@@ -16,7 +16,8 @@ struct Section {
 struct Module {
     uint8_t* base = nullptr;
     Section text;    // 代码
-    Section rdata;   // 只读数据（字符串常量）
+    Section rdata;   // 只读数据（字符串常量、虚表、RTTI 定位信息）
+    Section data;    // 可写数据（RTTI 类型描述符）
 };
 
 Module main_module();
@@ -35,6 +36,10 @@ inline uint8_t* rel32_target(uint8_t* ins, size_t opcode_len) {
     int32_t rel = *reinterpret_cast<int32_t*>(ins + opcode_len);
     return ins + opcode_len + 4 + rel;
 }
+
+// 按 RTTI 找虚表：mangled 如 ".?AVCSelectEventOptionCommand@@"，offset 是子对象在类里的偏移（主虚表为 0）。
+// 类型描述符（.data，名字在 +0x10）→ 完整对象定位器（.rdata，签名 1，按 rva 自指）→ 虚表（定位器指针之后一项）
+uint8_t* find_vtable(const Module& m, const char* mangled, uint32_t offset);
 
 // 用 .pdata（异常展开表）找所在函数的入口，跟随链式展开信息回到真正的起点
 uint8_t* function_start(uint8_t* addr);

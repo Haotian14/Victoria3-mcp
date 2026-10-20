@@ -157,6 +157,37 @@ class Bridge:
             raise GameError(f"改组政府 {members}：{r.get('output')}")
         return [int(x) for x in r["output"].strip("[]").split(",") if x]
 
+    # 伪造界面对象（见 V3Bridge datasys::fake_call）：spec 按偏移填几块缓冲区，0 号缓冲区作为通配上下文，
+    # 用于只存在于界面窗口里的对象（事件窗口、草稿……）。spec 写法：
+    # "缓冲区:偏移(十六进制):b/i/q=值"，值取整数 | bN（N 号缓冲区地址）| cK（路径第 K 项指针）| cK@偏移
+    def exec_fake(self, stmt: str, spec: str, path: Path | None = None) -> str:
+        """伪造对象后执行语句。返回 spec 里 cK / cK@偏移 的实际取值。失败抛 GameError。"""
+        r = self._request("POST", "/data/fake", {"mode": "x", "stmt": stmt, "spec": spec, **self._path(path)})
+        if not r.get("ok"):
+            raise GameError(f"{stmt}（{spec}）：{r.get('output')}")
+        return r.get("output", "")
+
+    def read_fake(self, text: str, spec: str, path: Path | None = None) -> str:
+        r = self._request("POST", "/data/fake", {"mode": "r", "text": text, "spec": spec, **self._path(path)})
+        if not r.get("ok"):
+            raise GameError(f"{text}（{spec}）：{r.get('output')}")
+        return r["output"]
+
+    def rows_fake(self, list_stmt: str, fields: list[str], spec: str, path: Path | None = None) -> list[list[str]]:
+        r = self._request("POST", "/data/fake", {"mode": "l", "list": list_stmt, "spec": spec,
+                                                 "fields": SEP.join(f"[{f}]" for f in fields), **self._path(path)})
+        if not r.get("ok"):
+            raise GameError(f"{list_stmt}（{spec}）：{r.get('output')}")
+        return r["output"]
+
+    def events(self, fields: list[str]) -> list[list[str]]:
+        """全部进行中的事件（含只以弹窗出现、不在任何分类列表里的）。每行第一格是事件 id，
+        其后是 fields（以事件为上下文，如 "Event.GetKey"）的求值结果。"""
+        r = self._request("POST", "/events", {"fields": SEP.join(f"[{f}]" for f in fields)})
+        if not r.get("ok"):
+            raise GameError(f"事件列表：{r.get('output')}")
+        return r["output"]
+
     def rows(self, list_stmt: str, fields: list[str], path: Path | None = None, limit: int = 0) -> list[list[str]]:
         """界面列表逐项求值。fields 每项是不带方括号的表达式，如 "Technology.GetName"。
         单个字段失败时该格以 FIELD_ERROR 开头，不影响其他格。"""

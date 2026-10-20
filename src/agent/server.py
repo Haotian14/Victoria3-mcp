@@ -29,6 +29,21 @@ from agent.strategy import economy  # noqa: E402
 
 bridge = Bridge()
 
+# act 里参数放在 params 的动作：Actions 方法名 → 参数说明
+ACT_PARAMS = {
+    "command": "cmd, probe, path=[[列表, 下标]...], target, probe_path",
+    "set_wage": "which: Government/Military, level",
+    "set_supply_ships": "level",
+    "set_trade_policy": "goods, side: Import/Export, policy: TariffsNone/TariffsLow/TariffsHigh/TariffsMax/"
+                        "SubventionsLow/SubventionsHigh/SubventionsMax",
+    "toggle_consumption_tax": "goods",
+    "country_command": "cmd: MobilizeAllArmies/DemobilizeAllArmies/PauseConstruction/ResumeConstruction/"
+                       "PauseShipConstruction/ResumeShipConstruction/DeclareBankruptcy/LeavePowerBloc",
+    "company": "key: 公司类型, create: true 创建 / false 解散",
+    "negotiate": "ig_index: 利益集团下标",
+    "choose_event_option": "event_id, option（events 工具列出的序号）",
+}
+
 server = MCPServer(
     name="victoria3",
     instructions=(
@@ -232,12 +247,20 @@ def get_state(states_limit: int = 8, buildings: bool = True) -> dict[str, Any]:
     "手动下发一个玩家动作（与点界面按钮等价，执行前后各读一次确认）。kind 取："
     "set_tax(level: VeryLow/Low/Medium/High/VeryHigh)、research(tech)、enact_law(law)、"
     "build(state: 州 id, building)、set_pm(state, building, pm)、"
-    "reform_government(government: 改组后全部在朝利益集团的名字，逗号分隔，如「士大夫,军队,乡村民众」)。"
+    "reform_government(government: 改组后全部在朝利益集团的名字，逗号分隔，如「士大夫,军队,乡村民众」)；"
+    "以及参数放在 params 里的：" + "；".join(f"{k}({v})" for k, v in ACT_PARAMS.items()) + "。"
+    "command 可执行 docs/actions.md 清单里的任意命令：cmd 是命令表达式，probe 是执行前后各读一次的表达式，"
+    "path 是上下文路径 [[列表, 下标], ...]，target 给定时要求读到它。"
 ))
 def act(kind: str, level: str = "", tech: str = "", law: str = "", state: int = 0, building: str = "",
-        pm: str = "", government: str = "") -> dict[str, Any]:
+        pm: str = "", government: str = "", params: dict[str, Any] | None = None) -> dict[str, Any]:
     a = Actions(bridge)
-    if kind == "set_tax":
+    if kind in ACT_PARAMS:
+        try:
+            r = getattr(a, kind)(**(params or {}))
+        except (TypeError, ValueError) as e:
+            return {"ok": False, "error": f"{kind} 参数不对：{e}", "params": ACT_PARAMS[kind]}
+    elif kind == "set_tax":
         r = a.set_tax(level)
     elif kind == "research":
         r = a.research(tech)
@@ -259,6 +282,14 @@ def act(kind: str, level: str = "", tech: str = "", law: str = "", state: int = 
         else:
             return {"ok": False, "error": f"不认识的动作 {kind}"}
     return {"ok": r.ok, "action": r.action, "detail": r.detail, "before": r.before, "after": r.after}
+
+
+@server.tool(description="玩家待处理的事件（含弹窗事件）与可选项；用 act(kind=choose_event_option) 选择。")
+def events() -> list[dict[str, Any]] | dict[str, Any]:
+    try:
+        return Actions(bridge).events()
+    except (GameError, BridgeError) as e:
+        return {"ok": False, "error": str(e)}
 
 
 @server.tool(description=(

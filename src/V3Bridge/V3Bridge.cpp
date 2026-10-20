@@ -149,7 +149,7 @@ bool locate() {
 }
 
 // ---------------------------------------------------------------- 主线程执行
-enum class JobKind { Console, Read, Exec, Call, Eval, List, Reform };
+enum class JobKind { Console, Read, Exec, Call, Eval, List, Reform, Fake };
 
 struct Job {
     JobKind kind = JobKind::Console;
@@ -161,6 +161,8 @@ struct Job {
     std::vector<std::string> fields;
     int limit = 0;
     std::vector<int> members;  // /gov/reform：改组后在朝的利益集团（list 里的下标）
+    std::string spec;          // /data/fake：伪造对象的写入项（见 datasys::fake_call）
+    std::string mode;          // /data/fake：x 执行 stmt / r 求 text / l 列表 list 逐项求 fields
     bool json = false;     // output 已经是 JSON（不再当字符串转义）
     bool ok = false;
     bool crashed = false;
@@ -202,19 +204,27 @@ bool seh_call(uint64_t fn, const uint64_t* a, uint64_t* ret, DWORD* code) {
 
 std::string json_escape(const std::string& s);
 
+// /events 是不经数据系统的列表：遍历游戏的事件对象库（datasys::list_events）
+const char* const kEventsList = "@events";
+
+std::string rows_json(const std::vector<std::vector<std::string>>& rows) {
+    std::string o = "[";
+    for (size_t r = 0; r < rows.size(); ++r) {
+        o += r ? ",[" : "[";
+        for (size_t c = 0; c < rows[r].size(); ++c) o += (c ? ",\"" : "\"") + json_escape(rows[r][c]) + "\"";
+        o += "]";
+    }
+    return o + "]";
+}
+
 void run_job(Job* job) {
     if (job->kind == JobKind::List) {
         std::vector<std::vector<std::string>> rows;
         std::string err;
-        job->ok = datasys::list_read(job->path, job->list, job->fields, job->limit, &rows, &err);
+        job->ok = job->list == kEventsList ? datasys::list_events(job->fields, &rows, &err)
+                                           : datasys::list_read(job->path, job->list, job->fields, job->limit, &rows, &err);
         if (!job->ok) { job->output = err; return; }
-        std::string o = "[";
-        for (size_t r = 0; r < rows.size(); ++r) {
-            o += r ? ",[" : "[";
-            for (size_t c = 0; c < rows[r].size(); ++c) o += (c ? ",\"" : "\"") + json_escape(rows[r][c]) + "\"";
-            o += "]";
-        }
-        job->output = o + "]";
+        job->output = rows_json(rows);
         job->json = true;
         return;
     }
@@ -251,6 +261,17 @@ void run_job(Job* job) {
         std::string err;
         job->ok = datasys::exec(job->path, job->cmd, &err);
         job->output = err;
+        return;
+    }
+    if (job->kind == JobKind::Fake) {
+        std::string out, err;
+        std::vector<std::vector<std::string>> rows;
+        char mode = job->mode.empty() ? 'x' : job->mode[0];
+        job->ok = datasys::fake_call(job->path, job->spec, mode, mode == 'l' ? job->list : job->cmd, job->fields, &out,
+                                     &rows, &err);
+        if (!job->ok) { job->output = err; return; }
+        job->output = mode == 'l' ? rows_json(rows) : out;
+        job->json = mode == 'l';
         return;
     }
     // 与游戏控制台一致：按空格切分，第一个是命令名
@@ -473,7 +494,8 @@ void handle(SOCKET c) {
     }
     // /console?cmd=  控制台命令；/data/read?text=  按本地化文本求值；/data/exec?stmt=  执行语句
     if (path == "/console" || path == "/data/read" || path == "/data/exec" || path == "/call" ||
-        path == "/data/eval" || path == "/data/list" || path == "/gov/reform") {
+        path == "/data/eval" || path == "/data/list" || path == "/gov/reform" || path == "/data/fake" ||
+        path == "/events") {
         if (!g_ready) {
             send_json(c, 503, "{\"ok\":false,\"error\":\"桥接层未就绪\",\"health\":" + health_json() + "}");
             return;
@@ -481,11 +503,12 @@ void handle(SOCKET c) {
         auto* job = new Job;
         const char* key = path == "/console" ? "cmd" : path == "/data/read" ? "text" : "stmt";
         if (path == "/data/eval") job->kind = JobKind::Eval;
-        if (path == "/data/list") {
+        if (path == "/data/list" || path == "/events" || path == "/data/fake") {
             // list=列表语句；fields=以  分隔的若干段文本
             job->kind = JobKind::List;
             job->list = query_param(query, "list");
             if (job->list.empty()) job->list = query_param(body, "list");
+            if (path == "/events") job->list = kEventsList;   // fields 照常，list 不用给
             std::string f = query_param(query, "fields");
             if (f.empty()) f = query_param(body, "fields");
             for (size_t a = 0, b; a <= f.size(); a = b + 1) {
@@ -516,6 +539,15 @@ void handle(SOCKET c) {
             std::string ip = query_param(query, ik.c_str());
             if (ip.empty()) ip = query_param(body, ik.c_str());
             job->path.push_back({lp, atoi(ip.c_str())});
+        }
+        if (path == "/data/fake") {
+            // spec=伪造对象的写入项；mode=x（stmt=语句）/ r（text=文本）/ l（list + fields）；p0/i0... 照常
+            job->kind = JobKind::Fake;
+            job->spec = query_param(query, "spec");
+            if (job->spec.empty()) job->spec = query_param(body, "spec");
+            job->mode = query_param(query, "mode");
+            if (job->mode.empty()) job->mode = query_param(body, "mode");
+            if (job->mode == "r") key = "text";
         }
         if (job->kind == JobKind::Console || job->kind == JobKind::Read || job->kind == JobKind::Exec ||
             job->kind == JobKind::Call)

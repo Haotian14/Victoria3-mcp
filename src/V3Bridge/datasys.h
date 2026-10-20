@@ -41,4 +41,19 @@ bool list_read(const std::vector<PathStep>& path, const std::string& list, const
 bool reform_government(const std::string& ig_list, const std::vector<int>& members, std::string* out,
                        std::string* error);
 
+// 伪造界面对象：界面窗口里的对象（事件窗口、草稿……）从玩家国家走不到，就照游戏回调读的字段
+// 自己填几块缓冲区，0 号缓冲区作为通配上下文（顶替任何没配上的需求），接在 path 的各项之后。
+// spec 以 ; 分隔，每项「缓冲区:偏移(十六进制):类型=值」，类型 b/i/q（1/4/8 字节）或 a（空 CPdxArray，值忽略），值取
+//   十进制整数 | bN（N 号缓冲区地址）| cK（路径第 K 项对象指针）| cK@偏移（该对象偏移处的 int32）。
+// 例（事件选项）："0:0:q=b1;0:8:i=2;1:88:q=b2;2:10:i=12345"。
+// mode：'x' 执行语句 text（out 返回各 cK / cK@偏移 的实际取值）；'r' 求文本 text；'l' 列表 text 逐项求 fields
+bool fake_call(const std::vector<PathStep>& path, const std::string& spec, char mode, const std::string& text,
+               const std::vector<std::string>& fields, std::string* out, std::vector<std::vector<std::string>>* rows,
+               std::string* error);
+
+// 全部进行中的事件（含没有分类、只以弹窗 / 地图标记出现的）：数据系统没有这样的列表，
+// 直接遍历游戏的事件对象库，每个事件作为上下文求 fields。每行第一格是事件 id（选项命令要用）
+bool list_events(const std::vector<std::string>& fields, std::vector<std::vector<std::string>>* rows,
+                 std::string* error);
+
 }  // namespace datasys

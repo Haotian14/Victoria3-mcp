@@ -684,4 +684,199 @@ bool reform_government(const std::string& ig_list, const std::vector<int>& membe
     return exec_in("Execute(ReformGovernment.Confirm)", &reform, 1, error);
 }
 
+// ---------------------------------------------------------------- 伪造界面对象
+// 改组政府的通用版：界面对象的字段由调用方按 spec 给出（见 datasys.h）。缓冲区是静态的，
+// 游戏回调在对象上留的标记（如事件窗口的「已选」位）每次调用前清零。
+// 类型 a 在该处放一个空 CPdxArray（值忽略）：游戏往里填的元素不归还（每次几百字节，可以接受）。
+namespace {
+
+constexpr int kFakeBufs = 4;
+constexpr size_t kFakeSize = 0x1000;
+alignas(16) uint8_t g_fake[kFakeBufs][kFakeSize];
+
+bool parse_value(const std::string& v, const std::vector<CtxEntry>& items, int64_t* out, std::string* note,
+                 std::string* error) {
+    if (v.empty()) { *error = "空值"; return false; }
+    if (v[0] == 'b') {
+        int n = atoi(v.c_str() + 1);
+        if (n < 0 || n >= kFakeBufs) { *error = "缓冲区 " + v + " 越界"; return false; }
+        *out = reinterpret_cast<int64_t>(g_fake[n]);
+        return true;
+    }
+    if (v[0] == 'c') {
+        int k = atoi(v.c_str() + 1);
+        if (k < 0 || k >= static_cast<int>(items.size())) { *error = "路径没有第 " + v + " 项"; return false; }
+        auto* p = static_cast<uint8_t*>(items[k].ptr);
+        size_t at = v.find('@');
+        if (at == std::string::npos) {
+            *out = reinterpret_cast<int64_t>(p);
+        } else {
+            int x = 0;
+            if (!p || !seh_read_int(p + strtoul(v.c_str() + at + 1, nullptr, 16), &x)) {
+                *error = "读不到 " + v;
+                return false;
+            }
+            *out = x;
+        }
+        char b[64];
+        snprintf(b, sizeof b, "%s%s=0x%llx", note->empty() ? "" : ",", v.c_str(), static_cast<long long>(*out));
+        *note += b;
+        return true;
+    }
+    *out = strtoll(v.c_str(), nullptr, 10);
+    return true;
+}
+
+// 按 spec 填缓冲区，并把 0 号缓冲区作为通配上下文追加到 items 末尾
+bool fill_fake(std::vector<CtxEntry>* items_io, const std::string& spec, std::string* out, std::string* error) {
+    std::vector<CtxEntry>& items = *items_io;
+    memset(g_fake, 0, sizeof g_fake);
+    for (size_t a = 0, b; a < spec.size(); a = b + 1) {
+        b = spec.find(';', a);
+        if (b == std::string::npos) b = spec.size();
+        std::string w = spec.substr(a, b - a);
+        if (w.empty()) continue;
+        int buf = -1;
+        unsigned off = 0;
+        char kind = 0;
+        size_t eq = w.find('=');
+        if (eq == std::string::npos || sscanf_s(w.c_str(), "%d:%x:%c", &buf, &off, &kind, 1) != 3 ||
+            buf < 0 || buf >= kFakeBufs || off + sizeof(PdxArray) > kFakeSize) {
+            *error = "写入项不合法：" + w;
+            return false;
+        }
+        uint8_t* dst = g_fake[buf] + off;
+        if (kind == 'a') {  // 空的 CPdxArray（带游戏的默认分配器）：界面对象里按需填充的数组，如事件窗口的选项
+            g_array_init(reinterpret_cast<PdxArray*>(dst));
+            continue;
+        }
+        int64_t v = 0;
+        if (!parse_value(w.substr(eq + 1), items, &v, out, error)) return false;
+        if (kind == 'b') *dst = static_cast<uint8_t>(v);
+        else if (kind == 'i') *reinterpret_cast<int32_t*>(dst) = static_cast<int32_t>(v);
+        else if (kind == 'q') *reinterpret_cast<int64_t*>(dst) = v;
+        else { *error = "未知类型 " + std::string(1, kind); return false; }
+    }
+    items.push_back(CtxEntry{g_fake[0], kAnyType, false, {}});
+    return true;
+}
+
+}  // namespace
+
+bool fake_call(const std::vector<PathStep>& path, const std::string& spec, char mode, const std::string& text,
+               const std::vector<std::string>& fields, std::string* out, std::vector<std::vector<std::string>>* rows,
+               std::string* error) {
+    Access access;
+    std::vector<CtxEntry> items;
+    std::vector<AnyBuf> anys;
+    std::string note;
+    // spec 不引用路径项（cK）时先填伪造对象，路径里的列表就能以它为上下文（如 EventWindow.GetOptions）；
+    // 引用时先走路径再填
+    bool refs_path = spec.find("=c") != std::string::npos;
+    if (!refs_path && !fill_fake(&items, spec, &note, error)) return false;
+    if (!walk(path, &items, &anys, error)) return false;
+    if (refs_path && !fill_fake(&items, spec, &note, error)) return false;
+    if (mode == 'x') {
+        *out = note;
+        return exec_in(text, items.data(), static_cast<int>(items.size()), error);
+    }
+    if (mode == 'r') return read_in(text, items.data(), static_cast<int>(items.size()), out, error);
+    // 'l'：text 是列表语句，逐项求 fields（与 list_read 相同）
+    anys.emplace_back();
+    Model m{};
+    int size = 0;
+    if (!open_model(text, items, &anys.back(), &m, &size, error)) return false;
+    items.emplace_back();
+    for (int i = 0; i < size; ++i) {
+        std::vector<std::string> row;
+        if (!item_ctx(m, i, &items.back(), error)) return false;
+        for (const std::string& f : fields) {
+            std::string v, err;
+            if (!read_in(f, items.data(), static_cast<int>(items.size()), &v, &err)) v = "" + err;
+            row.push_back(v);
+        }
+        rows->push_back(std::move(row));
+    }
+    return true;
+}
+
+// ---------------------------------------------------------------- 事件
+// 事件窗口点选项（EventOption.Select，1.13.11 的 02100980 → 020ff9a0）：窗口对象 +0x88 处的句柄
+// 经 id → 对象的查找函数（00e7a0c0）取到事件，组装 CSelectEventOptionCommand{国家, 事件 id, 选项下标} 发出。
+// 查找函数开头 mov rax,[rip+X] 取的就是事件对象库：+0x20 槽数组（每槽 16 字节，对象指针在 +8），+0x2c 槽数，
+// 下标 = id 低 24 位；对象（CGenericEvent）+0x08 是事件 id。定位链：RTTI 找到命令虚表 → 引用它且带 mov edx,0Eh（发命令）
+// 的界面函数 → 其中 add rcx,10h; call 的目标即查找函数。
+namespace {
+
+uint8_t** g_event_db = nullptr;  // 指向「事件对象库指针」的全局变量
+std::string g_event_locate_error;
+
+bool locate_events() {
+    if (g_event_db) return true;
+    if (!g_event_locate_error.empty()) return false;
+    scan::Module mod = scan::main_module();
+    uint8_t* vt = scan::find_vtable(mod, ".?AVCSelectEventOptionCommand@@", 0);
+    if (!vt) { g_event_locate_error = "RTTI 找不到 CSelectEventOptionCommand"; return false; }
+    uint8_t* refs[16];
+    size_t n = scan::find_lea_refs(mod.text, vt, refs, 16);
+    for (size_t k = 0; k < n && k < 16; ++k) {
+        uint8_t* fb = nullptr;
+        size_t fs = 0;
+        if (!function_bounds(refs[k], &fb, &fs) || !scan::find_pattern(fb, fs, "BA 0E 00 00 00")) continue;
+        uint8_t* site = scan::find_pattern(fb, fs, "48 83 C1 10 E8");
+        if (!site) continue;
+        uint8_t* lookup = scan::rel32_target(site + 4, 1);
+        uint8_t* mov = scan::find_pattern(lookup, 0x20, "48 8B 05");
+        if (!mov) continue;
+        g_event_db = reinterpret_cast<uint8_t**>(mov + 7 + *reinterpret_cast<int32_t*>(mov + 3));
+        return true;
+    }
+    g_event_locate_error = "找不到事件对象库（命令虚表引用 " + std::to_string(n) + " 处）";
+    return false;
+}
+
+bool seh_read_ptr(const void* p, void** out) {
+    __try {
+        *out = *static_cast<void* const*>(p);
+        return true;
+    } __except (EXCEPTION_EXECUTE_HANDLER) {
+        return false;
+    }
+}
+
+}  // namespace
+
+bool list_events(const std::vector<std::string>& fields, std::vector<std::vector<std::string>>* rows,
+                 std::string* error) {
+    if (!locate_events()) { *error = g_event_locate_error; return false; }
+    Access access;
+    uint8_t* db = *g_event_db;
+    if (!db) return true;  // 还没有任何事件
+    int count = 0;
+    void* slots = nullptr;
+    if (!seh_read_int(db + 0x2c, &count) || !seh_read_ptr(db + 0x20, &slots) || count < 0 || count > 1000000) {
+        *error = "事件对象库读取失败";
+        return false;
+    }
+    for (int i = 0; i < count; ++i) {
+        void* obj = nullptr;
+        int id = 0;
+        if (!seh_read_ptr(static_cast<uint8_t*>(slots) + i * 16 + 8, &obj) || !obj) continue;
+        if (!seh_read_int(static_cast<uint8_t*>(obj) + 8, &id)) continue;
+        // 数据系统里的 Event 不是事件对象本身，而是 +0x10 处放事件 id 的句柄（Event.* 的回调都先
+        // add rcx,10h 再查对象库；事件窗口 +0x88 指的也是这种句柄）
+        alignas(16) uint8_t handle[0x40] = {};
+        *reinterpret_cast<int*>(handle + 0x10) = id;
+        CtxEntry e{handle, kAnyType, true, {}};
+        std::vector<std::string> row{std::to_string(id)};
+        for (const std::string& f : fields) {
+            std::string v, err;
+            if (!read_in(f, &e, 1, &v, &err)) v = "\x01" + err;  // 与 list_read 一样标出单格失败
+            row.push_back(v);
+        }
+        rows->push_back(std::move(row));
+    }
+    return true;
+}
+
 }  // namespace datasys

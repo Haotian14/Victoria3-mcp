@@ -777,8 +777,8 @@
   "domain": "国家",
   "reach": "直达",
   "family": "Country.CreateCompany",
-  "status": "未做",
-  "via": ""
+  "status": "已验证",
+  "via": "Actions.company"
  },
  {
   "receiver": "Country",
@@ -887,8 +887,8 @@
   "domain": "国家",
   "reach": "直达",
   "family": "Country.PauseConstruction",
-  "status": "未做",
-  "via": ""
+  "status": "已验证",
+  "via": "Actions.country_command"
  },
  {
   "receiver": "Country",
@@ -905,8 +905,8 @@
   "domain": "国家",
   "reach": "直达",
   "family": "Country.PauseShipConstruction",
-  "status": "未做",
-  "via": ""
+  "status": "已验证",
+  "via": "Actions.country_command"
  },
  {
   "receiver": "Country",
@@ -924,8 +924,8 @@
   "domain": "国家",
   "reach": "直达",
   "family": "Country.RemoveCompany",
-  "status": "未做",
-  "via": ""
+  "status": "已验证",
+  "via": "Actions.company"
  },
  {
   "receiver": "Country",
@@ -944,8 +944,8 @@
   "domain": "国家",
   "reach": "直达",
   "family": "Country.ResumeConstruction",
-  "status": "未做",
-  "via": ""
+  "status": "已验证",
+  "via": "Actions.country_command"
  },
  {
   "receiver": "Country",
@@ -962,8 +962,8 @@
   "domain": "国家",
   "reach": "直达",
   "family": "Country.ResumeShipConstruction",
-  "status": "未做",
-  "via": ""
+  "status": "已验证",
+  "via": "Actions.country_command"
  },
  {
   "receiver": "Country",
@@ -998,8 +998,8 @@
   "domain": "国家",
   "reach": "直达",
   "family": "Country.SetExportSubventions*",
-  "status": "未做",
-  "via": ""
+  "status": "已验证",
+  "via": "Actions.set_trade_policy"
  },
  {
   "receiver": "Country",
@@ -1016,8 +1016,8 @@
   "domain": "国家",
   "reach": "直达",
   "family": "Country.SetExportSubventions*",
-  "status": "未做",
-  "via": ""
+  "status": "已验证",
+  "via": "Actions.set_trade_policy"
  },
  {
   "receiver": "Country",
@@ -1034,8 +1034,8 @@
   "domain": "国家",
   "reach": "直达",
   "family": "Country.SetExportSubventions*",
-  "status": "未做",
-  "via": ""
+  "status": "已验证",
+  "via": "Actions.set_trade_policy"
  },
  {
   "receiver": "Country",
@@ -1052,8 +1052,8 @@
   "domain": "国家",
   "reach": "直达",
   "family": "Country.SetExportTariffs*",
-  "status": "未做",
-  "via": ""
+  "status": "已验证",
+  "via": "Actions.set_trade_policy"
  },
  {
   "receiver": "Country",
@@ -1070,8 +1070,8 @@
   "domain": "国家",
   "reach": "直达",
   "family": "Country.SetExportTariffs*",
-  "status": "未做",
-  "via": ""
+  "status": "已验证",
+  "via": "Actions.set_trade_policy"
  },
  {
   "receiver": "Country",
@@ -1088,8 +1088,8 @@
   "domain": "国家",
   "reach": "直达",
   "family": "Country.SetExportTariffs*",
-  "status": "未做",
-  "via": ""
+  "status": "已验证",
+  "via": "Actions.set_trade_policy"
  },
  {
   "receiver": "Country",
@@ -1106,8 +1106,8 @@
   "domain": "国家",
   "reach": "直达",
   "family": "Country.SetExportTariffs*",
-  "status": "未做",
-  "via": ""
+  "status": "已验证",
+  "via": "Actions.set_trade_policy"
  },
  {
   "receiver": "Country",
@@ -1124,8 +1124,8 @@
   "domain": "国家",
   "reach": "直达",
   "family": "Country.SetGovernmentWageLevel*",
-  "status": "未做",
-  "via": ""
+  "status": "已验证",
+  "via": "Actions.set_wage"
  },
  {
   "receiver": "Country",
@@ -1142,8 +1142,8 @@
   "domain": "国家",
   "reach": "直达",
   "family": "Country.SetGovernmentWageLevel*",
-  "status": "未做",
-  "via": ""
+  "status": "已验证",
+  "via": "Actions.set_wage"
  },
  {
   "receiver": "Country",
@@ -1160,8 +1160,8 @@
   "domain": "国家",
   "reach": "直达",
   "family": "Country.SetGovernmentWageLevel*",
-  "status": "未做",
-  "via": ""
+  "status": "已验证",
+  "via": "Actions.set_wage"
  },
  {
   "receiver": "Country",
@@ -1178,8 +1178,8 @@
   "domain": "国家",
   "reach": "直达",
   "family": "Country.SetGovernmentWageLevel*",
-  "status": "未做",
-  "via": ""
+  "status": "已验证",
+  "via": "Actions.set_wage"
  },
  {
   "receiver": "Country",
@@ -1196,8 +1196,8 @@
   "domain": "国家",
   "reach": "直达",
   "family": "Country.SetGovernmentWageLevel*",
-  "status": "未做",
-  "via": ""
+  "status": "已验证",
+  "via": "Actions.set_wage"
  },
  {
   "receiver": "Country",
@@ -1214,8 +1214,8 @@
   "domain": "国家",
   "reach": "直达",
   "family": "Country.SetImportSubventions*",
-  "status": "未做",
-  "via": ""
+  "status": "已验证",
+  "via": "Actions.set_trade_policy"
  },
  {
   "receiver": "Country",
@@ -1232,8 +1232,8 @@
   "domain": "国家",
   "reach": "直达",
   "family": "Country.SetImportSubventions*",
-  "status": "未做",
-  "via": ""
+  "status": "已验证",
+  "via": "Actions.set_trade_policy"
  },
  {
   "receiver": "Country",
@@ -1250,8 +1250,8 @@
   "domain": "国家",
   "reach": "直达",
   "family": "Country.SetImportSubventions*",
-  "status": "未做",
-  "via": ""
+  "status": "已验证",
+  "via": "Actions.set_trade_policy"
  },
  {
   "receiver": "Country",
@@ -1268,8 +1268,8 @@
   "domain": "国家",
   "reach": "直达",
   "family": "Country.SetImportTariffs*",
-  "status": "未做",
-  "via": ""
+  "status": "已验证",
+  "via": "Actions.set_trade_policy"
  },
  {
   "receiver": "Country",
@@ -1286,8 +1286,8 @@
   "domain": "国家",
   "reach": "直达",
   "family": "Country.SetImportTariffs*",
-  "status": "未做",
-  "via": ""
+  "status": "已验证",
+  "via": "Actions.set_trade_policy"
  },
  {
   "receiver": "Country",
@@ -1304,8 +1304,8 @@
   "domain": "国家",
   "reach": "直达",
   "family": "Country.SetImportTariffs*",
-  "status": "未做",
-  "via": ""
+  "status": "已验证",
+  "via": "Actions.set_trade_policy"
  },
  {
   "receiver": "Country",
@@ -1322,8 +1322,8 @@
   "domain": "国家",
   "reach": "直达",
   "family": "Country.SetImportTariffs*",
-  "status": "未做",
-  "via": ""
+  "status": "已验证",
+  "via": "Actions.set_trade_policy"
  },
  {
   "receiver": "Country",
@@ -1340,8 +1340,8 @@
   "domain": "国家",
   "reach": "直达",
   "family": "Country.SetMilitaryWageLevel*",
-  "status": "未做",
-  "via": ""
+  "status": "已验证",
+  "via": "Actions.set_wage"
  },
  {
   "receiver": "Country",
@@ -1358,8 +1358,8 @@
   "domain": "国家",
   "reach": "直达",
   "family": "Country.SetMilitaryWageLevel*",
-  "status": "未做",
-  "via": ""
+  "status": "已验证",
+  "via": "Actions.set_wage"
  },
  {
   "receiver": "Country",
@@ -1376,8 +1376,8 @@
   "domain": "国家",
   "reach": "直达",
   "family": "Country.SetMilitaryWageLevel*",
-  "status": "未做",
-  "via": ""
+  "status": "已验证",
+  "via": "Actions.set_wage"
  },
  {
   "receiver": "Country",
@@ -1394,8 +1394,8 @@
   "domain": "国家",
   "reach": "直达",
   "family": "Country.SetMilitaryWageLevel*",
-  "status": "未做",
-  "via": ""
+  "status": "已验证",
+  "via": "Actions.set_wage"
  },
  {
   "receiver": "Country",
@@ -1412,8 +1412,8 @@
   "domain": "国家",
   "reach": "直达",
   "family": "Country.SetMilitaryWageLevel*",
-  "status": "未做",
-  "via": ""
+  "status": "已验证",
+  "via": "Actions.set_wage"
  },
  {
   "receiver": "Country",
@@ -1430,8 +1430,8 @@
   "domain": "国家",
   "reach": "直达",
   "family": "Country.SetSupplyShipConstructionLevel*",
-  "status": "未做",
-  "via": ""
+  "status": "已验证",
+  "via": "Actions.set_supply_ships"
  },
  {
   "receiver": "Country",
@@ -1448,8 +1448,8 @@
   "domain": "国家",
   "reach": "直达",
   "family": "Country.SetSupplyShipConstructionLevel*",
-  "status": "未做",
-  "via": ""
+  "status": "已验证",
+  "via": "Actions.set_supply_ships"
  },
  {
   "receiver": "Country",
@@ -1466,8 +1466,8 @@
   "domain": "国家",
   "reach": "直达",
   "family": "Country.SetSupplyShipConstructionLevel*",
-  "status": "未做",
-  "via": ""
+  "status": "已验证",
+  "via": "Actions.set_supply_ships"
  },
  {
   "receiver": "Country",
@@ -1484,8 +1484,8 @@
   "domain": "国家",
   "reach": "直达",
   "family": "Country.SetSupplyShipConstructionLevel*",
-  "status": "未做",
-  "via": ""
+  "status": "已验证",
+  "via": "Actions.set_supply_ships"
  },
  {
   "receiver": "Country",
@@ -1502,8 +1502,8 @@
   "domain": "国家",
   "reach": "直达",
   "family": "Country.SetSupplyShipConstructionLevel*",
-  "status": "未做",
-  "via": ""
+  "status": "已验证",
+  "via": "Actions.set_supply_ships"
  },
  {
   "receiver": "Country",
@@ -2036,8 +2036,8 @@
   "domain": "事件",
   "reach": "窗口",
   "family": "EventOption.Select",
-  "status": "未做",
-  "via": ""
+  "status": "已验证",
+  "via": "Actions.choose_event_option"
  },
  {
   "receiver": "Front",
@@ -2345,8 +2345,8 @@
   "domain": "经济",
   "reach": "直达",
   "family": "Country.SetExportSubventions*",
-  "status": "未做",
-  "via": ""
+  "status": "已验证",
+  "via": "Actions.command"
  },
  {
   "receiver": "Goods",
@@ -2363,8 +2363,8 @@
   "domain": "经济",
   "reach": "直达",
   "family": "Country.SetExportSubventions*",
-  "status": "未做",
-  "via": ""
+  "status": "已验证",
+  "via": "Actions.command"
  },
  {
   "receiver": "Goods",
@@ -2381,8 +2381,8 @@
   "domain": "经济",
   "reach": "直达",
   "family": "Country.SetExportSubventions*",
-  "status": "未做",
-  "via": ""
+  "status": "已验证",
+  "via": "Actions.command"
  },
  {
   "receiver": "Goods",
@@ -2399,8 +2399,8 @@
   "domain": "经济",
   "reach": "直达",
   "family": "Country.SetExportTariffs*",
-  "status": "未做",
-  "via": ""
+  "status": "已验证",
+  "via": "Actions.command"
  },
  {
   "receiver": "Goods",
@@ -2417,8 +2417,8 @@
   "domain": "经济",
   "reach": "直达",
   "family": "Country.SetExportTariffs*",
-  "status": "未做",
-  "via": ""
+  "status": "已验证",
+  "via": "Actions.command"
  },
  {
   "receiver": "Goods",
@@ -2435,8 +2435,8 @@
   "domain": "经济",
   "reach": "直达",
   "family": "Country.SetExportTariffs*",
-  "status": "未做",
-  "via": ""
+  "status": "已验证",
+  "via": "Actions.command"
  },
  {
   "receiver": "Goods",
@@ -2453,8 +2453,8 @@
   "domain": "经济",
   "reach": "直达",
   "family": "Country.SetExportTariffs*",
-  "status": "未做",
-  "via": ""
+  "status": "已验证",
+  "via": "Actions.command"
  },
  {
   "receiver": "Goods",
@@ -2471,8 +2471,8 @@
   "domain": "经济",
   "reach": "直达",
   "family": "Country.SetImportSubventions*",
-  "status": "未做",
-  "via": ""
+  "status": "已验证",
+  "via": "Actions.command"
  },
  {
   "receiver": "Goods",
@@ -2489,8 +2489,8 @@
   "domain": "经济",
   "reach": "直达",
   "family": "Country.SetImportSubventions*",
-  "status": "未做",
-  "via": ""
+  "status": "已验证",
+  "via": "Actions.command"
  },
  {
   "receiver": "Goods",
@@ -2507,8 +2507,8 @@
   "domain": "经济",
   "reach": "直达",
   "family": "Country.SetImportSubventions*",
-  "status": "未做",
-  "via": ""
+  "status": "已验证",
+  "via": "Actions.command"
  },
  {
   "receiver": "Goods",
@@ -2525,8 +2525,8 @@
   "domain": "经济",
   "reach": "直达",
   "family": "Country.SetImportTariffs*",
-  "status": "未做",
-  "via": ""
+  "status": "已验证",
+  "via": "Actions.command"
  },
  {
   "receiver": "Goods",
@@ -2543,8 +2543,8 @@
   "domain": "经济",
   "reach": "直达",
   "family": "Country.SetImportTariffs*",
-  "status": "未做",
-  "via": ""
+  "status": "已验证",
+  "via": "Actions.command"
  },
  {
   "receiver": "Goods",
@@ -2561,8 +2561,8 @@
   "domain": "经济",
   "reach": "直达",
   "family": "Country.SetImportTariffs*",
-  "status": "未做",
-  "via": ""
+  "status": "已验证",
+  "via": "Actions.command"
  },
  {
   "receiver": "Goods",
@@ -2579,8 +2579,8 @@
   "domain": "经济",
   "reach": "直达",
   "family": "Country.SetImportTariffs*",
-  "status": "未做",
-  "via": ""
+  "status": "已验证",
+  "via": "Actions.command"
  },
  {
   "receiver": "Goods",
@@ -2600,8 +2600,8 @@
   "domain": "经济",
   "reach": "直达",
   "family": "Goods.ToggleTaxation",
-  "status": "未做",
-  "via": ""
+  "status": "已验证",
+  "via": "Actions.toggle_consumption_tax"
  },
  {
   "receiver": "Hq",

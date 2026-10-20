@@ -5,72 +5,87 @@
 
 可达性：**直达** = 从玩家国家沿列表能走到对象，照现有做法即可；**窗口** = 对象只存在于界面窗口 / 弹窗 / 草稿里，要像改组政府那样构造（见 docs/bridge.md）；**组合** = 军事 / 地图类，要组合编队、前线、海域等多个对象；**界面** = 只影响界面显示（改名、开关、定位），不影响局面；**待查** = 接收对象还没归类。
 
-**进度：命令 10 / 265 已验证；按操作种类（只差档位的算一种）6 / 225。**
+**进度：命令 61 / 265 已验证；按操作种类（只差档位的算一种）21 / 225。**
 
-按可达性（操作种类，已验证 / 总数）：直达 5 / 110，窗口 1 / 31，组合 0 / 77，界面 0 / 7。
+按可达性（操作种类，已验证 / 总数）：直达 19 / 110，窗口 2 / 31，组合 0 / 77，界面 0 / 7。
 
-不在本表、但同样要打通的：事件选项（事件弹窗，现在由游戏默认选）、立即存档（目前用自动存档）、暂停 / 调速（`TimeKeeper`，已验证，不经 Execute）。
+不在本表、但同样要打通的：立即存档（目前用自动存档）、暂停 / 调速（`TimeKeeper`，已验证，不经 Execute）。事件选项在「事件」一节（`EventOption.Select`）。每条命令用的路径与核实方式见 docs/bridge.md「已验证的玩家动作」。
 
-## 国家（5 / 50）
+## 国家（40 / 50）
 
 | 状态 | 可达性 | 命令 | 例子 | 界面文件 |
 |---|---|---|---|---|
+| ✓ `Actions.company` | 直达 | `Country.CreateCompany` | `GetPlayer.CreateCompany(CompanyType.Self)` | companies_panel.gui |
+| ✓ `Actions.country_command` | 直达 | `Country.PauseConstruction` | `Country.PauseConstruction` | building_browser_panel.gui, production_methods.gui … |
+| ✓ `Actions.country_command` | 直达 | `Country.PauseShipConstruction` | `Country.PauseShipConstruction` | production_methods.gui |
+| ✓ `Actions.company` | 直达 | `Country.RemoveCompany` | `GetPlayer.RemoveCompany(CompanyType.Self)` | companies_panel.gui, company_panel.gui |
+| ✓ `Actions.country_command` | 直达 | `Country.ResumeConstruction` | `Country.ResumeConstruction` | building_browser_panel.gui, production_methods.gui … |
+| ✓ `Actions.country_command` | 直达 | `Country.ResumeShipConstruction` | `Country.ResumeShipConstruction` | production_methods.gui |
+| ✓ `Actions.set_trade_policy` | 直达 | `Country.SetExportSubventionsHigh` | `GetPlayer.SetExportSubventionsHigh(Goods.Self)` | budget_panel.gui |
+| ✓ `Actions.set_trade_policy` | 直达 | `Country.SetExportSubventionsLow` | `GetPlayer.SetExportSubventionsLow(Goods.Self)` | budget_panel.gui |
+| ✓ `Actions.set_trade_policy` | 直达 | `Country.SetExportSubventionsMax` | `GetPlayer.SetExportSubventionsMax(Goods.Self)` | budget_panel.gui |
+| ✓ `Actions.set_trade_policy` | 直达 | `Country.SetExportTariffsHigh` | `GetPlayer.SetExportTariffsHigh(Goods.Self)` | budget_panel.gui |
+| ✓ `Actions.set_trade_policy` | 直达 | `Country.SetExportTariffsLow` | `GetPlayer.SetExportTariffsLow(Goods.Self)` | budget_panel.gui |
+| ✓ `Actions.set_trade_policy` | 直达 | `Country.SetExportTariffsMax` | `GetPlayer.SetExportTariffsMax(Goods.Self)` | budget_panel.gui |
+| ✓ `Actions.set_trade_policy` | 直达 | `Country.SetExportTariffsNone` | `GetPlayer.SetExportTariffsNone(Goods.Self)` | budget_panel.gui |
+| ✓ `Actions.set_wage` | 直达 | `Country.SetGovernmentWageLevelHigh` | `GetPlayer.SetGovernmentWageLevelHigh` | budget_panel.gui |
+| ✓ `Actions.set_wage` | 直达 | `Country.SetGovernmentWageLevelLow` | `GetPlayer.SetGovernmentWageLevelLow` | budget_panel.gui |
+| ✓ `Actions.set_wage` | 直达 | `Country.SetGovernmentWageLevelMedium` | `GetPlayer.SetGovernmentWageLevelMedium` | budget_panel.gui |
+| ✓ `Actions.set_wage` | 直达 | `Country.SetGovernmentWageLevelVeryHigh` | `GetPlayer.SetGovernmentWageLevelVeryHigh` | budget_panel.gui |
+| ✓ `Actions.set_wage` | 直达 | `Country.SetGovernmentWageLevelVeryLow` | `GetPlayer.SetGovernmentWageLevelVeryLow` | budget_panel.gui |
+| ✓ `Actions.set_trade_policy` | 直达 | `Country.SetImportSubventionsHigh` | `GetPlayer.SetImportSubventionsHigh(Goods.Self)` | budget_panel.gui |
+| ✓ `Actions.set_trade_policy` | 直达 | `Country.SetImportSubventionsLow` | `GetPlayer.SetImportSubventionsLow(Goods.Self)` | budget_panel.gui |
+| ✓ `Actions.set_trade_policy` | 直达 | `Country.SetImportSubventionsMax` | `GetPlayer.SetImportSubventionsMax(Goods.Self)` | budget_panel.gui |
+| ✓ `Actions.set_trade_policy` | 直达 | `Country.SetImportTariffsHigh` | `GetPlayer.SetImportTariffsHigh(Goods.Self)` | budget_panel.gui |
+| ✓ `Actions.set_trade_policy` | 直达 | `Country.SetImportTariffsLow` | `GetPlayer.SetImportTariffsLow(Goods.Self)` | budget_panel.gui |
+| ✓ `Actions.set_trade_policy` | 直达 | `Country.SetImportTariffsMax` | `GetPlayer.SetImportTariffsMax(Goods.Self)` | budget_panel.gui |
+| ✓ `Actions.set_trade_policy` | 直达 | `Country.SetImportTariffsNone` | `GetPlayer.SetImportTariffsNone(Goods.Self)` | budget_panel.gui |
+| ✓ `Actions.set_wage` | 直达 | `Country.SetMilitaryWageLevelHigh` | `GetPlayer.SetMilitaryWageLevelHigh` | budget_panel.gui |
+| ✓ `Actions.set_wage` | 直达 | `Country.SetMilitaryWageLevelLow` | `GetPlayer.SetMilitaryWageLevelLow` | budget_panel.gui |
+| ✓ `Actions.set_wage` | 直达 | `Country.SetMilitaryWageLevelMedium` | `GetPlayer.SetMilitaryWageLevelMedium` | budget_panel.gui |
+| ✓ `Actions.set_wage` | 直达 | `Country.SetMilitaryWageLevelVeryHigh` | `GetPlayer.SetMilitaryWageLevelVeryHigh` | budget_panel.gui |
+| ✓ `Actions.set_wage` | 直达 | `Country.SetMilitaryWageLevelVeryLow` | `GetPlayer.SetMilitaryWageLevelVeryLow` | budget_panel.gui |
+| ✓ `Actions.set_supply_ships` | 直达 | `Country.SetSupplyShipConstructionLevelHigh` | `GetPlayer.SetSupplyShipConstructionLevelHigh` | construction_panel.gui |
+| ✓ `Actions.set_supply_ships` | 直达 | `Country.SetSupplyShipConstructionLevelLow` | `GetPlayer.SetSupplyShipConstructionLevelLow` | construction_panel.gui |
+| ✓ `Actions.set_supply_ships` | 直达 | `Country.SetSupplyShipConstructionLevelMedium` | `GetPlayer.SetSupplyShipConstructionLevelMedium` | construction_panel.gui |
+| ✓ `Actions.set_supply_ships` | 直达 | `Country.SetSupplyShipConstructionLevelVeryHigh` | `GetPlayer.SetSupplyShipConstructionLevelVeryHigh` | construction_panel.gui |
+| ✓ `Actions.set_supply_ships` | 直达 | `Country.SetSupplyShipConstructionLevelVeryLow` | `GetPlayer.SetSupplyShipConstructionLevelVeryLow` | construction_panel.gui |
 | ✓ `Actions.set_tax` | 直达 | `Country.SetTaxLevelHigh` | `GetPlayer.SetTaxLevelHigh` | budget_panel.gui |
 | ✓ `Actions.set_tax` | 直达 | `Country.SetTaxLevelLow` | `GetPlayer.SetTaxLevelLow` | budget_panel.gui |
 | ✓ `Actions.set_tax` | 直达 | `Country.SetTaxLevelMedium` | `GetPlayer.SetTaxLevelMedium` | budget_panel.gui |
 | ✓ `Actions.set_tax` | 直达 | `Country.SetTaxLevelVeryHigh` | `GetPlayer.SetTaxLevelVeryHigh` | budget_panel.gui |
 | ✓ `Actions.set_tax` | 直达 | `Country.SetTaxLevelVeryLow` | `GetPlayer.SetTaxLevelVeryLow` | budget_panel.gui |
 |  | 直达 | `Country.ClearDefaultConstructionFleet` | `Country.ClearDefaultConstructionFleet` | right_click_menu.gui |
-|  | 直达 | `Country.CreateCompany` | `GetPlayer.CreateCompany(CompanyType.Self)` | companies_panel.gui |
 |  | 直达 | `Country.DeclareBankruptcy` | `Country.DeclareBankruptcy` | budget_panel.gui |
 |  | 直达 | `Country.DemobilizeAllArmies` | `Country.DemobilizeAllArmies` | panel_military.gui |
 |  | 直达 | `Country.Kick` | `Country.GetPowerBloc.Kick(Country.Self)` | right_click_menu.gui |
 |  | 直达 | `Country.LeavePowerBloc` | `GetPlayer.LeavePowerBloc` | power_bloc_panel.gui |
 |  | 直达 | `Country.MobilizeAllArmies` | `Country.MobilizeAllArmies` | panel_military.gui |
-|  | 直达 | `Country.PauseConstruction` | `Country.PauseConstruction` | building_browser_panel.gui, production_methods.gui … |
-|  | 直达 | `Country.PauseShipConstruction` | `Country.PauseShipConstruction` | production_methods.gui |
-|  | 直达 | `Country.RemoveCompany` | `GetPlayer.RemoveCompany(CompanyType.Self)` | companies_panel.gui, company_panel.gui |
-|  | 直达 | `Country.ResumeConstruction` | `Country.ResumeConstruction` | building_browser_panel.gui, production_methods.gui … |
-|  | 直达 | `Country.ResumeShipConstruction` | `Country.ResumeShipConstruction` | production_methods.gui |
 |  | 直达 | `Country.SetDefaultConstructionFleet` | `Country.SetDefaultConstructionFleet(MilitaryFormation.Self)` | right_click_menu.gui |
-|  | 直达 | `Country.SetExportSubventionsHigh` | `GetPlayer.SetExportSubventionsHigh(Goods.Self)` | budget_panel.gui |
-|  | 直达 | `Country.SetExportSubventionsLow` | `GetPlayer.SetExportSubventionsLow(Goods.Self)` | budget_panel.gui |
-|  | 直达 | `Country.SetExportSubventionsMax` | `GetPlayer.SetExportSubventionsMax(Goods.Self)` | budget_panel.gui |
-|  | 直达 | `Country.SetExportTariffsHigh` | `GetPlayer.SetExportTariffsHigh(Goods.Self)` | budget_panel.gui |
-|  | 直达 | `Country.SetExportTariffsLow` | `GetPlayer.SetExportTariffsLow(Goods.Self)` | budget_panel.gui |
-|  | 直达 | `Country.SetExportTariffsMax` | `GetPlayer.SetExportTariffsMax(Goods.Self)` | budget_panel.gui |
-|  | 直达 | `Country.SetExportTariffsNone` | `GetPlayer.SetExportTariffsNone(Goods.Self)` | budget_panel.gui |
-|  | 直达 | `Country.SetGovernmentWageLevelHigh` | `GetPlayer.SetGovernmentWageLevelHigh` | budget_panel.gui |
-|  | 直达 | `Country.SetGovernmentWageLevelLow` | `GetPlayer.SetGovernmentWageLevelLow` | budget_panel.gui |
-|  | 直达 | `Country.SetGovernmentWageLevelMedium` | `GetPlayer.SetGovernmentWageLevelMedium` | budget_panel.gui |
-|  | 直达 | `Country.SetGovernmentWageLevelVeryHigh` | `GetPlayer.SetGovernmentWageLevelVeryHigh` | budget_panel.gui |
-|  | 直达 | `Country.SetGovernmentWageLevelVeryLow` | `GetPlayer.SetGovernmentWageLevelVeryLow` | budget_panel.gui |
-|  | 直达 | `Country.SetImportSubventionsHigh` | `GetPlayer.SetImportSubventionsHigh(Goods.Self)` | budget_panel.gui |
-|  | 直达 | `Country.SetImportSubventionsLow` | `GetPlayer.SetImportSubventionsLow(Goods.Self)` | budget_panel.gui |
-|  | 直达 | `Country.SetImportSubventionsMax` | `GetPlayer.SetImportSubventionsMax(Goods.Self)` | budget_panel.gui |
-|  | 直达 | `Country.SetImportTariffsHigh` | `GetPlayer.SetImportTariffsHigh(Goods.Self)` | budget_panel.gui |
-|  | 直达 | `Country.SetImportTariffsLow` | `GetPlayer.SetImportTariffsLow(Goods.Self)` | budget_panel.gui |
-|  | 直达 | `Country.SetImportTariffsMax` | `GetPlayer.SetImportTariffsMax(Goods.Self)` | budget_panel.gui |
-|  | 直达 | `Country.SetImportTariffsNone` | `GetPlayer.SetImportTariffsNone(Goods.Self)` | budget_panel.gui |
-|  | 直达 | `Country.SetMilitaryWageLevelHigh` | `GetPlayer.SetMilitaryWageLevelHigh` | budget_panel.gui |
-|  | 直达 | `Country.SetMilitaryWageLevelLow` | `GetPlayer.SetMilitaryWageLevelLow` | budget_panel.gui |
-|  | 直达 | `Country.SetMilitaryWageLevelMedium` | `GetPlayer.SetMilitaryWageLevelMedium` | budget_panel.gui |
-|  | 直达 | `Country.SetMilitaryWageLevelVeryHigh` | `GetPlayer.SetMilitaryWageLevelVeryHigh` | budget_panel.gui |
-|  | 直达 | `Country.SetMilitaryWageLevelVeryLow` | `GetPlayer.SetMilitaryWageLevelVeryLow` | budget_panel.gui |
-|  | 直达 | `Country.SetSupplyShipConstructionLevelHigh` | `GetPlayer.SetSupplyShipConstructionLevelHigh` | construction_panel.gui |
-|  | 直达 | `Country.SetSupplyShipConstructionLevelLow` | `GetPlayer.SetSupplyShipConstructionLevelLow` | construction_panel.gui |
-|  | 直达 | `Country.SetSupplyShipConstructionLevelMedium` | `GetPlayer.SetSupplyShipConstructionLevelMedium` | construction_panel.gui |
-|  | 直达 | `Country.SetSupplyShipConstructionLevelVeryHigh` | `GetPlayer.SetSupplyShipConstructionLevelVeryHigh` | construction_panel.gui |
-|  | 直达 | `Country.SetSupplyShipConstructionLevelVeryLow` | `GetPlayer.SetSupplyShipConstructionLevelVeryLow` | construction_panel.gui |
 |  | 直达 | `Country.StartNegotiationWith` | `AccessPlayer.StartNegotiationWith(InterestGroup.Self)` | right_click_menu.gui |
 |  | 界面 | `Country.ToggleIgnoreCountryFormation` | `GetPlayer.ToggleIgnoreCountryFormation(CountryFormation.Self)` | country_formation_panel.gui, culture_panel.gui |
 |  | 界面 | `Country.ToggleIgnoreDecision` | `GetPlayer.ToggleIgnoreDecision(Decision.Self)` | journal.gui |
 
-## 经济（2 / 56）
+## 经济（17 / 56）
 
 | 状态 | 可达性 | 命令 | 例子 | 界面文件 |
 |---|---|---|---|---|
 | ✓ `Actions.build` | 直达 | `Building.QueueConstruction` | `Building.QueueConstruction` | build_urban_buildings_menu.gui, building_details_panel.gui … |
+| ✓ `Actions.command` | 直达 | `Goods.SetExportSubventionsHigh` | `Goods.GetMarket.GetOwner.SetExportSubventionsHigh(Goods.Self)` | budget_panel.gui |
+| ✓ `Actions.command` | 直达 | `Goods.SetExportSubventionsLow` | `Goods.GetMarket.GetOwner.SetExportSubventionsLow(Goods.Self)` | budget_panel.gui |
+| ✓ `Actions.command` | 直达 | `Goods.SetExportSubventionsMax` | `Goods.GetMarket.GetOwner.SetExportSubventionsMax(Goods.Self)` | budget_panel.gui |
+| ✓ `Actions.command` | 直达 | `Goods.SetExportTariffsHigh` | `Goods.GetMarket.GetOwner.SetExportTariffsHigh(Goods.Self)` | budget_panel.gui |
+| ✓ `Actions.command` | 直达 | `Goods.SetExportTariffsLow` | `Goods.GetMarket.GetOwner.SetExportTariffsLow(Goods.Self)` | budget_panel.gui |
+| ✓ `Actions.command` | 直达 | `Goods.SetExportTariffsMax` | `Goods.GetMarket.GetOwner.SetExportTariffsMax(Goods.Self)` | budget_panel.gui |
+| ✓ `Actions.command` | 直达 | `Goods.SetExportTariffsNone` | `Goods.GetMarket.GetOwner.SetExportTariffsNone(Goods.Self)` | budget_panel.gui |
+| ✓ `Actions.command` | 直达 | `Goods.SetImportSubventionsHigh` | `Goods.GetMarket.GetOwner.SetImportSubventionsHigh(Goods.Self)` | budget_panel.gui |
+| ✓ `Actions.command` | 直达 | `Goods.SetImportSubventionsLow` | `Goods.GetMarket.GetOwner.SetImportSubventionsLow(Goods.Self)` | budget_panel.gui |
+| ✓ `Actions.command` | 直达 | `Goods.SetImportSubventionsMax` | `Goods.GetMarket.GetOwner.SetImportSubventionsMax(Goods.Self)` | budget_panel.gui |
+| ✓ `Actions.command` | 直达 | `Goods.SetImportTariffsHigh` | `Goods.GetMarket.GetOwner.SetImportTariffsHigh(Goods.Self)` | budget_panel.gui |
+| ✓ `Actions.command` | 直达 | `Goods.SetImportTariffsLow` | `Goods.GetMarket.GetOwner.SetImportTariffsLow(Goods.Self)` | budget_panel.gui |
+| ✓ `Actions.command` | 直达 | `Goods.SetImportTariffsMax` | `Goods.GetMarket.GetOwner.SetImportTariffsMax(Goods.Self)` | budget_panel.gui |
+| ✓ `Actions.command` | 直达 | `Goods.SetImportTariffsNone` | `Goods.GetMarket.GetOwner.SetImportTariffsNone(Goods.Self)` | budget_panel.gui |
+| ✓ `Actions.toggle_consumption_tax` | 直达 | `Goods.ToggleTaxation` | `Goods.ToggleTaxation(GetPlayer)` | add_consumption_tax_menu.gui, goods_panel.gui … |
 | ✓ `Actions.set_pm` | 直达 | `ProductionMethod.GetSwitch` | `ProductionMethod.GetSwitch` | （程序生成的菜单） |
 |  | 直达 | `Building.CancelConstruction` | `Building.CancelConstruction` | building_details_panel.gui, goods_local_prices_panel.gui … |
 |  | 直达 | `Building.Downsize` | `Building.Downsize` | building_details_panel.gui, goods_state_panel.gui … |
@@ -101,21 +116,6 @@
 |  | 直达 | `Global.ChangeAllConstructionSpeed` | `ChangeAllConstructionSpeed(ProductionMethod.Self)` | budget_panel.gui |
 |  | 直达 | `Global.PauseAllConstruction` | `PauseAllConstruction` | budget_panel.gui |
 |  | 直达 | `Global.ResumeAllConstruction` | `ResumeAllConstruction` | budget_panel.gui |
-|  | 直达 | `Goods.SetExportSubventionsHigh` | `Goods.GetMarket.GetOwner.SetExportSubventionsHigh(Goods.Self)` | budget_panel.gui |
-|  | 直达 | `Goods.SetExportSubventionsLow` | `Goods.GetMarket.GetOwner.SetExportSubventionsLow(Goods.Self)` | budget_panel.gui |
-|  | 直达 | `Goods.SetExportSubventionsMax` | `Goods.GetMarket.GetOwner.SetExportSubventionsMax(Goods.Self)` | budget_panel.gui |
-|  | 直达 | `Goods.SetExportTariffsHigh` | `Goods.GetMarket.GetOwner.SetExportTariffsHigh(Goods.Self)` | budget_panel.gui |
-|  | 直达 | `Goods.SetExportTariffsLow` | `Goods.GetMarket.GetOwner.SetExportTariffsLow(Goods.Self)` | budget_panel.gui |
-|  | 直达 | `Goods.SetExportTariffsMax` | `Goods.GetMarket.GetOwner.SetExportTariffsMax(Goods.Self)` | budget_panel.gui |
-|  | 直达 | `Goods.SetExportTariffsNone` | `Goods.GetMarket.GetOwner.SetExportTariffsNone(Goods.Self)` | budget_panel.gui |
-|  | 直达 | `Goods.SetImportSubventionsHigh` | `Goods.GetMarket.GetOwner.SetImportSubventionsHigh(Goods.Self)` | budget_panel.gui |
-|  | 直达 | `Goods.SetImportSubventionsLow` | `Goods.GetMarket.GetOwner.SetImportSubventionsLow(Goods.Self)` | budget_panel.gui |
-|  | 直达 | `Goods.SetImportSubventionsMax` | `Goods.GetMarket.GetOwner.SetImportSubventionsMax(Goods.Self)` | budget_panel.gui |
-|  | 直达 | `Goods.SetImportTariffsHigh` | `Goods.GetMarket.GetOwner.SetImportTariffsHigh(Goods.Self)` | budget_panel.gui |
-|  | 直达 | `Goods.SetImportTariffsLow` | `Goods.GetMarket.GetOwner.SetImportTariffsLow(Goods.Self)` | budget_panel.gui |
-|  | 直达 | `Goods.SetImportTariffsMax` | `Goods.GetMarket.GetOwner.SetImportTariffsMax(Goods.Self)` | budget_panel.gui |
-|  | 直达 | `Goods.SetImportTariffsNone` | `Goods.GetMarket.GetOwner.SetImportTariffsNone(Goods.Self)` | budget_panel.gui |
-|  | 直达 | `Goods.ToggleTaxation` | `Goods.ToggleTaxation(GetPlayer)` | add_consumption_tax_menu.gui, goods_panel.gui … |
 |  | 直达 | `State.AbandonColony` | `State.AbandonColony` | states_panel.gui |
 |  | 直达 | `State.Colonize` | `State.GetStateRegion.Colonize` | right_click_menu.gui |
 |  | 直达 | `State.GetStationSelectedFormationsCommand` | `State.GetStationSelectedFormationsCommand` | right_click_menu.gui |
@@ -173,11 +173,11 @@
 |  | 直达 | `ScriptedButton.ExecuteEffect` | `ScriptedButton.ExecuteEffect` | journal_entry.gui |
 |  | 直达 | `ScriptedGui.je_meiji_restoration_japanese_emperor_sgui` | `ScriptedGui.je_meiji_restoration_japanese_emperor_sgui` | journal_entry_widgets/ep2_japan_widgets.gui |
 
-## 事件（0 / 1）
+## 事件（1 / 1）
 
 | 状态 | 可达性 | 命令 | 例子 | 界面文件 |
 |---|---|---|---|---|
-|  | 窗口 | `EventOption.Select` | `EventOption.Select` | eventwindow.gui |
+| ✓ `Actions.choose_event_option` | 窗口 | `EventOption.Select` | `EventOption.Select` | eventwindow.gui |
 
 ## 外交（0 / 37）
 

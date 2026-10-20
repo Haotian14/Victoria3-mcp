@@ -48,6 +48,21 @@ VERIFIED = {
     "Building.QueueConstruction": "Actions.build",
     "ProductionMethod.GetSwitch": "Actions.set_pm",
     "ReformGovernment.Confirm": "Actions.reform_government",
+    "Goods.ToggleTaxation": "Actions.toggle_consumption_tax",
+    "Country.CreateCompany": "Actions.company",
+    "Country.RemoveCompany": "Actions.company",
+    "EventOption.Select": "Actions.choose_event_option",
+    **{f"Country.{c}": "Actions.country_command" for c in (
+        "PauseConstruction", "ResumeConstruction", "PauseShipConstruction", "ResumeShipConstruction")},
+    **{f"Country.Set{k}{t}": via for k, via in (("GovernmentWageLevel", "Actions.set_wage"),
+                                                ("MilitaryWageLevel", "Actions.set_wage"),
+                                                ("SupplyShipConstructionLevel", "Actions.set_supply_ships"))
+       for t in ("VeryLow", "Low", "Medium", "High", "VeryHigh")},
+    # 关税 / 补贴：直接在玩家国家上（Country.*），以及预算面板按商品走到市场所有者的写法（Goods.*，经 Actions.command）
+    **{f"{r}.Set{side}{p}": via for r, via in (("Country", "Actions.set_trade_policy"), ("Goods", "Actions.command"))
+       for side in ("Import", "Export")
+       for p in ("TariffsNone", "TariffsLow", "TariffsHigh", "TariffsMax",
+                 "SubventionsLow", "SubventionsHigh", "SubventionsMax")},
 }
 
 # 接收对象 → (领域, 可达性)。可达性：
@@ -248,8 +263,9 @@ def render(rows: list[dict]) -> str:
         "按可达性（操作种类，已验证 / 总数）：" +
         "，".join(f"{k} {by_reach[k][1]} / {by_reach[k][0]}" for k in REACH_ORDER if k in by_reach) + "。",
         "",
-        "不在本表、但同样要打通的：事件选项（事件弹窗，现在由游戏默认选）、立即存档（目前用自动存档）、"
-        "暂停 / 调速（`TimeKeeper`，已验证，不经 Execute）。",
+        "不在本表、但同样要打通的：立即存档（目前用自动存档）、"
+        "暂停 / 调速（`TimeKeeper`，已验证，不经 Execute）。事件选项在「事件」一节（`EventOption.Select`）。"
+        "每条命令用的路径与核实方式见 docs/bridge.md「已验证的玩家动作」。",
         "",
     ]
     for domain in ORDER:

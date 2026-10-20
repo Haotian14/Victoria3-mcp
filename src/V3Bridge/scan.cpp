@@ -20,6 +20,7 @@ Module main_module() {
         Section s{m.base + sec->VirtualAddress, sec->Misc.VirtualSize};
         if (strcmp(name, ".text") == 0) m.text = s;
         else if (strcmp(name, ".rdata") == 0) m.rdata = s;
+        else if (strcmp(name, ".data") == 0) m.data = s;
     }
     return m;
 }
@@ -67,6 +68,22 @@ uint8_t* find_pattern(uint8_t* begin, size_t size, const char* pattern) {
             if (bytes[j] >= 0 && begin[i + j] != static_cast<uint8_t>(bytes[j])) break;
         }
         if (j == bytes.size()) return begin + i;
+    }
+    return nullptr;
+}
+
+uint8_t* find_vtable(const Module& m, const char* mangled, uint32_t offset) {
+    uint8_t* name = find_cstring(m.data, mangled);
+    if (!name) return nullptr;
+    uint32_t td = static_cast<uint32_t>(name - 0x10 - m.base);
+    // 完整对象定位器：{ 签名 1, 偏移, 构造偏移, 类型描述符 rva, 层次 rva, 自身 rva }
+    for (uint8_t* p = m.rdata.begin; p + 24 <= m.rdata.begin + m.rdata.size; p += 4) {
+        auto* col = reinterpret_cast<uint32_t*>(p);
+        if (col[3] != td || col[0] != 1 || col[1] != offset || col[5] != static_cast<uint32_t>(p - m.base)) continue;
+        uint64_t va = reinterpret_cast<uint64_t>(p);
+        for (uint8_t* q = m.rdata.begin; q + 16 <= m.rdata.begin + m.rdata.size; q += 8) {
+            if (*reinterpret_cast<uint64_t*>(q) == va) return q + 8;
+        }
     }
     return nullptr;
 }

@@ -1,4 +1,4 @@
-"""玩家动作：税率、研究、法律、改组政府、建造、生产方式。
+"""玩家动作：docs/actions.md 清单里的游戏命令。
 
 全部走界面按钮背后的同一条命令（Execute(...)），与玩家点击等价：法律要走推行流程、
 建造进建造队列、研究进研究槽，不直接改游戏状态。每个动作：
@@ -14,12 +14,46 @@ from dataclasses import dataclass
 from typing import Any, Callable
 
 from agent import gamedata
-from agent.bridge import PLAYER, Bridge, GameError, plain
+from agent.bridge import IGS, PLAYER, PLAYER_MUT, Bridge, GameError, plain
 from agent.observe import STATES, TAX_LEVELS, Snapshot, interest_groups
 
 PM_GROUPS = "Building.AccessProductionMethodGroups"
 PM_OPTIONS = "ProductionMethodGroup.AccessBuildingProductionMethods(Building.Self)"
 LAW_ALTERNATIVES = "Law.GetLawAlternatives"
+
+LEVELS = TAX_LEVELS
+LEVEL_NAMES = {"TaxLevel": "税率", "GovernmentWageLevel": "政府工资", "MilitaryWageLevel": "军队工资",
+               "SupplyShipConstructionLevel": "补给舰建造"}
+TRADE_POLICIES = ("TariffsNone", "TariffsLow", "TariffsHigh", "TariffsMax",
+                  "SubventionsLow", "SubventionsHigh", "SubventionsMax")
+# 国家命令 → 核实用的读数
+COUNTRY_COMMANDS = {
+    "MobilizeAllArmies": "IsMobilized", "DemobilizeAllArmies": "IsMobilized",
+    "PauseConstruction": "IsConstructionPaused", "ResumeConstruction": "IsConstructionPaused",
+    "PauseShipConstruction": "IsShipConstructionPaused", "ResumeShipConstruction": "IsShipConstructionPaused",
+    "DeclareBankruptcy": "InDefault", "LeavePowerBloc": "IsInPowerBloc",
+}
+COMPANY_TYPES = f"{PLAYER_MUT}.GetAvailableCompanies"
+COMPANIES = f"{PLAYER_MUT}.GetCompanies"
+
+# 事件：每个事件作为上下文求的字段（最后一项判断是不是玩家的事件）
+EVENT_FIELDS = ["Event.GetKey", "Event.GetTitle", "Event.GetNumRemainingDays",
+                "Event.GetTopScope.GetRootScope.GetCountry.IsLocalPlayer"]
+EVENT_OPTIONS = "EventWindow.GetOptions"
+OPTION_FIELDS = ["EventOption.GetText", "EventOption.IsEnabled", "EventOption.IsDefaultOption"]
+SIGNATURE_FIELDS = ["GetGoldReserves", "GetPrestige", "GetGovernmentLegitimacy", "GetLawBeingEnacted.GetLawType.GetKey"]
+_ANSWERED: dict[int, int] = {}      # 本进程已回答的事件 id → 选项
+
+
+def _event_window(event_id: int) -> str:
+    """伪造的事件窗口（EventWindow）：+0x88 指向事件句柄（+0x10 是事件 id），+0x110 是选项数组。
+    0 号缓冲区就是窗口，1 号是句柄。"""
+    return f"0:88:q=b1;0:110:a=0;1:10:i={event_id}"
+
+
+def _diff(a: dict[str, Any], b: dict[str, Any]) -> dict[str, Any]:
+    """a 里与 b 不同的项。"""
+    return {k: v for k, v in a.items() if b.get(k) != v}
 
 
 @dataclass
@@ -47,46 +81,164 @@ class Actions:
         except GameError:
             return ""
 
-    def _run(self, name: str, cmd: str, probe: Callable[[], Any], expect: Callable[[Any], bool],
+    def _probe(self, expr: str, path=None) -> str | None:
+        """读一个表达式；读不到（对象已不在列表里、函数在当前状态下求值失败）给 None。"""
+        try:
+            return plain(self.b.read(f"[{expr}]", path))
+        except GameError:
+            return None
+
+    def _run(self, name: str, cmd: str, probe: Callable[[], Any], expect: Callable[[Any], bool] | None,
              path=None, wait: float = 1.5) -> ActionResult:
+        """expect 为 None 时只要求前后读数不同（开关类命令没有固定的目标值）。"""
         before = probe()
-        if expect(before):
+        if expect is not None and expect(before):
             return ActionResult(True, name, "已是目标状态", before, before)
         if self.b.read(f"[IsValid({cmd})]", path) != "1":
             return ActionResult(False, name, f"不可执行：{self._why_not(cmd, path) or '游戏判定不可用'}", before, before)
         self.b.exec(f"Execute({cmd})", path)
+        done = expect or (lambda v: v != before)
         after = before
         t0 = time.time()
         while time.time() - t0 < wait:
             after = probe()
-            if expect(after):
+            if done(after):
                 return ActionResult(True, name, "", before, after)
             time.sleep(0.1)
         return ActionResult(False, name, "已执行但没看到生效", before, after)
 
-    # ------------------------------------------------------------ 税率
-    def set_tax(self, level: str) -> ActionResult:
-        """level 取 VeryLow / Low / Medium / High / VeryHigh。"""
-        if level not in TAX_LEVELS:
-            raise ValueError(f"税级只能取 {TAX_LEVELS}")
+    def command(self, cmd: str, probe: str | Callable[[], Any], path=None, target: str | None = None,
+                probe_path=None, name: str = "", wait: float = 1.5) -> ActionResult:
+        """按清单执行任意一条游戏命令（docs/actions.md 的「命令」列，接收对象换成实际路径）。
+        probe：执行前后各读一次的表达式（默认在 path 上求值，另给 probe_path 时在它上面求值）；
+        target 给定时要求读到它，否则只要求读数变化。
+        例：command("Building.ToggleSubsidies", "Building.IsSubsidized", path=建筑路径)。"""
+        if isinstance(probe, str):
+            expr, ppath = probe, path if probe_path is None else probe_path
+            probe = lambda: self._probe(expr, ppath)   # noqa: E731
+        expect = (lambda v: v == target) if target is not None else None
+        return self._run(name or cmd, cmd, probe, expect, path=path, wait=wait)
+
+    def _set_level(self, kind: str, level: str) -> ActionResult:
+        """预算面板上的五档：当前档位的按钮是唯一不可用的那个（界面也按这个显示选中）。"""
+        if level not in LEVELS:
+            raise ValueError(f"档位只能取 {LEVELS}")
 
         def probe():
-            vals = self.b.read_many([f"IsValid({PLAYER}.SetTaxLevel{t})" for t in TAX_LEVELS])
-            invalid = [t for t, v in zip(TAX_LEVELS, vals) if v == "0"]
+            vals = self.b.read_many([f"IsValid({PLAYER}.Set{kind}{t})" for t in LEVELS])
+            invalid = [t for t, v in zip(LEVELS, vals) if v == "0"]
             return invalid[0] if len(invalid) == 1 else None
 
-        cmd = f"{PLAYER}.SetTaxLevel{level}"
-        before = probe()
-        if before == level:
-            return ActionResult(True, f"税率 {level}", "已是目标状态", before, before)
-        self.b.exec(f"Execute({cmd})")
+        return self._run(f"{LEVEL_NAMES[kind]} {level}", f"{PLAYER}.Set{kind}{level}", probe, lambda v: v == level)
+
+    # ------------------------------------------------------------ 税率 / 工资 / 补给舰
+    def set_tax(self, level: str) -> ActionResult:
+        """level 取 VeryLow / Low / Medium / High / VeryHigh。"""
+        return self._set_level("TaxLevel", level)
+
+    def set_wage(self, which: str, level: str) -> ActionResult:
+        """which：Government（政府工资）/ Military（军队工资）。"""
+        if which not in ("Government", "Military"):
+            raise ValueError("which 取 Government / Military")
+        return self._set_level(f"{which}WageLevel", level)
+
+    def set_supply_ships(self, level: str) -> ActionResult:
+        return self._set_level("SupplyShipConstructionLevel", level)
+
+    # ------------------------------------------------------------ 关税与补贴、消费税
+    def set_trade_policy(self, goods: str, side: str, policy: str) -> ActionResult:
+        """side：Import / Export；policy：TariffsNone / TariffsLow / TariffsHigh / TariffsMax /
+        SubventionsLow / SubventionsHigh / SubventionsMax（同一商品同一方向只有一种）。"""
+        if side not in ("Import", "Export") or policy not in TRADE_POLICIES:
+            raise ValueError(f"side 取 Import / Export，policy 取 {TRADE_POLICIES}")
+        g = f"GetGoods('{goods}').Self"
+
+        def probe():
+            vals = self.b.read_many([f"{PLAYER}.Has{side}{p}({g})" for p in TRADE_POLICIES])
+            return next((p for p, v in zip(TRADE_POLICIES, vals) if v == "1"), None)
+
+        return self._run(f"{goods} {side} {policy}", f"{PLAYER}.Set{side}{policy}({g})", probe,
+                         lambda v: v == policy)
+
+    def toggle_consumption_tax(self, goods: str) -> ActionResult:
+        g = f"GetGoods('{goods}')"
+        return self.command(f"{g}.ToggleTaxation({PLAYER})", f"{g}.IsTaxed({PLAYER})", name=f"消费税开关 {goods}")
+
+    # ------------------------------------------------------------ 国家级命令
+    def country_command(self, cmd: str) -> ActionResult:
+        """不带参数的国家命令，见 COUNTRY_COMMANDS（动员 / 复员全部军队、暂停 / 恢复建造、宣布破产……）。"""
+        if cmd not in COUNTRY_COMMANDS:
+            raise ValueError(f"只支持 {list(COUNTRY_COMMANDS)}")
+        return self.command(f"{PLAYER}.{cmd}", f"{PLAYER}.{COUNTRY_COMMANDS[cmd]}", name=cmd)
+
+    # ------------------------------------------------------------ 公司
+    def company(self, key: str, create: bool = True) -> ActionResult:
+        """创建 / 解散公司（公司面板的「建立」/「解散」）。公司类型没有全局取法，按列表找：
+        创建在可建立的公司类型里找，解散在已有公司里找（上下文是 Company，类型取 Company.GetCompanyType）。"""
+        name = f"{'创建' if create else '解散'}公司 {key}"
+        lst, key_expr = (COMPANY_TYPES, "CompanyType.GetKey") if create else (COMPANIES, "Company.GetCompanyType.GetKey")
+        keys = [r[0] for r in self.b.rows(lst, [key_expr])]
+        if key not in keys:
+            return ActionResult(False, name, f"{'可建立' if create else '已有'}的公司里没有它：{keys}")
+        t = "CompanyType.Self" if create else "Company.GetCompanyType.Self"
+        cmd = f"{PLAYER}.{'CreateCompany' if create else 'RemoveCompany'}({t})"
+        return self.command(cmd, f"{PLAYER}.GetNumCompanies", path=[(lst, keys.index(key))], probe_path=[],
+                            name=name)
+
+    # ------------------------------------------------------------ 谈判
+    def negotiate(self, ig_index: int) -> ActionResult:
+        """与利益集团谈判（ig_index 是 IGS 列表下标）。"""
+        return self.command(f"{PLAYER_MUT}.StartNegotiationWith(InterestGroup.Self)", f"{PLAYER}.IsNegotiating",
+                            path=[(IGS, ig_index)], probe_path=[], name=f"与利益集团 {ig_index} 谈判")
+
+    # ------------------------------------------------------------ 事件
+    def events(self) -> list[dict[str, Any]]:
+        """玩家待处理的事件与可选项（与事件窗口里看到的一致：条件不满足的选项不列出）。
+        option 是事件窗口里的序号，choose_event_option 用它。"""
+        out = []
+        for eid, key, title, days, mine in self.b.events(EVENT_FIELDS):
+            if mine != "1" or int(eid) in _ANSWERED:
+                continue
+            opts = self.b.rows_fake(EVENT_OPTIONS, OPTION_FIELDS, _event_window(int(eid)))
+            out.append({"id": int(eid), "key": key, "title": plain(title), "days_left": int(days or 0),
+                        "options": [{"option": i, "text": plain(t), "enabled": e == "1", "default": d == "1"}
+                                    for i, (t, e, d) in enumerate(opts)]})
+        return out
+
+    def choose_event_option(self, event_id: int, option: int) -> ActionResult:
+        """事件窗口点第 option 个选项（EventOption.Select，界面上没有 Execute 包装）。
+        事件窗口从数据系统走不到，桥接层伪造窗口对象（+0x88 事件句柄、+0x110 选项数组），见 docs/bridge.md。
+        游戏不拒绝对同一事件的重复回答（暂停时事件要到下一天才移出），所以这里记下已答的事件。"""
+        name = f"事件 {event_id} 选第 {option} 项"
+        if event_id in _ANSWERED:
+            return ActionResult(False, name, f"这个事件已经选过第 {_ANSWERED[event_id]} 项")
+        ev = next((e for e in self.events() if e["id"] == event_id), None)
+        if ev is None:
+            return ActionResult(False, name, "玩家没有这个待处理事件")
+        if not 0 <= option < len(ev["options"]):
+            return ActionResult(False, name, f"只有 {len(ev['options'])} 个可选项")
+        if not ev["options"][option]["enabled"]:
+            return ActionResult(False, name, "这个选项不可用")
+        name = f"事件 {ev['key']}「{ev['title']}」选「{ev['options'][option]['text']}」"
+        before = self._signature()
+        self.b.exec_fake("EventOption.Select", _event_window(event_id), path=[(EVENT_OPTIONS, option)])
+        _ANSWERED[event_id] = option
         after = before
-        for _ in range(15):
-            after = probe()
-            if after == level:
-                return ActionResult(True, f"税率 {level}", "", before, after)
+        t0 = time.time()
+        while time.time() - t0 < 1.5:
+            after = self._signature()
+            if after != before:
+                return ActionResult(True, name, "", _diff(before, after), _diff(after, before))
             time.sleep(0.1)
-        return ActionResult(False, f"税率 {level}", "已执行但没看到生效", before, after)
+        return ActionResult(True, name, "已选；这个选项没有可读的即时变化（效果可能在之后结算）", before, after)
+
+    def _signature(self) -> dict[str, Any]:
+        """事件选项效果的粗略读数：定时修正、国库、威望、合法性、在推行的法律。"""
+        vals = self.b.read_many([f"{PLAYER}.{f}" for f in SIGNATURE_FIELDS])
+        sig: dict[str, Any] = dict(zip(SIGNATURE_FIELDS, (plain(v) if v else v for v in vals)))
+        sig["modifiers"] = sorted(plain(r[0]) for r in self.b.rows(f"{PLAYER_MUT}.GetTimedModifiers",
+                                                                   ["TimedModifier.GetName"]))
+        return sig
 
     # ------------------------------------------------------------ 研究
     def research(self, tech: str) -> ActionResult:
