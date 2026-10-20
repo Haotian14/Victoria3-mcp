@@ -1,7 +1,10 @@
 """生产方式：已建成的建筑按「增加值 − 工资」挑每组最赚钱的已解锁方式。
 
-- 只在差距明显时换：目标方式利润领先 SWITCH_MARGIN 以内的都算「可接受」，现行方式在其中就不动，
-  避免价格小幅波动时来回切（切换期间建筑会有一段适应期）；
+- 只在差距明显时换：目标方式利润领先 SWITCH_MARGIN 以内的都算「可接受」，现行方式在其中就不动；
+  换过的建筑 runner 冷却 24 个月。普鲁士自测里 10% 的门槛不够：纺织厂在两种方式间来回切了 34 次 ——
+  自己一产出，那种商品就跌价，「最优」又翻回去，每次切换还有一段适应期的减产；
+- 产出不是商品的方式组不碰（建造部门、行政机构）：模型只看得到投入成本、看不到建造点数，
+  会把铁框架降回木制（普鲁士自测建造力因此从 45 掉到 24）；
 - 投入在本国市场上没人卖（卖单为 0）的方式不选，否则一换就短缺；
 - 每月最多处理 MAX_PER_MONTH 个建筑（按等级从大到小轮流），读列表很费往返。
 """
@@ -14,7 +17,7 @@ from agent.strategy import economy
 from agent.strategy.config import Decision, cfg
 from agent.strategy.construction import _prices, _wage_rates
 
-SWITCH_MARGIN = 0.10
+SWITCH_MARGIN = 0.25
 MAX_PER_MONTH = 12
 
 
@@ -24,7 +27,7 @@ def candidates(gd: GameData, snap: Snapshot, researched: set[str], offset: int =
     wages, wage_all = _wage_rates(snap)
     mix = cfg()["construction"]["wage_mix"]
     no_supply = {g for g, p in snap.prices.items() if not p.get("sell")}
-    skip = set(cfg()["skip_buildings"]) - {"building_construction_sector"}
+    skip = set(cfg()["skip_buildings"])
 
     owned = [(s, key, row) for s in snap.states for key, row in s.buildings.items()
              if row.levels > 0 and key in gd.buildings and key not in skip and "subsistence" not in key]
@@ -41,7 +44,7 @@ def candidates(gd: GameData, snap: Snapshot, researched: set[str], offset: int =
             options = [pm for pm in (gd.pmgs.get(pmg) or {}).get("pms", [])
                        if economy.pm_unlocked(gd, pm, researched, laws)
                        and not (set(gd.pms[pm]["inputs"]) & no_supply)]
-            if len(options) < 2:
+            if len(options) < 2 or any(not gd.pms[pm]["outputs"] for pm in options):
                 continue
             ranked = sorted(options, key=lambda pm: economy.pm_profit(gd, pm, prices, wage), reverse=True)
             best = economy.pm_profit(gd, ranked[0], prices, wage)

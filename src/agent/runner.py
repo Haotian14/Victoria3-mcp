@@ -23,6 +23,7 @@ ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 LOG_DIR = os.path.join(ROOT, "logs")
 
 LAW_RETRY_MONTHS = 12
+PM_COOLDOWN_MONTHS = 24     # 建筑换过生产方式后这么久不再换（适应期减产 + 防止来回切）
 
 METRICS = ("gdp", "money", "balance", "income", "expenses", "construction", "construction_used",
            "sol", "literacy", "population", "prestige")
@@ -117,10 +118,14 @@ def execute(b: Bridge, plan: planner.Plan, snap: observe.Snapshot, mem: Memory,
         built += run(d).ok
     for d in plan.pm:
         key = f"{d.args['state']}:{d.args['building']}:{d.args['pm']}"
-        if mem.blocked.get(key, -1) > month:
+        cool = f"pm:{d.args['state']}:{d.args['building']}"
+        if mem.blocked.get(key, -1) > month or mem.blocked.get(cool, -1) > month:
             continue
-        if not run(d).ok:
+        r = run(d)
+        if not r.ok:
             mem.blocked[key] = month + LAW_RETRY_MONTHS   # 换不了（不可用 / 没有这个方式）：一年内不再试
+        elif r.before != r.after:
+            mem.blocked[cool] = month + PM_COOLDOWN_MONTHS
     mem.pm_offset += len(plan.pm) or 1
     return results
 
