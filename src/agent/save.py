@@ -13,6 +13,7 @@
 from __future__ import annotations
 
 import io
+import re
 import zipfile
 from dataclasses import dataclass
 from typing import Any
@@ -72,6 +73,18 @@ def _is_binary(b: bytes) -> bool:
     # 文本存档开头是 `meta_data={` / `date=` 之类的 ASCII；二进制满是 0x00 与控制字节
     ctrl = sum(1 for c in head if c < 9 or 13 < c < 32)
     return ctrl > len(head) // 20
+
+
+def peek_meta(path: str, size: int = 8192) -> dict[str, Any]:
+    """只读文件头的 meta_data（日期、国家名），不解析整个存档。文本存档的 meta_data 在最前面。"""
+    with open(path, "rb") as f:
+        head = f.read(size).decode("utf-8", errors="replace")
+    out: dict[str, Any] = {}
+    for key in ("game_date", "name", "version", "rank"):
+        m = re.search(rf'^\s*{key}="?([^"\n]+)"?', head, re.M)
+        if m:
+            out[key] = m.group(1)
+    return out
 
 
 def load(path: str) -> dict[str, Any]:

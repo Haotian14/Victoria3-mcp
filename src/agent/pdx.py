@@ -68,6 +68,11 @@ def _block(tokens: list[tuple[str, str]], i: int, top: bool = False) -> tuple[li
         if kind == "lb":
             # 匿名块：存档里的 `{ { ... } { ... } }` 数组
             sub, i = _block(tokens, i + 1)
+            if i < n and tokens[i][0] == "op":
+                # 以块为键的映射（存档的移民目标：`{ culture=49 religion=x } = { num_to_migrate=432 }`）
+                value, i = _value(tokens, i + 1)
+                out.append((None, None, {"_type": "_pair", "_values": [(None, None, sub), (None, None, value)]}))
+                continue
             out.append((None, None, sub))
             continue
         if kind == "op":

@@ -55,3 +55,12 @@ def test_stray_closing_brace_tolerated():
 
 def test_quoted_escape():
     assert obj(r'a = "say \"hi\""') == {"a": 'say "hi"'}
+
+
+def test_block_as_key():
+    # 存档的移民目标以块为键
+    obj = pdx.to_obj(pdx.parse("m={ { culture=49 type=migration } = { num=432 } }"))
+    pair = obj["m"][0]
+    assert pair["_type"] == "_pair"
+    key, value = pair["_values"]
+    assert key == {"culture": 49, "type": "migration"} and value == {"num": 432}
