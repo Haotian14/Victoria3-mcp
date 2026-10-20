@@ -1,0 +1,1845 @@
+{
+ "buildings": {
+  "building_angkor_wat": {
+   "buildable": false,
+   "construction": 2500,
+   "expandable": false,
+   "group": "bg_monuments",
+   "name": {
+    "en": "Angkor Wat",
+    "zh": "吴哥窟"
+   },
+   "pmgs": [
+    "pmg_base_building_angkor_wat"
+   ],
+   "techs": []
+  },
+  "building_argebam": {
+   "buildable": false,
+   "construction": null,
+   "expandable": false,
+   "group": "bg_monuments_hidden",
+   "name": {
+    "en": "#This is a dummy building that serve no gameplay mechanical purpose but still need to be reacted to by city hub graphics. It (and this text) should never show up in the UI#!",
+    "zh": "#This is a dummy building that serve no gameplay mechanical purpose but still need to be reacted to by city hub graphics. It (and this text) should never show up in the UI#!"
+   },
+   "pmgs": [
+    "pmg_dummy"
+   ],
+   "techs": []
+  },
+  "building_arms_industry": {
+   "buildable": true,
+   "construction": 600,
+   "expandable": true,
+   "group": "bg_military_industry",
+   "name": {
+    "en": "Arms Industries",
+    "zh": "武器厂"
+   },
+   "pmgs": [
+    "pmg_firearms_manufacturing",
+    "pmg_automation_building_arms_industry"
+   ],
+   "techs": [
+    "gunsmithing"
+   ]
+  },
+  "building_army_logistics_center": {
+   "buildable": false,
+   "construction": null,
+   "expandable": false,
+   "group": "bg_army_logistics_center",
+   "name": {
+    "en": "Army Logistics Center",
+    "zh": "陆军后勤中心"
+   },
+   "pmgs": [
+    "pmg_army_logistics_center"
+   ],
+   "techs": []
+  },
+  "building_art_academy": {
+   "buildable": true,
+   "construction": 400,
+   "expandable": true,
+   "group": "bg_arts",
+   "name": {
+    "en": "Arts Academy",
+    "zh": "艺术学院"
+   },
+   "pmgs": [
+    "pmg_base_building_art_academy",
+    "pmg_ownership_building_art_academy",
+    "pmg_principle_freedom_of_movement_3"
+   ],
+   "techs": [
+    "romanticism"
+   ]
+  },
+  "building_artillery_foundry": {
+   "buildable": true,
+   "construction": 600,
+   "expandable": true,
+   "group": "bg_military_industry",
+   "name": {
+    "en": "Artillery Foundry",
+    "zh": "火炮铸造厂"
+   },
+   "pmgs": [
+    "pmg_foundries",
+    "pmg_automation_building_arms_industry"
+   ],
+   "techs": [
+    "gunsmithing"
+   ]
+  },
+  "building_automotive_industry": {
+   "buildable": true,
+   "construction": 800,
+   "expandable": true,
+   "group": "bg_heavy_industry",
+   "name": {
+    "en": "Automotive Industries",
+    "zh": "汽车厂"
+   },
+   "pmgs": [
+    "pmg_automobile_production",
+    "pmg_aeroplanes",
+    "pmg_tanks",
+    "pmg_automation_building_automotive_industry"
+   ],
+   "techs": [
+    "combustion_engine"
+   ]
+  },
+  "building_banana_plantation": {
+   "buildable": true,
+   "construction": 200,
+   "expandable": true,
+   "group": "bg_plantations",
+   "name": {
+    "en": "Banana Plantations",
+    "zh": "香蕉种植园"
+   },
+   "pmgs": [
+    "pmg_base_building_banana_plantation",
+    "pmg_banana_exploitation",
+    "pmg_train_automation_building_banana_plantation"
+   ],
+   "techs": [
+    "enclosure"
+   ]
+  },
+  "building_barrack": {
+   "buildable": true,
+   "construction": 100,
+   "expandable": true,
+   "group": "bg_army",
+   "name": {
+    "en": "Barracks",
+    "zh": "兵营"
+   },
+   "pmgs": [
+    "pmg_training"
+   ],
+   "techs": [
+    "standing_army"
+   ]
+  },
+  "building_big_ben": {
+   "buildable": true,
+   "construction": 2500,
+   "expandable": false,
+   "group": "bg_monuments",
+   "name": {
+    "en": "Big Ben",
+    "zh": "大本钟"
+   },
+   "pmgs": [
+    "pmg_base_building_big_ben"
+   ],
+   "techs": []
+  },
+  "building_capitol_hill": {
+   "buildable": false,
+   "construction": null,
+   "expandable": false,
+   "group": "bg_monuments_hidden",
+   "name": {
+    "en": "#This is a dummy building that serve no gameplay mechanical purpose but still need to be reacted to by city hub graphics. It (and this text) should never show up in the UI#!",
+    "zh": "#This is a dummy building that serve no gameplay mechanical purpose but still need to be reacted to by city hub graphics. It (and this text) should never show up in the UI#!"
+   },
+   "pmgs": [
+    "pmg_dummy"
+   ],
+   "techs": []
+  },
+  "building_central_park": {
+   "buildable": false,
+   "construction": null,
+   "expandable": false,
+   "group": "bg_monuments_hidden",
+   "name": {
+    "en": "#This is a dummy building that serve no gameplay mechanical purpose but still need to be reacted to by city hub graphics. It (and this text) should never show up in the UI#!",
+    "zh": "#This is a dummy building that serve no gameplay mechanical purpose but still need to be reacted to by city hub graphics. It (and this text) should never show up in the UI#!"
+   },
+   "pmgs": [
+    "pmg_dummy"
+   ],
+   "techs": []
+  },
+  "building_chemical_plant": {
+   "buildable": true,
+   "construction": 800,
+   "expandable": true,
+   "group": "bg_heavy_industry",
+   "name": {
+    "en": "Fertilizer Plants",
+    "zh": "肥料厂"
+   },
+   "pmgs": [
+    "pmg_fertilizer_production"
+   ],
+   "techs": [
+    "intensive_agriculture"
+   ]
+  },
+  "building_chichen_itza": {
+   "buildable": false,
+   "construction": null,
+   "expandable": false,
+   "group": "bg_monuments_hidden",
+   "name": {
+    "en": "#This is a dummy building that serve no gameplay mechanical purpose but still need to be reacted to by city hub graphics. It (and this text) should never show up in the UI#!",
+    "zh": "#This is a dummy building that serve no gameplay mechanical purpose but still need to be reacted to by city hub graphics. It (and this text) should never show up in the UI#!"
+   },
+   "pmgs": [
+    "pmg_dummy"
+   ],
+   "techs": []
+  },
+  "building_coal_mine": {
+   "buildable": true,
+   "construction": 400,
+   "expandable": true,
+   "group": "bg_mining",
+   "name": {
+    "en": "Coal Mines",
+    "zh": "煤矿"
+   },
+   "pmgs": [
+    "pmg_mining_equipment_building_coal_mine",
+    "pmg_explosives_building_coal_mine",
+    "pmg_steam_automation_building_coal_mine",
+    "pmg_train_automation_building_coal_mine"
+   ],
+   "techs": [
+    "shaft_mining"
+   ]
+  },
+  "building_coffee_plantation": {
+   "buildable": true,
+   "construction": 200,
+   "expandable": true,
+   "group": "bg_plantations",
+   "name": {
+    "en": "Coffee Plantations",
+    "zh": "咖啡种植园"
+   },
+   "pmgs": [
+    "pmg_base_building_coffee_plantation",
+    "pmg_drying_coffee_plantation",
+    "pmg_coffee_exploitation",
+    "pmg_train_automation_building_coffee_plantation"
+   ],
+   "techs": [
+    "enclosure"
+   ]
+  },
+  "building_company_headquarter": {
+   "buildable": false,
+   "construction": null,
+   "expandable": false,
+   "group": "bg_company_headquarter",
+   "name": {
+    "en": "Company Headquarter",
+    "zh": "公司总部"
+   },
+   "pmgs": [
+    "pmg_ownership_building_company_headquarter"
+   ],
+   "techs": []
+  },
+  "building_company_regional_headquarter": {
+   "buildable": false,
+   "construction": null,
+   "expandable": false,
+   "group": "bg_company_regional_headquarter",
+   "name": {
+    "en": "Regional Company Headquarter",
+    "zh": "区域公司总部"
+   },
+   "pmgs": [
+    "pmg_ownership_building_company_headquarter"
+   ],
+   "techs": []
+  },
+  "building_conscription_center": {
+   "buildable": false,
+   "construction": null,
+   "expandable": false,
+   "group": "bg_conscription",
+   "name": {
+    "en": "Conscription Center",
+    "zh": "征兵中心"
+   },
+   "pmgs": [
+    "pmg_training_conscription"
+   ],
+   "techs": []
+  },
+  "building_construction_sector": {
+   "buildable": true,
+   "construction": 25,
+   "expandable": true,
+   "group": "bg_construction",
+   "name": {
+    "en": "Construction Sector",
+    "zh": "建造部门"
+   },
+   "pmgs": [
+    "pmg_base_building_construction_sector"
+   ],
+   "techs": [
+    "urbanization"
+   ]
+  },
+  "building_cotton_plantation": {
+   "buildable": true,
+   "construction": 200,
+   "expandable": true,
+   "group": "bg_plantations",
+   "name": {
+    "en": "Cotton Plantations",
+    "zh": "棉花种植园"
+   },
+   "pmgs": [
+    "pmg_base_building_cotton_plantation",
+    "pmg_cotton_exploitation",
+    "pmg_train_automation_building_cotton_plantation"
+   ],
+   "techs": [
+    "enclosure"
+   ]
+  },
+  "building_cristo_redentor": {
+   "buildable": true,
+   "construction": 2500,
+   "expandable": false,
+   "group": "bg_monuments",
+   "name": {
+    "en": "Cristo Redentor",
+    "zh": "救世基督像"
+   },
+   "pmgs": [
+    "pmg_base_building_cristo_redentor"
+   ],
+   "techs": [
+    "pneumatic_tools"
+   ]
+  },
+  "building_dye_plantation": {
+   "buildable": true,
+   "construction": 200,
+   "expandable": true,
+   "group": "bg_plantations",
+   "name": {
+    "en": "Dye Plantations",
+    "zh": "染料作物种植园"
+   },
+   "pmgs": [
+    "pmg_base_building_dye_plantation",
+    "pmg_dye_exploitation",
+    "pmg_train_automation_building_dye_plantation"
+   ],
+   "techs": [
+    "enclosure"
+   ]
+  },
+  "building_easter_island_heads": {
+   "buildable": false,
+   "construction": null,
+   "expandable": false,
+   "group": "bg_monuments_hidden",
+   "name": {
+    "en": "#This is a dummy building that serve no gameplay mechanical purpose but still need to be reacted to by city hub graphics. It (and this text) should never show up in the UI#!",
+    "zh": "#This is a dummy building that serve no gameplay mechanical purpose but still need to be reacted to by city hub graphics. It (and this text) should never show up in the UI#!"
+   },
+   "pmgs": [
+    "pmg_dummy"
+   ],
+   "techs": []
+  },
+  "building_eiffel_tower": {
+   "buildable": true,
+   "construction": 2500,
+   "expandable": false,
+   "group": "bg_monuments",
+   "name": {
+    "en": "The Eiffel Tower",
+    "zh": "埃菲尔铁塔"
+   },
+   "pmgs": [
+    "pmg_base_building_eiffel_tower"
+   ],
+   "techs": [
+    "steel_frame_buildings"
+   ]
+  },
+  "building_electrics_industry": {
+   "buildable": true,
+   "construction": 800,
+   "expandable": true,
+   "group": "bg_heavy_industry",
+   "name": {
+    "en": "Electrics Industries",
+    "zh": "电子厂"
+   },
+   "pmgs": [
+    "pmg_telephones_category",
+    "pmg_radios_category"
+   ],
+   "techs": [
+    "telephone"
+   ]
+  },
+  "building_estacion_de_madrid_atocha": {
+   "buildable": true,
+   "construction": 2500,
+   "expandable": false,
+   "group": "bg_monuments",
+   "name": {
+    "en": "Atocha Railway Station",
+    "zh": "阿托查火车站"
+   },
+   "pmgs": [
+    "pmg_base_building_estacion_de_madrid_atocha"
+   ],
+   "techs": [
+    "steel_frame_buildings"
+   ]
+  },
+  "building_explosives_factory": {
+   "buildable": true,
+   "construction": 800,
+   "expandable": true,
+   "group": "bg_heavy_industry",
+   "name": {
+    "en": "Explosives Factory",
+    "zh": "炸药厂"
+   },
+   "pmgs": [
+    "pmg_explosives_building_chemical_plant"
+   ],
+   "techs": [
+    "intensive_agriculture"
+   ]
+  },
+  "building_eye_of_sahara": {
+   "buildable": false,
+   "construction": null,
+   "expandable": false,
+   "group": "bg_monuments_hidden",
+   "name": {
+    "en": "#This is a dummy building that serve no gameplay mechanical purpose but still need to be reacted to by city hub graphics. It (and this text) should never show up in the UI#!",
+    "zh": "#This is a dummy building that serve no gameplay mechanical purpose but still need to be reacted to by city hub graphics. It (and this text) should never show up in the UI#!"
+   },
+   "pmgs": [
+    "pmg_dummy"
+   ],
+   "techs": []
+  },
+  "building_financial_district": {
+   "buildable": false,
+   "construction": null,
+   "expandable": false,
+   "group": "bg_financial_districts",
+   "name": {
+    "en": "Financial Districts",
+    "zh": "金融区"
+   },
+   "pmgs": [
+    "pmg_ownership_building_financial_district"
+   ],
+   "techs": []
+  },
+  "building_fishing_wharf": {
+   "buildable": true,
+   "construction": 200,
+   "expandable": true,
+   "group": "bg_fishing",
+   "name": {
+    "en": "Fishing Wharves",
+    "zh": "渔业码头"
+   },
+   "pmgs": [
+    "pmg_base_building_fishing_wharf",
+    "pmg_refrigeration_building_fishing_wharf"
+   ],
+   "techs": []
+  },
+  "building_food_industry": {
+   "buildable": true,
+   "construction": 600,
+   "expandable": true,
+   "group": "bg_light_industry",
+   "name": {
+    "en": "Food Industries",
+    "zh": "食品厂"
+   },
+   "pmgs": [
+    "pmg_base_building_food_industry",
+    "pmg_canning",
+    "pmg_distillery",
+    "pmg_automation_building_food_industry"
+   ],
+   "techs": [
+    "manufacturies"
+   ]
+  },
+  "building_forbidden_city": {
+   "buildable": false,
+   "construction": 2500,
+   "expandable": false,
+   "group": "bg_monuments",
+   "name": {
+    "en": "Forbidden City",
+    "zh": "紫禁城"
+   },
+   "pmgs": [
+    "pmg_base_building_forbidden_city"
+   ],
+   "techs": []
+  },
+  "building_furniture_manufactory": {
+   "buildable": true,
+   "construction": 600,
+   "expandable": true,
+   "group": "bg_light_industry",
+   "name": {
+    "en": "Furniture Manufacturies",
+    "zh": "家具制造厂"
+   },
+   "pmgs": [
+    "pmg_base_building_furniture_manufactory",
+    "pmg_luxury_building_furniture_manufactory",
+    "pmg_automation_building_furniture_manufactory"
+   ],
+   "techs": [
+    "manufacturies"
+   ]
+  },
+  "building_giza_necropolis": {
+   "buildable": false,
+   "construction": null,
+   "expandable": false,
+   "group": "bg_monuments_hidden",
+   "name": {
+    "en": "#This is a dummy building that serve no gameplay mechanical purpose but still need to be reacted to by city hub graphics. It (and this text) should never show up in the UI#!",
+    "zh": "#This is a dummy building that serve no gameplay mechanical purpose but still need to be reacted to by city hub graphics. It (and this text) should never show up in the UI#!"
+   },
+   "pmgs": [
+    "pmg_dummy"
+   ],
+   "techs": []
+  },
+  "building_glassworks": {
+   "buildable": true,
+   "construction": 600,
+   "expandable": true,
+   "group": "bg_light_industry",
+   "name": {
+    "en": "Glassworks",
+    "zh": "玻璃厂"
+   },
+   "pmgs": [
+    "pmg_base_building_glassworks",
+    "pmg_luxury_building_glassworks",
+    "pmg_glassblowing"
+   ],
+   "techs": [
+    "manufacturies"
+   ]
+  },
+  "building_gold_field": {
+   "buildable": false,
+   "construction": null,
+   "expandable": false,
+   "group": "bg_gold_fields",
+   "name": {
+    "en": "Gold Fields",
+    "zh": "金矿场"
+   },
+   "pmgs": [
+    "pmg_base_building_gold_field"
+   ],
+   "techs": [
+    "prospecting"
+   ]
+  },
+  "building_gold_mine": {
+   "buildable": true,
+   "construction": 400,
+   "expandable": true,
+   "group": "bg_mining",
+   "name": {
+    "en": "Gold Mines",
+    "zh": "金矿"
+   },
+   "pmgs": [
+    "pmg_mining_equipment_building_gold_mine",
+    "pmg_explosives_building_gold_mine",
+    "pmg_steam_automation_building_gold_mine",
+    "pmg_train_automation_building_gold_mine"
+   ],
+   "techs": [
+    "prospecting"
+   ]
+  },
+  "building_government_administration": {
+   "buildable": true,
+   "construction": 100,
+   "expandable": true,
+   "group": "bg_bureaucracy",
+   "name": {
+    "en": "Government Administration",
+    "zh": "政府行政机构"
+   },
+   "pmgs": [
+    "pmg_base_building_government_administration",
+    "pmg_government_administration_bureaucrat_professionalism",
+    "pmg_government_administration_religious_administration"
+   ],
+   "techs": [
+    "tech_bureaucracy"
+   ]
+  },
+  "building_gran_teatro_de_la_habana": {
+   "buildable": true,
+   "construction": 2500,
+   "expandable": false,
+   "group": "bg_monuments",
+   "name": {
+    "en": "Grand Theater of Havana",
+    "zh": "哈瓦那大剧院"
+   },
+   "pmgs": [
+    "pmg_base_building_gran_teatro_de_la_habana"
+   ],
+   "techs": [
+    "pneumatic_tools"
+   ]
+  },
+  "building_hagia_sophia": {
+   "buildable": false,
+   "construction": 2500,
+   "expandable": false,
+   "group": "bg_monuments",
+   "name": {
+    "en": "Hagia Sophia",
+    "zh": "圣索菲亚"
+   },
+   "pmgs": [
+    "pmg_base_building_hagia_sophia"
+   ],
+   "techs": []
+  },
+  "building_halloween_castledracula": {
+   "buildable": false,
+   "construction": null,
+   "expandable": false,
+   "group": "bg_monuments_hidden",
+   "name": {
+    "en": "Castle Dracula",
+    "zh": "德古拉城堡"
+   },
+   "pmgs": [
+    "pmg_dummy"
+   ],
+   "techs": []
+  },
+  "building_iron_mine": {
+   "buildable": true,
+   "construction": 400,
+   "expandable": true,
+   "group": "bg_mining",
+   "name": {
+    "en": "Iron Mines",
+    "zh": "铁矿"
+   },
+   "pmgs": [
+    "pmg_mining_equipment_building_iron_mine",
+    "pmg_explosives_building_iron_mine",
+    "pmg_steam_automation_building_iron_mine",
+    "pmg_train_automation_building_iron_mine"
+   ],
+   "techs": [
+    "shaft_mining"
+   ]
+  },
+  "building_kaiserforum_1": {
+   "buildable": true,
+   "construction": 2500,
+   "expandable": false,
+   "group": "bg_monuments",
+   "name": {
+    "en": "Kaiserforum",
+    "zh": "皇帝广场"
+   },
+   "pmgs": [
+    "pmg_base_building_kaiserforum_1"
+   ],
+   "techs": [
+    "reinforced_concrete"
+   ]
+  },
+  "building_kaiserforum_2": {
+   "buildable": true,
+   "construction": 2500,
+   "expandable": false,
+   "group": "bg_monuments",
+   "name": {
+    "en": "Kaiserforum",
+    "zh": "皇帝广场"
+   },
+   "pmgs": [
+    "pmg_base_building_kaiserforum_2"
+   ],
+   "techs": []
+  },
+  "building_kaiserforum_3": {
+   "buildable": true,
+   "construction": 2500,
+   "expandable": false,
+   "group": "bg_monuments",
+   "name": {
+    "en": "Kaiserforum",
+    "zh": "皇帝广场"
+   },
+   "pmgs": [
+    "pmg_base_building_kaiserforum_3"
+   ],
+   "techs": []
+  },
+  "building_kaiserforum_4": {
+   "buildable": true,
+   "construction": 2500,
+   "expandable": false,
+   "group": "bg_monuments",
+   "name": {
+    "en": "Kaiserforum",
+    "zh": "皇帝广场"
+   },
+   "pmgs": [
+    "pmg_base_building_kaiserforum_4"
+   ],
+   "techs": []
+  },
+  "building_khaju_bridge": {
+   "buildable": false,
+   "construction": null,
+   "expandable": false,
+   "group": "bg_monuments_hidden",
+   "name": {
+    "en": "#This is a dummy building that serve no gameplay mechanical purpose but still need to be reacted to by city hub graphics. It (and this text) should never show up in the UI#!",
+    "zh": "#This is a dummy building that serve no gameplay mechanical purpose but still need to be reacted to by city hub graphics. It (and this text) should never show up in the UI#!"
+   },
+   "pmgs": [
+    "pmg_dummy"
+   ],
+   "techs": []
+  },
+  "building_kiel_canal": {
+   "buildable": true,
+   "construction": 5000,
+   "expandable": false,
+   "group": "bg_canals",
+   "name": {
+    "en": "Kiel Canal",
+    "zh": "基尔运河"
+   },
+   "pmgs": [
+    "pmg_canal"
+   ],
+   "techs": [
+    "ironclad_tech"
+   ]
+  },
+  "building_lead_mine": {
+   "buildable": true,
+   "construction": 400,
+   "expandable": true,
+   "group": "bg_mining",
+   "name": {
+    "en": "Lead Mines",
+    "zh": "铅矿"
+   },
+   "pmgs": [
+    "pmg_mining_equipment_building_lead_mine",
+    "pmg_explosives_building_lead_mine",
+    "pmg_steam_automation_building_lead_mine",
+    "pmg_train_automation_building_lead_mine"
+   ],
+   "techs": [
+    "shaft_mining"
+   ]
+  },
+  "building_livestock_ranch": {
+   "buildable": true,
+   "construction": 200,
+   "expandable": true,
+   "group": "bg_ranching",
+   "name": {
+    "en": "Livestock Ranches",
+    "zh": "畜牧场"
+   },
+   "pmgs": [
+    "pmg_base_building_livestock_ranch",
+    "pmg_sheep_ranch",
+    "pmg_fencing",
+    "pmg_refrigeration_building_livestock_ranch"
+   ],
+   "techs": [
+    "enclosure"
+   ]
+  },
+  "building_logging_camp": {
+   "buildable": true,
+   "construction": 200,
+   "expandable": true,
+   "group": "bg_logging",
+   "name": {
+    "en": "Logging Camps",
+    "zh": "伐木营地"
+   },
+   "pmgs": [
+    "pmg_base_building_logging_camp",
+    "pmg_hardwood",
+    "pmg_equipment",
+    "pmg_transportation_building_logging_camp"
+   ],
+   "techs": []
+  },
+  "building_machu_picchu": {
+   "buildable": false,
+   "construction": null,
+   "expandable": false,
+   "group": "bg_monuments_hidden",
+   "name": {
+    "en": "#This is a dummy building that serve no gameplay mechanical purpose but still need to be reacted to by city hub graphics. It (and this text) should never show up in the UI#!",
+    "zh": "#This is a dummy building that serve no gameplay mechanical purpose but still need to be reacted to by city hub graphics. It (and this text) should never show up in the UI#!"
+   },
+   "pmgs": [
+    "pmg_dummy"
+   ],
+   "techs": []
+  },
+  "building_maize_farm": {
+   "buildable": true,
+   "construction": 200,
+   "expandable": true,
+   "group": "bg_staple_crops",
+   "name": {
+    "en": "Maize Farms",
+    "zh": "玉米农场"
+   },
+   "pmgs": [
+    "pmg_base_building_maize_farm",
+    "pmg_secondary_building_maize_farm",
+    "pmg_harvesting_process_building_maize_farm"
+   ],
+   "techs": [
+    "enclosure"
+   ]
+  },
+  "building_manila_cathedral_monument": {
+   "buildable": true,
+   "construction": 2500,
+   "expandable": false,
+   "group": "bg_monuments",
+   "name": {
+    "en": "Manila Cathedral",
+    "zh": "马尼拉主教座堂"
+   },
+   "pmgs": [
+    "pmg_base_building_manila_cathedral_monument"
+   ],
+   "techs": [
+    "reinforced_concrete"
+   ]
+  },
+  "building_manila_cathedral_original": {
+   "buildable": false,
+   "construction": null,
+   "expandable": false,
+   "group": "bg_monuments_hidden",
+   "name": {
+    "en": "Manila Cathedral",
+    "zh": "马尼拉主教座堂"
+   },
+   "pmgs": [
+    "pmg_dummy"
+   ],
+   "techs": []
+  },
+  "building_manila_cathedral_ruins": {
+   "buildable": false,
+   "construction": null,
+   "expandable": false,
+   "group": "bg_monuments_hidden",
+   "name": {
+    "en": "Manila Cathedral Ruins",
+    "zh": "马尼拉主教座堂废墟"
+   },
+   "pmgs": [
+    "pmg_base_building_manila_cathedral_ruins"
+   ],
+   "techs": []
+  },
+  "building_manor_house": {
+   "buildable": false,
+   "construction": null,
+   "expandable": false,
+   "group": "bg_manor_houses",
+   "name": {
+    "en": "Manor Houses",
+    "zh": "庄园宅邸"
+   },
+   "pmgs": [
+    "pmg_ownership_building_manor_house",
+    "pmg_additional_ownership_building_manor_house"
+   ],
+   "techs": []
+  },
+  "building_martandsuntemple": {
+   "buildable": false,
+   "construction": null,
+   "expandable": false,
+   "group": "bg_monuments_hidden",
+   "name": {
+    "en": "#This is a dummy building that serve no gameplay mechanical purpose but still need to be reacted to by city hub graphics. It (and this text) should never show up in the UI#!",
+    "zh": "#This is a dummy building that serve no gameplay mechanical purpose but still need to be reacted to by city hub graphics. It (and this text) should never show up in the UI#!"
+   },
+   "pmgs": [
+    "pmg_dummy"
+   ],
+   "techs": []
+  },
+  "building_millet_farm": {
+   "buildable": true,
+   "construction": 200,
+   "expandable": true,
+   "group": "bg_staple_crops",
+   "name": {
+    "en": "Millet Farms",
+    "zh": "杂谷农场"
+   },
+   "pmgs": [
+    "pmg_base_building_millet_farm",
+    "pmg_secondary_building_millet_farm",
+    "pmg_harvesting_process_building_millet_farm"
+   ],
+   "techs": [
+    "enclosure"
+   ]
+  },
+  "building_mosque_of_djenne": {
+   "buildable": true,
+   "construction": 2500,
+   "expandable": false,
+   "group": "bg_monuments",
+   "name": {
+    "en": "Mosque of Djenne",
+    "zh": "杰内大清真寺"
+   },
+   "pmgs": [
+    "pmg_base_building_mosque_of_djenne"
+   ],
+   "techs": []
+  },
+  "building_motor_industry": {
+   "buildable": true,
+   "construction": 800,
+   "expandable": true,
+   "group": "bg_heavy_industry",
+   "name": {
+    "en": "Motor Industries",
+    "zh": "动力机械厂"
+   },
+   "pmgs": [
+    "pmg_base_building_motor_industry",
+    "pmg_automation_building_motor_industry"
+   ],
+   "techs": [
+    "atmospheric_engine"
+   ]
+  },
+  "building_munition_plant": {
+   "buildable": true,
+   "construction": 800,
+   "expandable": true,
+   "group": "bg_military_industry",
+   "name": {
+    "en": "Munition Plants",
+    "zh": "弹药厂"
+   },
+   "pmgs": [
+    "pmg_base_building_munition_plant",
+    "pmg_automation_building_munition_plant"
+   ],
+   "techs": [
+    "percussion_cap"
+   ]
+  },
+  "building_naval_administration": {
+   "buildable": true,
+   "construction": 100,
+   "expandable": true,
+   "group": "bg_naval_administration",
+   "name": {
+    "en": "Naval Administration",
+    "zh": "海军部门"
+   },
+   "pmgs": [
+    "pmg_base_building_naval_administration"
+   ],
+   "techs": [
+    "admiralty"
+   ]
+  },
+  "building_naval_fortification": {
+   "buildable": true,
+   "construction": 100,
+   "expandable": true,
+   "group": "bg_naval_fortification",
+   "name": {
+    "en": "Naval Fortification",
+    "zh": "海防要塞"
+   },
+   "pmgs": [
+    "pmg_base_building_naval_fortification"
+   ],
+   "techs": []
+  },
+  "building_naval_logistics_center": {
+   "buildable": false,
+   "construction": null,
+   "expandable": false,
+   "group": "bg_naval_logistics_center",
+   "name": {
+    "en": "Naval Logistics Center",
+    "zh": "海军后勤中心"
+   },
+   "pmgs": [
+    "pmg_naval_logistics_center"
+   ],
+   "techs": []
+  },
+  "building_observatorygreenwich": {
+   "buildable": false,
+   "construction": null,
+   "expandable": false,
+   "group": "bg_monuments_hidden",
+   "name": {
+    "en": "#This is a dummy building that serve no gameplay mechanical purpose but still need to be reacted to by city hub graphics. It (and this text) should never show up in the UI#!",
+    "zh": "#This is a dummy building that serve no gameplay mechanical purpose but still need to be reacted to by city hub graphics. It (and this text) should never show up in the UI#!"
+   },
+   "pmgs": [
+    "pmg_dummy"
+   ],
+   "techs": []
+  },
+  "building_oil_rig": {
+   "buildable": true,
+   "construction": 400,
+   "expandable": true,
+   "group": "bg_oil_extraction",
+   "name": {
+    "en": "Oil Rigs",
+    "zh": "油井"
+   },
+   "pmgs": [
+    "pmg_base_building_oil_rig",
+    "pmg_transportation_building_oil_rig"
+   ],
+   "techs": [
+    "pumpjacks"
+   ]
+  },
+  "building_opium_plantation": {
+   "buildable": true,
+   "construction": 200,
+   "expandable": true,
+   "group": "bg_plantations",
+   "name": {
+    "en": "Opium Plantations",
+    "zh": "鸦片种植园"
+   },
+   "pmgs": [
+    "pmg_base_building_opium_plantation",
+    "pmg_train_automation_building_opium_plantation"
+   ],
+   "techs": [
+    "enclosure"
+   ]
+  },
+  "building_panama_canal": {
+   "buildable": true,
+   "construction": 5000,
+   "expandable": false,
+   "group": "bg_canals",
+   "name": {
+    "en": "Panama Canal",
+    "zh": "巴拿马运河"
+   },
+   "pmgs": [
+    "pmg_canal"
+   ],
+   "techs": [
+    "civilizing_mission"
+   ]
+  },
+  "building_paper_mill": {
+   "buildable": true,
+   "construction": 600,
+   "expandable": true,
+   "group": "bg_light_industry",
+   "name": {
+    "en": "Paper Mills",
+    "zh": "造纸厂"
+   },
+   "pmgs": [
+    "pmg_base_building_paper_mill",
+    "pmg_automation_building_paper_mill"
+   ],
+   "techs": [
+    "manufacturies"
+   ]
+  },
+  "building_pena_convent": {
+   "buildable": false,
+   "construction": null,
+   "expandable": false,
+   "group": "bg_monuments_hidden",
+   "name": {
+    "en": "Pena Convent",
+    "zh": "佩纳修道院"
+   },
+   "pmgs": [
+    "pmg_base_building_pena_convent"
+   ],
+   "techs": []
+  },
+  "building_pena_palace": {
+   "buildable": true,
+   "construction": 2500,
+   "expandable": false,
+   "group": "bg_monuments",
+   "name": {
+    "en": "Pena Palace",
+    "zh": "佩纳宫"
+   },
+   "pmgs": [
+    "pmg_base_building_pena_palace"
+   ],
+   "techs": [
+    "mechanical_tools"
+   ]
+  },
+  "building_petra": {
+   "buildable": false,
+   "construction": null,
+   "expandable": false,
+   "group": "bg_monuments_hidden",
+   "name": {
+    "en": "#This is a dummy building that serve no gameplay mechanical purpose but still need to be reacted to by city hub graphics. It (and this text) should never show up in the UI#!",
+    "zh": "#This is a dummy building that serve no gameplay mechanical purpose but still need to be reacted to by city hub graphics. It (and this text) should never show up in the UI#!"
+   },
+   "pmgs": [
+    "pmg_dummy"
+   ],
+   "techs": []
+  },
+  "building_port": {
+   "buildable": true,
+   "construction": 400,
+   "expandable": true,
+   "group": "bg_private_infrastructure",
+   "name": {
+    "en": "Port",
+    "zh": "港口"
+   },
+   "pmgs": [
+    "pmg_base_building_port"
+   ],
+   "techs": [
+    "navigation"
+   ]
+  },
+  "building_power_bloc_statue": {
+   "buildable": true,
+   "construction": 2500,
+   "expandable": false,
+   "group": "bg_monuments",
+   "name": {
+    "en": "Power Bloc Statue",
+    "zh": "国家集团雕像"
+   },
+   "pmgs": [
+    "pmg_base_building_power_bloc_statue"
+   ],
+   "techs": []
+  },
+  "building_power_plant": {
+   "buildable": true,
+   "construction": 400,
+   "expandable": true,
+   "group": "bg_power",
+   "name": {
+    "en": "Power Plants",
+    "zh": "发电厂"
+   },
+   "pmgs": [
+    "pmg_base_building_power_plant"
+   ],
+   "techs": [
+    "electrical_generation"
+   ]
+  },
+  "building_railway": {
+   "buildable": true,
+   "construction": 800,
+   "expandable": true,
+   "group": "bg_private_infrastructure",
+   "name": {
+    "en": "Railway",
+    "zh": "铁路"
+   },
+   "pmgs": [
+    "pmg_base_building_railway",
+    "pmg_passenger_trains"
+   ],
+   "techs": [
+    "railways"
+   ]
+  },
+  "building_rice_farm": {
+   "buildable": true,
+   "construction": 200,
+   "expandable": true,
+   "group": "bg_staple_crops",
+   "name": {
+    "en": "Rice Farms",
+    "zh": "水稻农场"
+   },
+   "pmgs": [
+    "pmg_base_building_rice_farm",
+    "pmg_secondary_building_rice_farm",
+    "pmg_harvesting_process_building_rice_farm"
+   ],
+   "techs": [
+    "enclosure"
+   ]
+  },
+  "building_rubber_plantation": {
+   "buildable": true,
+   "construction": 200,
+   "expandable": true,
+   "group": "bg_rubber",
+   "name": {
+    "en": "Rubber Plantations",
+    "zh": "橡胶种植园"
+   },
+   "pmgs": [
+    "pmg_base_building_rubber_plantation",
+    "pmg_rubber_exploitation",
+    "pmg_train_automation_building_rubber_plantation"
+   ],
+   "techs": [
+    "rubber_mastication"
+   ]
+  },
+  "building_rye_farm": {
+   "buildable": true,
+   "construction": 200,
+   "expandable": true,
+   "group": "bg_staple_crops",
+   "name": {
+    "en": "Rye Farms",
+    "zh": "黑麦农场"
+   },
+   "pmgs": [
+    "pmg_base_building_rye_farm",
+    "pmg_secondary_building_rye_farm",
+    "pmg_harvesting_process_building_rye_farm"
+   ],
+   "techs": [
+    "enclosure"
+   ]
+  },
+  "building_sagrada_familia_cathedral_1": {
+   "buildable": true,
+   "construction": 6000,
+   "expandable": false,
+   "group": "bg_monuments",
+   "name": {
+    "en": "Sagrada Família Cathedral",
+    "zh": "圣家堂"
+   },
+   "pmgs": [
+    "pmg_base_building_sagrada_familia_cathedral_1"
+   ],
+   "techs": [
+    "reinforced_concrete"
+   ]
+  },
+  "building_sagrada_familia_cathedral_2": {
+   "buildable": true,
+   "construction": 6000,
+   "expandable": false,
+   "group": "bg_monuments",
+   "name": {
+    "en": "Sagrada Família Cathedral",
+    "zh": "圣家堂"
+   },
+   "pmgs": [
+    "pmg_base_building_sagrada_familia_cathedral_2"
+   ],
+   "techs": []
+  },
+  "building_sagrada_familia_cathedral_3": {
+   "buildable": true,
+   "construction": 6000,
+   "expandable": false,
+   "group": "bg_monuments",
+   "name": {
+    "en": "Sagrada Família Cathedral",
+    "zh": "圣家堂"
+   },
+   "pmgs": [
+    "pmg_base_building_sagrada_familia_cathedral_3"
+   ],
+   "techs": []
+  },
+  "building_saint_basils_cathedral": {
+   "buildable": false,
+   "construction": 2500,
+   "expandable": false,
+   "group": "bg_monuments",
+   "name": {
+    "en": "Saint Basil’s Cathedral",
+    "zh": "圣瓦西里大教堂"
+   },
+   "pmgs": [
+    "pmg_base_building_saint_basils_cathedral"
+   ],
+   "techs": []
+  },
+  "building_shipyard": {
+   "buildable": true,
+   "construction": 600,
+   "expandable": true,
+   "group": "bg_ship_construction",
+   "name": {
+    "en": "Shipyards",
+    "zh": "造船厂"
+   },
+   "pmgs": [
+    "pmg_base_building_shipyard"
+   ],
+   "techs": [
+    "navigation"
+   ]
+  },
+  "building_silk_plantation": {
+   "buildable": true,
+   "construction": 200,
+   "expandable": true,
+   "group": "bg_plantations",
+   "name": {
+    "en": "Silk Plantations",
+    "zh": "丝绸种植园"
+   },
+   "pmgs": [
+    "pmg_base_building_silk_plantation",
+    "pmg_train_automation_building_silk_plantation"
+   ],
+   "techs": [
+    "enclosure"
+   ]
+  },
+  "building_skyscraper": {
+   "buildable": true,
+   "construction": 2500,
+   "expandable": false,
+   "group": "bg_skyscraper",
+   "name": {
+    "en": "Skyscraper",
+    "zh": "摩天大楼"
+   },
+   "pmgs": [
+    "pmg_base_building_skyscraper",
+    "pmg_airship_mooring_post"
+   ],
+   "techs": []
+  },
+  "building_statue_of_liberty": {
+   "buildable": true,
+   "construction": 2500,
+   "expandable": false,
+   "group": "bg_monuments",
+   "name": {
+    "en": "Statue of Liberty",
+    "zh": "自由女神像"
+   },
+   "pmgs": [
+    "pmg_base_building_statue_of_liberty"
+   ],
+   "techs": [
+    "steel_frame_buildings"
+   ]
+  },
+  "building_steel_mill": {
+   "buildable": true,
+   "construction": 800,
+   "expandable": true,
+   "group": "bg_heavy_industry",
+   "name": {
+    "en": "Steel Mills",
+    "zh": "炼钢厂"
+   },
+   "pmgs": [
+    "pmg_steelmaking_process",
+    "pmg_automation_building_steel_mill"
+   ],
+   "techs": [
+    "steelworking"
+   ]
+  },
+  "building_subsistence_farm": {
+   "buildable": false,
+   "construction": null,
+   "expandable": false,
+   "group": "bg_subsistence_agriculture",
+   "name": {
+    "en": "Subsistence Farms",
+    "zh": "自给农场"
+   },
+   "pmgs": [
+    "pmg_base_building_subsistence_farm",
+    "pmg_home_workshops_building_subsistence_farm",
+    "pmg_serfdom_building_subsistence_farm"
+   ],
+   "techs": []
+  },
+  "building_subsistence_fishing_village": {
+   "buildable": false,
+   "construction": null,
+   "expandable": false,
+   "group": "bg_subsistence_agriculture",
+   "name": {
+    "en": "Subsistence Fishing Villages",
+    "zh": "自给渔村"
+   },
+   "pmgs": [
+    "pmg_base_building_subsistence_fishing_village",
+    "pmg_home_workshops_building_subsistence_fishing_village",
+    "pmg_serfdom_building_subsistence_fishing_village"
+   ],
+   "techs": []
+  },
+  "building_subsistence_orchard": {
+   "buildable": false,
+   "construction": null,
+   "expandable": false,
+   "group": "bg_subsistence_agriculture",
+   "name": {
+    "en": "Subsistence Orchards",
+    "zh": "自给果园"
+   },
+   "pmgs": [
+    "pmg_base_building_subsistence_orchard",
+    "pmg_home_workshops_building_subsistence_orchard",
+    "pmg_serfdom_building_subsistence_orchard"
+   ],
+   "techs": []
+  },
+  "building_subsistence_pasture": {
+   "buildable": false,
+   "construction": null,
+   "expandable": false,
+   "group": "bg_subsistence_ranching",
+   "name": {
+    "en": "Subsistence Pastures",
+    "zh": "自给牧场"
+   },
+   "pmgs": [
+    "pmg_base_building_subsistence_pasture",
+    "pmg_home_workshops_building_subsistence_pasture",
+    "pmg_serfdom_building_subsistence_pasture"
+   ],
+   "techs": []
+  },
+  "building_subsistence_rice_farm": {
+   "buildable": false,
+   "construction": null,
+   "expandable": false,
+   "group": "bg_subsistence_agriculture",
+   "name": {
+    "en": "Subsistence Rice Paddies",
+    "zh": "自给稻田"
+   },
+   "pmgs": [
+    "pmg_base_building_subsistence_rice_farm",
+    "pmg_home_workshops_building_subsistence_rice_farm",
+    "pmg_serfdom_building_subsistence_rice_farm"
+   ],
+   "techs": []
+  },
+  "building_suez_canal": {
+   "buildable": true,
+   "construction": 5000,
+   "expandable": false,
+   "group": "bg_canals",
+   "name": {
+    "en": "Suez Canal",
+    "zh": "苏伊士运河"
+   },
+   "pmgs": [
+    "pmg_canal"
+   ],
+   "techs": [
+    "colonization"
+   ]
+  },
+  "building_sugar_plantation": {
+   "buildable": true,
+   "construction": 200,
+   "expandable": true,
+   "group": "bg_plantations",
+   "name": {
+    "en": "Sugar Plantations",
+    "zh": "糖料作物种植园"
+   },
+   "pmgs": [
+    "pmg_base_building_sugar_plantation",
+    "pmg_refinement_building_sugar_plantation",
+    "pmg_exploitation_sugar",
+    "pmg_train_automation_building_sugar_plantation"
+   ],
+   "techs": [
+    "enclosure"
+   ]
+  },
+  "building_sulfur_mine": {
+   "buildable": true,
+   "construction": 400,
+   "expandable": true,
+   "group": "bg_mining",
+   "name": {
+    "en": "Sulfur Mines",
+    "zh": "硫矿"
+   },
+   "pmgs": [
+    "pmg_mining_equipment_building_sulfur_mine",
+    "pmg_explosives_building_sulfur_mine",
+    "pmg_steam_automation_building_sulfur_mine",
+    "pmg_train_automation_building_sulfur_mine"
+   ],
+   "techs": [
+    "shaft_mining"
+   ]
+  },
+  "building_synthetics_plant": {
+   "buildable": true,
+   "construction": 800,
+   "expandable": true,
+   "group": "bg_heavy_industry",
+   "name": {
+    "en": "Synthetics Plants",
+    "zh": "化学合成厂"
+   },
+   "pmgs": [
+    "pmg_synthetic_dyes",
+    "pmg_synthetic_silk"
+   ],
+   "techs": [
+    "aniline"
+   ]
+  },
+  "building_taj_mahal": {
+   "buildable": false,
+   "construction": 2500,
+   "expandable": false,
+   "group": "bg_monuments",
+   "name": {
+    "en": "Taj Mahal",
+    "zh": "泰姬陵"
+   },
+   "pmgs": [
+    "pmg_base_building_taj_mahal"
+   ],
+   "techs": []
+  },
+  "building_tea_plantation": {
+   "buildable": true,
+   "construction": 200,
+   "expandable": true,
+   "group": "bg_plantations",
+   "name": {
+    "en": "Tea Plantations",
+    "zh": "茶叶种植园"
+   },
+   "pmgs": [
+    "pmg_base_building_tea_plantation",
+    "pmg_tea_exploitation",
+    "pmg_train_automation_building_tea_plantation"
+   ],
+   "techs": [
+    "enclosure"
+   ]
+  },
+  "building_temple_of_poseidon": {
+   "buildable": false,
+   "construction": null,
+   "expandable": false,
+   "group": "bg_monuments_hidden",
+   "name": {
+    "en": "#This is a dummy building that serve no gameplay mechanical purpose but still need to be reacted to by city hub graphics. It (and this text) should never show up in the UI#!",
+    "zh": "#This is a dummy building that serve no gameplay mechanical purpose but still need to be reacted to by city hub graphics. It (and this text) should never show up in the UI#!"
+   },
+   "pmgs": [
+    "pmg_dummy"
+   ],
+   "techs": []
+  },
+  "building_textile_mill": {
+   "buildable": true,
+   "construction": 600,
+   "expandable": true,
+   "group": "bg_light_industry",
+   "name": {
+    "en": "Textile Mills",
+    "zh": "纺织厂"
+   },
+   "pmgs": [
+    "pmg_base_building_textile_mill",
+    "pmg_luxury_building_textile_mill",
+    "pmg_automation_building_textile_mill"
+   ],
+   "techs": [
+    "manufacturies"
+   ]
+  },
+  "building_tobacco_plantation": {
+   "buildable": true,
+   "construction": 200,
+   "expandable": true,
+   "group": "bg_plantations",
+   "name": {
+    "en": "Tobacco Plantations",
+    "zh": "烟草种植园"
+   },
+   "pmgs": [
+    "pmg_base_building_tobacco_plantation",
+    "pmg_manufacture_tobacco",
+    "pmg_working_conditions_tobacco",
+    "pmg_train_automation_building_tobacco_plantation"
+   ],
+   "techs": [
+    "enclosure"
+   ]
+  },
+  "building_tooling_workshop": {
+   "buildable": true,
+   "construction": 600,
+   "expandable": true,
+   "group": "bg_light_industry",
+   "name": {
+    "en": "Tooling Workshops",
+    "zh": "工艺装备工坊"
+   },
+   "pmgs": [
+    "pmg_base_building_tooling_workshop",
+    "pmg_automation_building_tooling_workshop"
+   ],
+   "techs": [
+    "manufacturies"
+   ]
+  },
+  "building_trade_center": {
+   "buildable": true,
+   "construction": 100,
+   "expandable": true,
+   "group": "bg_trade",
+   "name": {
+    "en": "Trade Center",
+    "zh": "贸易中心"
+   },
+   "pmgs": [
+    "pmg_base_building_trade_center",
+    "pmg_trade_quantity_trade_center"
+   ],
+   "techs": []
+  },
+  "building_university": {
+   "buildable": true,
+   "construction": 400,
+   "expandable": true,
+   "group": "bg_technology",
+   "name": {
+    "en": "University",
+    "zh": "大学"
+   },
+   "pmgs": [
+    "pmg_base_building_university",
+    "pmg_university_academia",
+    "pmg_principle_freedom_of_movement_3"
+   ],
+   "techs": [
+    "academia"
+   ]
+  },
+  "building_urban_center": {
+   "buildable": false,
+   "construction": null,
+   "expandable": false,
+   "group": "bg_service",
+   "name": {
+    "en": "Urban Center",
+    "zh": "城镇中心"
+   },
+   "pmgs": [
+    "pmg_amenities",
+    "pmg_street_lighting",
+    "pmg_public_transport",
+    "pmg_urban_clergy"
+   ],
+   "techs": [
+    "urbanization"
+   ]
+  },
+  "building_vatican_city": {
+   "buildable": false,
+   "construction": 2500,
+   "expandable": false,
+   "group": "bg_monuments",
+   "name": {
+    "en": "Vatican City",
+    "zh": "梵蒂冈城"
+   },
+   "pmgs": [
+    "pmg_base_building_vatican_city"
+   ],
+   "techs": []
+  },
+  "building_victoria_terminus": {
+   "buildable": true,
+   "construction": 2500,
+   "expandable": false,
+   "group": "bg_monuments",
+   "name": {
+    "en": "Victoria Terminus",
+    "zh": "维多利亚终点站"
+   },
+   "pmgs": [
+    "pmg_base_building_victoria_terminus"
+   ],
+   "techs": [
+    "steel_frame_buildings"
+   ]
+  },
+  "building_vineyard": {
+   "buildable": true,
+   "construction": 200,
+   "expandable": true,
+   "group": "bg_agriculture",
+   "name": {
+    "en": "Vineyards",
+    "zh": "葡萄园"
+   },
+   "pmgs": [
+    "pmg_base_building_vineyard",
+    "pmg_train_automation_building_vineyard"
+   ],
+   "techs": [
+    "enclosure"
+   ]
+  },
+  "building_wat_arun": {
+   "buildable": false,
+   "construction": null,
+   "expandable": false,
+   "group": "bg_monuments_hidden",
+   "name": {
+    "en": "#This is a dummy building that serve no gameplay mechanical purpose but still need to be reacted to by city hub graphics. It (and this text) should never show up in the UI#!",
+    "zh": "#This is a dummy building that serve no gameplay mechanical purpose but still need to be reacted to by city hub graphics. It (and this text) should never show up in the UI#!"
+   },
+   "pmgs": [
+    "pmg_dummy"
+   ],
+   "techs": []
+  },
+  "building_whaling_station": {
+   "buildable": true,
+   "construction": 200,
+   "expandable": true,
+   "group": "bg_whaling",
+   "name": {
+    "en": "Whaling Stations",
+    "zh": "捕鲸站"
+   },
+   "pmgs": [
+    "pmg_base_building_whaling_station",
+    "pmg_refrigeration_building_whaling_station"
+   ],
+   "techs": [
+    "navigation"
+   ]
+  },
+  "building_wheat_farm": {
+   "buildable": true,
+   "construction": 200,
+   "expandable": true,
+   "group": "bg_staple_crops",
+   "name": {
+    "en": "Wheat Farms",
+    "zh": "小麦农场"
+   },
+   "pmgs": [
+    "pmg_base_building_wheat_farm",
+    "pmg_secondary_building_wheat_farm",
+    "pmg_harvesting_process_building_wheat_farm"
+   ],
+   "techs": [
+    "enclosure"
+   ]
+  },
+  "building_white_house": {
+   "buildable": false,
+   "construction": 2500,
+   "expandable": false,
+   "group": "bg_monuments",
+   "name": {
+    "en": "White House",
+    "zh": "白宫"
+   },
+   "pmgs": [
+    "pmg_base_building_white_house"
+   ],
+   "techs": []
+  }
+ },
+ "game_version": "1.13.11"
+}

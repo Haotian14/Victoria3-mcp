@@ -1,0 +1,1657 @@
+{
+ "game_version": "1.13.11",
+ "laws": {
+  "law_affirmative_action": {
+   "disallowing_laws": [],
+   "group": "lawgroup_caste_hegemony",
+   "name": {
+    "en": "Affirmative Action",
+    "zh": "平权法案"
+   },
+   "progressiveness": 50,
+   "techs": []
+  },
+  "law_agrarianism": {
+   "disallowing_laws": [
+    "law_anarchy",
+    "law_factory_councils",
+    "law_women_in_the_fields"
+   ],
+   "group": "lawgroup_economic_system",
+   "name": {
+    "en": "Agrarianism",
+    "zh": "农本主义"
+   },
+   "progressiveness": 0,
+   "techs": [
+    "romanticism"
+   ]
+  },
+  "law_anarchy": {
+   "disallowing_laws": [],
+   "group": "lawgroup_distribution_of_power",
+   "name": {
+    "en": "Anarchy",
+    "zh": "无政府"
+   },
+   "progressiveness": 200,
+   "techs": [
+    "anarchism"
+   ]
+  },
+  "law_anti_strike_laws": {
+   "disallowing_laws": [],
+   "group": "lawgroup_labour_associations",
+   "name": {
+    "en": "Anti-Strike Laws",
+    "zh": "反罢工法"
+   },
+   "progressiveness": 25,
+   "techs": []
+  },
+  "law_appointed_bureaucrats": {
+   "disallowing_laws": [],
+   "group": "lawgroup_bureaucracy",
+   "name": {
+    "en": "Appointed Bureaucrats",
+    "zh": "任命官僚制"
+   },
+   "progressiveness": 0,
+   "techs": []
+  },
+  "law_autocracy": {
+   "disallowing_laws": [
+    "law_parliamentary_republic"
+   ],
+   "group": "lawgroup_distribution_of_power",
+   "name": {
+    "en": "Autocracy",
+    "zh": "独裁制"
+   },
+   "progressiveness": -100,
+   "techs": []
+  },
+  "law_bakufu": {
+   "disallowing_laws": [],
+   "group": "lawgroup_distribution_of_power",
+   "name": {
+    "en": "Bakufu",
+    "zh": "幕府"
+   },
+   "progressiveness": -100,
+   "techs": []
+  },
+  "law_canton_system": {
+   "disallowing_laws": [],
+   "group": "lawgroup_trade_policy",
+   "name": {
+    "en": "Canton System",
+    "zh": "广州一口通商"
+   },
+   "progressiveness": -50,
+   "techs": []
+  },
+  "law_censorship": {
+   "disallowing_laws": [],
+   "group": "lawgroup_free_speech",
+   "name": {
+    "en": "Censorship",
+    "zh": "出版物审查"
+   },
+   "progressiveness": 0,
+   "techs": [
+    "law_enforcement"
+   ]
+  },
+  "law_census_voting": {
+   "disallowing_laws": [
+    "law_chiefdom",
+    "law_command_economy"
+   ],
+   "group": "lawgroup_distribution_of_power",
+   "name": {
+    "en": "Census Suffrage",
+    "zh": "资格性选举制"
+   },
+   "progressiveness": 50,
+   "techs": [
+    "democracy"
+   ]
+  },
+  "law_charitable_health_system": {
+   "disallowing_laws": [],
+   "group": "lawgroup_health_system",
+   "name": {
+    "en": "Charity Hospitals",
+    "zh": "慈善医院"
+   },
+   "progressiveness": 0,
+   "techs": [
+    "medical_degrees"
+   ]
+  },
+  "law_chiefdom": {
+   "disallowing_laws": [],
+   "group": "lawgroup_governance_principles",
+   "name": {
+    "en": "Chiefdom",
+    "zh": "酋邦制"
+   },
+   "progressiveness": -100,
+   "techs": []
+  },
+  "law_chiefs_distribute_aid": {
+   "disallowing_laws": [],
+   "group": "lawgroup_welfare",
+   "name": {
+    "en": "law_chiefs_distribute_aid",
+    "zh": "首领家长式管理"
+   },
+   "progressiveness": -25,
+   "techs": []
+  },
+  "law_child_labor_allowed": {
+   "disallowing_laws": [],
+   "group": "lawgroup_childrens_rights",
+   "name": {
+    "en": "Child Labor Allowed",
+    "zh": "允许童工"
+   },
+   "progressiveness": -50,
+   "techs": []
+  },
+  "law_closed_borders": {
+   "disallowing_laws": [],
+   "group": "lawgroup_migration",
+   "name": {
+    "en": "Closed Borders",
+    "zh": "关闭边境"
+   },
+   "progressiveness": -50,
+   "techs": []
+  },
+  "law_collectivized_agriculture": {
+   "disallowing_laws": [],
+   "group": "lawgroup_land_reform",
+   "name": {
+    "en": "Collectivized Agriculture",
+    "zh": "集体化农业"
+   },
+   "progressiveness": 100,
+   "techs": [
+    "socialism"
+   ]
+  },
+  "law_colonial_administration": {
+   "disallowing_laws": [
+    "law_anarchy"
+   ],
+   "group": "lawgroup_governance_principles",
+   "name": {
+    "en": "Colonial Administration",
+    "zh": "殖民政府"
+   },
+   "progressiveness": 0,
+   "techs": []
+  },
+  "law_colonial_exploitation": {
+   "disallowing_laws": [
+    "law_sakoku"
+   ],
+   "group": "lawgroup_colonization",
+   "name": {
+    "en": "Colonial Exploitation",
+    "zh": "殖民剥削"
+   },
+   "progressiveness": -25,
+   "techs": [
+    "colonization"
+   ]
+  },
+  "law_colonial_resettlement": {
+   "disallowing_laws": [
+    "law_sakoku"
+   ],
+   "group": "lawgroup_colonization",
+   "name": {
+    "en": "Colonial Resettlement",
+    "zh": "殖民安置"
+   },
+   "progressiveness": 0,
+   "techs": [
+    "colonization"
+   ]
+  },
+  "law_colonial_slavery": {
+   "disallowing_laws": [],
+   "group": "lawgroup_slavery",
+   "name": {
+    "en": "Colonial Slavery",
+    "zh": "殖民地奴隶制"
+   },
+   "progressiveness": 50,
+   "techs": []
+  },
+  "law_combination_acts": {
+   "disallowing_laws": [],
+   "group": "lawgroup_labour_associations",
+   "name": {
+    "en": "Combination Acts",
+    "zh": "结社法"
+   },
+   "progressiveness": 0,
+   "techs": []
+  },
+  "law_command_economy": {
+   "disallowing_laws": [
+    "law_serfdom",
+    "law_anarchy",
+    "law_women_in_the_fields"
+   ],
+   "group": "lawgroup_economic_system",
+   "name": {
+    "en": "Command Economy",
+    "zh": "计划经济"
+   },
+   "progressiveness": 50,
+   "techs": [
+    "central_planning"
+   ]
+  },
+  "law_commercialized_agriculture": {
+   "disallowing_laws": [
+    "law_traditionalism"
+   ],
+   "group": "lawgroup_land_reform",
+   "name": {
+    "en": "Commercialized Agriculture",
+    "zh": "商品化农业"
+   },
+   "progressiveness": 50,
+   "techs": [
+    "mutual_funds"
+   ]
+  },
+  "law_compulsory_primary_school": {
+   "disallowing_laws": [
+    "law_no_schools",
+    "law_terakoya"
+   ],
+   "group": "lawgroup_childrens_rights",
+   "name": {
+    "en": "Compulsory Primary School",
+    "zh": "义务小学"
+   },
+   "progressiveness": 50,
+   "techs": [
+    "human_rights"
+   ]
+  },
+  "law_consumption_based_taxation": {
+   "disallowing_laws": [],
+   "group": "lawgroup_taxation",
+   "name": {
+    "en": "Consumption-Based Taxation",
+    "zh": "消费税制"
+   },
+   "progressiveness": -100,
+   "techs": []
+  },
+  "law_cooperative_ownership": {
+   "disallowing_laws": [
+    "law_serfdom",
+    "law_women_in_the_fields"
+   ],
+   "group": "lawgroup_economic_system",
+   "name": {
+    "en": "Cooperative Ownership",
+    "zh": "合作社所有制"
+   },
+   "progressiveness": 100,
+   "techs": []
+  },
+  "law_corporate_state": {
+   "disallowing_laws": [],
+   "group": "lawgroup_governance_principles",
+   "name": {
+    "en": "Corporate State",
+    "zh": "法团国家"
+   },
+   "progressiveness": 50,
+   "techs": [
+    "corporatism"
+   ]
+  },
+  "law_corporatized_unions": {
+   "disallowing_laws": [],
+   "group": "lawgroup_labour_associations",
+   "name": {
+    "en": "Corporatized Unions",
+    "zh": "法团化工会"
+   },
+   "progressiveness": 0,
+   "techs": [
+    "corporatism"
+   ]
+  },
+  "law_council_republic": {
+   "disallowing_laws": [],
+   "group": "lawgroup_governance_principles",
+   "name": {
+    "en": "Council Republic",
+    "zh": "委员会共和制"
+   },
+   "progressiveness": 200,
+   "techs": [
+    "socialism"
+   ]
+  },
+  "law_crownland_diets": {
+   "disallowing_laws": [
+    "law_council_republic"
+   ],
+   "group": "lawgroup_bureaucracy",
+   "name": {
+    "en": "Crownland Diets",
+    "zh": "王冠领地议会"
+   },
+   "progressiveness": -50,
+   "techs": []
+  },
+  "law_cultural_exclusion": {
+   "disallowing_laws": [],
+   "group": "lawgroup_citizenship",
+   "name": {
+    "en": "Cultural Exclusion",
+    "zh": "文化排斥"
+   },
+   "progressiveness": 25,
+   "techs": []
+  },
+  "law_debt_slavery": {
+   "disallowing_laws": [
+    "law_multicultural",
+    "law_affirmative_action"
+   ],
+   "group": "lawgroup_slavery",
+   "name": {
+    "en": "Debt Slavery",
+    "zh": "债务奴隶制"
+   },
+   "progressiveness": -50,
+   "techs": []
+  },
+  "law_dedicated_police": {
+   "disallowing_laws": [],
+   "group": "lawgroup_policing",
+   "name": {
+    "en": "Dedicated Police Force",
+    "zh": "专职警察部队"
+   },
+   "progressiveness": 25,
+   "techs": [
+    "law_enforcement"
+   ]
+  },
+  "law_diplomatic_navy": {
+   "disallowing_laws": [],
+   "group": "lawgroup_navy_model",
+   "name": {
+    "en": "Diplomatic Fleet",
+    "zh": "外交舰队"
+   },
+   "progressiveness": 0,
+   "techs": [
+    "military_drill"
+   ]
+  },
+  "law_elder_council": {
+   "disallowing_laws": [],
+   "group": "lawgroup_distribution_of_power",
+   "name": {
+    "en": "Elder Council",
+    "zh": "长老议会"
+   },
+   "progressiveness": -25,
+   "techs": []
+  },
+  "law_elected_bureaucrats": {
+   "disallowing_laws": [
+    "law_technocracy",
+    "law_elder_council"
+   ],
+   "group": "lawgroup_bureaucracy",
+   "name": {
+    "en": "Elected Bureaucrats",
+    "zh": "选举官僚制"
+   },
+   "progressiveness": 50,
+   "techs": []
+  },
+  "law_ethnostate": {
+   "disallowing_laws": [],
+   "group": "lawgroup_citizenship",
+   "name": {
+    "en": "Ethnostate",
+    "zh": "族裔国家"
+   },
+   "progressiveness": -75,
+   "techs": [
+    "nationalism"
+   ]
+  },
+  "law_expanded_latifundias": {
+   "disallowing_laws": [
+    "law_council_republic"
+   ],
+   "group": "lawgroup_land_reform",
+   "name": {
+    "en": "Expanded Latifundias",
+    "zh": "扩大大庄园制"
+   },
+   "progressiveness": -25,
+   "techs": []
+  },
+  "law_extraction_economy": {
+   "disallowing_laws": [
+    [
+     "law_anarchy",
+     "law_factory_councils"
+    ],
+    [
+     "law_anarchy",
+     "law_women_in_the_fields"
+    ]
+   ],
+   "group": "lawgroup_economic_system",
+   "name": {
+    "en": "Extraction Economy",
+    "zh": "盘剥经济"
+   },
+   "progressiveness": -50,
+   "techs": [
+    "colonization"
+   ]
+  },
+  "law_factory_councils": {
+   "disallowing_laws": [],
+   "group": "lawgroup_labour_associations",
+   "name": {
+    "en": "Factory Councils",
+    "zh": "工厂委员会"
+   },
+   "progressiveness": 100,
+   "techs": [
+    "socialism"
+   ]
+  },
+  "law_free_trade": {
+   "disallowing_laws": [
+    "law_command_economy"
+   ],
+   "group": "lawgroup_trade_policy",
+   "name": {
+    "en": "Free Trade",
+    "zh": "自由贸易"
+   },
+   "progressiveness": 50,
+   "techs": [
+    "international_trade"
+   ]
+  },
+  "law_freedom_of_conscience": {
+   "disallowing_laws": [
+    "law_theocracy"
+   ],
+   "group": "lawgroup_church_and_state",
+   "name": {
+    "en": "Freedom of Conscience",
+    "zh": "信仰自由"
+   },
+   "progressiveness": 0,
+   "techs": [
+    "rationalism"
+   ]
+  },
+  "law_frontier_colonization": {
+   "disallowing_laws": [
+    "law_sakoku"
+   ],
+   "group": "lawgroup_colonization",
+   "name": {
+    "en": "Frontier Colonization",
+    "zh": "边疆殖民"
+   },
+   "progressiveness": 0,
+   "techs": [
+    "colonization"
+   ]
+  },
+  "law_graduated_taxation": {
+   "disallowing_laws": [
+    "law_traditionalism"
+   ],
+   "group": "lawgroup_taxation",
+   "name": {
+    "en": "Graduated Taxation",
+    "zh": "累进税制"
+   },
+   "progressiveness": 100,
+   "techs": [
+    "socialism"
+   ]
+  },
+  "law_guaranteed_liberties": {
+   "disallowing_laws": [],
+   "group": "lawgroup_internal_security",
+   "name": {
+    "en": "Guaranteed Liberties",
+    "zh": "保障自由"
+   },
+   "progressiveness": 75,
+   "techs": []
+  },
+  "law_guild_system": {
+   "disallowing_laws": [
+    "law_laissez_faire"
+   ],
+   "group": "lawgroup_labour_associations",
+   "name": {
+    "en": "Guild System",
+    "zh": "行会制度"
+   },
+   "progressiveness": -50,
+   "techs": []
+  },
+  "law_hereditary_bureaucrats": {
+   "disallowing_laws": [
+    "law_council_republic"
+   ],
+   "group": "lawgroup_bureaucracy",
+   "name": {
+    "en": "Hereditary Bureaucrats",
+    "zh": "世袭官僚制"
+   },
+   "progressiveness": -50,
+   "techs": []
+  },
+  "law_hindu_caste_codified": {
+   "disallowing_laws": [],
+   "group": "lawgroup_caste_hegemony",
+   "name": {
+    "en": "Caste System Codified",
+    "zh": "种姓制度法典化"
+   },
+   "progressiveness": -25,
+   "techs": []
+  },
+  "law_hindu_caste_enforced": {
+   "disallowing_laws": [],
+   "group": "lawgroup_caste_hegemony",
+   "name": {
+    "en": "Caste System Enforced",
+    "zh": "实施种姓制度"
+   },
+   "progressiveness": -75,
+   "techs": []
+  },
+  "law_hindu_caste_not_enforced": {
+   "disallowing_laws": [],
+   "group": "lawgroup_caste_hegemony",
+   "name": {
+    "en": "Caste Not Enforced",
+    "zh": "不实施种姓制度"
+   },
+   "progressiveness": 0,
+   "techs": []
+  },
+  "law_homesteading": {
+   "disallowing_laws": [],
+   "group": "lawgroup_land_reform",
+   "name": {
+    "en": "Homesteading",
+    "zh": "宅地法"
+   },
+   "progressiveness": 50,
+   "techs": []
+  },
+  "law_industry_banned": {
+   "disallowing_laws": [
+    "law_anarchy",
+    "law_factory_councils"
+   ],
+   "group": "lawgroup_economic_system",
+   "name": {
+    "en": "Industry Banned",
+    "zh": "禁止工业"
+   },
+   "progressiveness": -50,
+   "techs": [
+    "romanticism"
+   ]
+  },
+  "law_intermediate_edo_system": {
+   "disallowing_laws": [],
+   "group": "lawgroup_edo_social_system",
+   "name": {
+    "en": "law_intermediate_edo_system",
+    "zh": "松动等级秩序"
+   },
+   "progressiveness": -50,
+   "techs": []
+  },
+  "law_interventionism": {
+   "disallowing_laws": [
+    "law_serfdom",
+    "law_anarchy",
+    "law_factory_councils",
+    "law_women_in_the_fields"
+   ],
+   "group": "lawgroup_economic_system",
+   "name": {
+    "en": "Interventionism",
+    "zh": "经济干预"
+   },
+   "progressiveness": 25,
+   "techs": [
+    "manufacturies"
+   ]
+  },
+  "law_isolationism": {
+   "disallowing_laws": [
+    "law_laissez_faire"
+   ],
+   "group": "lawgroup_trade_policy",
+   "name": {
+    "en": "Isolationism",
+    "zh": "孤立主义"
+   },
+   "progressiveness": -50,
+   "techs": []
+  },
+  "law_jeune_ecole": {
+   "disallowing_laws": [],
+   "group": "lawgroup_navy_model",
+   "name": {
+    "en": "Jeune École",
+    "zh": "绿水学派"
+   },
+   "progressiveness": -50,
+   "techs": [
+    "jeune_ecole"
+   ]
+  },
+  "law_laissez_faire": {
+   "disallowing_laws": [
+    "law_serfdom",
+    "law_isolationism",
+    "law_anarchy",
+    "law_guild_system",
+    "law_factory_councils",
+    "law_women_in_the_fields"
+   ],
+   "group": "lawgroup_economic_system",
+   "name": {
+    "en": "Laissez-Faire",
+    "zh": "自由放任"
+   },
+   "progressiveness": 25,
+   "techs": [
+    "international_trade"
+   ]
+  },
+  "law_land_based_taxation": {
+   "disallowing_laws": [],
+   "group": "lawgroup_taxation",
+   "name": {
+    "en": "Land-Based Taxation",
+    "zh": "土地税制"
+   },
+   "progressiveness": -50,
+   "techs": []
+  },
+  "law_landed_voting": {
+   "disallowing_laws": [
+    "law_chiefdom",
+    "law_command_economy"
+   ],
+   "group": "lawgroup_distribution_of_power",
+   "name": {
+    "en": "Landed Voting",
+    "zh": "地产投票"
+   },
+   "progressiveness": -25,
+   "techs": [
+    "democracy"
+   ]
+  },
+  "law_latifundias": {
+   "disallowing_laws": [
+    "law_council_republic"
+   ],
+   "group": "lawgroup_land_reform",
+   "name": {
+    "en": "Latifundias",
+    "zh": "大庄园制"
+   },
+   "progressiveness": -25,
+   "techs": []
+  },
+  "law_lax_edo_system": {
+   "disallowing_laws": [],
+   "group": "lawgroup_edo_social_system",
+   "name": {
+    "en": "law_lax_edo_system",
+    "zh": "宽松等级秩序"
+   },
+   "progressiveness": -25,
+   "techs": []
+  },
+  "law_legacy_slavery": {
+   "disallowing_laws": [],
+   "group": "lawgroup_slavery",
+   "name": {
+    "en": "Legacy Slavery",
+    "zh": "遗留奴隶制"
+   },
+   "progressiveness": 0,
+   "techs": []
+  },
+  "law_local_police": {
+   "disallowing_laws": [],
+   "group": "lawgroup_policing",
+   "name": {
+    "en": "Local Police Force",
+    "zh": "地方警察部队"
+   },
+   "progressiveness": -50,
+   "techs": [
+    "tech_bureaucracy"
+   ]
+  },
+  "law_manorialism": {
+   "disallowing_laws": [],
+   "group": "lawgroup_land_reform",
+   "name": {
+    "en": "Manorialism",
+    "zh": "庄园制"
+   },
+   "progressiveness": -50,
+   "techs": []
+  },
+  "law_mass_conscription": {
+   "disallowing_laws": [
+    "law_strict_edo_system",
+    "law_intermediate_edo_system"
+   ],
+   "group": "lawgroup_army_model",
+   "name": {
+    "en": "Mass Conscription",
+    "zh": "大规模征兵"
+   },
+   "progressiveness": 50,
+   "techs": [
+    "enlistment_offices"
+   ]
+  },
+  "law_mercantilism": {
+   "disallowing_laws": [],
+   "group": "lawgroup_trade_policy",
+   "name": {
+    "en": "Mercantilism",
+    "zh": "重商主义"
+   },
+   "progressiveness": 0,
+   "techs": [
+    "international_trade"
+   ]
+  },
+  "law_merchant_navy": {
+   "disallowing_laws": [],
+   "group": "lawgroup_navy_model",
+   "name": {
+    "en": "Merchant Navy",
+    "zh": "商业海军"
+   },
+   "progressiveness": -50,
+   "techs": []
+  },
+  "law_migration_controls": {
+   "disallowing_laws": [
+    "law_sakoku"
+   ],
+   "group": "lawgroup_migration",
+   "name": {
+    "en": "Migration Controls",
+    "zh": "移民控制"
+   },
+   "progressiveness": 0,
+   "techs": []
+  },
+  "law_militarized_police": {
+   "disallowing_laws": [],
+   "group": "lawgroup_policing",
+   "name": {
+    "en": "Militarized Police Force",
+    "zh": "军事化警察部队"
+   },
+   "progressiveness": -100,
+   "techs": [
+    "mass_surveillance"
+   ]
+  },
+  "law_millet_system": {
+   "disallowing_laws": [],
+   "group": "lawgroup_church_and_state",
+   "name": {
+    "en": "Millet System",
+    "zh": "米勒特制"
+   },
+   "progressiveness": -50,
+   "techs": []
+  },
+  "law_monarchy": {
+   "disallowing_laws": [
+    "law_anarchy"
+   ],
+   "group": "lawgroup_governance_principles",
+   "name": {
+    "en": "Monarchy",
+    "zh": "君主制"
+   },
+   "progressiveness": 0,
+   "techs": []
+  },
+  "law_multicultural": {
+   "disallowing_laws": [],
+   "group": "lawgroup_citizenship",
+   "name": {
+    "en": "Multiculturalism",
+    "zh": "文化多元"
+   },
+   "progressiveness": 75,
+   "techs": [
+    "human_rights"
+   ]
+  },
+  "law_national_guard": {
+   "disallowing_laws": [],
+   "group": "lawgroup_internal_security",
+   "name": {
+    "en": "National Guard",
+    "zh": "国民警卫队"
+   },
+   "progressiveness": 25,
+   "techs": [
+    "law_enforcement"
+   ]
+  },
+  "law_national_militia": {
+   "disallowing_laws": [
+    "law_strict_edo_system",
+    "law_intermediate_edo_system"
+   ],
+   "group": "lawgroup_army_model",
+   "name": {
+    "en": "National Militia",
+    "zh": "国家民兵"
+   },
+   "progressiveness": 0,
+   "techs": [
+    "mandatory_service"
+   ]
+  },
+  "law_national_supremacy": {
+   "disallowing_laws": [],
+   "group": "lawgroup_citizenship",
+   "name": {
+    "en": "National Supremacy",
+    "zh": "民族至上"
+   },
+   "progressiveness": -25,
+   "techs": []
+  },
+  "law_neo_absolutism": {
+   "disallowing_laws": [],
+   "group": "lawgroup_distribution_of_power",
+   "name": {
+    "en": "Neo-Absolutism",
+    "zh": "新专制主义"
+   },
+   "progressiveness": -100,
+   "techs": []
+  },
+  "law_no_colonial_affairs": {
+   "disallowing_laws": [],
+   "group": "lawgroup_colonization",
+   "name": {
+    "en": "No Colonial Affairs",
+    "zh": "无殖民事务"
+   },
+   "progressiveness": 0,
+   "techs": []
+  },
+  "law_no_health_system": {
+   "disallowing_laws": [],
+   "group": "lawgroup_health_system",
+   "name": {
+    "en": "No Health System",
+    "zh": "无卫生系统"
+   },
+   "progressiveness": -25,
+   "techs": []
+  },
+  "law_no_home_affairs": {
+   "disallowing_laws": [],
+   "group": "lawgroup_internal_security",
+   "name": {
+    "en": "No Home Affairs",
+    "zh": "无内务机构"
+   },
+   "progressiveness": -25,
+   "techs": []
+  },
+  "law_no_migration_controls": {
+   "disallowing_laws": [
+    "law_sakoku"
+   ],
+   "group": "lawgroup_migration",
+   "name": {
+    "en": "No Migration Controls",
+    "zh": "无移民控制"
+   },
+   "progressiveness": 50,
+   "techs": []
+  },
+  "law_no_police": {
+   "disallowing_laws": [],
+   "group": "lawgroup_policing",
+   "name": {
+    "en": "No Police",
+    "zh": "无警察"
+   },
+   "progressiveness": 0,
+   "techs": []
+  },
+  "law_no_schools": {
+   "disallowing_laws": [
+    "law_compulsory_primary_school"
+   ],
+   "group": "lawgroup_education_system",
+   "name": {
+    "en": "No Schools",
+    "zh": "无学校"
+   },
+   "progressiveness": -25,
+   "techs": []
+  },
+  "law_no_social_security": {
+   "disallowing_laws": [],
+   "group": "lawgroup_welfare",
+   "name": {
+    "en": "No Social Security",
+    "zh": "无社会保障"
+   },
+   "progressiveness": 0,
+   "techs": []
+  },
+  "law_no_womens_rights": {
+   "disallowing_laws": [],
+   "group": "lawgroup_rights_of_women",
+   "name": {
+    "en": "Legal Guardianship",
+    "zh": "法定监护"
+   },
+   "progressiveness": -100,
+   "techs": []
+  },
+  "law_no_workers_rights": {
+   "disallowing_laws": [],
+   "group": "lawgroup_labor_rights",
+   "name": {
+    "en": "No Workers' Rights",
+    "zh": "无劳动者权利"
+   },
+   "progressiveness": 0,
+   "techs": []
+  },
+  "law_old_age_pension": {
+   "disallowing_laws": [],
+   "group": "lawgroup_welfare",
+   "name": {
+    "en": "Old Age Pension",
+    "zh": "养老金"
+   },
+   "progressiveness": 100,
+   "techs": [
+    "human_rights"
+   ]
+  },
+  "law_oligarchy": {
+   "disallowing_laws": [],
+   "group": "lawgroup_distribution_of_power",
+   "name": {
+    "en": "Oligarchy",
+    "zh": "寡头制"
+   },
+   "progressiveness": -50,
+   "techs": []
+  },
+  "law_organic_regulation": {
+   "disallowing_laws": [],
+   "group": "lawgroup_distribution_of_power",
+   "name": {
+    "en": "Organic Regulation",
+    "zh": "组织法规"
+   },
+   "progressiveness": -50,
+   "techs": []
+  },
+  "law_outlawed_dissent": {
+   "disallowing_laws": [],
+   "group": "lawgroup_free_speech",
+   "name": {
+    "en": "Outlawed Dissent",
+    "zh": "异议非法"
+   },
+   "progressiveness": -50,
+   "techs": [
+    "political_agitation"
+   ]
+  },
+  "law_parliamentary_republic": {
+   "disallowing_laws": [
+    "law_autocracy"
+   ],
+   "group": "lawgroup_governance_principles",
+   "name": {
+    "en": "Parliamentary Republic",
+    "zh": "议会共和制"
+   },
+   "progressiveness": 100,
+   "techs": [
+    "democracy"
+   ]
+  },
+  "law_peasant_levies": {
+   "disallowing_laws": [],
+   "group": "lawgroup_army_model",
+   "name": {
+    "en": "Peasant Levies",
+    "zh": "征召农兵"
+   },
+   "progressiveness": -50,
+   "techs": []
+  },
+  "law_peasant_proprietorship": {
+   "disallowing_laws": [],
+   "group": "lawgroup_land_reform",
+   "name": {
+    "en": "Peasant Proprietorship",
+    "zh": "农民产权"
+   },
+   "progressiveness": 50,
+   "techs": []
+  },
+  "law_people_of_the_book": {
+   "disallowing_laws": [],
+   "group": "lawgroup_church_and_state",
+   "name": {
+    "en": "People of the Book",
+    "zh": "有经人"
+   },
+   "progressiveness": -50,
+   "techs": []
+  },
+  "law_per_capita_based_taxation": {
+   "disallowing_laws": [
+    "law_traditionalism"
+   ],
+   "group": "lawgroup_taxation",
+   "name": {
+    "en": "Per-Capita Taxation",
+    "zh": "人均税制"
+   },
+   "progressiveness": 0,
+   "techs": [
+    "currency_standards"
+   ]
+  },
+  "law_poor_laws": {
+   "disallowing_laws": [],
+   "group": "lawgroup_welfare",
+   "name": {
+    "en": "Poor Laws",
+    "zh": "济贫法"
+   },
+   "progressiveness": 25,
+   "techs": [
+    "democracy"
+   ]
+  },
+  "law_presidential_republic": {
+   "disallowing_laws": [],
+   "group": "lawgroup_governance_principles",
+   "name": {
+    "en": "Presidential Republic",
+    "zh": "总统共和制"
+   },
+   "progressiveness": 100,
+   "techs": [
+    "democracy"
+   ]
+  },
+  "law_private_health_insurance": {
+   "disallowing_laws": [],
+   "group": "lawgroup_health_system",
+   "name": {
+    "en": "Private Health Insurance",
+    "zh": "私人医疗保险"
+   },
+   "progressiveness": 50,
+   "techs": [
+    "pharmaceuticals"
+   ]
+  },
+  "law_private_schools": {
+   "disallowing_laws": [
+    "law_state_religion"
+   ],
+   "group": "lawgroup_education_system",
+   "name": {
+    "en": "Private Schools",
+    "zh": "私立学校"
+   },
+   "progressiveness": 25,
+   "techs": [
+    "academia"
+   ]
+  },
+  "law_professional_army": {
+   "disallowing_laws": [
+    "law_strict_edo_system",
+    "law_intermediate_edo_system"
+   ],
+   "group": "lawgroup_army_model",
+   "name": {
+    "en": "Professional Army",
+    "zh": "职业军队"
+   },
+   "progressiveness": 0,
+   "techs": [
+    "military_drill"
+   ]
+  },
+  "law_professional_navy": {
+   "disallowing_laws": [],
+   "group": "lawgroup_navy_model",
+   "name": {
+    "en": "Capital Fleet",
+    "zh": "主力舰队"
+   },
+   "progressiveness": 0,
+   "techs": [
+    "military_drill"
+   ]
+  },
+  "law_proportional_taxation": {
+   "disallowing_laws": [
+    "law_traditionalism"
+   ],
+   "group": "lawgroup_taxation",
+   "name": {
+    "en": "Proportional Taxation",
+    "zh": "比例税制"
+   },
+   "progressiveness": 50,
+   "techs": [
+    "egalitarianism"
+   ]
+  },
+  "law_protected_speech": {
+   "disallowing_laws": [],
+   "group": "lawgroup_free_speech",
+   "name": {
+    "en": "Protected Speech",
+    "zh": "言论保护"
+   },
+   "progressiveness": 100,
+   "techs": [
+    "human_rights"
+   ]
+  },
+  "law_protectionism": {
+   "disallowing_laws": [],
+   "group": "lawgroup_trade_policy",
+   "name": {
+    "en": "Protectionism",
+    "zh": "贸易保护"
+   },
+   "progressiveness": 50,
+   "techs": [
+    "stock_exchange"
+   ]
+  },
+  "law_public_health_insurance": {
+   "disallowing_laws": [],
+   "group": "lawgroup_health_system",
+   "name": {
+    "en": "Public Health Insurance",
+    "zh": "公共医疗保险"
+   },
+   "progressiveness": 100,
+   "techs": [
+    "pharmaceuticals"
+   ]
+  },
+  "law_public_schools": {
+   "disallowing_laws": [
+    "law_state_religion",
+    "law_serfdom"
+   ],
+   "group": "lawgroup_education_system",
+   "name": {
+    "en": "Public Schools",
+    "zh": "公立学校"
+   },
+   "progressiveness": 50,
+   "techs": [
+    "empiricism"
+   ]
+  },
+  "law_racial_segregation": {
+   "disallowing_laws": [],
+   "group": "lawgroup_citizenship",
+   "name": {
+    "en": "Racial Segregation",
+    "zh": "种族隔离"
+   },
+   "progressiveness": 0,
+   "techs": []
+  },
+  "law_regulatory_bodies": {
+   "disallowing_laws": [],
+   "group": "lawgroup_labor_rights",
+   "name": {
+    "en": "Regulatory Bodies",
+    "zh": "监管机构"
+   },
+   "progressiveness": 50,
+   "techs": [
+    "labor_movement"
+   ]
+  },
+  "law_religious_schools": {
+   "disallowing_laws": [
+    "law_total_separation",
+    "law_state_atheism",
+    "law_serfdom"
+   ],
+   "group": "lawgroup_education_system",
+   "name": {
+    "en": "Religious Schools",
+    "zh": "教会学校"
+   },
+   "progressiveness": 0,
+   "techs": [
+    "rationalism"
+   ]
+  },
+  "law_restricted_child_labor": {
+   "disallowing_laws": [],
+   "group": "lawgroup_childrens_rights",
+   "name": {
+    "en": "Restricted Child Labor",
+    "zh": "限制童工"
+   },
+   "progressiveness": 0,
+   "techs": [
+    "labor_movement"
+   ]
+  },
+  "law_right_of_assembly": {
+   "disallowing_laws": [],
+   "group": "lawgroup_free_speech",
+   "name": {
+    "en": "Right of Assembly",
+    "zh": "集会权"
+   },
+   "progressiveness": 50,
+   "techs": []
+  },
+  "law_right_to_associate": {
+   "disallowing_laws": [],
+   "group": "lawgroup_labour_associations",
+   "name": {
+    "en": "Right to Associate",
+    "zh": "组织工会权"
+   },
+   "progressiveness": 50,
+   "techs": []
+  },
+  "law_sakoku": {
+   "disallowing_laws": [],
+   "group": "lawgroup_trade_policy",
+   "name": {
+    "en": "Sakoku",
+    "zh": "锁国"
+   },
+   "progressiveness": -50,
+   "techs": []
+  },
+  "law_secret_police": {
+   "disallowing_laws": [],
+   "group": "lawgroup_internal_security",
+   "name": {
+    "en": "Secret Police",
+    "zh": "秘密警察"
+   },
+   "progressiveness": 0,
+   "techs": [
+    "central_archives"
+   ]
+  },
+  "law_serfdom": {
+   "disallowing_laws": [
+    "law_interventionism",
+    "law_laissez_faire",
+    "law_command_economy"
+   ],
+   "group": "lawgroup_land_reform",
+   "name": {
+    "en": "Serfdom",
+    "zh": "农奴制"
+   },
+   "progressiveness": -50,
+   "techs": []
+  },
+  "law_shinsengumi": {
+   "disallowing_laws": [],
+   "group": "lawgroup_internal_security",
+   "name": {
+    "en": "Shinsengumi",
+    "zh": "新选组"
+   },
+   "progressiveness": -5,
+   "techs": [
+    "law_enforcement"
+   ]
+  },
+  "law_single_party_state": {
+   "disallowing_laws": [],
+   "group": "lawgroup_distribution_of_power",
+   "name": {
+    "en": "Single-Party State",
+    "zh": "一党制国家"
+   },
+   "progressiveness": 50,
+   "techs": [
+    "political_agitation"
+   ]
+  },
+  "law_slave_trade": {
+   "disallowing_laws": [
+    "law_cultural_exclusion",
+    "law_multicultural",
+    "law_affirmative_action"
+   ],
+   "group": "lawgroup_slavery",
+   "name": {
+    "en": "Slave Trade",
+    "zh": "奴隶贸易"
+   },
+   "progressiveness": -50,
+   "techs": []
+  },
+  "law_slavery_banned": {
+   "disallowing_laws": [],
+   "group": "lawgroup_slavery",
+   "name": {
+    "en": "Slavery Banned",
+    "zh": "禁止蓄奴"
+   },
+   "progressiveness": 100,
+   "techs": []
+  },
+  "law_social_monarchy": {
+   "disallowing_laws": [],
+   "group": "lawgroup_governance_principles",
+   "name": {
+    "en": "Social Monarchy",
+    "zh": "社会君主制"
+   },
+   "progressiveness": 25,
+   "techs": [
+    "corporatism"
+   ]
+  },
+  "law_state_atheism": {
+   "disallowing_laws": [
+    "law_theocracy"
+   ],
+   "group": "lawgroup_church_and_state",
+   "name": {
+    "en": "State Atheism",
+    "zh": "国家无神论"
+   },
+   "progressiveness": 100,
+   "techs": [
+    "empiricism"
+   ]
+  },
+  "law_state_religion": {
+   "disallowing_laws": [],
+   "group": "lawgroup_church_and_state",
+   "name": {
+    "en": "State Religion",
+    "zh": "国教"
+   },
+   "progressiveness": -50,
+   "techs": []
+  },
+  "law_strict_edo_system": {
+   "disallowing_laws": [],
+   "group": "lawgroup_edo_social_system",
+   "name": {
+    "en": "law_strict_edo_system",
+    "zh": "严格等级秩序"
+   },
+   "progressiveness": -75,
+   "techs": []
+  },
+  "law_subjecthood": {
+   "disallowing_laws": [],
+   "group": "lawgroup_citizenship",
+   "name": {
+    "en": "Subjecthood",
+    "zh": "臣民身份"
+   },
+   "progressiveness": -25,
+   "techs": []
+  },
+  "law_technocracy": {
+   "disallowing_laws": [],
+   "group": "lawgroup_distribution_of_power",
+   "name": {
+    "en": "Technocracy",
+    "zh": "技术治国"
+   },
+   "progressiveness": -50,
+   "techs": [
+    "central_archives"
+   ]
+  },
+  "law_tenant_farmers": {
+   "disallowing_laws": [],
+   "group": "lawgroup_land_reform",
+   "name": {
+    "en": "Tenant Farmers",
+    "zh": "佃农"
+   },
+   "progressiveness": 0,
+   "techs": []
+  },
+  "law_terakoya": {
+   "disallowing_laws": [],
+   "group": "lawgroup_education_system",
+   "name": {
+    "en": "Terakoya",
+    "zh": "寺子屋"
+   },
+   "progressiveness": 25,
+   "techs": [
+    "academia"
+   ]
+  },
+  "law_theocracy": {
+   "disallowing_laws": [
+    "law_total_separation"
+   ],
+   "group": "lawgroup_governance_principles",
+   "name": {
+    "en": "Theocracy",
+    "zh": "神权制"
+   },
+   "progressiveness": -25,
+   "techs": []
+  },
+  "law_total_separation": {
+   "disallowing_laws": [
+    "law_theocracy"
+   ],
+   "group": "lawgroup_church_and_state",
+   "name": {
+    "en": "Total Separation",
+    "zh": "完全分离"
+   },
+   "progressiveness": 50,
+   "techs": [
+    "empiricism"
+   ]
+  },
+  "law_traditionalism": {
+   "disallowing_laws": [
+    "law_per_capita_based_taxation",
+    "law_proportional_taxation",
+    "law_graduated_taxation",
+    "law_anarchy",
+    "law_factory_councils"
+   ],
+   "group": "lawgroup_economic_system",
+   "name": {
+    "en": "Traditionalism",
+    "zh": "传统主义"
+   },
+   "progressiveness": -50,
+   "techs": []
+  },
+  "law_universal_suffrage": {
+   "disallowing_laws": [
+    "law_chiefdom",
+    "law_command_economy"
+   ],
+   "group": "lawgroup_distribution_of_power",
+   "name": {
+    "en": "Universal Suffrage",
+    "zh": "普选制"
+   },
+   "progressiveness": 100,
+   "techs": [
+    "egalitarianism"
+   ]
+  },
+  "law_wage_subsidies": {
+   "disallowing_laws": [],
+   "group": "lawgroup_welfare",
+   "name": {
+    "en": "Wage Subsidies",
+    "zh": "工资补贴"
+   },
+   "progressiveness": 75,
+   "techs": [
+    "labor_movement"
+   ]
+  },
+  "law_warrior_caste": {
+   "disallowing_laws": [],
+   "group": "lawgroup_army_model",
+   "name": {
+    "en": "Warrior Caste",
+    "zh": "武士阶级"
+   },
+   "progressiveness": -50,
+   "techs": []
+  },
+  "law_wealth_voting": {
+   "disallowing_laws": [
+    "law_chiefdom",
+    "law_command_economy"
+   ],
+   "group": "lawgroup_distribution_of_power",
+   "name": {
+    "en": "Wealth Voting",
+    "zh": "财产投票"
+   },
+   "progressiveness": 0,
+   "techs": [
+    "democracy"
+   ]
+  },
+  "law_women_in_the_fields": {
+   "disallowing_laws": [],
+   "group": "lawgroup_rights_of_women",
+   "name": {
+    "en": "law_women_in_the_fields",
+    "zh": "女性耕作"
+   },
+   "progressiveness": -100,
+   "techs": []
+  },
+  "law_women_in_the_workplace": {
+   "disallowing_laws": [],
+   "group": "lawgroup_rights_of_women",
+   "name": {
+    "en": "Women in the Workplace",
+    "zh": "女性工作"
+   },
+   "progressiveness": 0,
+   "techs": [
+    "feminism"
+   ]
+  },
+  "law_women_own_property": {
+   "disallowing_laws": [],
+   "group": "lawgroup_rights_of_women",
+   "name": {
+    "en": "Propertied Women",
+    "zh": "有产妇女"
+   },
+   "progressiveness": -50,
+   "techs": []
+  },
+  "law_womens_suffrage": {
+   "disallowing_laws": [],
+   "group": "lawgroup_rights_of_women",
+   "name": {
+    "en": "Women’s Suffrage",
+    "zh": "妇女选举权"
+   },
+   "progressiveness": 50,
+   "techs": [
+    "feminism"
+   ]
+  },
+  "law_worker_protections": {
+   "disallowing_laws": [],
+   "group": "lawgroup_labor_rights",
+   "name": {
+    "en": "Workers' Protections",
+    "zh": "劳动者保障"
+   },
+   "progressiveness": 100,
+   "techs": [
+    "human_rights"
+   ]
+  }
+ }
+}

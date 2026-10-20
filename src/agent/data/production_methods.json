@@ -1,0 +1,8230 @@
+{
+ "game_version": "1.13.11",
+ "production_methods": {
+  "automatic_irrigation_building_banana_plantation": {
+   "disallowing_laws": [],
+   "employment": {
+    "farmers": 1500,
+    "laborers": 3000,
+    "machinists": 500
+   },
+   "inputs": {
+    "engines": 5
+   },
+   "name": {
+    "en": "Automatic Irrigation",
+    "zh": "自动灌溉"
+   },
+   "outputs": {
+    "fruit": 40
+   },
+   "techs": [
+    "pumpjacks"
+   ],
+   "unlocking_laws": []
+  },
+  "automatic_irrigation_building_cotton_plantation": {
+   "disallowing_laws": [],
+   "employment": {
+    "farmers": 1500,
+    "laborers": 5000,
+    "machinists": 500
+   },
+   "inputs": {
+    "engines": 5
+   },
+   "name": {
+    "en": "Automatic Irrigation",
+    "zh": "自动灌溉"
+   },
+   "outputs": {
+    "fabric": 80
+   },
+   "techs": [
+    "pumpjacks"
+   ],
+   "unlocking_laws": []
+  },
+  "automatic_irrigation_building_dye_plantation": {
+   "disallowing_laws": [],
+   "employment": {
+    "farmers": 1500,
+    "laborers": 4500,
+    "machinists": 500
+   },
+   "inputs": {
+    "engines": 5
+   },
+   "name": {
+    "en": "Automatic Irrigation",
+    "zh": "自动灌溉"
+   },
+   "outputs": {
+    "dye": 45
+   },
+   "techs": [
+    "pumpjacks"
+   ],
+   "unlocking_laws": []
+  },
+  "automatic_irrigation_building_opium_plantation": {
+   "disallowing_laws": [],
+   "employment": {
+    "farmers": 1500,
+    "laborers": 2500,
+    "machinists": 500
+   },
+   "inputs": {
+    "engines": 5
+   },
+   "name": {
+    "en": "Automatic Irrigation",
+    "zh": "自动灌溉"
+   },
+   "outputs": {
+    "opium": 40
+   },
+   "techs": [
+    "pumpjacks"
+   ],
+   "unlocking_laws": []
+  },
+  "automatic_irrigation_building_rubber_plantation": {
+   "disallowing_laws": [],
+   "employment": {
+    "farmers": 1500,
+    "laborers": 4000,
+    "machinists": 500
+   },
+   "inputs": {
+    "engines": 5
+   },
+   "name": {
+    "en": "Automatic Irrigation",
+    "zh": "自动灌溉"
+   },
+   "outputs": {
+    "rubber": 40
+   },
+   "techs": [
+    "pumpjacks"
+   ],
+   "unlocking_laws": []
+  },
+  "automatic_irrigation_building_silk_plantation": {
+   "disallowing_laws": [],
+   "employment": {
+    "farmers": 1500,
+    "laborers": 3000,
+    "machinists": 500
+   },
+   "inputs": {
+    "engines": 5
+   },
+   "name": {
+    "en": "Automatic Irrigation",
+    "zh": "自动灌溉"
+   },
+   "outputs": {
+    "silk": 40
+   },
+   "techs": [
+    "pumpjacks"
+   ],
+   "unlocking_laws": []
+  },
+  "automatic_irrigation_building_sugar_plantation": {
+   "disallowing_laws": [],
+   "employment": {
+    "farmers": 1000,
+    "laborers": 7000,
+    "machinists": 500
+   },
+   "inputs": {
+    "engines": 5
+   },
+   "name": {
+    "en": "Automatic Irrigation",
+    "zh": "自动灌溉"
+   },
+   "outputs": {
+    "sugar": 50
+   },
+   "techs": [
+    "pumpjacks"
+   ],
+   "unlocking_laws": []
+  },
+  "automatic_irrigation_building_tea_plantation": {
+   "disallowing_laws": [],
+   "employment": {
+    "farmers": 1500,
+    "laborers": 4000,
+    "machinists": 500
+   },
+   "inputs": {
+    "engines": 4
+   },
+   "name": {
+    "en": "Automatic Irrigation",
+    "zh": "自动灌溉"
+   },
+   "outputs": {
+    "tea": 35
+   },
+   "techs": [
+    "pumpjacks"
+   ],
+   "unlocking_laws": []
+  },
+  "automatic_irrigation_building_tobacco_plantation": {
+   "disallowing_laws": [],
+   "employment": {
+    "farmers": 1500,
+    "laborers": 4000,
+    "machinists": 500
+   },
+   "inputs": {
+    "engines": 5
+   },
+   "name": {
+    "en": "Automatic Irrigation",
+    "zh": "自动灌溉"
+   },
+   "outputs": {
+    "tobacco": 45
+   },
+   "techs": [
+    "pumpjacks"
+   ],
+   "unlocking_laws": []
+  },
+  "automatic_irrigation_building_vineyard": {
+   "disallowing_laws": [],
+   "employment": {
+    "farmers": 1500,
+    "laborers": 3000,
+    "machinists": 500
+   },
+   "inputs": {
+    "engines": 5
+   },
+   "name": {
+    "en": "Automatic Irrigation",
+    "zh": "自动灌溉"
+   },
+   "outputs": {
+    "wine": 40
+   },
+   "techs": [
+    "pumpjacks"
+   ],
+   "unlocking_laws": []
+  },
+  "centrifugal_machine_sugar": {
+   "disallowing_laws": [],
+   "employment": {
+    "engineers": 500,
+    "laborers": -3500,
+    "machinists": 1000
+   },
+   "inputs": {
+    "coal": 4,
+    "engines": 1
+   },
+   "name": {
+    "en": "Centrifugal Machines",
+    "zh": "离心分晶机"
+   },
+   "outputs": {
+    "sugar": 30
+   },
+   "techs": [
+    "rotary_valve_engine"
+   ],
+   "unlocking_laws": []
+  },
+  "coffee_plantation_dry_process": {
+   "disallowing_laws": [],
+   "employment": {
+    "farmers": 1000,
+    "laborers": 6000
+   },
+   "inputs": {},
+   "name": {
+    "en": "Dry Process",
+    "zh": "干法加工"
+   },
+   "outputs": {
+    "coffee": 20
+   },
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "coffee_plantation_mechanical_drying": {
+   "disallowing_laws": [],
+   "employment": {
+    "laborers": 500,
+    "machinists": 500
+   },
+   "inputs": {
+    "engines": 2,
+    "tools": 3
+   },
+   "name": {
+    "en": "Mechanical Dryers",
+    "zh": "干燥机"
+   },
+   "outputs": {
+    "coffee": 15
+   },
+   "techs": [
+    "mechanized_workshops"
+   ],
+   "unlocking_laws": []
+  },
+  "coffee_plantation_patio_drying": {
+   "disallowing_laws": [],
+   "employment": {
+    "laborers": 1500
+   },
+   "inputs": {},
+   "name": {
+    "en": "Patio Drying",
+    "zh": "平台晾晒"
+   },
+   "outputs": {
+    "coffee": 5
+   },
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "coffee_plantation_wet_process_manual": {
+   "disallowing_laws": [],
+   "employment": {
+    "farmers": 1500,
+    "laborers": 4000
+   },
+   "inputs": {
+    "tools": 5
+   },
+   "name": {
+    "en": "Wet Process - Manual Pulping",
+    "zh": "湿法加工‑手工去肉"
+   },
+   "outputs": {
+    "coffee": 25
+   },
+   "techs": [
+    "mechanical_tools"
+   ],
+   "unlocking_laws": []
+  },
+  "coffee_plantation_wet_process_mechanical": {
+   "disallowing_laws": [],
+   "employment": {
+    "farmers": 1500,
+    "laborers": 3500,
+    "machinists": 500
+   },
+   "inputs": {
+    "engines": 3,
+    "tools": 5
+   },
+   "name": {
+    "en": "Wet Process - Mechanical Pulping",
+    "zh": "湿法加工‑机械去肉"
+   },
+   "outputs": {
+    "coffee": 35
+   },
+   "techs": [
+    "mechanized_workshops"
+   ],
+   "unlocking_laws": []
+  },
+  "default_building_banana_plantation": {
+   "disallowing_laws": [],
+   "employment": {
+    "farmers": 1000,
+    "laborers": 5000
+   },
+   "inputs": {},
+   "name": {
+    "en": "Basic Production",
+    "zh": "基础生产"
+   },
+   "outputs": {
+    "fruit": 30
+   },
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "default_building_cotton_plantation": {
+   "disallowing_laws": [],
+   "employment": {
+    "farmers": 1000,
+    "laborers": 7000
+   },
+   "inputs": {},
+   "name": {
+    "en": "Basic Production",
+    "zh": "基础生产"
+   },
+   "outputs": {
+    "fabric": 45
+   },
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "default_building_dye_plantation": {
+   "disallowing_laws": [],
+   "employment": {
+    "farmers": 1000,
+    "laborers": 6000
+   },
+   "inputs": {},
+   "name": {
+    "en": "Basic Production",
+    "zh": "基础生产"
+   },
+   "outputs": {
+    "dye": 30
+   },
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "default_building_gold_field": {
+   "disallowing_laws": [],
+   "employment": {
+    "laborers": 4500,
+    "shopkeepers": 500
+   },
+   "inputs": {},
+   "name": {
+    "en": "Basic Production",
+    "zh": "基础生产"
+   },
+   "outputs": {
+    "gold": 10
+   },
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "default_building_opium_plantation": {
+   "disallowing_laws": [],
+   "employment": {
+    "farmers": 1000,
+    "laborers": 4000
+   },
+   "inputs": {},
+   "name": {
+    "en": "Basic Production",
+    "zh": "基础生产"
+   },
+   "outputs": {
+    "opium": 20
+   },
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "default_building_rubber_plantation": {
+   "disallowing_laws": [],
+   "employment": {
+    "farmers": 1000,
+    "laborers": 6000
+   },
+   "inputs": {},
+   "name": {
+    "en": "Basic Production",
+    "zh": "基础生产"
+   },
+   "outputs": {
+    "rubber": 20
+   },
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "default_building_silk_plantation": {
+   "disallowing_laws": [],
+   "employment": {
+    "farmers": 1000,
+    "laborers": 4000
+   },
+   "inputs": {},
+   "name": {
+    "en": "Basic Production",
+    "zh": "基础生产"
+   },
+   "outputs": {
+    "silk": 15
+   },
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "default_building_subsistence_farm": {
+   "disallowing_laws": [],
+   "employment": {
+    "peasants": 5000
+   },
+   "inputs": {},
+   "name": {
+    "en": "Basic Production",
+    "zh": "基础生产"
+   },
+   "outputs": {
+    "fabric": 0.5,
+    "grain": 1.0,
+    "services": 0.5,
+    "wood": 0.5
+   },
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "default_building_subsistence_fishing_village": {
+   "disallowing_laws": [],
+   "employment": {
+    "peasants": 5000
+   },
+   "inputs": {},
+   "name": {
+    "en": "Basic Production",
+    "zh": "基础生产"
+   },
+   "outputs": {
+    "fabric": 0.25,
+    "fish": 1.0,
+    "grain": 0.5,
+    "services": 0.5,
+    "wood": 0.25
+   },
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "default_building_subsistence_orchard": {
+   "disallowing_laws": [],
+   "employment": {
+    "peasants": 5000
+   },
+   "inputs": {},
+   "name": {
+    "en": "Basic Production",
+    "zh": "基础生产"
+   },
+   "outputs": {
+    "fabric": 0.5,
+    "fruit": 0.5,
+    "grain": 0.25,
+    "services": 0.5,
+    "wood": 0.5
+   },
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "default_building_subsistence_pasture": {
+   "disallowing_laws": [],
+   "employment": {
+    "peasants": 5000
+   },
+   "inputs": {},
+   "name": {
+    "en": "Basic Production",
+    "zh": "基础生产"
+   },
+   "outputs": {
+    "fabric": 0.75,
+    "grain": 0.25,
+    "meat": 0.5,
+    "services": 0.5,
+    "wood": 0.25
+   },
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "default_building_subsistence_rice_farm": {
+   "disallowing_laws": [],
+   "employment": {
+    "peasants": 10000
+   },
+   "inputs": {},
+   "name": {
+    "en": "Basic Production",
+    "zh": "基础生产"
+   },
+   "outputs": {
+    "fabric": 0.75,
+    "grain": 2,
+    "services": 1,
+    "wood": 0.75
+   },
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "default_building_sugar_plantation": {
+   "disallowing_laws": [],
+   "employment": {
+    "farmers": 1000,
+    "laborers": 9000
+   },
+   "inputs": {},
+   "name": {
+    "en": "Basic Production",
+    "zh": "基础生产"
+   },
+   "outputs": {
+    "sugar": 25
+   },
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "default_building_tea_plantation": {
+   "disallowing_laws": [],
+   "employment": {
+    "farmers": 1000,
+    "laborers": 6000
+   },
+   "inputs": {},
+   "name": {
+    "en": "Basic Production",
+    "zh": "基础生产"
+   },
+   "outputs": {
+    "tea": 20
+   },
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "default_building_tobacco_plantation": {
+   "disallowing_laws": [],
+   "employment": {
+    "farmers": 1000,
+    "laborers": 6000
+   },
+   "inputs": {},
+   "name": {
+    "en": "Basic Production",
+    "zh": "基础生产"
+   },
+   "outputs": {
+    "tobacco": 30
+   },
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "default_building_vineyard": {
+   "disallowing_laws": [],
+   "employment": {
+    "farmers": 1000,
+    "laborers": 4000
+   },
+   "inputs": {},
+   "name": {
+    "en": "Basic Production",
+    "zh": "基础生产"
+   },
+   "outputs": {
+    "wine": 20
+   },
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "default_labour": {
+   "disallowing_laws": [
+    "law_slave_trade"
+   ],
+   "employment": {},
+   "inputs": {},
+   "name": {
+    "en": "Standard Labor",
+    "zh": "标准条件"
+   },
+   "outputs": {},
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "default_labour_tobacco": {
+   "disallowing_laws": [],
+   "employment": {},
+   "inputs": {},
+   "name": {
+    "en": "Standard Labor",
+    "zh": "标准条件"
+   },
+   "outputs": {},
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "electric_rollers": {
+   "disallowing_laws": [],
+   "employment": {
+    "laborers": -1500,
+    "machinists": 500
+   },
+   "inputs": {
+    "electricity": 2,
+    "iron": 2
+   },
+   "name": {
+    "en": "Electric Rollers",
+    "zh": "电动卷烟机"
+   },
+   "outputs": {
+    "tobacco": 20
+   },
+   "techs": [
+    "electrical_generation"
+   ],
+   "unlocking_laws": []
+  },
+  "hand_rolled": {
+   "disallowing_laws": [],
+   "employment": {
+    "laborers": 1000
+   },
+   "inputs": {},
+   "name": {
+    "en": "Hand-Rolled",
+    "zh": "手工卷制"
+   },
+   "outputs": {},
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "lectors_tobacco": {
+   "disallowing_laws": [
+    "law_censorship"
+   ],
+   "employment": {},
+   "inputs": {},
+   "name": {
+    "en": "Lectors",
+    "zh": "朗读辅助"
+   },
+   "outputs": {
+    "tobacco": 2
+   },
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "molds": {
+   "disallowing_laws": [],
+   "employment": {
+    "machinists": 500
+   },
+   "inputs": {
+    "iron": 1
+   },
+   "name": {
+    "en": "Molds",
+    "zh": "模具成型"
+   },
+   "outputs": {
+    "tobacco": 5
+   },
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "ox_driven_rollers_sugar": {
+   "disallowing_laws": [],
+   "employment": {},
+   "inputs": {},
+   "name": {
+    "en": "Ox-Driven Rollers",
+    "zh": "牛力碾压辊"
+   },
+   "outputs": {},
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_advanced_tactics_training": {
+   "disallowing_laws": [
+    "law_warrior_caste"
+   ],
+   "employment": {},
+   "inputs": {},
+   "name": {
+    "en": "Advanced Tactics Training",
+    "zh": "先进战术训练"
+   },
+   "outputs": {},
+   "techs": [
+    "military_statistics"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_advanced_tactics_training_conscription": {
+   "disallowing_laws": [
+    "law_peasant_levies",
+    "law_warrior_caste"
+   ],
+   "employment": {},
+   "inputs": {},
+   "name": {
+    "en": "Advanced Tactics Training",
+    "zh": "先进战术训练"
+   },
+   "outputs": {},
+   "techs": [
+    "military_statistics"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_aeroplane_production": {
+   "disallowing_laws": [],
+   "employment": {
+    "engineers": 250
+   },
+   "inputs": {
+    "fabric": 4,
+    "hardwood": 4
+   },
+   "name": {
+    "en": "Aeroplane Production",
+    "zh": "飞机生产"
+   },
+   "outputs": {
+    "aeroplanes": 10,
+    "automobiles": -10
+   },
+   "techs": [
+    "military_aviation"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_airship_mooring_post": {
+   "disallowing_laws": [],
+   "employment": {},
+   "inputs": {},
+   "name": {
+    "en": "Airship Mooring Post",
+    "zh": "飞艇泊位"
+   },
+   "outputs": {},
+   "techs": [
+    "zeppelins"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_ammonia-soda_process": {
+   "disallowing_laws": [],
+   "employment": {
+    "engineers": 1000,
+    "laborers": 2500,
+    "machinists": 1000,
+    "shopkeepers": 500
+   },
+   "inputs": {
+    "fertilizer": 30,
+    "paper": 10,
+    "sulfur": 30
+   },
+   "name": {
+    "en": "Ammonia-soda Process",
+    "zh": "氨碱法"
+   },
+   "outputs": {
+    "explosives": 80
+   },
+   "techs": [
+    "nitroglycerin"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_analytical_philosophy_department": {
+   "disallowing_laws": [],
+   "employment": {
+    "academics": 100,
+    "clerks": 200,
+    "laborers": 200
+   },
+   "inputs": {
+    "paper": 15
+   },
+   "name": {
+    "en": "Analytical Philosophy Department",
+    "zh": "分析哲学系"
+   },
+   "outputs": {},
+   "techs": [
+    "analytical_philosophy"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_anchorage": {
+   "disallowing_laws": [],
+   "employment": {
+    "bureaucrats": 10,
+    "clerks": 20,
+    "laborers": 70
+   },
+   "inputs": {},
+   "name": {
+    "en": "Anchorage",
+    "zh": "锚地"
+   },
+   "outputs": {},
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_apple_orchards": {
+   "disallowing_laws": [],
+   "employment": {},
+   "inputs": {},
+   "name": {
+    "en": "Apple Orchards",
+    "zh": "苹果园"
+   },
+   "outputs": {
+    "fruit": 7,
+    "grain": -8,
+    "sugar": 1
+   },
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_arc_welded_buildings": {
+   "disallowing_laws": [],
+   "employment": {
+    "bureaucrats": 100,
+    "clerks": 100,
+    "engineers": 50,
+    "laborers": 600,
+    "machinists": 150
+   },
+   "inputs": {
+    "electricity": 40,
+    "explosives": 20,
+    "glass": 40,
+    "steel": 50,
+    "tools": 40
+   },
+   "name": {
+    "en": "Arc-Welded Buildings",
+    "zh": "电焊建筑"
+   },
+   "outputs": {},
+   "techs": [
+    "arc_welding"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_arc_welding_shipbuilding": {
+   "disallowing_laws": [],
+   "employment": {
+    "engineers": 1500,
+    "laborers": 1000,
+    "machinists": 2000,
+    "shopkeepers": 500
+   },
+   "inputs": {
+    "electricity": 30,
+    "engines": 10,
+    "steel": 30
+   },
+   "name": {
+    "en": "Arc-Welded Steamships",
+    "zh": "电焊蒸汽船"
+   },
+   "outputs": {
+    "steamers": 80
+   },
+   "techs": [
+    "arc_welding"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_arcades": {
+   "disallowing_laws": [],
+   "employment": {
+    "clerks": 3000,
+    "laborers": 1000,
+    "shopkeepers": 1000
+   },
+   "inputs": {
+    "electricity": 1,
+    "glass": 2,
+    "steel": 2
+   },
+   "name": {
+    "en": "Arcades",
+    "zh": "购物拱廊"
+   },
+   "outputs": {
+    "services": 30
+   },
+   "techs": [
+    "elevator"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_artificial_fertilizers": {
+   "disallowing_laws": [],
+   "employment": {
+    "engineers": 500,
+    "laborers": 3000,
+    "machinists": 1000,
+    "shopkeepers": 500
+   },
+   "inputs": {
+    "iron": 10,
+    "sulfur": 30
+   },
+   "name": {
+    "en": "Artificial Fertilizers",
+    "zh": "人工肥"
+   },
+   "outputs": {
+    "fertilizer": 90
+   },
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_assembly_lines_building_arms_industry": {
+   "disallowing_laws": [],
+   "employment": {
+    "laborers": -2500
+   },
+   "inputs": {
+    "electricity": 5,
+    "oil": 10
+   },
+   "name": {
+    "en": "Assembly Lines",
+    "zh": "流水线"
+   },
+   "outputs": {},
+   "techs": [
+    "conveyors"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_assembly_lines_building_automotive_industry": {
+   "disallowing_laws": [],
+   "employment": {
+    "laborers": -1500
+   },
+   "inputs": {
+    "electricity": 5,
+    "oil": 5,
+    "tools": 5
+   },
+   "name": {
+    "en": "Assembly Lines",
+    "zh": "流水线"
+   },
+   "outputs": {},
+   "techs": [
+    "conveyors"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_assembly_lines_building_furniture_manufactory": {
+   "disallowing_laws": [
+    "law_industry_banned"
+   ],
+   "employment": {
+    "laborers": -3000
+   },
+   "inputs": {
+    "electricity": 5,
+    "oil": 5,
+    "tools": 5
+   },
+   "name": {
+    "en": "Assembly Lines",
+    "zh": "流水线"
+   },
+   "outputs": {},
+   "techs": [
+    "conveyors"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_assembly_lines_building_motor_industry": {
+   "disallowing_laws": [],
+   "employment": {
+    "laborers": -1500,
+    "machinists": -500
+   },
+   "inputs": {
+    "electricity": 5,
+    "oil": 5,
+    "tools": 5
+   },
+   "name": {
+    "en": "Assembly Lines",
+    "zh": "流水线"
+   },
+   "outputs": {},
+   "techs": [
+    "conveyors"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_assembly_lines_building_munition_plant": {
+   "disallowing_laws": [],
+   "employment": {
+    "laborers": -2500
+   },
+   "inputs": {
+    "electricity": 5,
+    "oil": 10
+   },
+   "name": {
+    "en": "Assembly Lines",
+    "zh": "流水线"
+   },
+   "outputs": {},
+   "techs": [
+    "conveyors"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_assembly_lines_building_tooling_workshop": {
+   "disallowing_laws": [
+    "law_industry_banned"
+   ],
+   "employment": {
+    "laborers": -3000
+   },
+   "inputs": {
+    "electricity": 5,
+    "oil": 10
+   },
+   "name": {
+    "en": "Assembly Lines",
+    "zh": "流水线"
+   },
+   "outputs": {},
+   "techs": [
+    "conveyors"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_atmospheric_engine_pump_building_coal_mine": {
+   "disallowing_laws": [],
+   "employment": {
+    "engineers": 250,
+    "laborers": 3750,
+    "machinists": 500,
+    "shopkeepers": 500
+   },
+   "inputs": {
+    "tools": 10
+   },
+   "name": {
+    "en": "Atmospheric Engine Pump",
+    "zh": "大气蒸汽机泵"
+   },
+   "outputs": {
+    "coal": 40
+   },
+   "techs": [
+    "atmospheric_engine"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_atmospheric_engine_pump_building_gold_mine": {
+   "disallowing_laws": [],
+   "employment": {
+    "engineers": 250,
+    "laborers": 3750,
+    "machinists": 500,
+    "shopkeepers": 500
+   },
+   "inputs": {
+    "coal": 10,
+    "tools": 10
+   },
+   "name": {
+    "en": "Atmospheric Engine Pump",
+    "zh": "大气蒸汽机泵"
+   },
+   "outputs": {
+    "gold": 15
+   },
+   "techs": [
+    "atmospheric_engine"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_atmospheric_engine_pump_building_iron_mine": {
+   "disallowing_laws": [],
+   "employment": {
+    "engineers": 250,
+    "laborers": 3750,
+    "machinists": 500,
+    "shopkeepers": 500
+   },
+   "inputs": {
+    "coal": 10,
+    "tools": 10
+   },
+   "name": {
+    "en": "Atmospheric Engine Pump",
+    "zh": "大气蒸汽机泵"
+   },
+   "outputs": {
+    "iron": 40
+   },
+   "techs": [
+    "atmospheric_engine"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_atmospheric_engine_pump_building_lead_mine": {
+   "disallowing_laws": [],
+   "employment": {
+    "engineers": 250,
+    "laborers": 3750,
+    "machinists": 500,
+    "shopkeepers": 500
+   },
+   "inputs": {
+    "coal": 10,
+    "tools": 10
+   },
+   "name": {
+    "en": "Atmospheric Engine Pump",
+    "zh": "大气蒸汽机泵"
+   },
+   "outputs": {
+    "lead": 40
+   },
+   "techs": [
+    "atmospheric_engine"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_atmospheric_engine_pump_building_sulfur_mine": {
+   "disallowing_laws": [],
+   "employment": {
+    "engineers": 250,
+    "laborers": 3750,
+    "machinists": 500,
+    "shopkeepers": 500
+   },
+   "inputs": {
+    "coal": 10,
+    "tools": 10
+   },
+   "name": {
+    "en": "Atmospheric Engine Pump",
+    "zh": "大气蒸汽机泵"
+   },
+   "outputs": {
+    "sulfur": 40
+   },
+   "techs": [
+    "atmospheric_engine"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_automated_bakery": {
+   "disallowing_laws": [
+    "law_industry_banned"
+   ],
+   "employment": {
+    "laborers": -2500
+   },
+   "inputs": {
+    "tools": 10
+   },
+   "name": {
+    "en": "Automated Bakery",
+    "zh": "自动化面包房"
+   },
+   "outputs": {},
+   "techs": [
+    "dough_rollers"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_automatic_bottle_blowers": {
+   "disallowing_laws": [
+    "law_industry_banned"
+   ],
+   "employment": {
+    "laborers": -2500
+   },
+   "inputs": {
+    "engines": 2,
+    "oil": 5,
+    "tools": 2
+   },
+   "name": {
+    "en": "Automatic Bottle Blowers",
+    "zh": "自动吹瓶机"
+   },
+   "outputs": {},
+   "techs": [
+    "automatic_bottle_blowers"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_automatic_power_looms": {
+   "disallowing_laws": [
+    "law_industry_banned"
+   ],
+   "employment": {
+    "laborers": -2500
+   },
+   "inputs": {
+    "electricity": 10,
+    "tools": 5
+   },
+   "name": {
+    "en": "Automatic Power Looms",
+    "zh": "自动化动力织机"
+   },
+   "outputs": {},
+   "techs": [
+    "electrical_capacitors"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_automation_disabled": {
+   "disallowing_laws": [],
+   "employment": {},
+   "inputs": {},
+   "name": {
+    "en": "Hand Assembly",
+    "zh": "手工装配"
+   },
+   "outputs": {},
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_automobile_production": {
+   "disallowing_laws": [],
+   "employment": {
+    "engineers": 1000,
+    "laborers": 2000,
+    "machinists": 1500,
+    "shopkeepers": 500
+   },
+   "inputs": {
+    "engines": 10,
+    "oil": 5,
+    "rubber": 5
+   },
+   "name": {
+    "en": "Automobile Production",
+    "zh": "汽车生产"
+   },
+   "outputs": {
+    "automobiles": 30
+   },
+   "techs": [
+    "combustion_engine"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_bakery": {
+   "disallowing_laws": [],
+   "employment": {
+    "laborers": 4500,
+    "shopkeepers": 500
+   },
+   "inputs": {
+    "grain": 40
+   },
+   "name": {
+    "en": "Bakeries",
+    "zh": "面包房"
+   },
+   "outputs": {
+    "groceries": 45
+   },
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_baking_powder": {
+   "disallowing_laws": [],
+   "employment": {
+    "engineers": 250,
+    "laborers": 3500,
+    "machinists": 750,
+    "shopkeepers": 500
+   },
+   "inputs": {
+    "grain": 80,
+    "sugar": 30
+   },
+   "name": {
+    "en": "Baking Powder",
+    "zh": "发酵粉"
+   },
+   "outputs": {
+    "groceries": 120
+   },
+   "techs": [
+    "baking_powder"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_barbed_wire_fences": {
+   "disallowing_laws": [],
+   "employment": {
+    "laborers": -500
+   },
+   "inputs": {
+    "iron": 1
+   },
+   "name": {
+    "en": "Barbed Wire Fences",
+    "zh": "有刺铁丝围栏"
+   },
+   "outputs": {},
+   "techs": [
+    "field_works"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_basic_army_logistics_center": {
+   "disallowing_laws": [],
+   "employment": {
+    "bureaucrats": 30,
+    "laborers": 60,
+    "officers": 10
+   },
+   "inputs": {},
+   "name": {
+    "en": "Base",
+    "zh": "基础"
+   },
+   "outputs": {},
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_basic_naval_logistics_center": {
+   "disallowing_laws": [],
+   "employment": {
+    "bureaucrats": 30,
+    "laborers": 60,
+    "officers": 10
+   },
+   "inputs": {},
+   "name": {
+    "en": "Base",
+    "zh": "基础"
+   },
+   "outputs": {},
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_basic_port": {
+   "disallowing_laws": [],
+   "employment": {
+    "bureaucrats": 100,
+    "clerks": 200,
+    "laborers": 700
+   },
+   "inputs": {
+    "clippers": 6
+   },
+   "name": {
+    "en": "Cargo Port",
+    "zh": "货运港口"
+   },
+   "outputs": {
+    "merchant_marine": 9
+   },
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_basic_shipbuilding": {
+   "disallowing_laws": [],
+   "employment": {
+    "engineers": 250,
+    "laborers": 3500,
+    "machinists": 750,
+    "shopkeepers": 500
+   },
+   "inputs": {
+    "fabric": 20,
+    "wood": 40
+   },
+   "name": {
+    "en": "Wooden Ships",
+    "zh": "木船"
+   },
+   "outputs": {
+    "clippers": 40
+   },
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_battlefleet_tactics": {
+   "disallowing_laws": [],
+   "employment": {},
+   "inputs": {},
+   "name": {
+    "en": "Battlefleet Tactics",
+    "zh": "作战舰队战术"
+   },
+   "outputs": {},
+   "techs": [
+    "battlefleet_tactics"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_bessemer_process": {
+   "disallowing_laws": [],
+   "employment": {
+    "engineers": 500,
+    "laborers": 3000,
+    "machinists": 1000,
+    "shopkeepers": 500
+   },
+   "inputs": {
+    "coal": 30,
+    "iron": 60
+   },
+   "name": {
+    "en": "Bessemer Process",
+    "zh": "贝塞麦转炉炼钢法"
+   },
+   "outputs": {
+    "steel": 90
+   },
+   "techs": [
+    "bessemer_process"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_bleached_paper": {
+   "disallowing_laws": [],
+   "employment": {
+    "engineers": 500,
+    "laborers": 3000,
+    "machinists": 1000,
+    "shopkeepers": 500
+   },
+   "inputs": {
+    "dye": 10,
+    "sulfur": 10,
+    "wood": 30
+   },
+   "name": {
+    "en": "Paper Bleaching",
+    "zh": "纸浆漂白"
+   },
+   "outputs": {
+    "paper": 100
+   },
+   "techs": [
+    "chemical_bleaching"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_blister_steel_process": {
+   "disallowing_laws": [],
+   "employment": {
+    "engineers": 250,
+    "laborers": 3500,
+    "machinists": 750,
+    "shopkeepers": 500
+   },
+   "inputs": {
+    "coal": 30,
+    "iron": 40
+   },
+   "name": {
+    "en": "Blister Steel Process",
+    "zh": "泡钢法"
+   },
+   "outputs": {
+    "steel": 65
+   },
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_bolt_action_rifles": {
+   "disallowing_laws": [],
+   "employment": {
+    "engineers": 750,
+    "laborers": 2500,
+    "machinists": 1250,
+    "shopkeepers": 500
+   },
+   "inputs": {
+    "hardwood": 10,
+    "oil": 10,
+    "steel": 20,
+    "tools": 20
+   },
+   "name": {
+    "en": "Bolt Action Rifles",
+    "zh": "栓动步枪"
+   },
+   "outputs": {
+    "small_arms": 100
+   },
+   "techs": [
+    "bolt_action_rifles"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_bone_china": {
+   "disallowing_laws": [],
+   "employment": {
+    "shopkeepers": 500
+   },
+   "inputs": {
+    "dye": 10
+   },
+   "name": {
+    "en": "Bone China",
+    "zh": "骨瓷"
+   },
+   "outputs": {
+    "glass": -20,
+    "porcelain": 30
+   },
+   "techs": [
+    "chemical_bleaching"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_bourgeoisie_patronage": {
+   "disallowing_laws": [
+    "law_command_economy",
+    "law_cooperative_ownership"
+   ],
+   "employment": {
+    "academics": 1500,
+    "clerks": 2500,
+    "laborers": 1000
+   },
+   "inputs": {},
+   "name": {
+    "en": "Bourgeoisie Patronage",
+    "zh": "资产阶级赞助"
+   },
+   "outputs": {},
+   "techs": [
+    "realism"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_breech_loaders": {
+   "disallowing_laws": [],
+   "employment": {
+    "engineers": 500,
+    "laborers": 2750,
+    "machinists": 1500,
+    "shopkeepers": 500
+   },
+   "inputs": {
+    "hardwood": 10,
+    "steel": 25,
+    "tools": 10
+   },
+   "name": {
+    "en": "Breech Loaders",
+    "zh": "后膛炮"
+   },
+   "outputs": {
+    "artillery": 65
+   },
+   "techs": [
+    "breech_loading_artillery"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_brine_electrolysis": {
+   "disallowing_laws": [],
+   "employment": {
+    "engineers": 1500,
+    "laborers": 1000,
+    "machinists": 1000,
+    "shopkeepers": 500
+   },
+   "inputs": {
+    "electricity": 20,
+    "fertilizer": 50,
+    "paper": 30,
+    "sulfur": 40
+   },
+   "name": {
+    "en": "Brine Electrolysis",
+    "zh": "氯碱法"
+   },
+   "outputs": {
+    "explosives": 150
+   },
+   "techs": [
+    "electrical_capacitors"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_butchering_tools": {
+   "disallowing_laws": [],
+   "employment": {
+    "farmers": 1000,
+    "laborers": 4000
+   },
+   "inputs": {
+    "tools": 2
+   },
+   "name": {
+    "en": "Butchering Tools",
+    "zh": "屠宰工具"
+   },
+   "outputs": {
+    "meat": 15
+   },
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_canal": {
+   "disallowing_laws": [],
+   "employment": {
+    "bureaucrats": 500,
+    "clerks": 2000,
+    "machinists": 2500
+   },
+   "inputs": {
+    "coal": 15,
+    "tools": 10
+   },
+   "name": {
+    "en": "Canal",
+    "zh": "运河"
+   },
+   "outputs": {},
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_cannery": {
+   "disallowing_laws": [],
+   "employment": {
+    "machinists": 500
+   },
+   "inputs": {
+    "grain": -20,
+    "iron": 10,
+    "meat": 20
+   },
+   "name": {
+    "en": "Canned Meat",
+    "zh": "肉罐头"
+   },
+   "outputs": {
+    "groceries": 30
+   },
+   "techs": [
+    "canneries"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_cannery_fish": {
+   "disallowing_laws": [],
+   "employment": {
+    "machinists": 500
+   },
+   "inputs": {
+    "fish": 30,
+    "grain": -20,
+    "iron": 10
+   },
+   "name": {
+    "en": "Canned Fish",
+    "zh": "鱼罐头"
+   },
+   "outputs": {
+    "groceries": 30
+   },
+   "techs": [
+    "canneries"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_cannons": {
+   "disallowing_laws": [],
+   "employment": {
+    "laborers": 3500,
+    "machinists": 1000,
+    "shopkeepers": 500
+   },
+   "inputs": {
+    "hardwood": 10,
+    "iron": 15
+   },
+   "name": {
+    "en": "Cannons",
+    "zh": "火炮"
+   },
+   "outputs": {
+    "artillery": 25
+   },
+   "techs": [
+    "artillery"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_ceramics": {
+   "disallowing_laws": [],
+   "employment": {
+    "shopkeepers": 250
+   },
+   "inputs": {
+    "dye": 5
+   },
+   "name": {
+    "en": "Ceramics",
+    "zh": "陶瓷"
+   },
+   "outputs": {
+    "glass": -10,
+    "porcelain": 10
+   },
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_chainsaws": {
+   "disallowing_laws": [
+    "law_industry_banned"
+   ],
+   "employment": {
+    "engineers": 250,
+    "laborers": -1500
+   },
+   "inputs": {
+    "engines": 1,
+    "oil": 4
+   },
+   "name": {
+    "en": "Chainsaws",
+    "zh": "链锯"
+   },
+   "outputs": {},
+   "techs": [
+    "combustion_engine"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_chemical_fertilizer": {
+   "disallowing_laws": [],
+   "employment": {
+    "farmers": 2500,
+    "laborers": 2500
+   },
+   "inputs": {
+    "fertilizer": 15
+   },
+   "name": {
+    "en": "Chemical Fertilizers",
+    "zh": "化肥"
+   },
+   "outputs": {
+    "grain": 60
+   },
+   "techs": [
+    "nitrogen_fixation"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_chemical_fertilizer_building_rice_farm": {
+   "disallowing_laws": [],
+   "employment": {
+    "farmers": 5000,
+    "laborers": 5000
+   },
+   "inputs": {
+    "fertilizer": 30
+   },
+   "name": {
+    "en": "Chemical Fertilizers",
+    "zh": "化肥"
+   },
+   "outputs": {
+    "grain": 100
+   },
+   "techs": [
+    "nitrogen_fixation"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_citrus_orchards": {
+   "disallowing_laws": [],
+   "employment": {},
+   "inputs": {},
+   "name": {
+    "en": "Citrus Orchards",
+    "zh": "柑橘园"
+   },
+   "outputs": {
+    "fruit": 7,
+    "grain": -8,
+    "sugar": 1
+   },
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_coal-fired_plant": {
+   "disallowing_laws": [],
+   "employment": {
+    "engineers": 150,
+    "laborers": 350,
+    "machinists": 500
+   },
+   "inputs": {
+    "coal": 20,
+    "engines": 6
+   },
+   "name": {
+    "en": "Coal-Fired Plant",
+    "zh": "燃煤电厂"
+   },
+   "outputs": {
+    "electricity": 50
+   },
+   "techs": [
+    "steam_turbine"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_combustion_derricks": {
+   "disallowing_laws": [],
+   "employment": {
+    "engineers": 1000,
+    "laborers": 2000,
+    "machinists": 1500,
+    "shopkeepers": 500
+   },
+   "inputs": {
+    "engines": 10
+   },
+   "name": {
+    "en": "Combustion Engine Derricks",
+    "zh": "内燃机井架"
+   },
+   "outputs": {
+    "oil": 100
+   },
+   "techs": [
+    "combustion_engine"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_company_headquarter_government_run": {
+   "disallowing_laws": [],
+   "employment": {
+    "bureaucrats": 50,
+    "clerks": 50
+   },
+   "inputs": {},
+   "name": {
+    "en": "Government Run",
+    "zh": "政府运营"
+   },
+   "outputs": {},
+   "techs": [],
+   "unlocking_laws": [
+    "law_command_economy"
+   ]
+  },
+  "pm_company_headquarter_principle_divine_economics_2": {
+   "disallowing_laws": [
+    "law_command_economy",
+    "law_cooperative_ownership"
+   ],
+   "employment": {
+    "capitalists": 25,
+    "clergymen": 25
+   },
+   "inputs": {},
+   "name": {
+    "en": "Increased Clergy Oversight",
+    "zh": "促进教士监督"
+   },
+   "outputs": {},
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_company_headquarter_principle_divine_economics_2_academics": {
+   "disallowing_laws": [
+    "law_command_economy",
+    "law_cooperative_ownership"
+   ],
+   "employment": {
+    "academics": 15,
+    "capitalists": 10,
+    "clergymen": 25
+   },
+   "inputs": {},
+   "name": {
+    "en": "Increased Clergy Oversight",
+    "zh": "促进教士监督"
+   },
+   "outputs": {},
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_company_headquarter_principle_divine_economics_2_aristocrats": {
+   "disallowing_laws": [
+    "law_command_economy",
+    "law_cooperative_ownership",
+    "law_commercialized_agriculture"
+   ],
+   "employment": {
+    "aristocrats": 15,
+    "capitalists": 10,
+    "clergymen": 25
+   },
+   "inputs": {},
+   "name": {
+    "en": "Increased Clergy Oversight",
+    "zh": "促进教士监督"
+   },
+   "outputs": {},
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_company_headquarter_principle_divine_economics_2_aristocrats_commercial_agriculture": {
+   "disallowing_laws": [
+    "law_command_economy",
+    "law_cooperative_ownership"
+   ],
+   "employment": {
+    "aristocrats": 10,
+    "capitalists": 15,
+    "clergymen": 25
+   },
+   "inputs": {},
+   "name": {
+    "en": "Increased Clergy Oversight",
+    "zh": "促进教士监督"
+   },
+   "outputs": {},
+   "techs": [],
+   "unlocking_laws": [
+    "law_commercialized_agriculture"
+   ]
+  },
+  "pm_company_headquarter_principle_divine_economics_2_bureaucrats": {
+   "disallowing_laws": [
+    "law_command_economy",
+    "law_cooperative_ownership"
+   ],
+   "employment": {
+    "bureaucrats": 15,
+    "capitalists": 10,
+    "clergymen": 25
+   },
+   "inputs": {},
+   "name": {
+    "en": "Increased Clergy Oversight",
+    "zh": "促进教士监督"
+   },
+   "outputs": {},
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_company_headquarter_principle_divine_economics_2_shopkeepers": {
+   "disallowing_laws": [
+    "law_command_economy",
+    "law_cooperative_ownership"
+   ],
+   "employment": {
+    "capitalists": 10,
+    "clergymen": 25,
+    "shopkeepers": 15
+   },
+   "inputs": {},
+   "name": {
+    "en": "Increased Clergy Oversight",
+    "zh": "促进教士监督"
+   },
+   "outputs": {},
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_company_headquarter_privately_owned": {
+   "disallowing_laws": [
+    "law_command_economy",
+    "law_cooperative_ownership"
+   ],
+   "employment": {
+    "capitalists": 25,
+    "clerks": 25
+   },
+   "inputs": {},
+   "name": {
+    "en": "Privately Owned",
+    "zh": "私人所有"
+   },
+   "outputs": {},
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_company_headquarter_privately_owned_academics": {
+   "disallowing_laws": [
+    "law_command_economy",
+    "law_cooperative_ownership"
+   ],
+   "employment": {
+    "academics": 25,
+    "capitalists": 10,
+    "clerks": 15
+   },
+   "inputs": {},
+   "name": {
+    "en": "Privately Owned",
+    "zh": "私人所有"
+   },
+   "outputs": {},
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_company_headquarter_privately_owned_aristocrats": {
+   "disallowing_laws": [
+    "law_command_economy",
+    "law_cooperative_ownership",
+    "law_commercialized_agriculture"
+   ],
+   "employment": {
+    "aristocrats": 15,
+    "capitalists": 10,
+    "clerks": 25
+   },
+   "inputs": {},
+   "name": {
+    "en": "Privately Owned",
+    "zh": "私人所有"
+   },
+   "outputs": {},
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_company_headquarter_privately_owned_aristocrats_commercial_agriculture": {
+   "disallowing_laws": [
+    "law_command_economy",
+    "law_cooperative_ownership"
+   ],
+   "employment": {
+    "aristocrats": 10,
+    "capitalists": 15,
+    "clerks": 25
+   },
+   "inputs": {},
+   "name": {
+    "en": "Privately Owned",
+    "zh": "私人所有"
+   },
+   "outputs": {},
+   "techs": [],
+   "unlocking_laws": [
+    "law_commercialized_agriculture"
+   ]
+  },
+  "pm_company_headquarter_privately_owned_bureaucrats": {
+   "disallowing_laws": [
+    "law_command_economy",
+    "law_cooperative_ownership"
+   ],
+   "employment": {
+    "bureaucrats": 25,
+    "capitalists": 10,
+    "clerks": 15
+   },
+   "inputs": {},
+   "name": {
+    "en": "Privately Owned",
+    "zh": "私人所有"
+   },
+   "outputs": {},
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_company_headquarter_privately_owned_shopkeepers": {
+   "disallowing_laws": [
+    "law_command_economy",
+    "law_cooperative_ownership"
+   ],
+   "employment": {
+    "capitalists": 10,
+    "clerks": 15,
+    "shopkeepers": 25
+   },
+   "inputs": {},
+   "name": {
+    "en": "Privately Owned",
+    "zh": "私人所有"
+   },
+   "outputs": {},
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_company_headquarter_worker_cooperative": {
+   "disallowing_laws": [],
+   "employment": {
+    "clerks": 50,
+    "shopkeepers": 50
+   },
+   "inputs": {},
+   "name": {
+    "en": "Worker Cooperative",
+    "zh": "劳动合作社"
+   },
+   "outputs": {},
+   "techs": [],
+   "unlocking_laws": [
+    "law_cooperative_ownership"
+   ]
+  },
+  "pm_complex_shipbuilding": {
+   "disallowing_laws": [],
+   "employment": {
+    "engineers": 500,
+    "laborers": 3000,
+    "machinists": 1000,
+    "shopkeepers": 500
+   },
+   "inputs": {
+    "engines": 5,
+    "fabric": 20,
+    "hardwood": 20,
+    "wood": 20
+   },
+   "name": {
+    "en": "Reinforced Wooden Ships",
+    "zh": "强化木船"
+   },
+   "outputs": {
+    "clippers": 70
+   },
+   "techs": [
+    "screw_frigate"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_compression_ignition_tractors": {
+   "disallowing_laws": [],
+   "employment": {
+    "laborers": -2500
+   },
+   "inputs": {
+    "engines": 1,
+    "oil": 2
+   },
+   "name": {
+    "en": "Compression Ignition Tractors",
+    "zh": "压燃拖拉机"
+   },
+   "outputs": {},
+   "techs": [
+    "compression_ignition"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_condensing_engine_pump_building_coal_mine": {
+   "disallowing_laws": [],
+   "employment": {
+    "engineers": 500,
+    "laborers": 3000,
+    "machinists": 1000,
+    "shopkeepers": 500
+   },
+   "inputs": {
+    "tools": 15
+   },
+   "name": {
+    "en": "Condensing Engine Pump",
+    "zh": "冷凝蒸汽机泵"
+   },
+   "outputs": {
+    "coal": 60
+   },
+   "techs": [
+    "watertube_boiler"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_condensing_engine_pump_building_gold_mine": {
+   "disallowing_laws": [],
+   "employment": {
+    "engineers": 500,
+    "laborers": 3000,
+    "machinists": 1000,
+    "shopkeepers": 500
+   },
+   "inputs": {
+    "coal": 15,
+    "tools": 15
+   },
+   "name": {
+    "en": "Condensing Engine Pump",
+    "zh": "冷凝蒸汽机泵"
+   },
+   "outputs": {
+    "gold": 25
+   },
+   "techs": [
+    "watertube_boiler"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_condensing_engine_pump_building_iron_mine": {
+   "disallowing_laws": [],
+   "employment": {
+    "engineers": 500,
+    "laborers": 3000,
+    "machinists": 1000,
+    "shopkeepers": 500
+   },
+   "inputs": {
+    "coal": 15,
+    "tools": 15
+   },
+   "name": {
+    "en": "Condensing Engine Pump",
+    "zh": "冷凝蒸汽机泵"
+   },
+   "outputs": {
+    "iron": 60
+   },
+   "techs": [
+    "watertube_boiler"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_condensing_engine_pump_building_lead_mine": {
+   "disallowing_laws": [],
+   "employment": {
+    "engineers": 500,
+    "laborers": 3000,
+    "machinists": 1000,
+    "shopkeepers": 500
+   },
+   "inputs": {
+    "coal": 15,
+    "tools": 15
+   },
+   "name": {
+    "en": "Condensing Engine Pump",
+    "zh": "冷凝蒸汽机泵"
+   },
+   "outputs": {
+    "lead": 60
+   },
+   "techs": [
+    "watertube_boiler"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_condensing_engine_pump_building_sulfur_mine": {
+   "disallowing_laws": [],
+   "employment": {
+    "engineers": 500,
+    "laborers": 3000,
+    "machinists": 1000,
+    "shopkeepers": 500
+   },
+   "inputs": {
+    "coal": 15,
+    "tools": 15
+   },
+   "name": {
+    "en": "Condensing Engine Pump",
+    "zh": "冷凝蒸汽机泵"
+   },
+   "outputs": {
+    "sulfur": 60
+   },
+   "techs": [
+    "watertube_boiler"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_corvee_labor": {
+   "disallowing_laws": [],
+   "employment": {},
+   "inputs": {},
+   "name": {
+    "en": "Corvée Labor",
+    "zh": "徭役劳动"
+   },
+   "outputs": {
+    "grain": 0.25
+   },
+   "techs": [],
+   "unlocking_laws": [
+    "law_manorialism"
+   ]
+  },
+  "pm_covered_markets": {
+   "disallowing_laws": [],
+   "employment": {
+    "clerks": 1900,
+    "laborers": 2500,
+    "shopkeepers": 400
+   },
+   "inputs": {
+    "glass": 2,
+    "steel": 1
+   },
+   "name": {
+    "en": "Covered Markets",
+    "zh": "室内市场"
+   },
+   "outputs": {
+    "services": 25
+   },
+   "techs": [
+    "steel_frame_buildings"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_craftsman_sewing": {
+   "disallowing_laws": [],
+   "employment": {
+    "shopkeepers": 500
+   },
+   "inputs": {
+    "fabric": -15,
+    "silk": 15
+   },
+   "name": {
+    "en": "Craftsman Sewing",
+    "zh": "工匠缝纫"
+   },
+   "outputs": {
+    "clothes": -30,
+    "luxury_clothes": 30
+   },
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_crude_tools": {
+   "disallowing_laws": [],
+   "employment": {
+    "laborers": 4500,
+    "shopkeepers": 500
+   },
+   "inputs": {
+    "wood": 30
+   },
+   "name": {
+    "en": "Crude Tools",
+    "zh": "粗制工具"
+   },
+   "outputs": {
+    "tools": 30
+   },
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_crystal_glass": {
+   "disallowing_laws": [],
+   "employment": {
+    "engineers": 500,
+    "laborers": 3000,
+    "machinists": 1000,
+    "shopkeepers": 500
+   },
+   "inputs": {
+    "lead": 35
+   },
+   "name": {
+    "en": "Crystal Glass",
+    "zh": "水晶玻璃"
+   },
+   "outputs": {
+    "glass": 60
+   },
+   "techs": [
+    "crystal_glass"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_default_building_angkor_wat": {
+   "disallowing_laws": [],
+   "employment": {
+    "clergymen": 500
+   },
+   "inputs": {},
+   "name": {
+    "en": "Angkor Wat",
+    "zh": "吴哥窟"
+   },
+   "outputs": {},
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_default_building_big_ben": {
+   "disallowing_laws": [],
+   "employment": {
+    "machinists": 100
+   },
+   "inputs": {},
+   "name": {
+    "en": "Big Ben",
+    "zh": "大本钟"
+   },
+   "outputs": {},
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_default_building_cristo_redentor": {
+   "disallowing_laws": [],
+   "employment": {
+    "clergymen": 100
+   },
+   "inputs": {},
+   "name": {
+    "en": "Default Production",
+    "zh": "默认生产"
+   },
+   "outputs": {},
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_default_building_eiffel_tower": {
+   "disallowing_laws": [],
+   "employment": {
+    "machinists": 100
+   },
+   "inputs": {},
+   "name": {
+    "en": "Default Production",
+    "zh": "默认生产"
+   },
+   "outputs": {},
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_default_building_estacion_de_madrid_atocha": {
+   "disallowing_laws": [],
+   "employment": {
+    "clerks": 100,
+    "laborers": 200,
+    "machinists": 200
+   },
+   "inputs": {},
+   "name": {
+    "en": "Default Production",
+    "zh": "默认生产"
+   },
+   "outputs": {},
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_default_building_forbidden_city": {
+   "disallowing_laws": [],
+   "employment": {
+    "bureaucrats": 800,
+    "clergymen": 200
+   },
+   "inputs": {},
+   "name": {
+    "en": "Forbidden City",
+    "zh": "紫禁城"
+   },
+   "outputs": {},
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_default_building_gran_teatro_de_la_habana": {
+   "disallowing_laws": [],
+   "employment": {
+    "academics": 200
+   },
+   "inputs": {
+    "paper": 10
+   },
+   "name": {
+    "en": "Default Production",
+    "zh": "默认生产"
+   },
+   "outputs": {
+    "fine_art": 5
+   },
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_default_building_hagia_sophia": {
+   "disallowing_laws": [],
+   "employment": {
+    "clergymen": 200
+   },
+   "inputs": {},
+   "name": {
+    "en": "Hagia Sophia",
+    "zh": "圣索菲亚"
+   },
+   "outputs": {},
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_default_building_kaiserforum_1": {
+   "disallowing_laws": [],
+   "employment": {},
+   "inputs": {},
+   "name": {
+    "en": "Default Production",
+    "zh": "默认生产"
+   },
+   "outputs": {},
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_default_building_kaiserforum_2": {
+   "disallowing_laws": [],
+   "employment": {},
+   "inputs": {},
+   "name": {
+    "en": "Default Production",
+    "zh": "默认生产"
+   },
+   "outputs": {},
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_default_building_kaiserforum_3": {
+   "disallowing_laws": [],
+   "employment": {
+    "academics": 100,
+    "aristocrats": 100,
+    "bureaucrats": 200
+   },
+   "inputs": {},
+   "name": {
+    "en": "Default Production",
+    "zh": "默认生产"
+   },
+   "outputs": {},
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_default_building_kaiserforum_4": {
+   "disallowing_laws": [],
+   "employment": {
+    "academics": 100,
+    "aristocrats": 100,
+    "bureaucrats": 200
+   },
+   "inputs": {},
+   "name": {
+    "en": "Default Production",
+    "zh": "默认生产"
+   },
+   "outputs": {},
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_default_building_manila_cathedral_monument": {
+   "disallowing_laws": [],
+   "employment": {
+    "clergymen": 100
+   },
+   "inputs": {},
+   "name": {
+    "en": "Default Production",
+    "zh": "默认生产"
+   },
+   "outputs": {},
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_default_building_manila_cathedral_ruins": {
+   "disallowing_laws": [],
+   "employment": {
+    "clergymen": 50
+   },
+   "inputs": {},
+   "name": {
+    "en": "Default Production",
+    "zh": "默认生产"
+   },
+   "outputs": {},
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_default_building_mosque_of_djenne": {
+   "disallowing_laws": [],
+   "employment": {
+    "clergymen": 500
+   },
+   "inputs": {},
+   "name": {
+    "en": "Mosque of Djenne",
+    "zh": "杰内大清真寺"
+   },
+   "outputs": {},
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_default_building_pena_convent": {
+   "disallowing_laws": [],
+   "employment": {},
+   "inputs": {},
+   "name": {
+    "en": "Default Production",
+    "zh": "默认生产"
+   },
+   "outputs": {},
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_default_building_pena_palace": {
+   "disallowing_laws": [],
+   "employment": {
+    "aristocrats": 100,
+    "bureaucrats": 200
+   },
+   "inputs": {},
+   "name": {
+    "en": "Default Production",
+    "zh": "默认生产"
+   },
+   "outputs": {},
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_default_building_sagrada_familia_cathedral_1": {
+   "disallowing_laws": [],
+   "employment": {},
+   "inputs": {},
+   "name": {
+    "en": "Default Production",
+    "zh": "默认生产"
+   },
+   "outputs": {},
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_default_building_sagrada_familia_cathedral_2": {
+   "disallowing_laws": [],
+   "employment": {},
+   "inputs": {},
+   "name": {
+    "en": "Default Production",
+    "zh": "默认生产"
+   },
+   "outputs": {},
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_default_building_sagrada_familia_cathedral_3": {
+   "disallowing_laws": [],
+   "employment": {
+    "clergymen": 400
+   },
+   "inputs": {},
+   "name": {
+    "en": "Default Production",
+    "zh": "默认生产"
+   },
+   "outputs": {},
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_default_building_saint_basils_cathedral": {
+   "disallowing_laws": [],
+   "employment": {
+    "clergymen": 200
+   },
+   "inputs": {},
+   "name": {
+    "en": "Saint Basil’s Cathedral",
+    "zh": "圣瓦西里大教堂"
+   },
+   "outputs": {},
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_default_building_statue_of_liberty": {
+   "disallowing_laws": [],
+   "employment": {
+    "bureaucrats": 100
+   },
+   "inputs": {},
+   "name": {
+    "en": "Statue of Liberty",
+    "zh": "自由女神像"
+   },
+   "outputs": {},
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_default_building_taj_mahal": {
+   "disallowing_laws": [],
+   "employment": {
+    "bureaucrats": 100
+   },
+   "inputs": {},
+   "name": {
+    "en": "Taj Mahal",
+    "zh": "泰姬陵"
+   },
+   "outputs": {},
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_default_building_vatican_city": {
+   "disallowing_laws": [],
+   "employment": {
+    "clergymen": 500
+   },
+   "inputs": {},
+   "name": {
+    "en": "Vatican City",
+    "zh": "梵蒂冈城"
+   },
+   "outputs": {},
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_default_building_victoria_terminus": {
+   "disallowing_laws": [],
+   "employment": {
+    "clerks": 100,
+    "laborers": 200,
+    "machinists": 200
+   },
+   "inputs": {},
+   "name": {
+    "en": "Default Production",
+    "zh": "默认生产"
+   },
+   "outputs": {},
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_default_building_white_house": {
+   "disallowing_laws": [],
+   "employment": {
+    "bureaucrats": 500
+   },
+   "inputs": {},
+   "name": {
+    "en": "White House",
+    "zh": "白宫"
+   },
+   "outputs": {},
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_diesel_engines": {
+   "disallowing_laws": [],
+   "employment": {
+    "engineers": 1500,
+    "laborers": 1500,
+    "machinists": 1500,
+    "shopkeepers": 500
+   },
+   "inputs": {
+    "oil": 50,
+    "steel": 50
+   },
+   "name": {
+    "en": "Diesel Engines",
+    "zh": "柴油发动机"
+   },
+   "outputs": {
+    "engines": 120
+   },
+   "techs": [
+    "compression_ignition"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_diesel_pump_building_coal_mine": {
+   "disallowing_laws": [],
+   "employment": {
+    "engineers": 750,
+    "laborers": 2250,
+    "machinists": 1500,
+    "shopkeepers": 500
+   },
+   "inputs": {
+    "oil": 5,
+    "tools": 15
+   },
+   "name": {
+    "en": "Diesel Pump",
+    "zh": "柴油泵"
+   },
+   "outputs": {
+    "coal": 90
+   },
+   "techs": [
+    "compression_ignition"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_diesel_pump_building_gold_mine": {
+   "disallowing_laws": [],
+   "employment": {
+    "engineers": 750,
+    "laborers": 2250,
+    "machinists": 1500,
+    "shopkeepers": 500
+   },
+   "inputs": {
+    "oil": 5,
+    "tools": 15
+   },
+   "name": {
+    "en": "Diesel Pump",
+    "zh": "柴油泵"
+   },
+   "outputs": {
+    "gold": 30
+   },
+   "techs": [
+    "compression_ignition"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_diesel_pump_building_iron_mine": {
+   "disallowing_laws": [],
+   "employment": {
+    "engineers": 750,
+    "laborers": 2250,
+    "machinists": 1500,
+    "shopkeepers": 500
+   },
+   "inputs": {
+    "oil": 5,
+    "tools": 15
+   },
+   "name": {
+    "en": "Diesel Pump",
+    "zh": "柴油泵"
+   },
+   "outputs": {
+    "iron": 70
+   },
+   "techs": [
+    "compression_ignition"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_diesel_pump_building_lead_mine": {
+   "disallowing_laws": [],
+   "employment": {
+    "engineers": 750,
+    "laborers": 2250,
+    "machinists": 1500,
+    "shopkeepers": 500
+   },
+   "inputs": {
+    "oil": 5,
+    "tools": 15
+   },
+   "name": {
+    "en": "Diesel Pump",
+    "zh": "柴油泵"
+   },
+   "outputs": {
+    "lead": 70
+   },
+   "techs": [
+    "compression_ignition"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_diesel_pump_building_sulfur_mine": {
+   "disallowing_laws": [],
+   "employment": {
+    "engineers": 750,
+    "laborers": 2250,
+    "machinists": 1500,
+    "shopkeepers": 500
+   },
+   "inputs": {
+    "oil": 5,
+    "tools": 15
+   },
+   "name": {
+    "en": "Diesel Pump",
+    "zh": "柴油泵"
+   },
+   "outputs": {
+    "sulfur": 80
+   },
+   "techs": [
+    "compression_ignition"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_diesel_trains": {
+   "disallowing_laws": [],
+   "employment": {
+    "clerks": 200,
+    "engineers": 100,
+    "laborers": 400,
+    "machinists": 300
+   },
+   "inputs": {
+    "engines": 5,
+    "oil": 6
+   },
+   "name": {
+    "en": "Diesel Trains",
+    "zh": "内燃机车"
+   },
+   "outputs": {
+    "transportation": 40
+   },
+   "techs": [
+    "compression_ignition"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_diesel_trains_principle_transport_3": {
+   "disallowing_laws": [],
+   "employment": {
+    "clerks": 200,
+    "engineers": 100,
+    "laborers": 400,
+    "machinists": 300
+   },
+   "inputs": {
+    "engines": 6,
+    "oil": 8
+   },
+   "name": {
+    "en": "Joint Diesel Trains",
+    "zh": "联合内燃机车"
+   },
+   "outputs": {
+    "transportation": 50
+   },
+   "techs": [
+    "compression_ignition"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_disabled_canning": {
+   "disallowing_laws": [],
+   "employment": {},
+   "inputs": {},
+   "name": {
+    "en": "Jars",
+    "zh": "广口瓶"
+   },
+   "outputs": {},
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_disabled_ceramics": {
+   "disallowing_laws": [],
+   "employment": {},
+   "inputs": {},
+   "name": {
+    "en": "Prioritize Glass Production",
+    "zh": "优先玻璃生产"
+   },
+   "outputs": {},
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_disabled_distillery": {
+   "disallowing_laws": [],
+   "employment": {},
+   "inputs": {},
+   "name": {
+    "en": "Prioritize Grocery Production",
+    "zh": "优先加工食品生产"
+   },
+   "outputs": {},
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_dummy": {
+   "disallowing_laws": [],
+   "employment": {},
+   "inputs": {},
+   "name": {
+    "en": "Dummy PM for graphics-only buildings. Should never be shown in UI.",
+    "zh": "用于仅图像建筑的虚拟生产方式。永远不应在UI中显示。"
+   },
+   "outputs": {},
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_dye_production": {
+   "disallowing_laws": [],
+   "employment": {
+    "engineers": 2000,
+    "laborers": 1000,
+    "machinists": 1500,
+    "shopkeepers": 500
+   },
+   "inputs": {
+    "fertilizer": 30,
+    "sulfur": 20
+   },
+   "name": {
+    "en": "Synthetic Dye",
+    "zh": "合成染料"
+   },
+   "outputs": {
+    "dye": 80
+   },
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_dye_workshops": {
+   "disallowing_laws": [],
+   "employment": {
+    "laborers": 4000,
+    "machinists": 500,
+    "shopkeepers": 500
+   },
+   "inputs": {
+    "dye": 5,
+    "fabric": 40
+   },
+   "name": {
+    "en": "Dye Workshops",
+    "zh": "染料工坊"
+   },
+   "outputs": {
+    "clothes": 60
+   },
+   "techs": [
+    "lathe"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_dynamite_building_coal_mine": {
+   "disallowing_laws": [],
+   "employment": {
+    "engineers": 250
+   },
+   "inputs": {
+    "explosives": 10
+   },
+   "name": {
+    "en": "Dynamite",
+    "zh": "黄色炸药"
+   },
+   "outputs": {
+    "coal": 25
+   },
+   "techs": [
+    "dynamite"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_dynamite_building_gold_mine": {
+   "disallowing_laws": [],
+   "employment": {
+    "engineers": 250
+   },
+   "inputs": {
+    "explosives": 10
+   },
+   "name": {
+    "en": "Dynamite",
+    "zh": "黄色炸药"
+   },
+   "outputs": {
+    "gold": 10
+   },
+   "techs": [
+    "dynamite"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_dynamite_building_iron_mine": {
+   "disallowing_laws": [],
+   "employment": {
+    "engineers": 250
+   },
+   "inputs": {
+    "explosives": 10
+   },
+   "name": {
+    "en": "Dynamite",
+    "zh": "黄色炸药"
+   },
+   "outputs": {
+    "iron": 20
+   },
+   "techs": [
+    "dynamite"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_dynamite_building_lead_mine": {
+   "disallowing_laws": [],
+   "employment": {
+    "engineers": 250
+   },
+   "inputs": {
+    "explosives": 10
+   },
+   "name": {
+    "en": "Dynamite",
+    "zh": "黄色炸药"
+   },
+   "outputs": {
+    "lead": 20
+   },
+   "techs": [
+    "dynamite"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_dynamite_building_sulfur_mine": {
+   "disallowing_laws": [],
+   "employment": {
+    "engineers": 250
+   },
+   "inputs": {
+    "explosives": 10
+   },
+   "name": {
+    "en": "Dynamite",
+    "zh": "黄色炸药"
+   },
+   "outputs": {
+    "sulfur": 20
+   },
+   "techs": [
+    "dynamite"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_early_power_plant": {
+   "disallowing_laws": [],
+   "employment": {
+    "engineers": 100,
+    "laborers": 500,
+    "machinists": 400
+   },
+   "inputs": {
+    "coal": 5,
+    "engines": 4,
+    "wood": 5
+   },
+   "name": {
+    "en": "Early Power Plant",
+    "zh": "早期发电"
+   },
+   "outputs": {
+    "electricity": 25
+   },
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_early_trains": {
+   "disallowing_laws": [],
+   "employment": {
+    "clerks": 200,
+    "laborers": 600,
+    "machinists": 200
+   },
+   "inputs": {
+    "coal": 2,
+    "engines": 5
+   },
+   "name": {
+    "en": "Experimental Trains",
+    "zh": "实验性列车"
+   },
+   "outputs": {
+    "transportation": 20
+   },
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_elastics": {
+   "disallowing_laws": [],
+   "employment": {
+    "shopkeepers": 1000
+   },
+   "inputs": {
+    "fabric": -35,
+    "rubber": 10,
+    "silk": 35
+   },
+   "name": {
+    "en": "Elastics",
+    "zh": "弹性织物"
+   },
+   "outputs": {
+    "clothes": -70,
+    "luxury_clothes": 70
+   },
+   "techs": [
+    "vulcanization"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_electric_arc_process": {
+   "disallowing_laws": [],
+   "employment": {
+    "engineers": 1000,
+    "laborers": 2000,
+    "machinists": 1500,
+    "shopkeepers": 500
+   },
+   "inputs": {
+    "coal": 30,
+    "electricity": 30,
+    "iron": 100
+   },
+   "name": {
+    "en": "Electric Arc Process",
+    "zh": "电弧炉炼钢法"
+   },
+   "outputs": {
+    "steel": 150
+   },
+   "techs": [
+    "electric_arc_process"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_electric_engines": {
+   "disallowing_laws": [],
+   "employment": {
+    "engineers": 1000,
+    "laborers": 2000,
+    "machinists": 1500,
+    "shopkeepers": 500
+   },
+   "inputs": {
+    "electricity": 30,
+    "steel": 40
+   },
+   "name": {
+    "en": "Electric Engines",
+    "zh": "电力发动机"
+   },
+   "outputs": {
+    "engines": 80
+   },
+   "techs": [
+    "electric_railway"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_electric_fencing": {
+   "disallowing_laws": [],
+   "employment": {
+    "laborers": -1000
+   },
+   "inputs": {
+    "electricity": 1,
+    "iron": 1
+   },
+   "name": {
+    "en": "Electric Fences",
+    "zh": "电围栏"
+   },
+   "outputs": {},
+   "techs": [
+    "electrical_generation"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_electric_saw_mills": {
+   "disallowing_laws": [],
+   "employment": {
+    "engineers": 500,
+    "laborers": 3000,
+    "machinists": 1000,
+    "shopkeepers": 500
+   },
+   "inputs": {
+    "electricity": 5,
+    "tools": 10
+   },
+   "name": {
+    "en": "Electric Saw Mills",
+    "zh": "电力锯木厂"
+   },
+   "outputs": {
+    "wood": 100
+   },
+   "techs": [
+    "electrical_generation"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_electric_sewing_machines": {
+   "disallowing_laws": [],
+   "employment": {
+    "engineers": 500,
+    "laborers": 3000,
+    "machinists": 1000,
+    "shopkeepers": 500
+   },
+   "inputs": {
+    "dye": 20,
+    "electricity": 10,
+    "fabric": 60,
+    "tools": 10
+   },
+   "name": {
+    "en": "Electric Sewing Machines",
+    "zh": "电动缝纫机"
+   },
+   "outputs": {
+    "clothes": 140
+   },
+   "techs": [
+    "electrical_capacitors"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_electric_streetlights": {
+   "disallowing_laws": [],
+   "employment": {
+    "engineers": 50,
+    "laborers": 200
+   },
+   "inputs": {
+    "electricity": 3
+   },
+   "name": {
+    "en": "Electric Streetlights",
+    "zh": "电力路灯"
+   },
+   "outputs": {
+    "services": 10
+   },
+   "techs": [
+    "electrical_generation"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_electric_trains": {
+   "disallowing_laws": [],
+   "employment": {
+    "clerks": 200,
+    "engineers": 50,
+    "laborers": 400,
+    "machinists": 350
+   },
+   "inputs": {
+    "electricity": 8,
+    "engines": 5
+   },
+   "name": {
+    "en": "Electric Trains",
+    "zh": "电力机车"
+   },
+   "outputs": {
+    "transportation": 35
+   },
+   "techs": [
+    "electric_railway"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_electric_trains_principle_transport_3": {
+   "disallowing_laws": [],
+   "employment": {
+    "clerks": 200,
+    "engineers": 50,
+    "laborers": 400,
+    "machinists": 350
+   },
+   "inputs": {
+    "electricity": 10,
+    "engines": 6
+   },
+   "name": {
+    "en": "Joint Electric Trains",
+    "zh": "联合电力机车"
+   },
+   "outputs": {
+    "transportation": 45
+   },
+   "techs": [
+    "electric_railway"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_explosive_shells": {
+   "disallowing_laws": [],
+   "employment": {
+    "engineers": 750,
+    "laborers": 2500,
+    "machinists": 1250,
+    "shopkeepers": 500
+   },
+   "inputs": {
+    "explosives": 40,
+    "lead": 30
+   },
+   "name": {
+    "en": "Explosive Shells",
+    "zh": "可爆弹"
+   },
+   "outputs": {
+    "ammunition": 90
+   },
+   "techs": [
+    "dynamite"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_fertilization": {
+   "disallowing_laws": [],
+   "employment": {
+    "farmers": 2000,
+    "laborers": 3000
+   },
+   "inputs": {
+    "fertilizer": 10
+   },
+   "name": {
+    "en": "Fertilizers",
+    "zh": "肥料"
+   },
+   "outputs": {
+    "grain": 45
+   },
+   "techs": [
+    "improved_fertilizer"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_fertilization_building_rice_farm": {
+   "disallowing_laws": [],
+   "employment": {
+    "farmers": 4000,
+    "laborers": 6000
+   },
+   "inputs": {
+    "fertilizer": 20
+   },
+   "name": {
+    "en": "Fertilizers",
+    "zh": "肥料"
+   },
+   "outputs": {
+    "grain": 75
+   },
+   "techs": [
+    "improved_fertilizer"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_fig_orchards": {
+   "disallowing_laws": [],
+   "employment": {},
+   "inputs": {},
+   "name": {
+    "en": "Fig Orchards",
+    "zh": "无花果园"
+   },
+   "outputs": {
+    "fruit": 7,
+    "grain": -8,
+    "sugar": 1
+   },
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_fig_orchards_building_rice_farm": {
+   "disallowing_laws": [],
+   "employment": {},
+   "inputs": {},
+   "name": {
+    "en": "Fig Orchards",
+    "zh": "无花果园"
+   },
+   "outputs": {
+    "fruit": 15,
+    "grain": -20,
+    "sugar": 2
+   },
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_film_art": {
+   "disallowing_laws": [],
+   "employment": {},
+   "inputs": {
+    "electricity": 5,
+    "paper": 15,
+    "tools": 10
+   },
+   "name": {
+    "en": "Film Art",
+    "zh": "电影艺术"
+   },
+   "outputs": {
+    "fine_art": 10
+   },
+   "techs": [
+    "film"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_financial_district_principle_divine_economics_2": {
+   "disallowing_laws": [],
+   "employment": {
+    "capitalists": 50,
+    "clergymen": 25,
+    "clerks": 25
+   },
+   "inputs": {},
+   "name": {
+    "en": "Increased Clergy Oversight",
+    "zh": "促进教士监督"
+   },
+   "outputs": {},
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_financial_district_privately_owned": {
+   "disallowing_laws": [],
+   "employment": {
+    "capitalists": 50,
+    "clerks": 25,
+    "shopkeepers": 25
+   },
+   "inputs": {},
+   "name": {
+    "en": "Privately Owned",
+    "zh": "私人所有"
+   },
+   "outputs": {},
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_financial_district_publicly_traded": {
+   "disallowing_laws": [],
+   "employment": {
+    "bureaucrats": 25,
+    "capitalists": 50,
+    "clerks": 25
+   },
+   "inputs": {},
+   "name": {
+    "en": "Publicly Traded",
+    "zh": "公开交易"
+   },
+   "outputs": {},
+   "techs": [
+    "mutual_funds"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_fishing_trawlers": {
+   "disallowing_laws": [],
+   "employment": {
+    "laborers": 4000,
+    "machinists": 500,
+    "shopkeepers": 500
+   },
+   "inputs": {
+    "clippers": 5
+   },
+   "name": {
+    "en": "Fishing Trawlers",
+    "zh": "拖网渔船"
+   },
+   "outputs": {
+    "fish": 50
+   },
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_flash_freezing_building_fishing_wharf": {
+   "disallowing_laws": [],
+   "employment": {
+    "laborers": -3000
+   },
+   "inputs": {
+    "electricity": 7,
+    "transportation": 7
+   },
+   "name": {
+    "en": "Flash Freezing",
+    "zh": "速冻"
+   },
+   "outputs": {},
+   "techs": [
+    "flash_freezing"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_flash_freezing_building_whaling_station": {
+   "disallowing_laws": [],
+   "employment": {
+    "laborers": -3000
+   },
+   "inputs": {
+    "electricity": 7,
+    "transportation": 7
+   },
+   "name": {
+    "en": "Flash Freezing",
+    "zh": "速冻"
+   },
+   "outputs": {},
+   "techs": [
+    "flash_freezing"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_forest_glass": {
+   "disallowing_laws": [],
+   "employment": {
+    "laborers": 4500,
+    "shopkeepers": 500
+   },
+   "inputs": {
+    "wood": 30
+   },
+   "name": {
+    "en": "Forest Glass",
+    "zh": "草木灰玻璃"
+   },
+   "outputs": {
+    "glass": 30
+   },
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_free_urban_clergy": {
+   "disallowing_laws": [
+    "law_state_religion",
+    "law_state_atheism"
+   ],
+   "employment": {
+    "clergymen": 150,
+    "clerks": 100
+   },
+   "inputs": {},
+   "name": {
+    "en": "Free Churches",
+    "zh": "自由教堂"
+   },
+   "outputs": {},
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_freedom_of_movement_no_effect": {
+   "disallowing_laws": [],
+   "employment": {},
+   "inputs": {},
+   "name": {
+    "en": "No effect",
+    "zh": "无效果"
+   },
+   "outputs": {},
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_gas_streetlights": {
+   "disallowing_laws": [],
+   "employment": {
+    "laborers": 250
+   },
+   "inputs": {
+    "coal": 2
+   },
+   "name": {
+    "en": "Gas Streetlights",
+    "zh": "煤气路灯"
+   },
+   "outputs": {
+    "services": 5
+   },
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_general_training": {
+   "disallowing_laws": [
+    "law_warrior_caste"
+   ],
+   "employment": {},
+   "inputs": {},
+   "name": {
+    "en": "General Training",
+    "zh": "一般训练"
+   },
+   "outputs": {},
+   "techs": [
+    "general_staff"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_general_training_conscription": {
+   "disallowing_laws": [],
+   "employment": {},
+   "inputs": {},
+   "name": {
+    "en": "General Training",
+    "zh": "一般训练"
+   },
+   "outputs": {},
+   "techs": [
+    "general_staff"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_handcrafted_furniture": {
+   "disallowing_laws": [],
+   "employment": {
+    "laborers": 4500,
+    "shopkeepers": 500
+   },
+   "inputs": {
+    "fabric": 10,
+    "wood": 30
+   },
+   "name": {
+    "en": "Handcrafted Furniture",
+    "zh": "手工家具"
+   },
+   "outputs": {
+    "furniture": 45
+   },
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_handsewn_clothes": {
+   "disallowing_laws": [],
+   "employment": {
+    "laborers": 4500,
+    "shopkeepers": 500
+   },
+   "inputs": {
+    "fabric": 40
+   },
+   "name": {
+    "en": "Handsewn Clothes",
+    "zh": "手工衣物"
+   },
+   "outputs": {
+    "clothes": 45
+   },
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_hardwood": {
+   "disallowing_laws": [],
+   "employment": {},
+   "inputs": {},
+   "name": {
+    "en": "Hardwood Production",
+    "zh": "硬木生产"
+   },
+   "outputs": {
+    "hardwood": 10,
+    "wood": -25
+   },
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_hereditary_bureaucrats": {
+   "disallowing_laws": [],
+   "employment": {
+    "aristocrats": 250,
+    "bureaucrats": 250
+   },
+   "inputs": {},
+   "name": {
+    "en": "Hereditary Bureaucrats",
+    "zh": "世袭官僚"
+   },
+   "outputs": {},
+   "techs": [],
+   "unlocking_laws": [
+    "law_hereditary_bureaucrats",
+    "law_crownland_diets"
+   ]
+  },
+  "pm_herring_meal_farming": {
+   "disallowing_laws": [],
+   "employment": {
+    "farmers": 1000,
+    "laborers": 4000
+   },
+   "inputs": {
+    "fish": 5
+   },
+   "name": {
+    "en": "Fish Fertilizers",
+    "zh": "鱼类肥料"
+   },
+   "outputs": {
+    "grain": 25
+   },
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_herring_meal_farming_building_rice_farm": {
+   "disallowing_laws": [],
+   "employment": {
+    "farmers": 2000,
+    "laborers": 8000
+   },
+   "inputs": {
+    "fish": 10
+   },
+   "name": {
+    "en": "Fish Fertilizers",
+    "zh": "鱼类肥料"
+   },
+   "outputs": {
+    "grain": 45
+   },
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_home_workshops_building_subsistence_farm": {
+   "disallowing_laws": [
+    "law_collectivized_agriculture"
+   ],
+   "employment": {},
+   "inputs": {},
+   "name": {
+    "en": "Home Workshops",
+    "zh": "家庭作坊"
+   },
+   "outputs": {
+    "clothes": 0.25,
+    "furniture": 0.25,
+    "liquor": 0.25
+   },
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_home_workshops_building_subsistence_fishing_village": {
+   "disallowing_laws": [
+    "law_collectivized_agriculture"
+   ],
+   "employment": {},
+   "inputs": {},
+   "name": {
+    "en": "Home Workshops",
+    "zh": "家庭作坊"
+   },
+   "outputs": {
+    "clothes": 0.25,
+    "furniture": 0.25,
+    "liquor": 0.25
+   },
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_home_workshops_building_subsistence_orchard": {
+   "disallowing_laws": [
+    "law_collectivized_agriculture"
+   ],
+   "employment": {},
+   "inputs": {},
+   "name": {
+    "en": "Home Workshops",
+    "zh": "家庭作坊"
+   },
+   "outputs": {
+    "clothes": 0.25,
+    "furniture": 0.25,
+    "liquor": 0.25
+   },
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_home_workshops_building_subsistence_pasture": {
+   "disallowing_laws": [
+    "law_collectivized_agriculture"
+   ],
+   "employment": {},
+   "inputs": {},
+   "name": {
+    "en": "Home Workshops",
+    "zh": "家庭作坊"
+   },
+   "outputs": {
+    "clothes": 0.25,
+    "furniture": 0.25,
+    "liquor": 0.25
+   },
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_home_workshops_building_subsistence_rice_farm": {
+   "disallowing_laws": [
+    "law_collectivized_agriculture"
+   ],
+   "employment": {},
+   "inputs": {},
+   "name": {
+    "en": "Home Workshops",
+    "zh": "家庭作坊"
+   },
+   "outputs": {
+    "clothes": 0.5,
+    "furniture": 0.5,
+    "liquor": 0.5
+   },
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_home_workshops_no_building_subsistence_farm": {
+   "disallowing_laws": [],
+   "employment": {},
+   "inputs": {},
+   "name": {
+    "en": "No Home Workshops",
+    "zh": "无家庭作坊"
+   },
+   "outputs": {
+    "fabric": 0.25,
+    "grain": 0.5,
+    "wood": 0.25
+   },
+   "techs": [],
+   "unlocking_laws": [
+    "law_collectivized_agriculture"
+   ]
+  },
+  "pm_home_workshops_no_building_subsistence_fishing_village": {
+   "disallowing_laws": [],
+   "employment": {},
+   "inputs": {},
+   "name": {
+    "en": "No Home Workshops",
+    "zh": "无家庭作坊"
+   },
+   "outputs": {
+    "fabric": 0.25,
+    "fish": 0.5,
+    "wood": 0.25
+   },
+   "techs": [],
+   "unlocking_laws": [
+    "law_collectivized_agriculture"
+   ]
+  },
+  "pm_home_workshops_no_building_subsistence_orchard": {
+   "disallowing_laws": [],
+   "employment": {},
+   "inputs": {},
+   "name": {
+    "en": "No Home Workshops",
+    "zh": "无家庭作坊"
+   },
+   "outputs": {
+    "fabric": 0.25,
+    "fruit": 0.33,
+    "wood": 0.25
+   },
+   "techs": [],
+   "unlocking_laws": [
+    "law_collectivized_agriculture"
+   ]
+  },
+  "pm_home_workshops_no_building_subsistence_pasture": {
+   "disallowing_laws": [],
+   "employment": {},
+   "inputs": {},
+   "name": {
+    "en": "No Home Workshops",
+    "zh": "无家庭作坊"
+   },
+   "outputs": {
+    "fabric": 0.5,
+    "meat": 0.33
+   },
+   "techs": [],
+   "unlocking_laws": [
+    "law_collectivized_agriculture"
+   ]
+  },
+  "pm_home_workshops_no_building_subsistence_rice_farm": {
+   "disallowing_laws": [],
+   "employment": {},
+   "inputs": {},
+   "name": {
+    "en": "No Home Workshops",
+    "zh": "无家庭作坊"
+   },
+   "outputs": {
+    "fabric": 0.5,
+    "grain": 1,
+    "wood": 0.5
+   },
+   "techs": [],
+   "unlocking_laws": [
+    "law_collectivized_agriculture"
+   ]
+  },
+  "pm_homesteading_building_subsistence": {
+   "disallowing_laws": [],
+   "employment": {
+    "farmers": 100,
+    "peasants": -100
+   },
+   "inputs": {},
+   "name": {
+    "en": "Homesteading",
+    "zh": "宅地法"
+   },
+   "outputs": {
+    "grain": 0.25
+   },
+   "techs": [],
+   "unlocking_laws": [
+    "law_homesteading"
+   ]
+  },
+  "pm_horizontal_drawer_cabinets": {
+   "disallowing_laws": [],
+   "employment": {
+    "clerks": 500
+   },
+   "inputs": {
+    "paper": 10
+   },
+   "name": {
+    "en": "Filing Cabinets",
+    "zh": "档案柜"
+   },
+   "outputs": {},
+   "techs": [
+    "centralization"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_houseware_plastics": {
+   "disallowing_laws": [],
+   "employment": {
+    "engineers": 750,
+    "laborers": 2500,
+    "machinists": 1250,
+    "shopkeepers": 500
+   },
+   "inputs": {
+    "lead": 30,
+    "oil": 20
+   },
+   "name": {
+    "en": "Houseware Plastics",
+    "zh": "塑料日用品"
+   },
+   "outputs": {
+    "glass": 100
+   },
+   "techs": [
+    "plastics"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_improved_fertilizer": {
+   "disallowing_laws": [],
+   "employment": {
+    "engineers": 1000,
+    "laborers": 2000,
+    "machinists": 1500,
+    "shopkeepers": 500
+   },
+   "inputs": {
+    "iron": 30,
+    "sulfur": 30
+   },
+   "name": {
+    "en": "Improved Fertilizers",
+    "zh": "改良化肥"
+   },
+   "outputs": {
+    "fertilizer": 140
+   },
+   "techs": [
+    "improved_fertilizer"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_increased_hardwood": {
+   "disallowing_laws": [],
+   "employment": {},
+   "inputs": {},
+   "name": {
+    "en": "Focused Hardwood Production",
+    "zh": "专注硬木生产"
+   },
+   "outputs": {
+    "hardwood": 20,
+    "wood": -40
+   },
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_independent_artists": {
+   "disallowing_laws": [],
+   "employment": {
+    "academics": 2000,
+    "clerks": 2000,
+    "laborers": 1000
+   },
+   "inputs": {},
+   "name": {
+    "en": "Independent Artists",
+    "zh": "独立艺术家"
+   },
+   "outputs": {},
+   "techs": [
+    "realism"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_industrial_port": {
+   "disallowing_laws": [],
+   "employment": {
+    "bureaucrats": 100,
+    "clerks": 200,
+    "laborers": 500,
+    "machinists": 200
+   },
+   "inputs": {
+    "coal": 5,
+    "steamers": 5
+   },
+   "name": {
+    "en": "Industrial Port",
+    "zh": "工业港口"
+   },
+   "outputs": {
+    "merchant_marine": 20
+   },
+   "techs": [
+    "gantry_cranes"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_intensive_grazing_ranch": {
+   "disallowing_laws": [],
+   "employment": {},
+   "inputs": {
+    "grain": 15
+   },
+   "name": {
+    "en": "Intensive Wool Gathering",
+    "zh": "集约羊毛采收"
+   },
+   "outputs": {
+    "fabric": 25,
+    "fertilizer": 5
+   },
+   "techs": [
+    "mechanized_farming"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_iron_frame_buildings": {
+   "disallowing_laws": [],
+   "employment": {
+    "bureaucrats": 100,
+    "clerks": 100,
+    "laborers": 750,
+    "machinists": 50
+   },
+   "inputs": {
+    "fabric": 20,
+    "iron": 50,
+    "tools": 10,
+    "wood": 40
+   },
+   "name": {
+    "en": "Iron-Frame Buildings",
+    "zh": "铁框架结构建筑"
+   },
+   "outputs": {},
+   "techs": [
+    "urban_planning"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_jeune_ecole": {
+   "disallowing_laws": [],
+   "employment": {},
+   "inputs": {},
+   "name": {
+    "en": "Jeune École",
+    "zh": "绿水学派"
+   },
+   "outputs": {},
+   "techs": [
+    "jeune_ecole"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_lathe": {
+   "disallowing_laws": [],
+   "employment": {
+    "engineers": 250,
+    "laborers": 3250,
+    "machinists": 1000,
+    "shopkeepers": 500
+   },
+   "inputs": {
+    "fabric": 10,
+    "tools": 5,
+    "wood": 30
+   },
+   "name": {
+    "en": "Lathes",
+    "zh": "车床加工"
+   },
+   "outputs": {
+    "furniture": 65
+   },
+   "techs": [
+    "lathe"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_leaded_glass": {
+   "disallowing_laws": [],
+   "employment": {
+    "laborers": 4000,
+    "machinists": 500,
+    "shopkeepers": 500
+   },
+   "inputs": {
+    "lead": 10,
+    "wood": 20
+   },
+   "name": {
+    "en": "Leaded Glass",
+    "zh": "含铅玻璃"
+   },
+   "outputs": {
+    "glass": 40
+   },
+   "techs": [
+    "lathe"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_leblanc_process": {
+   "disallowing_laws": [],
+   "employment": {
+    "engineers": 500,
+    "laborers": 3000,
+    "machinists": 1000,
+    "shopkeepers": 500
+   },
+   "inputs": {
+    "fertilizer": 20,
+    "sulfur": 20
+   },
+   "name": {
+    "en": "Leblanc Process",
+    "zh": "勒布朗法"
+   },
+   "outputs": {
+    "explosives": 50
+   },
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_log_carts": {
+   "disallowing_laws": [],
+   "employment": {
+    "laborers": -1500
+   },
+   "inputs": {
+    "transportation": 8
+   },
+   "name": {
+    "en": "Rail Log Carts",
+    "zh": "轨道原木车"
+   },
+   "outputs": {},
+   "techs": [
+    "electric_railway"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_luxury_furniture": {
+   "disallowing_laws": [],
+   "employment": {
+    "shopkeepers": 500
+   },
+   "inputs": {
+    "hardwood": 15,
+    "wood": -15
+   },
+   "name": {
+    "en": "Luxury Furniture Production",
+    "zh": "高档家具生产"
+   },
+   "outputs": {
+    "furniture": -25,
+    "luxury_furniture": 25
+   },
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_manor_house_bureaucrat_ownership": {
+   "disallowing_laws": [],
+   "employment": {
+    "bureaucrats": 100
+   },
+   "inputs": {},
+   "name": {
+    "en": "Bureaucrat Oversight",
+    "zh": "官僚监管"
+   },
+   "outputs": {},
+   "techs": [],
+   "unlocking_laws": [
+    "law_state_atheism"
+   ]
+  },
+  "pm_manor_house_clergy_ownership": {
+   "disallowing_laws": [
+    "law_state_atheism"
+   ],
+   "employment": {
+    "clergymen": 100
+   },
+   "inputs": {},
+   "name": {
+    "en": "Clergy Oversight",
+    "zh": "教士监督"
+   },
+   "outputs": {},
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_manor_house_principle_divine_economics_2": {
+   "disallowing_laws": [],
+   "employment": {
+    "aristocrats": 50,
+    "clergymen": 50
+   },
+   "inputs": {},
+   "name": {
+    "en": "Increased Clergy Oversight",
+    "zh": "促进教士监督"
+   },
+   "outputs": {},
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_manor_house_privately_owned": {
+   "disallowing_laws": [],
+   "employment": {
+    "aristocrats": 50
+   },
+   "inputs": {},
+   "name": {
+    "en": "Privately Owned",
+    "zh": "私人所有"
+   },
+   "outputs": {},
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_manual_dough_processing": {
+   "disallowing_laws": [],
+   "employment": {},
+   "inputs": {},
+   "name": {
+    "en": "Manual Dough Processing",
+    "zh": "手工面团加工"
+   },
+   "outputs": {},
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_manual_glassblowing": {
+   "disallowing_laws": [],
+   "employment": {},
+   "inputs": {},
+   "name": {
+    "en": "Manual Glassblowing",
+    "zh": "手工吹制玻璃"
+   },
+   "outputs": {},
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_market_squares": {
+   "disallowing_laws": [],
+   "employment": {
+    "clerks": 1400,
+    "laborers": 3000,
+    "shopkeepers": 400
+   },
+   "inputs": {
+    "glass": 1,
+    "wood": 1
+   },
+   "name": {
+    "en": "Market Squares",
+    "zh": "市集广场"
+   },
+   "outputs": {
+    "services": 20
+   },
+   "techs": [
+    "urban_planning"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_market_stalls": {
+   "disallowing_laws": [],
+   "employment": {
+    "clerks": 900,
+    "laborers": 3500,
+    "shopkeepers": 400
+   },
+   "inputs": {},
+   "name": {
+    "en": "Market Stalls",
+    "zh": "街市摊位"
+   },
+   "outputs": {
+    "services": 15
+   },
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_mass_automobile_production": {
+   "disallowing_laws": [],
+   "employment": {
+    "engineers": 1500,
+    "laborers": 1500,
+    "machinists": 1500,
+    "shopkeepers": 500
+   },
+   "inputs": {
+    "engines": 10,
+    "oil": 10,
+    "rubber": 10
+   },
+   "name": {
+    "en": "Mass Production",
+    "zh": "大规模生产"
+   },
+   "outputs": {
+    "automobiles": 50
+   },
+   "techs": [
+    "compression_ignition"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_mechanized_looms": {
+   "disallowing_laws": [
+    "law_industry_banned"
+   ],
+   "employment": {
+    "laborers": -1500
+   },
+   "inputs": {
+    "tools": 5
+   },
+   "name": {
+    "en": "Mechanized Looms",
+    "zh": "机械化织机"
+   },
+   "outputs": {},
+   "techs": [
+    "mechanized_workshops"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_mechanized_slaughtering": {
+   "disallowing_laws": [],
+   "employment": {
+    "farmers": 1000,
+    "laborers": 3500,
+    "machinists": 500
+   },
+   "inputs": {
+    "coal": 5,
+    "tools": 5
+   },
+   "name": {
+    "en": "Mechanized Slaughterhouses",
+    "zh": "机械化屠宰场"
+   },
+   "outputs": {
+    "meat": 35
+   },
+   "techs": [
+    "mechanized_farming"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_mechanized_workshops": {
+   "disallowing_laws": [],
+   "employment": {
+    "engineers": 750,
+    "laborers": 3000,
+    "machinists": 1250,
+    "shopkeepers": 500
+   },
+   "inputs": {
+    "fabric": 10,
+    "tools": 10,
+    "wood": 50
+   },
+   "name": {
+    "en": "Mechanized Workshops",
+    "zh": "机械化工坊"
+   },
+   "outputs": {
+    "furniture": 110
+   },
+   "techs": [
+    "mechanized_workshops"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_metal_shipbuilding": {
+   "disallowing_laws": [],
+   "employment": {
+    "engineers": 1000,
+    "laborers": 2000,
+    "machinists": 1500,
+    "shopkeepers": 500
+   },
+   "inputs": {
+    "coal": 10,
+    "engines": 10,
+    "steel": 30
+   },
+   "name": {
+    "en": "Steamships",
+    "zh": "蒸汽船"
+   },
+   "outputs": {
+    "steamers": 65
+   },
+   "techs": [
+    "gantry_cranes"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_military_shipbuilding_steam": {
+   "disallowing_laws": [],
+   "employment": {
+    "engineers": 1000,
+    "laborers": 2500,
+    "machinists": 1000,
+    "shopkeepers": 500
+   },
+   "inputs": {},
+   "name": {
+    "en": "Steel Hulls",
+    "zh": "钢制船身"
+   },
+   "outputs": {},
+   "techs": [
+    "ironclad_tech"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_military_shipbuilding_steam_2": {
+   "disallowing_laws": [],
+   "employment": {
+    "engineers": 1000,
+    "laborers": 2000,
+    "machinists": 1500,
+    "shopkeepers": 500
+   },
+   "inputs": {},
+   "name": {
+    "en": "Capital Ships",
+    "zh": "主力舰"
+   },
+   "outputs": {},
+   "techs": [
+    "arc_welding"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_military_shipbuilding_wooden": {
+   "disallowing_laws": [],
+   "employment": {
+    "engineers": 250,
+    "laborers": 3500,
+    "machinists": 750,
+    "shopkeepers": 500
+   },
+   "inputs": {},
+   "name": {
+    "en": "Wooden Hulls",
+    "zh": "木制船身"
+   },
+   "outputs": {},
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_military_shipbuilding_wooden_2": {
+   "disallowing_laws": [],
+   "employment": {
+    "engineers": 500,
+    "laborers": 3000,
+    "machinists": 1000,
+    "shopkeepers": 500
+   },
+   "inputs": {},
+   "name": {
+    "en": "Steam Ships",
+    "zh": "蒸汽船"
+   },
+   "outputs": {},
+   "techs": [
+    "screw_frigate"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_mobile_warfare_tactics": {
+   "disallowing_laws": [
+    "law_warrior_caste"
+   ],
+   "employment": {},
+   "inputs": {},
+   "name": {
+    "en": "Mobile Warfare Tactics",
+    "zh": "运动战战术"
+   },
+   "outputs": {},
+   "techs": [
+    "mobile_armor"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_mobile_warfare_tactics_conscription": {
+   "disallowing_laws": [
+    "law_peasant_levies",
+    "law_warrior_caste"
+   ],
+   "employment": {},
+   "inputs": {},
+   "name": {
+    "en": "Mobile Warfare Tactics",
+    "zh": "运动战战术"
+   },
+   "outputs": {},
+   "techs": [
+    "mobile_armor"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_modern_port": {
+   "disallowing_laws": [],
+   "employment": {
+    "bureaucrats": 100,
+    "clerks": 200,
+    "engineers": 50,
+    "laborers": 400,
+    "machinists": 250
+   },
+   "inputs": {
+    "oil": 10,
+    "steamers": 5
+   },
+   "name": {
+    "en": "Modern Port",
+    "zh": "现代港口"
+   },
+   "outputs": {
+    "merchant_marine": 30
+   },
+   "techs": [
+    "concrete_dockyards"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_monument_no_effects": {
+   "disallowing_laws": [],
+   "employment": {},
+   "inputs": {},
+   "name": {
+    "en": "No Effect",
+    "zh": "无效果"
+   },
+   "outputs": {},
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_monument_prestige_only": {
+   "disallowing_laws": [],
+   "employment": {},
+   "inputs": {},
+   "name": {
+    "en": "Prestige",
+    "zh": "威望"
+   },
+   "outputs": {},
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_monument_prestige_only_vatican_city": {
+   "disallowing_laws": [],
+   "employment": {},
+   "inputs": {},
+   "name": {
+    "en": "Prestige",
+    "zh": "威望"
+   },
+   "outputs": {},
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_muskets": {
+   "disallowing_laws": [],
+   "employment": {
+    "laborers": 4000,
+    "machinists": 500,
+    "shopkeepers": 500
+   },
+   "inputs": {
+    "hardwood": 10,
+    "iron": 10
+   },
+   "name": {
+    "en": "Muskets",
+    "zh": "滑膛枪"
+   },
+   "outputs": {
+    "small_arms": 30
+   },
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_naval_fortification_advanced": {
+   "disallowing_laws": [],
+   "employment": {
+    "officers": 200,
+    "soldiers": 800
+   },
+   "inputs": {
+    "ammunition": 5,
+    "artillery": 5,
+    "small_arms": 5,
+    "steel": 10
+   },
+   "name": {
+    "en": "Advanced Fortification",
+    "zh": "先进要塞"
+   },
+   "outputs": {},
+   "techs": [
+    "concrete_fortifications"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_naval_fortification_basic": {
+   "disallowing_laws": [],
+   "employment": {
+    "officers": 100,
+    "soldiers": 900
+   },
+   "inputs": {
+    "iron": 5,
+    "small_arms": 5
+   },
+   "name": {
+    "en": "Basic Fortification",
+    "zh": "基础要塞"
+   },
+   "outputs": {},
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_naval_fortification_reinforced": {
+   "disallowing_laws": [],
+   "employment": {
+    "officers": 150,
+    "soldiers": 850
+   },
+   "inputs": {
+    "artillery": 3,
+    "small_arms": 5,
+    "steel": 5
+   },
+   "name": {
+    "en": "Reinforced Fortification",
+    "zh": "强化要塞"
+   },
+   "outputs": {},
+   "techs": [
+    "breech_loading_artillery"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_nco_incorporation": {
+   "disallowing_laws": [
+    "law_warrior_caste"
+   ],
+   "employment": {},
+   "inputs": {},
+   "name": {
+    "en": "NCO Incorporation",
+    "zh": "编入士官"
+   },
+   "outputs": {},
+   "techs": [
+    "nco_training"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_nco_incorporation_conscription": {
+   "disallowing_laws": [
+    "law_peasant_levies",
+    "law_warrior_caste"
+   ],
+   "employment": {},
+   "inputs": {},
+   "name": {
+    "en": "NCO Incorporation",
+    "zh": "编入士官"
+   },
+   "outputs": {},
+   "techs": [
+    "nco_training"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_nitrogen_fixation": {
+   "disallowing_laws": [],
+   "employment": {
+    "engineers": 1500,
+    "laborers": 1000,
+    "machinists": 2000,
+    "shopkeepers": 500
+   },
+   "inputs": {
+    "iron": 30,
+    "oil": 20,
+    "sulfur": 40
+   },
+   "name": {
+    "en": "Nitrogen Fixation Process",
+    "zh": "固氮法"
+   },
+   "outputs": {
+    "fertilizer": 200
+   },
+   "techs": [
+    "nitrogen_fixation"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_nitroglycerin_building_coal_mine": {
+   "disallowing_laws": [],
+   "employment": {
+    "engineers": 250
+   },
+   "inputs": {
+    "explosives": 5
+   },
+   "name": {
+    "en": "Nitroglycerin",
+    "zh": "硝化甘油"
+   },
+   "outputs": {
+    "coal": 15
+   },
+   "techs": [
+    "nitroglycerin"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_nitroglycerin_building_gold_mine": {
+   "disallowing_laws": [],
+   "employment": {
+    "engineers": 250
+   },
+   "inputs": {
+    "explosives": 5
+   },
+   "name": {
+    "en": "Nitroglycerin",
+    "zh": "硝化甘油"
+   },
+   "outputs": {
+    "gold": 5
+   },
+   "techs": [
+    "nitroglycerin"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_nitroglycerin_building_iron_mine": {
+   "disallowing_laws": [],
+   "employment": {
+    "engineers": 250
+   },
+   "inputs": {
+    "explosives": 5
+   },
+   "name": {
+    "en": "Nitroglycerin",
+    "zh": "硝化甘油"
+   },
+   "outputs": {
+    "iron": 12
+   },
+   "techs": [
+    "nitroglycerin"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_nitroglycerin_building_lead_mine": {
+   "disallowing_laws": [],
+   "employment": {
+    "engineers": 250
+   },
+   "inputs": {
+    "explosives": 5
+   },
+   "name": {
+    "en": "Nitroglycerin",
+    "zh": "硝化甘油"
+   },
+   "outputs": {
+    "lead": 12
+   },
+   "techs": [
+    "nitroglycerin"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_nitroglycerin_building_sulfur_mine": {
+   "disallowing_laws": [],
+   "employment": {
+    "engineers": 250
+   },
+   "inputs": {
+    "explosives": 5
+   },
+   "name": {
+    "en": "Nitroglycerin",
+    "zh": "硝化甘油"
+   },
+   "outputs": {
+    "sulfur": 10
+   },
+   "techs": [
+    "nitroglycerin"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_no_aeroplane_production": {
+   "disallowing_laws": [],
+   "employment": {},
+   "inputs": {},
+   "name": {
+    "en": "No Aeroplane Production",
+    "zh": "无飞机生产"
+   },
+   "outputs": {},
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_no_airships": {
+   "disallowing_laws": [],
+   "employment": {},
+   "inputs": {},
+   "name": {
+    "en": "No Airships",
+    "zh": "无飞艇"
+   },
+   "outputs": {},
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_no_artificial_fibers": {
+   "disallowing_laws": [],
+   "employment": {},
+   "inputs": {},
+   "name": {
+    "en": "Prioritize Dye Production",
+    "zh": "优先染料生产"
+   },
+   "outputs": {},
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_no_artillery_production": {
+   "disallowing_laws": [],
+   "employment": {},
+   "inputs": {},
+   "name": {
+    "en": "Prioritize Small Arms Production",
+    "zh": "优先轻武器生产"
+   },
+   "outputs": {},
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_no_equipment": {
+   "disallowing_laws": [],
+   "employment": {},
+   "inputs": {},
+   "name": {
+    "en": "Horse Drawn",
+    "zh": "马拉"
+   },
+   "outputs": {},
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_no_explosives": {
+   "disallowing_laws": [],
+   "employment": {},
+   "inputs": {},
+   "name": {
+    "en": "Manual Drilling",
+    "zh": "手工钻孔"
+   },
+   "outputs": {},
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_no_explosives_production": {
+   "disallowing_laws": [],
+   "employment": {},
+   "inputs": {},
+   "name": {
+    "en": "Prioritize Fertilizer Production",
+    "zh": "优先肥料生产"
+   },
+   "outputs": {},
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_no_hardwood": {
+   "disallowing_laws": [],
+   "employment": {},
+   "inputs": {},
+   "name": {
+    "en": "Prioritize Softwood Production",
+    "zh": "优先软木生产"
+   },
+   "outputs": {},
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_no_luxuries": {
+   "disallowing_laws": [],
+   "employment": {},
+   "inputs": {},
+   "name": {
+    "en": "Prioritize Non-Luxury Furniture",
+    "zh": "优先非高档家具"
+   },
+   "outputs": {},
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_no_luxury_clothes": {
+   "disallowing_laws": [],
+   "employment": {},
+   "inputs": {},
+   "name": {
+    "en": "Prioritize Non-Luxury Clothing",
+    "zh": "优先非高档衣物"
+   },
+   "outputs": {},
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_no_military_shipbuilding": {
+   "disallowing_laws": [],
+   "employment": {},
+   "inputs": {},
+   "name": {
+    "en": "Civilian Shipbuilding",
+    "zh": "民用造船厂"
+   },
+   "outputs": {},
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_no_naval_theory": {
+   "disallowing_laws": [],
+   "employment": {},
+   "inputs": {},
+   "name": {
+    "en": "Naval Traditions",
+    "zh": "海军传统"
+   },
+   "outputs": {},
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_no_organization": {
+   "disallowing_laws": [
+    "law_warrior_caste"
+   ],
+   "employment": {},
+   "inputs": {},
+   "name": {
+    "en": "No Organized Training",
+    "zh": "无有组织训练"
+   },
+   "outputs": {},
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_no_organization_conscription": {
+   "disallowing_laws": [],
+   "employment": {},
+   "inputs": {},
+   "name": {
+    "en": "No Organized Training",
+    "zh": "无有组织训练"
+   },
+   "outputs": {},
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_no_passenger_trains": {
+   "disallowing_laws": [],
+   "employment": {},
+   "inputs": {},
+   "name": {
+    "en": "Cargo Prioritization",
+    "zh": "优先货物"
+   },
+   "outputs": {},
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_no_public_transport": {
+   "disallowing_laws": [],
+   "employment": {},
+   "inputs": {},
+   "name": {
+    "en": "Personal Transportation Only",
+    "zh": "仅限个人交通工具"
+   },
+   "outputs": {
+    "transportation": 2
+   },
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_no_radios": {
+   "disallowing_laws": [],
+   "employment": {},
+   "inputs": {},
+   "name": {
+    "en": "Prioritize Telephone Production",
+    "zh": "优先电话生产"
+   },
+   "outputs": {},
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_no_secondary": {
+   "disallowing_laws": [],
+   "employment": {},
+   "inputs": {},
+   "name": {
+    "en": "Maintain Single Crop",
+    "zh": "维持单一作物"
+   },
+   "outputs": {},
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_no_steam_automation": {
+   "disallowing_laws": [],
+   "employment": {},
+   "inputs": {},
+   "name": {
+    "en": "Hand Cranked Crane",
+    "zh": "手动曲柄起重机"
+   },
+   "outputs": {},
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_no_street_lighting": {
+   "disallowing_laws": [],
+   "employment": {},
+   "inputs": {},
+   "name": {
+    "en": "Unlit Streets",
+    "zh": "无灯街道"
+   },
+   "outputs": {},
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_no_tank_production": {
+   "disallowing_laws": [],
+   "employment": {},
+   "inputs": {},
+   "name": {
+    "en": "No Tank Production",
+    "zh": "无坦克生产"
+   },
+   "outputs": {},
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_no_urban_clergy": {
+   "disallowing_laws": [],
+   "employment": {
+    "bureaucrats": 50,
+    "clerks": 150
+   },
+   "inputs": {},
+   "name": {
+    "en": "State Atheism",
+    "zh": "国家无神论"
+   },
+   "outputs": {},
+   "techs": [],
+   "unlocking_laws": [
+    "law_state_atheism"
+   ]
+  },
+  "pm_oil-fired_plant": {
+   "disallowing_laws": [],
+   "employment": {
+    "engineers": 200,
+    "laborers": 200,
+    "machinists": 600
+   },
+   "inputs": {
+    "engines": 10,
+    "oil": 25
+   },
+   "name": {
+    "en": "Oil-Fired Plant",
+    "zh": "燃油电厂"
+   },
+   "outputs": {
+    "electricity": 80
+   },
+   "techs": [
+    "oil_turbine"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_open_air_stockyards": {
+   "disallowing_laws": [],
+   "employment": {
+    "farmers": 1000,
+    "laborers": 4000
+   },
+   "inputs": {},
+   "name": {
+    "en": "Open Air Stockyards",
+    "zh": "露天牲畜栏"
+   },
+   "outputs": {
+    "meat": 10
+   },
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_open_hearth_process": {
+   "disallowing_laws": [],
+   "employment": {
+    "engineers": 750,
+    "laborers": 2500,
+    "machinists": 1250,
+    "shopkeepers": 500
+   },
+   "inputs": {
+    "coal": 30,
+    "iron": 90
+   },
+   "name": {
+    "en": "Open Hearth Process",
+    "zh": "平炉炼钢法"
+   },
+   "outputs": {
+    "steel": 120
+   },
+   "techs": [
+    "open_hearth_process"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_patent_stills": {
+   "disallowing_laws": [],
+   "employment": {
+    "engineers": 200,
+    "machinists": 500,
+    "shopkeepers": 200
+   },
+   "inputs": {
+    "glass": 10,
+    "sugar": 25
+   },
+   "name": {
+    "en": "Patent Stills",
+    "zh": "连续式蒸馏器"
+   },
+   "outputs": {
+    "groceries": -40,
+    "liquor": 100
+   },
+   "techs": [
+    "fractional_distillation"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_peasant_proprietorship_building_subsistence": {
+   "disallowing_laws": [],
+   "employment": {
+    "farmers": 50,
+    "peasants": -50
+   },
+   "inputs": {},
+   "name": {
+    "en": "Peasant Proprietorship",
+    "zh": "农民产权"
+   },
+   "outputs": {
+    "grain": 0.25
+   },
+   "techs": [],
+   "unlocking_laws": [
+    "law_peasant_proprietorship"
+   ]
+  },
+  "pm_percussion_caps": {
+   "disallowing_laws": [],
+   "employment": {
+    "engineers": 500,
+    "laborers": 3000,
+    "machinists": 1000,
+    "shopkeepers": 500
+   },
+   "inputs": {
+    "explosives": 20,
+    "lead": 20
+   },
+   "name": {
+    "en": "Percussion Caps",
+    "zh": "火帽"
+   },
+   "outputs": {
+    "ammunition": 50
+   },
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_philosophy_department": {
+   "disallowing_laws": [],
+   "employment": {
+    "clerks": 250,
+    "laborers": 250
+   },
+   "inputs": {
+    "paper": 10
+   },
+   "name": {
+    "en": "Philosophy Department",
+    "zh": "哲学系"
+   },
+   "outputs": {},
+   "techs": [
+    "dialectics"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_photographic_art": {
+   "disallowing_laws": [],
+   "employment": {},
+   "inputs": {
+    "paper": 15,
+    "tools": 8
+   },
+   "name": {
+    "en": "Photographic Art",
+    "zh": "摄影艺术"
+   },
+   "outputs": {
+    "fine_art": 8
+   },
+   "techs": [
+    "camera"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_picks_and_shovels_building_coal_mine": {
+   "disallowing_laws": [],
+   "employment": {
+    "laborers": 4500,
+    "shopkeepers": 500
+   },
+   "inputs": {
+    "tools": 5
+   },
+   "name": {
+    "en": "Picks and Shovels",
+    "zh": "镐和铲"
+   },
+   "outputs": {
+    "coal": 25
+   },
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_picks_and_shovels_building_gold_mine": {
+   "disallowing_laws": [],
+   "employment": {
+    "laborers": 4500,
+    "shopkeepers": 500
+   },
+   "inputs": {
+    "tools": 5
+   },
+   "name": {
+    "en": "Picks and Shovels",
+    "zh": "镐和铲"
+   },
+   "outputs": {
+    "gold": 8
+   },
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_picks_and_shovels_building_iron_mine": {
+   "disallowing_laws": [],
+   "employment": {
+    "laborers": 4500,
+    "shopkeepers": 500
+   },
+   "inputs": {
+    "tools": 5
+   },
+   "name": {
+    "en": "Picks and Shovels",
+    "zh": "镐和铲"
+   },
+   "outputs": {
+    "iron": 20
+   },
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_picks_and_shovels_building_lead_mine": {
+   "disallowing_laws": [],
+   "employment": {
+    "laborers": 4500,
+    "shopkeepers": 500
+   },
+   "inputs": {
+    "tools": 5
+   },
+   "name": {
+    "en": "Picks and Shovels",
+    "zh": "镐和铲"
+   },
+   "outputs": {
+    "lead": 20
+   },
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_picks_and_shovels_building_sulfur_mine": {
+   "disallowing_laws": [],
+   "employment": {
+    "laborers": 4500,
+    "shopkeepers": 500
+   },
+   "inputs": {
+    "tools": 5
+   },
+   "name": {
+    "en": "Picks and Shovels",
+    "zh": "镐和铲"
+   },
+   "outputs": {
+    "sulfur": 20
+   },
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_pig_iron": {
+   "disallowing_laws": [],
+   "employment": {
+    "laborers": 4000,
+    "machinists": 500,
+    "shopkeepers": 500
+   },
+   "inputs": {
+    "iron": 20,
+    "wood": 30
+   },
+   "name": {
+    "en": "Wrought Iron Tools",
+    "zh": "锻铁工具"
+   },
+   "outputs": {
+    "tools": 60
+   },
+   "techs": [
+    "steelworking"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_pot_stills": {
+   "disallowing_laws": [],
+   "employment": {
+    "machinists": 250,
+    "shopkeepers": 100
+   },
+   "inputs": {
+    "sugar": 25
+   },
+   "name": {
+    "en": "Pot Stills",
+    "zh": "罐式蒸馏器"
+   },
+   "outputs": {
+    "groceries": -30,
+    "liquor": 60
+   },
+   "techs": [
+    "distillation"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_potatoes": {
+   "disallowing_laws": [],
+   "employment": {},
+   "inputs": {},
+   "name": {
+    "en": "Potatoes",
+    "zh": "马铃薯"
+   },
+   "outputs": {
+    "grain": -10,
+    "liquor": 10
+   },
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_power_bloc_prestige_only": {
+   "disallowing_laws": [],
+   "employment": {},
+   "inputs": {},
+   "name": {
+    "en": "Prestige Only",
+    "zh": "仅限威望"
+   },
+   "outputs": {},
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_power_bloc_statue_ideological_union": {
+   "disallowing_laws": [],
+   "employment": {
+    "bureaucrats": 500
+   },
+   "inputs": {},
+   "name": {
+    "en": "Ideological Union",
+    "zh": "意识形态联盟"
+   },
+   "outputs": {},
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_power_bloc_statue_military_treaty": {
+   "disallowing_laws": [],
+   "employment": {
+    "soldiers": 500
+   },
+   "inputs": {},
+   "name": {
+    "en": "Military Treaty",
+    "zh": "军事条约"
+   },
+   "outputs": {},
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_power_bloc_statue_religious": {
+   "disallowing_laws": [],
+   "employment": {
+    "clergymen": 500
+   },
+   "inputs": {},
+   "name": {
+    "en": "Religious Convocation",
+    "zh": "宗教大会"
+   },
+   "outputs": {},
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_power_bloc_statue_sovereign_empire": {
+   "disallowing_laws": [],
+   "employment": {
+    "bureaucrats": 500
+   },
+   "inputs": {},
+   "name": {
+    "en": "Sovereign Empire",
+    "zh": "至高帝国"
+   },
+   "outputs": {},
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_power_bloc_statue_trade_league": {
+   "disallowing_laws": [],
+   "employment": {
+    "clerks": 500
+   },
+   "inputs": {},
+   "name": {
+    "en": "Trade League",
+    "zh": "贸易联盟"
+   },
+   "outputs": {},
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_power_of_the_purse": {
+   "disallowing_laws": [],
+   "employment": {},
+   "inputs": {},
+   "name": {
+    "en": "Power of the Purse",
+    "zh": "钱袋权"
+   },
+   "outputs": {},
+   "techs": [
+    "power_of_the_purse"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_precision_tools": {
+   "disallowing_laws": [],
+   "employment": {
+    "shopkeepers": 1000
+   },
+   "inputs": {
+    "hardwood": 25,
+    "tools": 10,
+    "wood": -25
+   },
+   "name": {
+    "en": "Precision Tools",
+    "zh": "精密工具"
+   },
+   "outputs": {
+    "furniture": -55,
+    "luxury_furniture": 55
+   },
+   "techs": [
+    "mechanical_tools"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_principle_freedom_of_movement_3": {
+   "disallowing_laws": [],
+   "employment": {},
+   "inputs": {},
+   "name": {
+    "en": "Increased Exchange",
+    "zh": "促进交流"
+   },
+   "outputs": {},
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_professional_bureaucrats": {
+   "disallowing_laws": [
+    "law_hereditary_bureaucrats",
+    "law_crownland_diets"
+   ],
+   "employment": {
+    "bureaucrats": 500
+   },
+   "inputs": {},
+   "name": {
+    "en": "Professional Bureaucrats",
+    "zh": "专业官僚"
+   },
+   "outputs": {},
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_public_motor_carriages": {
+   "disallowing_laws": [],
+   "employment": {
+    "engineers": 200,
+    "laborers": -1000,
+    "machinists": 400
+   },
+   "inputs": {
+    "automobiles": 1
+   },
+   "name": {
+    "en": "Public Motor Carriages",
+    "zh": "公共机动车"
+   },
+   "outputs": {
+    "transportation": 8
+   },
+   "techs": [
+    "combustion_engine"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_public_trams": {
+   "disallowing_laws": [],
+   "employment": {
+    "engineers": 100,
+    "laborers": -500,
+    "machinists": 200
+   },
+   "inputs": {
+    "engines": 0.5
+   },
+   "name": {
+    "en": "Public Trams",
+    "zh": "公共有轨电车"
+   },
+   "outputs": {
+    "transportation": 4
+   },
+   "techs": [
+    "railways"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_pulp_pressing": {
+   "disallowing_laws": [],
+   "employment": {
+    "laborers": 4500,
+    "shopkeepers": 500
+   },
+   "inputs": {
+    "wood": 30
+   },
+   "name": {
+    "en": "Pulp Pressing",
+    "zh": "纸浆压榨"
+   },
+   "outputs": {
+    "paper": 40
+   },
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_radios": {
+   "disallowing_laws": [],
+   "employment": {
+    "engineers": 500
+   },
+   "inputs": {
+    "electricity": 50
+   },
+   "name": {
+    "en": "Radio Production",
+    "zh": "无线电生产"
+   },
+   "outputs": {
+    "radios": 40,
+    "telephones": -20
+   },
+   "techs": [
+    "radio"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_rail_transport_building_logging_camp": {
+   "disallowing_laws": [],
+   "employment": {
+    "laborers": -1000
+   },
+   "inputs": {
+    "transportation": 5
+   },
+   "name": {
+    "en": "Rail Transportation",
+    "zh": "轨道运输"
+   },
+   "outputs": {},
+   "techs": [
+    "railways"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_rail_transport_building_oil_rig": {
+   "disallowing_laws": [],
+   "employment": {
+    "laborers": -1000
+   },
+   "inputs": {
+    "transportation": 5
+   },
+   "name": {
+    "en": "Rail Transportation",
+    "zh": "轨道运输"
+   },
+   "outputs": {},
+   "techs": [
+    "railways"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_rail_transport_mine": {
+   "disallowing_laws": [],
+   "employment": {
+    "laborers": -1000
+   },
+   "inputs": {
+    "transportation": 5
+   },
+   "name": {
+    "en": "Rail Transportation",
+    "zh": "轨道运输"
+   },
+   "outputs": {},
+   "techs": [
+    "railways"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_rayon": {
+   "disallowing_laws": [],
+   "employment": {
+    "laborers": -1000,
+    "machinists": 1000
+   },
+   "inputs": {
+    "wood": 10
+   },
+   "name": {
+    "en": "Rayon",
+    "zh": "尼龙"
+   },
+   "outputs": {
+    "dye": -10,
+    "silk": 30
+   },
+   "techs": [
+    "art_silk"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_realist_art": {
+   "disallowing_laws": [],
+   "employment": {},
+   "inputs": {
+    "paper": 15
+   },
+   "name": {
+    "en": "Realist Art",
+    "zh": "现实主义艺术"
+   },
+   "outputs": {
+    "fine_art": 6
+   },
+   "techs": [
+    "realism"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_recoiled_barrels": {
+   "disallowing_laws": [],
+   "employment": {
+    "engineers": 750,
+    "laborers": 2500,
+    "machinists": 1500,
+    "shopkeepers": 500
+   },
+   "inputs": {
+    "oil": 10,
+    "steel": 40,
+    "tools": 20
+   },
+   "name": {
+    "en": "Recoil Mechanisms",
+    "zh": "后坐式机制"
+   },
+   "outputs": {
+    "artillery": 90
+   },
+   "techs": [
+    "automatic_machine_guns"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_refrigerated_rail_cars_building_fishing_wharf": {
+   "disallowing_laws": [],
+   "employment": {
+    "laborers": -2000
+   },
+   "inputs": {
+    "electricity": 5,
+    "transportation": 5
+   },
+   "name": {
+    "en": "Refrigerated Rail Cars",
+    "zh": "冷藏列车"
+   },
+   "outputs": {},
+   "techs": [
+    "electric_railway"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_refrigerated_rail_cars_building_livestock_ranch": {
+   "disallowing_laws": [],
+   "employment": {
+    "laborers": -1000
+   },
+   "inputs": {
+    "electricity": 1,
+    "transportation": 1
+   },
+   "name": {
+    "en": "Refrigerated Rail Cars",
+    "zh": "冷藏列车"
+   },
+   "outputs": {},
+   "techs": [
+    "electric_railway"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_refrigerated_rail_cars_building_whaling_station": {
+   "disallowing_laws": [],
+   "employment": {
+    "laborers": -2000
+   },
+   "inputs": {
+    "electricity": 5,
+    "transportation": 5
+   },
+   "name": {
+    "en": "Refrigerated Rail Cars",
+    "zh": "冷藏列车"
+   },
+   "outputs": {},
+   "techs": [
+    "electric_railway"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_refrigerated_storage_building_fishing_wharf": {
+   "disallowing_laws": [],
+   "employment": {
+    "laborers": -1000
+   },
+   "inputs": {
+    "electricity": 5
+   },
+   "name": {
+    "en": "Refrigerated Storage",
+    "zh": "冷库"
+   },
+   "outputs": {},
+   "techs": [
+    "pasteurization"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_refrigerated_storage_building_livestock_ranch": {
+   "disallowing_laws": [],
+   "employment": {
+    "laborers": -500
+   },
+   "inputs": {
+    "electricity": 1
+   },
+   "name": {
+    "en": "Refrigerated Storage",
+    "zh": "冷库"
+   },
+   "outputs": {},
+   "techs": [
+    "pasteurization"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_refrigerated_storage_building_whaling_station": {
+   "disallowing_laws": [],
+   "employment": {
+    "laborers": -1000
+   },
+   "inputs": {
+    "electricity": 5
+   },
+   "name": {
+    "en": "Refrigerated Storage",
+    "zh": "冷库"
+   },
+   "outputs": {},
+   "techs": [
+    "pasteurization"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_religious_academia": {
+   "disallowing_laws": [
+    "law_total_separation",
+    "law_state_atheism"
+   ],
+   "employment": {
+    "academics": 250,
+    "clergymen": 250
+   },
+   "inputs": {},
+   "name": {
+    "en": "Clerical Educators",
+    "zh": "神职教师"
+   },
+   "outputs": {},
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_religious_bureaucrats": {
+   "disallowing_laws": [
+    "law_total_separation",
+    "law_state_atheism"
+   ],
+   "employment": {
+    "bureaucrats": 250,
+    "clergymen": 250
+   },
+   "inputs": {},
+   "name": {
+    "en": "Administrative Clergy",
+    "zh": "教士行政"
+   },
+   "outputs": {},
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_repeaters": {
+   "disallowing_laws": [],
+   "employment": {
+    "engineers": 500,
+    "laborers": 3000,
+    "machinists": 1000,
+    "shopkeepers": 500
+   },
+   "inputs": {
+    "hardwood": 10,
+    "steel": 20,
+    "tools": 10
+   },
+   "name": {
+    "en": "Repeating Rifles",
+    "zh": "连发步枪"
+   },
+   "outputs": {
+    "small_arms": 70
+   },
+   "techs": [
+    "repeaters"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_rifles": {
+   "disallowing_laws": [],
+   "employment": {
+    "laborers": 3500,
+    "machinists": 1000,
+    "shopkeepers": 500
+   },
+   "inputs": {
+    "hardwood": 10,
+    "steel": 10,
+    "tools": 5
+   },
+   "name": {
+    "en": "Rifles",
+    "zh": "步枪"
+   },
+   "outputs": {
+    "small_arms": 50
+   },
+   "techs": [
+    "rifling"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_road_carts": {
+   "disallowing_laws": [],
+   "employment": {},
+   "inputs": {},
+   "name": {
+    "en": "Road Carts",
+    "zh": "手推车"
+   },
+   "outputs": {},
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_rotary_valve_engine_building_arms_industry": {
+   "disallowing_laws": [],
+   "employment": {
+    "laborers": -2000
+   },
+   "inputs": {
+    "coal": 15
+   },
+   "name": {
+    "en": "Rotary Valve Engine",
+    "zh": "旋转阀发动机"
+   },
+   "outputs": {},
+   "techs": [
+    "rotary_valve_engine"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_rotary_valve_engine_building_furniture_manufactory": {
+   "disallowing_laws": [
+    "law_industry_banned"
+   ],
+   "employment": {
+    "laborers": -2000
+   },
+   "inputs": {
+    "coal": 10,
+    "tools": 5
+   },
+   "name": {
+    "en": "Rotary Valve Engine",
+    "zh": "旋转阀发动机"
+   },
+   "outputs": {},
+   "techs": [
+    "rotary_valve_engine"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_rotary_valve_engine_building_motor_industry": {
+   "disallowing_laws": [],
+   "employment": {
+    "laborers": -1000,
+    "machinists": -500
+   },
+   "inputs": {
+    "coal": 10,
+    "tools": 5
+   },
+   "name": {
+    "en": "Rotary Valve Engine",
+    "zh": "旋转阀发动机"
+   },
+   "outputs": {},
+   "techs": [
+    "rotary_valve_engine"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_rotary_valve_engine_building_munition_plant": {
+   "disallowing_laws": [],
+   "employment": {
+    "laborers": -2000
+   },
+   "inputs": {
+    "coal": 15
+   },
+   "name": {
+    "en": "Rotary Valve Engine",
+    "zh": "旋转阀发动机"
+   },
+   "outputs": {},
+   "techs": [
+    "rotary_valve_engine"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_rotary_valve_engine_building_paper_mill": {
+   "disallowing_laws": [
+    "law_industry_banned"
+   ],
+   "employment": {
+    "laborers": -2000
+   },
+   "inputs": {
+    "coal": 10,
+    "tools": 5
+   },
+   "name": {
+    "en": "Rotary Valve Engine",
+    "zh": "旋转阀发动机"
+   },
+   "outputs": {},
+   "techs": [
+    "rotary_valve_engine"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_rotary_valve_engine_building_steel_mill": {
+   "disallowing_laws": [],
+   "employment": {
+    "laborers": -2000
+   },
+   "inputs": {
+    "coal": 10,
+    "tools": 5
+   },
+   "name": {
+    "en": "Rotary Valve Engine",
+    "zh": "旋转阀发动机"
+   },
+   "outputs": {},
+   "techs": [
+    "rotary_valve_engine"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_rotary_valve_engine_building_tooling_workshop": {
+   "disallowing_laws": [
+    "law_industry_banned"
+   ],
+   "employment": {
+    "laborers": -2000
+   },
+   "inputs": {
+    "coal": 15
+   },
+   "name": {
+    "en": "Rotary Valve Engine",
+    "zh": "旋转阀发动机"
+   },
+   "outputs": {},
+   "techs": [
+    "rotary_valve_engine"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_rubber_grips": {
+   "disallowing_laws": [],
+   "employment": {
+    "engineers": 500,
+    "laborers": 3000,
+    "machinists": 1000,
+    "shopkeepers": 500
+   },
+   "inputs": {
+    "rubber": 10,
+    "steel": 30
+   },
+   "name": {
+    "en": "Machined Steel Tools",
+    "zh": "机械化钢制工具"
+   },
+   "outputs": {
+    "tools": 110
+   },
+   "techs": [
+    "vulcanization"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_samurai_training": {
+   "disallowing_laws": [],
+   "employment": {},
+   "inputs": {},
+   "name": {
+    "en": "Samurai Training",
+    "zh": "武士训练"
+   },
+   "outputs": {},
+   "techs": [],
+   "unlocking_laws": [
+    "law_warrior_caste"
+   ]
+  },
+  "pm_saw_mills": {
+   "disallowing_laws": [],
+   "employment": {
+    "laborers": 4000,
+    "machinists": 500,
+    "shopkeepers": 500
+   },
+   "inputs": {
+    "tools": 5
+   },
+   "name": {
+    "en": "Saw Mills",
+    "zh": "锯木厂"
+   },
+   "outputs": {
+    "wood": 60
+   },
+   "techs": [
+    "steelworking"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_scholastic_education": {
+   "disallowing_laws": [],
+   "employment": {
+    "clerks": 250,
+    "laborers": 250
+   },
+   "inputs": {
+    "paper": 5
+   },
+   "name": {
+    "en": "Scholastic Education",
+    "zh": "经院教育"
+   },
+   "outputs": {},
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_sea_lane_strategies": {
+   "disallowing_laws": [],
+   "employment": {},
+   "inputs": {},
+   "name": {
+    "en": "Sea Lane Strategies",
+    "zh": "海中航线战略"
+   },
+   "outputs": {},
+   "techs": [
+    "sea_lane_strategies"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_secular_academia": {
+   "disallowing_laws": [
+    "law_state_religion"
+   ],
+   "employment": {
+    "academics": 500
+   },
+   "inputs": {},
+   "name": {
+    "en": "Secular Academia",
+    "zh": "世俗学术界"
+   },
+   "outputs": {},
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_secular_bureaucrats": {
+   "disallowing_laws": [
+    "law_state_religion"
+   ],
+   "employment": {
+    "bureaucrats": 500
+   },
+   "inputs": {},
+   "name": {
+    "en": "Secular Administration",
+    "zh": "世俗管治"
+   },
+   "outputs": {},
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_serfdom": {
+   "disallowing_laws": [],
+   "employment": {},
+   "inputs": {},
+   "name": {
+    "en": "Serfdom",
+    "zh": "农奴制"
+   },
+   "outputs": {
+    "grain": 0.5
+   },
+   "techs": [],
+   "unlocking_laws": [
+    "law_serfdom"
+   ]
+  },
+  "pm_serfdom_building_subsistence_fishing_village": {
+   "disallowing_laws": [],
+   "employment": {},
+   "inputs": {},
+   "name": {
+    "en": "Serfdom",
+    "zh": "农奴制"
+   },
+   "outputs": {
+    "fish": 0.5
+   },
+   "techs": [],
+   "unlocking_laws": [
+    "law_serfdom"
+   ]
+  },
+  "pm_serfdom_building_subsistence_orchard": {
+   "disallowing_laws": [],
+   "employment": {},
+   "inputs": {},
+   "name": {
+    "en": "Serfdom",
+    "zh": "农奴制"
+   },
+   "outputs": {
+    "fruit": 0.33
+   },
+   "techs": [],
+   "unlocking_laws": [
+    "law_serfdom"
+   ]
+  },
+  "pm_serfdom_building_subsistence_pasture": {
+   "disallowing_laws": [],
+   "employment": {},
+   "inputs": {},
+   "name": {
+    "en": "Serfdom",
+    "zh": "农奴制"
+   },
+   "outputs": {
+    "meat": 0.33
+   },
+   "techs": [],
+   "unlocking_laws": [
+    "law_serfdom"
+   ]
+  },
+  "pm_serfdom_building_subsistence_rice_farm": {
+   "disallowing_laws": [],
+   "employment": {},
+   "inputs": {},
+   "name": {
+    "en": "Serfdom",
+    "zh": "农奴制"
+   },
+   "outputs": {
+    "grain": 1
+   },
+   "techs": [],
+   "unlocking_laws": [
+    "law_serfdom"
+   ]
+  },
+  "pm_serfdom_no": {
+   "disallowing_laws": [],
+   "employment": {},
+   "inputs": {},
+   "name": {
+    "en": "Free Peasants",
+    "zh": "自由农民"
+   },
+   "outputs": {},
+   "techs": [],
+   "unlocking_laws": [
+    "law_tenant_farmers",
+    "law_commercialized_agriculture",
+    "law_collectivized_agriculture",
+    "law_latifundias",
+    "law_expanded_latifundias"
+   ]
+  },
+  "pm_sewing_machines": {
+   "disallowing_laws": [],
+   "employment": {
+    "engineers": 250,
+    "laborers": 3500,
+    "machinists": 750,
+    "shopkeepers": 500
+   },
+   "inputs": {
+    "dye": 10,
+    "fabric": 60,
+    "tools": 5
+   },
+   "name": {
+    "en": "Sewing Machines",
+    "zh": "缝纫机"
+   },
+   "outputs": {
+    "clothes": 100
+   },
+   "techs": [
+    "mechanized_workshops"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_sheep_farms": {
+   "disallowing_laws": [],
+   "employment": {},
+   "inputs": {
+    "grain": 10
+   },
+   "name": {
+    "en": "Increased Wool Gathering",
+    "zh": "改进羊毛采收"
+   },
+   "outputs": {
+    "fabric": 15,
+    "fertilizer": 2.5
+   },
+   "techs": [
+    "intensive_agriculture"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_simple_farming": {
+   "disallowing_laws": [],
+   "employment": {
+    "farmers": 1000,
+    "laborers": 4000
+   },
+   "inputs": {},
+   "name": {
+    "en": "Simple Farming",
+    "zh": "简单农业"
+   },
+   "outputs": {
+    "grain": 20
+   },
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_simple_farming_building_rice_farm": {
+   "disallowing_laws": [],
+   "employment": {
+    "farmers": 2000,
+    "laborers": 8000
+   },
+   "inputs": {},
+   "name": {
+    "en": "Simple Farming",
+    "zh": "简单农业"
+   },
+   "outputs": {
+    "grain": 35
+   },
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_simple_fishing": {
+   "disallowing_laws": [],
+   "employment": {
+    "laborers": 4500,
+    "shopkeepers": 500
+   },
+   "inputs": {},
+   "name": {
+    "en": "Simple Fishing",
+    "zh": "简单渔业"
+   },
+   "outputs": {
+    "fish": 25
+   },
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_simple_forestry": {
+   "disallowing_laws": [],
+   "employment": {
+    "laborers": 4500,
+    "shopkeepers": 500
+   },
+   "inputs": {},
+   "name": {
+    "en": "Simple Forestry",
+    "zh": "简单林业"
+   },
+   "outputs": {
+    "wood": 30
+   },
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_simple_organization": {
+   "disallowing_laws": [],
+   "employment": {
+    "clerks": 500
+   },
+   "inputs": {},
+   "name": {
+    "en": "Simple Organization",
+    "zh": "简单组织"
+   },
+   "outputs": {},
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_simple_ranch": {
+   "disallowing_laws": [],
+   "employment": {},
+   "inputs": {},
+   "name": {
+    "en": "Sheep Ranch",
+    "zh": "绵羊牧场"
+   },
+   "outputs": {
+    "fabric": 5
+   },
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_simple_sailor_recruitment": {
+   "disallowing_laws": [],
+   "employment": {
+    "officers": 100,
+    "soldiers": 900
+   },
+   "inputs": {},
+   "name": {
+    "en": "Simple Recruitment",
+    "zh": "基础招募"
+   },
+   "outputs": {},
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_simple_whaling": {
+   "disallowing_laws": [],
+   "employment": {
+    "laborers": 4500,
+    "shopkeepers": 500
+   },
+   "inputs": {},
+   "name": {
+    "en": "Simple Whaling",
+    "zh": "简单捕鲸业"
+   },
+   "outputs": {
+    "meat": 5,
+    "oil": 10
+   },
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_skyscraper_bureaucratic_nexus": {
+   "disallowing_laws": [],
+   "employment": {
+    "bureaucrats": 300,
+    "clerks": 500,
+    "laborers": 200
+   },
+   "inputs": {
+    "paper": 25
+   },
+   "name": {
+    "en": "Bureaucratic Nexus",
+    "zh": "官僚中心"
+   },
+   "outputs": {},
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_skyscraper_trade_nexus": {
+   "disallowing_laws": [],
+   "employment": {
+    "bureaucrats": 300,
+    "clerks": 500,
+    "laborers": 200
+   },
+   "inputs": {
+    "paper": 25
+   },
+   "name": {
+    "en": "Trade Nexus",
+    "zh": "贸易中心"
+   },
+   "outputs": {},
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_slaughterhouses": {
+   "disallowing_laws": [],
+   "employment": {
+    "farmers": 1000,
+    "laborers": 3750,
+    "machinists": 250
+   },
+   "inputs": {
+    "tools": 5
+   },
+   "name": {
+    "en": "Slaughterhouses",
+    "zh": "屠宰场"
+   },
+   "outputs": {
+    "meat": 25
+   },
+   "techs": [
+    "mechanical_tools"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_smoothbores": {
+   "disallowing_laws": [],
+   "employment": {
+    "engineers": 250,
+    "laborers": 3250,
+    "machinists": 1000,
+    "shopkeepers": 500
+   },
+   "inputs": {
+    "hardwood": 15,
+    "iron": 25
+   },
+   "name": {
+    "en": "Smoothbores",
+    "zh": "滑膛炮"
+   },
+   "outputs": {
+    "artillery": 45
+   },
+   "techs": [
+    "shell_gun"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_soil_enriching_farming": {
+   "disallowing_laws": [],
+   "employment": {
+    "farmers": 1500,
+    "laborers": 3500
+   },
+   "inputs": {
+    "fertilizer": 5
+   },
+   "name": {
+    "en": "Soil-Enriching Farming",
+    "zh": "土壤改良农业"
+   },
+   "outputs": {
+    "grain": 30
+   },
+   "techs": [
+    "intensive_agriculture"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_soil_enriching_farming_building_rice_farm": {
+   "disallowing_laws": [],
+   "employment": {
+    "farmers": 3000,
+    "laborers": 7000
+   },
+   "inputs": {
+    "fertilizer": 10
+   },
+   "name": {
+    "en": "Soil-Enriching Farming",
+    "zh": "土壤改良农业"
+   },
+   "outputs": {
+    "grain": 50
+   },
+   "techs": [
+    "intensive_agriculture"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_standard_fences": {
+   "disallowing_laws": [],
+   "employment": {},
+   "inputs": {},
+   "name": {
+    "en": "Standard Fences",
+    "zh": "标准围栏"
+   },
+   "outputs": {},
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_state_urban_clergy": {
+   "disallowing_laws": [],
+   "employment": {
+    "clergymen": 200
+   },
+   "inputs": {},
+   "name": {
+    "en": "State-Run Churches",
+    "zh": "国教教堂"
+   },
+   "outputs": {},
+   "techs": [],
+   "unlocking_laws": [
+    "law_state_religion"
+   ]
+  },
+  "pm_steam_derricks": {
+   "disallowing_laws": [],
+   "employment": {
+    "engineers": 500,
+    "laborers": 3000,
+    "machinists": 1000,
+    "shopkeepers": 500
+   },
+   "inputs": {
+    "coal": 10,
+    "engines": 5
+   },
+   "name": {
+    "en": "Steam-Powered Derricks",
+    "zh": "蒸汽动力井架"
+   },
+   "outputs": {
+    "oil": 60
+   },
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_steam_donkey_building_coal_mine": {
+   "disallowing_laws": [
+    "law_industry_banned"
+   ],
+   "employment": {
+    "laborers": -1000
+   },
+   "inputs": {
+    "engines": 1
+   },
+   "name": {
+    "en": "Steam Donkey",
+    "zh": "辅助蒸汽机"
+   },
+   "outputs": {
+    "coal": -3
+   },
+   "techs": [
+    "steam_donkey"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_steam_donkey_building_logging_camp": {
+   "disallowing_laws": [
+    "law_industry_banned"
+   ],
+   "employment": {
+    "laborers": -1000
+   },
+   "inputs": {
+    "coal": 4,
+    "engines": 1
+   },
+   "name": {
+    "en": "Steam Donkey",
+    "zh": "辅助蒸汽机"
+   },
+   "outputs": {},
+   "techs": [
+    "steam_donkey"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_steam_donkey_mine": {
+   "disallowing_laws": [
+    "law_industry_banned"
+   ],
+   "employment": {
+    "laborers": -1000
+   },
+   "inputs": {
+    "coal": 4,
+    "engines": 1
+   },
+   "name": {
+    "en": "Steam Donkey",
+    "zh": "辅助蒸汽机"
+   },
+   "outputs": {},
+   "techs": [
+    "steam_donkey"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_steam_engines": {
+   "disallowing_laws": [],
+   "employment": {
+    "engineers": 500,
+    "laborers": 2500,
+    "machinists": 1500,
+    "shopkeepers": 500
+   },
+   "inputs": {
+    "steel": 30
+   },
+   "name": {
+    "en": "Steam Engines",
+    "zh": "蒸汽发动机"
+   },
+   "outputs": {
+    "engines": 40
+   },
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_steam_rail_transport": {
+   "disallowing_laws": [],
+   "employment": {
+    "laborers": -1000
+   },
+   "inputs": {
+    "transportation": 5
+   },
+   "name": {
+    "en": "Rail Transportation",
+    "zh": "轨道运输"
+   },
+   "outputs": {},
+   "techs": [
+    "railways"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_steam_threshers": {
+   "disallowing_laws": [],
+   "employment": {
+    "laborers": -1500
+   },
+   "inputs": {
+    "coal": 1,
+    "tools": 2
+   },
+   "name": {
+    "en": "Steam-Powered Thresher Machines",
+    "zh": "蒸汽动力脱粒机"
+   },
+   "outputs": {},
+   "techs": [
+    "threshing_machine"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_steam_threshers_building_rice_farm": {
+   "disallowing_laws": [],
+   "employment": {
+    "laborers": -3000
+   },
+   "inputs": {
+    "coal": 2,
+    "tools": 4
+   },
+   "name": {
+    "en": "Steam-Powered Thresher Machines",
+    "zh": "蒸汽动力脱粒机"
+   },
+   "outputs": {},
+   "techs": [
+    "threshing_machine"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_steam_trains": {
+   "disallowing_laws": [],
+   "employment": {
+    "clerks": 200,
+    "laborers": 500,
+    "machinists": 300
+   },
+   "inputs": {
+    "coal": 5,
+    "engines": 5
+   },
+   "name": {
+    "en": "Steam Trains",
+    "zh": "蒸汽机车"
+   },
+   "outputs": {
+    "transportation": 25
+   },
+   "techs": [
+    "steel_railway_cars"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_steam_trains_principle_transport_3": {
+   "disallowing_laws": [],
+   "employment": {
+    "clerks": 200,
+    "laborers": 500,
+    "machinists": 300
+   },
+   "inputs": {
+    "coal": 6,
+    "engines": 6
+   },
+   "name": {
+    "en": "Joint Steam Trains",
+    "zh": "联合蒸汽机车"
+   },
+   "outputs": {
+    "transportation": 30
+   },
+   "techs": [
+    "steel_railway_cars"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_steam_trawlers": {
+   "disallowing_laws": [],
+   "employment": {
+    "engineers": 500,
+    "laborers": 3000,
+    "machinists": 1000,
+    "shopkeepers": 500
+   },
+   "inputs": {
+    "coal": 15,
+    "steamers": 5
+   },
+   "name": {
+    "en": "Steam Trawlers",
+    "zh": "蒸汽拖网渔船"
+   },
+   "outputs": {
+    "fish": 100
+   },
+   "techs": [
+    "gantry_cranes"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_steam_whaling_ships": {
+   "disallowing_laws": [],
+   "employment": {
+    "engineers": 500,
+    "laborers": 3000,
+    "machinists": 1000,
+    "shopkeepers": 500
+   },
+   "inputs": {
+    "coal": 20,
+    "steamers": 5
+   },
+   "name": {
+    "en": "Steam-Powered Whalers",
+    "zh": "蒸汽动力捕鲸船"
+   },
+   "outputs": {
+    "meat": 20,
+    "oil": 40
+   },
+   "techs": [
+    "gantry_cranes"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_steel": {
+   "disallowing_laws": [],
+   "employment": {
+    "engineers": 500,
+    "laborers": 3500,
+    "machinists": 500,
+    "shopkeepers": 500
+   },
+   "inputs": {
+    "steel": 20,
+    "wood": 30
+   },
+   "name": {
+    "en": "Steel Tools",
+    "zh": "钢制工具"
+   },
+   "outputs": {
+    "tools": 80
+   },
+   "techs": [
+    "mechanical_tools"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_steel_frame_buildings": {
+   "disallowing_laws": [],
+   "employment": {
+    "bureaucrats": 100,
+    "clerks": 100,
+    "laborers": 650,
+    "machinists": 150
+   },
+   "inputs": {
+    "explosives": 10,
+    "glass": 40,
+    "steel": 50,
+    "tools": 20
+   },
+   "name": {
+    "en": "Steel-Frame Buildings",
+    "zh": "钢框架结构建筑"
+   },
+   "outputs": {},
+   "techs": [
+    "steel_frame_buildings"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_steel_passenger_carriages": {
+   "disallowing_laws": [],
+   "employment": {
+    "clerks": 200
+   },
+   "inputs": {
+    "steel": 5
+   },
+   "name": {
+    "en": "Steel Passenger Carriages",
+    "zh": "钢制乘客车厢"
+   },
+   "outputs": {
+    "transportation": 15
+   },
+   "techs": [
+    "steel_railway_cars"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_sugar_beets": {
+   "disallowing_laws": [],
+   "employment": {},
+   "inputs": {},
+   "name": {
+    "en": "Sugar Beets",
+    "zh": "甜菜"
+   },
+   "outputs": {
+    "grain": -5,
+    "sugar": 4
+   },
+   "techs": [
+    "fractional_distillation"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_sulfite_pulping": {
+   "disallowing_laws": [],
+   "employment": {
+    "laborers": 4000,
+    "machinists": 500,
+    "shopkeepers": 500
+   },
+   "inputs": {
+    "sulfur": 10,
+    "wood": 30
+   },
+   "name": {
+    "en": "Sulfite Pulping",
+    "zh": "亚硫酸盐制浆"
+   },
+   "outputs": {
+    "paper": 70
+   },
+   "techs": [
+    "mechanical_tools"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_sweeteners": {
+   "disallowing_laws": [],
+   "employment": {
+    "laborers": 4000,
+    "machinists": 500,
+    "shopkeepers": 500
+   },
+   "inputs": {
+    "grain": 40,
+    "sugar": 15
+   },
+   "name": {
+    "en": "Sweeteners",
+    "zh": "甜味剂"
+   },
+   "outputs": {
+    "groceries": 65
+   },
+   "techs": [
+    "distillation"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_switch_boards": {
+   "disallowing_laws": [],
+   "employment": {
+    "clerks": 500
+   },
+   "inputs": {
+    "paper": 20,
+    "telephones": 5
+   },
+   "name": {
+    "en": "Telephone Switchboards",
+    "zh": "电话交换机"
+   },
+   "outputs": {},
+   "techs": [
+    "central_planning"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_tank_production": {
+   "disallowing_laws": [],
+   "employment": {
+    "engineers": 250
+   },
+   "inputs": {
+    "steel": 5
+   },
+   "name": {
+    "en": "Tank Production",
+    "zh": "坦克生产"
+   },
+   "outputs": {
+    "automobiles": -20,
+    "tanks": 20
+   },
+   "techs": [
+    "mobile_armor"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_tanker_cars": {
+   "disallowing_laws": [],
+   "employment": {
+    "laborers": -2000
+   },
+   "inputs": {
+    "transportation": 10
+   },
+   "name": {
+    "en": "Tanker Cars",
+    "zh": "罐车"
+   },
+   "outputs": {},
+   "techs": [
+    "steel_railway_cars"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_telephones": {
+   "disallowing_laws": [],
+   "employment": {
+    "engineers": 1000,
+    "laborers": 1500,
+    "machinists": 2000,
+    "shopkeepers": 500
+   },
+   "inputs": {
+    "iron": 20,
+    "lead": 20,
+    "rubber": 20,
+    "tools": 10
+   },
+   "name": {
+    "en": "Telephone Production",
+    "zh": "电话生产"
+   },
+   "outputs": {
+    "telephones": 60
+   },
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_tools": {
+   "disallowing_laws": [],
+   "employment": {
+    "laborers": -1000
+   },
+   "inputs": {
+    "tools": 2
+   },
+   "name": {
+    "en": "Harvesting Tools",
+    "zh": "收割工具"
+   },
+   "outputs": {},
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_tools_building_rice_farm": {
+   "disallowing_laws": [],
+   "employment": {
+    "laborers": -2000
+   },
+   "inputs": {
+    "tools": 4
+   },
+   "name": {
+    "en": "Harvesting Tools",
+    "zh": "收割工具"
+   },
+   "outputs": {},
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_tools_disabled": {
+   "disallowing_laws": [],
+   "employment": {},
+   "inputs": {},
+   "name": {
+    "en": "Ox-Powered Plows",
+    "zh": "牛拉犁"
+   },
+   "outputs": {},
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_tractors": {
+   "disallowing_laws": [],
+   "employment": {
+    "laborers": -2000
+   },
+   "inputs": {
+    "coal": 2,
+    "engines": 1
+   },
+   "name": {
+    "en": "Tractors",
+    "zh": "拖拉机"
+   },
+   "outputs": {},
+   "techs": [
+    "mechanized_farming"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_trade_center": {
+   "disallowing_laws": [],
+   "employment": {
+    "clerks": 800,
+    "shopkeepers": 200
+   },
+   "inputs": {},
+   "name": {
+    "en": "International Trading",
+    "zh": "国际贸易"
+   },
+   "outputs": {},
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_trade_center_principle_external_trade_2": {
+   "disallowing_laws": [],
+   "employment": {
+    "clerks": 800,
+    "shopkeepers": 200
+   },
+   "inputs": {},
+   "name": {
+    "en": "Influential Trade Center",
+    "zh": "有影响力的贸易中心"
+   },
+   "outputs": {},
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_trade_center_trade_quantity_high": {
+   "disallowing_laws": [],
+   "employment": {},
+   "inputs": {
+    "merchant_marine": 5
+   },
+   "name": {
+    "en": "Bulk Trading",
+    "zh": "大宗交易"
+   },
+   "outputs": {},
+   "techs": [
+    "hydraulic_cranes"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_trade_center_trade_quantity_limited": {
+   "disallowing_laws": [],
+   "employment": {},
+   "inputs": {
+    "merchant_marine": 3
+   },
+   "name": {
+    "en": "Small-Scale Trading",
+    "zh": "小宗交易"
+   },
+   "outputs": {},
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_trade_center_trade_quantity_normal": {
+   "disallowing_laws": [],
+   "employment": {},
+   "inputs": {
+    "merchant_marine": 4
+   },
+   "name": {
+    "en": "Regular Trading",
+    "zh": "常规交易"
+   },
+   "outputs": {},
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_trade_center_trade_quantity_very_high": {
+   "disallowing_laws": [],
+   "employment": {},
+   "inputs": {
+    "merchant_marine": 6
+   },
+   "name": {
+    "en": "Mass-Scale Trading",
+    "zh": "超大宗交易"
+   },
+   "outputs": {},
+   "techs": [
+    "floating_harbor"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_traditional_art": {
+   "disallowing_laws": [],
+   "employment": {},
+   "inputs": {
+    "paper": 10
+   },
+   "name": {
+    "en": "Traditional Art",
+    "zh": "传统艺术"
+   },
+   "outputs": {
+    "fine_art": 5
+   },
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_traditional_looms": {
+   "disallowing_laws": [],
+   "employment": {},
+   "inputs": {},
+   "name": {
+    "en": "Traditional Looms",
+    "zh": "传统织机"
+   },
+   "outputs": {},
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_traditional_patronage": {
+   "disallowing_laws": [
+    "law_command_economy",
+    "law_cooperative_ownership"
+   ],
+   "employment": {
+    "academics": 1000,
+    "clerks": 3000,
+    "laborers": 1000
+   },
+   "inputs": {},
+   "name": {
+    "en": "Traditional Patronage",
+    "zh": "传统赞助模式"
+   },
+   "outputs": {},
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_training_streamlining": {
+   "disallowing_laws": [
+    "law_warrior_caste"
+   ],
+   "employment": {},
+   "inputs": {},
+   "name": {
+    "en": "Training Method Streamlining",
+    "zh": "精简训练方式"
+   },
+   "outputs": {},
+   "techs": [
+    "wargaming"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_training_streamlining_conscription": {
+   "disallowing_laws": [
+    "law_peasant_levies",
+    "law_warrior_caste"
+   ],
+   "employment": {},
+   "inputs": {},
+   "name": {
+    "en": "Training Method Streamlining",
+    "zh": "精简训练方式"
+   },
+   "outputs": {},
+   "techs": [
+    "wargaming"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_unrefrigerated": {
+   "disallowing_laws": [],
+   "employment": {},
+   "inputs": {},
+   "name": {
+    "en": "Unrefrigerated",
+    "zh": "无冷藏"
+   },
+   "outputs": {},
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_vacuum_canning": {
+   "disallowing_laws": [],
+   "employment": {
+    "engineers": 200,
+    "machinists": 500
+   },
+   "inputs": {
+    "fish": 30,
+    "grain": -30,
+    "iron": 10,
+    "meat": 20,
+    "oil": 5
+   },
+   "name": {
+    "en": "Vacuum Packaging",
+    "zh": "真空包装"
+   },
+   "outputs": {
+    "groceries": 60
+   },
+   "techs": [
+    "vacuum_canning"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_vacuum_canning_principle_3": {
+   "disallowing_laws": [],
+   "employment": {
+    "engineers": 200,
+    "machinists": 500
+   },
+   "inputs": {
+    "fish": 30,
+    "grain": -30,
+    "iron": 10,
+    "meat": 20,
+    "oil": 5
+   },
+   "name": {
+    "en": "Efficient Canning Practices",
+    "zh": "高效罐头生产"
+   },
+   "outputs": {
+    "groceries": 70
+   },
+   "techs": [
+    "vacuum_canning"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_vacuum_evaporation": {
+   "disallowing_laws": [],
+   "employment": {
+    "engineers": 1000,
+    "laborers": 2000,
+    "machinists": 1000,
+    "shopkeepers": 500
+   },
+   "inputs": {
+    "fertilizer": 40,
+    "paper": 20,
+    "sulfur": 40
+   },
+   "name": {
+    "en": "Vacuum Evaporation",
+    "zh": "真空蒸发"
+   },
+   "outputs": {
+    "explosives": 110
+   },
+   "techs": [
+    "dynamite"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_vertical_filing_cabinets": {
+   "disallowing_laws": [],
+   "employment": {
+    "clerks": 500
+   },
+   "inputs": {
+    "paper": 20
+   },
+   "name": {
+    "en": "Standardized Filing System",
+    "zh": "标准档案系统"
+   },
+   "outputs": {},
+   "techs": [
+    "central_archives"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_watertube_boiler_building_furniture_manufactory": {
+   "disallowing_laws": [
+    "law_industry_banned"
+   ],
+   "employment": {
+    "laborers": -1500
+   },
+   "inputs": {
+    "coal": 5,
+    "tools": 5
+   },
+   "name": {
+    "en": "Water-tube Boiler",
+    "zh": "水管锅炉"
+   },
+   "outputs": {},
+   "techs": [
+    "watertube_boiler"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_watertube_boiler_building_motor_industry": {
+   "disallowing_laws": [],
+   "employment": {
+    "laborers": -500,
+    "machinists": -500
+   },
+   "inputs": {
+    "coal": 5,
+    "tools": 5
+   },
+   "name": {
+    "en": "Water-tube Boiler",
+    "zh": "水管锅炉"
+   },
+   "outputs": {},
+   "techs": [
+    "watertube_boiler"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_watertube_boiler_building_paper_mill": {
+   "disallowing_laws": [
+    "law_industry_banned"
+   ],
+   "employment": {
+    "laborers": -1500
+   },
+   "inputs": {
+    "coal": 5,
+    "tools": 5
+   },
+   "name": {
+    "en": "Water-tube Boiler",
+    "zh": "水管锅炉"
+   },
+   "outputs": {},
+   "techs": [
+    "watertube_boiler"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_watertube_boiler_building_steel_mill": {
+   "disallowing_laws": [],
+   "employment": {
+    "laborers": -1500
+   },
+   "inputs": {
+    "coal": 5,
+    "tools": 5
+   },
+   "name": {
+    "en": "Water-tube Boiler",
+    "zh": "水管锅炉"
+   },
+   "outputs": {},
+   "techs": [
+    "watertube_boiler"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_watertube_boiler_building_tooling_workshop": {
+   "disallowing_laws": [
+    "law_industry_banned"
+   ],
+   "employment": {
+    "laborers": -1500
+   },
+   "inputs": {
+    "coal": 10
+   },
+   "name": {
+    "en": "Water-tube Boiler",
+    "zh": "水管锅炉"
+   },
+   "outputs": {},
+   "techs": [
+    "watertube_boiler"
+   ],
+   "unlocking_laws": []
+  },
+  "pm_wooden_buildings": {
+   "disallowing_laws": [],
+   "employment": {
+    "bureaucrats": 100,
+    "clerks": 100,
+    "laborers": 800
+   },
+   "inputs": {
+    "fabric": 25,
+    "wood": 75
+   },
+   "name": {
+    "en": "Wooden Buildings",
+    "zh": "木制建筑"
+   },
+   "outputs": {},
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_wooden_passenger_carriages": {
+   "disallowing_laws": [],
+   "employment": {
+    "clerks": 100
+   },
+   "inputs": {
+    "wood": 8
+   },
+   "name": {
+    "en": "Wooden Passenger Carriages",
+    "zh": "木制乘客车厢"
+   },
+   "outputs": {
+    "transportation": 10
+   },
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "pm_wooden_whaling_ships": {
+   "disallowing_laws": [],
+   "employment": {
+    "laborers": 4000,
+    "machinists": 500,
+    "shopkeepers": 500
+   },
+   "inputs": {
+    "clippers": 5
+   },
+   "name": {
+    "en": "Whaling Fleet",
+    "zh": "捕鲸帆船"
+   },
+   "outputs": {
+    "meat": 10,
+    "oil": 20
+   },
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "radio_stations_tobacco": {
+   "disallowing_laws": [],
+   "employment": {},
+   "inputs": {
+    "radios": 1
+   },
+   "name": {
+    "en": "Factory Radios",
+    "zh": "工厂收音机"
+   },
+   "outputs": {
+    "tobacco": 5
+   },
+   "techs": [
+    "radio"
+   ],
+   "unlocking_laws": []
+  },
+  "slave_exploitation_banana": {
+   "disallowing_laws": [
+    "law_slavery_banned",
+    "law_colonial_slavery",
+    "law_debt_slavery"
+   ],
+   "employment": {},
+   "inputs": {},
+   "name": {
+    "en": "Violent Treatment",
+    "zh": "暴力对待"
+   },
+   "outputs": {
+    "fruit": 15
+   },
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "slave_exploitation_coffee": {
+   "disallowing_laws": [
+    "law_slavery_banned",
+    "law_colonial_slavery",
+    "law_debt_slavery"
+   ],
+   "employment": {},
+   "inputs": {},
+   "name": {
+    "en": "Violent Treatment",
+    "zh": "暴力对待"
+   },
+   "outputs": {
+    "coffee": 10
+   },
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "slave_exploitation_cotton": {
+   "disallowing_laws": [
+    "law_slavery_banned",
+    "law_colonial_slavery",
+    "law_debt_slavery"
+   ],
+   "employment": {},
+   "inputs": {},
+   "name": {
+    "en": "Violent Treatment",
+    "zh": "暴力对待"
+   },
+   "outputs": {
+    "fabric": 20
+   },
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "slave_exploitation_dye": {
+   "disallowing_laws": [
+    "law_slavery_banned",
+    "law_colonial_slavery",
+    "law_debt_slavery"
+   ],
+   "employment": {},
+   "inputs": {},
+   "name": {
+    "en": "Violent Treatment",
+    "zh": "暴力对待"
+   },
+   "outputs": {
+    "dye": 15
+   },
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "slave_exploitation_rubber": {
+   "disallowing_laws": [
+    "law_slavery_banned",
+    "law_colonial_slavery",
+    "law_debt_slavery"
+   ],
+   "employment": {},
+   "inputs": {},
+   "name": {
+    "en": "Violent Treatment",
+    "zh": "暴力对待"
+   },
+   "outputs": {
+    "rubber": 25
+   },
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "slave_exploitation_sugar": {
+   "disallowing_laws": [
+    "law_slavery_banned",
+    "law_colonial_slavery",
+    "law_debt_slavery"
+   ],
+   "employment": {},
+   "inputs": {},
+   "name": {
+    "en": "Violent Treatment",
+    "zh": "暴力对待"
+   },
+   "outputs": {
+    "sugar": 40
+   },
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "slave_exploitation_tea": {
+   "disallowing_laws": [
+    "law_slavery_banned",
+    "law_colonial_slavery",
+    "law_debt_slavery"
+   ],
+   "employment": {},
+   "inputs": {},
+   "name": {
+    "en": "Violent Treatment",
+    "zh": "暴力对待"
+   },
+   "outputs": {
+    "tea": 20
+   },
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "steam_powered_evaporation_sugar": {
+   "disallowing_laws": [],
+   "employment": {
+    "laborers": -2000,
+    "machinists": 500
+   },
+   "inputs": {
+    "coal": 2,
+    "engines": 1
+   },
+   "name": {
+    "en": "Steam-Powered Mills",
+    "zh": "蒸汽研磨机"
+   },
+   "outputs": {
+    "sugar": 15
+   },
+   "techs": [
+    "fractional_distillation"
+   ],
+   "unlocking_laws": []
+  },
+  "vacuum_pan_sugar": {
+   "disallowing_laws": [],
+   "employment": {
+    "laborers": -1000
+   },
+   "inputs": {
+    "coal": 1
+   },
+   "name": {
+    "en": "Vacuum Pans",
+    "zh": "真空浓缩罐"
+   },
+   "outputs": {
+    "sugar": 5
+   },
+   "techs": [
+    "watertube_boiler"
+   ],
+   "unlocking_laws": []
+  },
+  "worker_exploitation_banana": {
+   "disallowing_laws": [
+    "law_right_to_associate",
+    "law_corporatized_unions",
+    "law_factory_councils",
+    "law_guaranteed_liberties",
+    "law_regulatory_bodies",
+    "law_worker_protections",
+    "law_collectivized_agriculture",
+    "law_homesteading",
+    "law_peasant_proprietorship",
+    "law_multicultural",
+    "law_wage_subsidies",
+    "law_old_age_pension"
+   ],
+   "employment": {},
+   "inputs": {},
+   "name": {
+    "en": "Exploitative Practices",
+    "zh": "剥削压榨"
+   },
+   "outputs": {
+    "fruit": 10
+   },
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "worker_exploitation_coffee": {
+   "disallowing_laws": [
+    "law_right_to_associate",
+    "law_corporatized_unions",
+    "law_factory_councils",
+    "law_guaranteed_liberties",
+    "law_regulatory_bodies",
+    "law_worker_protections",
+    "law_collectivized_agriculture",
+    "law_homesteading",
+    "law_peasant_proprietorship",
+    "law_multicultural",
+    "law_wage_subsidies",
+    "law_old_age_pension"
+   ],
+   "employment": {},
+   "inputs": {},
+   "name": {
+    "en": "Exploitative Practices",
+    "zh": "剥削压榨"
+   },
+   "outputs": {
+    "coffee": 5
+   },
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "worker_exploitation_cotton": {
+   "disallowing_laws": [
+    "law_right_to_associate",
+    "law_corporatized_unions",
+    "law_factory_councils",
+    "law_guaranteed_liberties",
+    "law_regulatory_bodies",
+    "law_worker_protections",
+    "law_collectivized_agriculture",
+    "law_homesteading",
+    "law_peasant_proprietorship",
+    "law_multicultural",
+    "law_wage_subsidies",
+    "law_old_age_pension"
+   ],
+   "employment": {},
+   "inputs": {},
+   "name": {
+    "en": "Exploitative Practices",
+    "zh": "剥削压榨"
+   },
+   "outputs": {
+    "fabric": 10
+   },
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "worker_exploitation_dye": {
+   "disallowing_laws": [
+    "law_right_to_associate",
+    "law_corporatized_unions",
+    "law_factory_councils",
+    "law_guaranteed_liberties",
+    "law_regulatory_bodies",
+    "law_worker_protections",
+    "law_collectivized_agriculture",
+    "law_homesteading",
+    "law_peasant_proprietorship",
+    "law_multicultural",
+    "law_wage_subsidies",
+    "law_old_age_pension"
+   ],
+   "employment": {},
+   "inputs": {},
+   "name": {
+    "en": "Exploitative Practices",
+    "zh": "剥削压榨"
+   },
+   "outputs": {
+    "dye": 10
+   },
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "worker_exploitation_rubber": {
+   "disallowing_laws": [
+    "law_right_to_associate",
+    "law_corporatized_unions",
+    "law_factory_councils",
+    "law_guaranteed_liberties",
+    "law_regulatory_bodies",
+    "law_worker_protections",
+    "law_collectivized_agriculture",
+    "law_homesteading",
+    "law_peasant_proprietorship",
+    "law_multicultural",
+    "law_wage_subsidies",
+    "law_old_age_pension"
+   ],
+   "employment": {},
+   "inputs": {},
+   "name": {
+    "en": "Exploitative Practices",
+    "zh": "剥削压榨"
+   },
+   "outputs": {
+    "rubber": 10
+   },
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "worker_exploitation_sugar": {
+   "disallowing_laws": [
+    "law_right_to_associate",
+    "law_corporatized_unions",
+    "law_factory_councils",
+    "law_guaranteed_liberties",
+    "law_regulatory_bodies",
+    "law_worker_protections",
+    "law_collectivized_agriculture",
+    "law_homesteading",
+    "law_peasant_proprietorship",
+    "law_multicultural",
+    "law_wage_subsidies",
+    "law_old_age_pension"
+   ],
+   "employment": {},
+   "inputs": {},
+   "name": {
+    "en": "Exploitative Practices",
+    "zh": "剥削压榨"
+   },
+   "outputs": {
+    "sugar": 20
+   },
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "worker_exploitation_tea": {
+   "disallowing_laws": [
+    "law_right_to_associate",
+    "law_corporatized_unions",
+    "law_factory_councils",
+    "law_guaranteed_liberties",
+    "law_regulatory_bodies",
+    "law_worker_protections",
+    "law_collectivized_agriculture",
+    "law_homesteading",
+    "law_peasant_proprietorship",
+    "law_multicultural",
+    "law_wage_subsidies",
+    "law_old_age_pension"
+   ],
+   "employment": {},
+   "inputs": {},
+   "name": {
+    "en": "Exploitative Practices",
+    "zh": "剥削压榨"
+   },
+   "outputs": {
+    "tea": 15
+   },
+   "techs": [],
+   "unlocking_laws": []
+  },
+  "worker_exploitation_tobacco": {
+   "disallowing_laws": [
+    "law_right_to_associate",
+    "law_corporatized_unions",
+    "law_factory_councils",
+    "law_guaranteed_liberties",
+    "law_regulatory_bodies",
+    "law_worker_protections",
+    "law_collectivized_agriculture",
+    "law_homesteading",
+    "law_peasant_proprietorship",
+    "law_multicultural",
+    "law_wage_subsidies",
+    "law_old_age_pension"
+   ],
+   "employment": {
+    "laborers": 1000
+   },
+   "inputs": {},
+   "name": {
+    "en": "Exploited Rollers",
+    "zh": "压榨式卷制"
+   },
+   "outputs": {
+    "tobacco": 5
+   },
+   "techs": [],
+   "unlocking_laws": []
+  }
+ }
+}

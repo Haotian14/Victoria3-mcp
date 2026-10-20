@@ -1,0 +1,2188 @@
+{
+ "game_version": "1.13.11",
+ "technologies": {
+  "academia": {
+   "can_research": true,
+   "category": "society",
+   "era": "era_1",
+   "name": {
+    "en": "Academia",
+    "zh": "学术界"
+   },
+   "requires": [
+    "rationalism"
+   ]
+  },
+  "admiralty": {
+   "can_research": true,
+   "category": "military",
+   "era": "era_1",
+   "name": {
+    "en": "Admiralty",
+    "zh": "海军部"
+   },
+   "requires": [
+    "navigation"
+   ]
+  },
+  "analytical_philosophy": {
+   "can_research": true,
+   "category": "society",
+   "era": "era_5",
+   "name": {
+    "en": "Analytical Philosophy",
+    "zh": "分析哲学"
+   },
+   "requires": [
+    "psychoanalysis"
+   ]
+  },
+  "anarchism": {
+   "can_research": true,
+   "category": "society",
+   "era": "era_3",
+   "name": {
+    "en": "Anarchism",
+    "zh": "无政府主义"
+   },
+   "requires": [
+    "egalitarianism"
+   ]
+  },
+  "aniline": {
+   "can_research": true,
+   "category": "production",
+   "era": "era_3",
+   "name": {
+    "en": "Aniline",
+    "zh": "苯胺"
+   },
+   "requires": [
+    "rubber_mastication"
+   ]
+  },
+  "antibiotics": {
+   "can_research": true,
+   "category": "society",
+   "era": "era_5",
+   "name": {
+    "en": "Antibiotics",
+    "zh": "抗生素"
+   },
+   "requires": [
+    "malaria_prevention"
+   ]
+  },
+  "arc_welding": {
+   "can_research": true,
+   "category": "production",
+   "era": "era_5",
+   "name": {
+    "en": "Arc Welding",
+    "zh": "电弧焊"
+   },
+   "requires": [
+    "electric_arc_process",
+    "pneumatic_tools"
+   ]
+  },
+  "army_reserves": {
+   "can_research": true,
+   "category": "military",
+   "era": "era_1",
+   "name": {
+    "en": "Army Reserves",
+    "zh": "陆军预备役"
+   },
+   "requires": [
+    "line_infantry"
+   ]
+  },
+  "art_silk": {
+   "can_research": true,
+   "category": "production",
+   "era": "era_4",
+   "name": {
+    "en": "Art Silk",
+    "zh": "人造丝绸"
+   },
+   "requires": [
+    "aniline"
+   ]
+  },
+  "artillery": {
+   "can_research": true,
+   "category": "military",
+   "era": "era_1",
+   "name": {
+    "en": "Artillery",
+    "zh": "火炮"
+   },
+   "requires": [
+    "gunsmithing"
+   ]
+  },
+  "atmospheric_engine": {
+   "can_research": true,
+   "category": "production",
+   "era": "era_2",
+   "name": {
+    "en": "Atmospheric Engine",
+    "zh": "大气式蒸汽机"
+   },
+   "requires": [
+    "shaft_mining"
+   ]
+  },
+  "automatic_bottle_blowers": {
+   "can_research": true,
+   "category": "production",
+   "era": "era_4",
+   "name": {
+    "en": "Automatic Bottle Blowers",
+    "zh": "自动吹瓶机"
+   },
+   "requires": [
+    "vulcanization"
+   ]
+  },
+  "automatic_machine_guns": {
+   "can_research": true,
+   "category": "military",
+   "era": "era_4",
+   "name": {
+    "en": "Automatic Machine Guns",
+    "zh": "自动机枪"
+   },
+   "requires": [
+    "handcranked_machine_gun",
+    "bolt_action_rifles"
+   ]
+  },
+  "baking_powder": {
+   "can_research": true,
+   "category": "production",
+   "era": "era_2",
+   "name": {
+    "en": "Baking Powder",
+    "zh": "发酵粉"
+   },
+   "requires": [
+    "fractional_distillation"
+   ]
+  },
+  "banking": {
+   "can_research": true,
+   "category": "society",
+   "era": "era_1",
+   "name": {
+    "en": "Banking",
+    "zh": "银行业"
+   },
+   "requires": [
+    "currency_standards"
+   ]
+  },
+  "battlefleet_tactics": {
+   "can_research": true,
+   "category": "military",
+   "era": "era_5",
+   "name": {
+    "en": "Modern Battlefleet Tactics",
+    "zh": "现代舰队战术"
+   },
+   "requires": [
+    "battleship_tech",
+    "sea_lane_strategies"
+   ]
+  },
+  "battleship_tech": {
+   "can_research": true,
+   "category": "military",
+   "era": "era_5",
+   "name": {
+    "en": "Super Dreadnought",
+    "zh": "超级无畏舰"
+   },
+   "requires": [
+    "dreadnought_tech"
+   ]
+  },
+  "behaviorism": {
+   "can_research": true,
+   "category": "society",
+   "era": "era_5",
+   "name": {
+    "en": "Behaviorism",
+    "zh": "行为主义"
+   },
+   "requires": [
+    "psychoanalysis"
+   ]
+  },
+  "bessemer_process": {
+   "can_research": true,
+   "category": "production",
+   "era": "era_2",
+   "name": {
+    "en": "Bessemer Process",
+    "zh": "贝塞麦转炉炼钢法"
+   },
+   "requires": [
+    "steelworking"
+   ]
+  },
+  "bolt_action_rifles": {
+   "can_research": true,
+   "category": "military",
+   "era": "era_4",
+   "name": {
+    "en": "Bolt-Action Rifle",
+    "zh": "栓动式步枪"
+   },
+   "requires": [
+    "repeaters"
+   ]
+  },
+  "breech_loading_artillery": {
+   "can_research": true,
+   "category": "military",
+   "era": "era_3",
+   "name": {
+    "en": "Breech-Loading Artillery",
+    "zh": "后膛炮"
+   },
+   "requires": [
+    "rifling",
+    "shell_gun"
+   ]
+  },
+  "camera": {
+   "can_research": true,
+   "category": "society",
+   "era": "era_3",
+   "name": {
+    "en": "Camera",
+    "zh": "相机"
+   },
+   "requires": [
+    "realism"
+   ]
+  },
+  "canneries": {
+   "can_research": true,
+   "category": "production",
+   "era": "era_2",
+   "name": {
+    "en": "Canneries",
+    "zh": "罐装机"
+   },
+   "requires": [
+    "lathe"
+   ]
+  },
+  "carrier_tech": {
+   "can_research": true,
+   "category": "military",
+   "era": "era_5",
+   "name": {
+    "en": "Aircraft Carrier",
+    "zh": "航空母舰"
+   },
+   "requires": [
+    "dreadnought_tech"
+   ]
+  },
+  "central_archives": {
+   "can_research": true,
+   "category": "society",
+   "era": "era_2",
+   "name": {
+    "en": "Central Archives",
+    "zh": "中央档案馆"
+   },
+   "requires": [
+    "centralization"
+   ]
+  },
+  "central_banking": {
+   "can_research": true,
+   "category": "society",
+   "era": "era_2",
+   "name": {
+    "en": "Central Banking",
+    "zh": "中央银行"
+   },
+   "requires": [
+    "banking"
+   ]
+  },
+  "central_planning": {
+   "can_research": true,
+   "category": "society",
+   "era": "era_4",
+   "name": {
+    "en": "Central Planning",
+    "zh": "中央计划"
+   },
+   "requires": [
+    "identification_documents"
+   ]
+  },
+  "centralization": {
+   "can_research": true,
+   "category": "society",
+   "era": "era_1",
+   "name": {
+    "en": "Centralization",
+    "zh": "中央集权"
+   },
+   "requires": [
+    "tech_bureaucracy"
+   ]
+  },
+  "chemical_bleaching": {
+   "can_research": true,
+   "category": "production",
+   "era": "era_2",
+   "name": {
+    "en": "Chemical Bleaching",
+    "zh": "化学漂白"
+   },
+   "requires": [
+    "crystal_glass"
+   ]
+  },
+  "chemical_warfare": {
+   "can_research": true,
+   "category": "military",
+   "era": "era_5",
+   "name": {
+    "en": "Chemical Warfare",
+    "zh": "化学战"
+   },
+   "requires": [
+    "automatic_machine_guns"
+   ]
+  },
+  "civilizing_mission": {
+   "can_research": true,
+   "category": "society",
+   "era": "era_3",
+   "name": {
+    "en": "Civilizing Mission",
+    "zh": "开化使命"
+   },
+   "requires": [
+    "quinine",
+    "nationalism"
+   ]
+  },
+  "colonization": {
+   "can_research": true,
+   "category": "society",
+   "era": "era_1",
+   "name": {
+    "en": "Colonization",
+    "zh": "殖民"
+   },
+   "requires": [
+    "international_relations"
+   ]
+  },
+  "combustion_engine": {
+   "can_research": true,
+   "category": "production",
+   "era": "era_4",
+   "name": {
+    "en": "Combustion Engine",
+    "zh": "内燃机"
+   },
+   "requires": [
+    "rotary_valve_engine"
+   ]
+  },
+  "compression_ignition": {
+   "can_research": true,
+   "category": "production",
+   "era": "era_5",
+   "name": {
+    "en": "Compression Ignition",
+    "zh": "压缩点火"
+   },
+   "requires": [
+    "combustion_engine"
+   ]
+  },
+  "concrete_dockyards": {
+   "can_research": true,
+   "category": "military",
+   "era": "era_4",
+   "name": {
+    "en": "Concrete Dockyards",
+    "zh": "混凝土码头"
+   },
+   "requires": [
+    "floating_harbor"
+   ]
+  },
+  "concrete_fortifications": {
+   "can_research": true,
+   "category": "military",
+   "era": "era_5",
+   "name": {
+    "en": "Concrete Fortifications",
+    "zh": "混凝土工事"
+   },
+   "requires": [
+    "defense_in_depth"
+   ]
+  },
+  "conveyors": {
+   "can_research": true,
+   "category": "production",
+   "era": "era_4",
+   "name": {
+    "en": "Conveyors",
+    "zh": "传送带"
+   },
+   "requires": [
+    "vulcanization",
+    "shift_work",
+    "electrical_generation"
+   ]
+  },
+  "corporate_charters": {
+   "can_research": true,
+   "category": "society",
+   "era": "era_2",
+   "name": {
+    "en": "Corporate Charters",
+    "zh": "公司章程"
+   },
+   "requires": [
+    "stock_exchange"
+   ]
+  },
+  "corporate_management": {
+   "can_research": true,
+   "category": "society",
+   "era": "era_4",
+   "name": {
+    "en": "Corporate Governance",
+    "zh": "企业治理"
+   },
+   "requires": [
+    "investment_banks"
+   ]
+  },
+  "corporatism": {
+   "can_research": true,
+   "category": "society",
+   "era": "era_3",
+   "name": {
+    "en": "Corporatism",
+    "zh": "法团主义"
+   },
+   "requires": [
+    "labor_movement",
+    "nationalism"
+   ]
+  },
+  "cotton_gin": {
+   "can_research": true,
+   "category": "production",
+   "era": "era_1",
+   "name": {
+    "en": "Cotton Gin",
+    "zh": "轧棉机"
+   },
+   "requires": [
+    "manufacturies"
+   ]
+  },
+  "crystal_glass": {
+   "can_research": true,
+   "category": "production",
+   "era": "era_2",
+   "name": {
+    "en": "Crystal Glass",
+    "zh": "水晶玻璃"
+   },
+   "requires": [
+    "lathe"
+   ]
+  },
+  "currency_standards": {
+   "can_research": true,
+   "category": "society",
+   "era": "era_1",
+   "name": {
+    "en": "Currency Standards",
+    "zh": "货币本位制"
+   },
+   "requires": [
+    "international_trade",
+    "centralization"
+   ]
+  },
+  "defense_in_depth": {
+   "can_research": true,
+   "category": "military",
+   "era": "era_4",
+   "name": {
+    "en": "Defense in Depth",
+    "zh": "纵深防御"
+   },
+   "requires": [
+    "trench_works",
+    "handcranked_machine_gun"
+   ]
+  },
+  "democracy": {
+   "can_research": true,
+   "category": "society",
+   "era": "era_1",
+   "name": {
+    "en": "Democracy",
+    "zh": "民主"
+   },
+   "requires": [
+    "rationalism"
+   ]
+  },
+  "destroyer": {
+   "can_research": true,
+   "category": "military",
+   "era": "era_5",
+   "name": {
+    "en": "Destroyer",
+    "zh": "驱逐舰"
+   },
+   "requires": [
+    "monitor_tech"
+   ]
+  },
+  "dialectics": {
+   "can_research": true,
+   "category": "society",
+   "era": "era_2",
+   "name": {
+    "en": "Dialectics",
+    "zh": "辩证法"
+   },
+   "requires": [
+    "empiricism"
+   ]
+  },
+  "distillation": {
+   "can_research": true,
+   "category": "production",
+   "era": "era_1",
+   "name": {
+    "en": "Distillation",
+    "zh": "蒸馏"
+   },
+   "requires": [
+    "manufacturies"
+   ]
+  },
+  "dough_rollers": {
+   "can_research": true,
+   "category": "production",
+   "era": "era_5",
+   "name": {
+    "en": "Dough Rollers",
+    "zh": "压面机"
+   },
+   "requires": [
+    "conveyors"
+   ]
+  },
+  "dreadnought_tech": {
+   "can_research": true,
+   "category": "military",
+   "era": "era_4",
+   "name": {
+    "en": "Dreadnought",
+    "zh": "无畏舰"
+   },
+   "requires": [
+    "pre_dreadnought_tech",
+    "sea_lane_strategies",
+    "concrete_dockyards",
+    "military_aviation"
+   ]
+  },
+  "drydocks": {
+   "can_research": true,
+   "category": "military",
+   "era": "era_1",
+   "name": {
+    "en": "Drydocks",
+    "zh": "干船坞"
+   },
+   "requires": [
+    "navigation"
+   ]
+  },
+  "dynamite": {
+   "can_research": true,
+   "category": "production",
+   "era": "era_3",
+   "name": {
+    "en": "Dynamite",
+    "zh": "黄色炸药"
+   },
+   "requires": [
+    "nitroglycerin"
+   ]
+  },
+  "egalitarianism": {
+   "can_research": true,
+   "category": "society",
+   "era": "era_2",
+   "name": {
+    "en": "Egalitarianism",
+    "zh": "平等主义"
+   },
+   "requires": [
+    "democracy"
+   ]
+  },
+  "electric_arc_process": {
+   "can_research": true,
+   "category": "production",
+   "era": "era_4",
+   "name": {
+    "en": "Electric Arc Process",
+    "zh": "电弧炉炼钢法"
+   },
+   "requires": [
+    "open_hearth_process"
+   ]
+  },
+  "electric_railway": {
+   "can_research": true,
+   "category": "production",
+   "era": "era_4",
+   "name": {
+    "en": "Electric Railways",
+    "zh": "电气化铁路"
+   },
+   "requires": [
+    "electrical_capacitors",
+    "steel_railway_cars"
+   ]
+  },
+  "electric_telegraph": {
+   "can_research": true,
+   "category": "military",
+   "era": "era_3",
+   "name": {
+    "en": "Electric Telegraph",
+    "zh": "电报"
+   },
+   "requires": [
+    "logistics"
+   ]
+  },
+  "electrical_capacitors": {
+   "can_research": true,
+   "category": "production",
+   "era": "era_4",
+   "name": {
+    "en": "Electrical Capacitors",
+    "zh": "电容器"
+   },
+   "requires": [
+    "electrical_generation"
+   ]
+  },
+  "electrical_generation": {
+   "can_research": true,
+   "category": "production",
+   "era": "era_3",
+   "name": {
+    "en": "Electrical Generation",
+    "zh": "发电"
+   },
+   "requires": [
+    "rotary_valve_engine"
+   ]
+  },
+  "elevator": {
+   "can_research": true,
+   "category": "society",
+   "era": "era_4",
+   "name": {
+    "en": "Elevators",
+    "zh": "电梯"
+   },
+   "requires": [
+    "steel_frame_buildings"
+   ]
+  },
+  "empiricism": {
+   "can_research": true,
+   "category": "society",
+   "era": "era_1",
+   "name": {
+    "en": "Empiricism",
+    "zh": "经验主义"
+   },
+   "requires": [
+    "academia"
+   ]
+  },
+  "enclosure": {
+   "can_research": true,
+   "category": "production",
+   "era": "era_1",
+   "name": {
+    "en": "Enclosure",
+    "zh": "圈地"
+   },
+   "requires": []
+  },
+  "enlistment_offices": {
+   "can_research": true,
+   "category": "military",
+   "era": "era_3",
+   "name": {
+    "en": "Enlistment Offices",
+    "zh": "征兵办公室"
+   },
+   "requires": [
+    "logistics"
+   ]
+  },
+  "feminism": {
+   "can_research": true,
+   "category": "society",
+   "era": "era_3",
+   "name": {
+    "en": "Feminism",
+    "zh": "女权主义"
+   },
+   "requires": [
+    "human_rights"
+   ]
+  },
+  "field_works": {
+   "can_research": true,
+   "category": "military",
+   "era": "era_2",
+   "name": {
+    "en": "Field Works",
+    "zh": "野战工事"
+   },
+   "requires": [
+    "napoleonic_warfare"
+   ]
+  },
+  "film": {
+   "can_research": true,
+   "category": "society",
+   "era": "era_4",
+   "name": {
+    "en": "Film",
+    "zh": "电影"
+   },
+   "requires": [
+    "camera"
+   ]
+  },
+  "flamethrowers": {
+   "can_research": true,
+   "category": "military",
+   "era": "era_5",
+   "name": {
+    "en": "Flamethrowers",
+    "zh": "火焰喷射器"
+   },
+   "requires": [
+    "trench_works",
+    "automatic_machine_guns"
+   ]
+  },
+  "flash_freezing": {
+   "can_research": true,
+   "category": "production",
+   "era": "era_5",
+   "name": {
+    "en": "Flash Freezing",
+    "zh": "速冻"
+   },
+   "requires": [
+    "pasteurization"
+   ]
+  },
+  "floating_harbor": {
+   "can_research": true,
+   "category": "military",
+   "era": "era_3",
+   "name": {
+    "en": "Floating Harbor",
+    "zh": "浮动码头"
+   },
+   "requires": [
+    "gantry_cranes"
+   ]
+  },
+  "fractional_distillation": {
+   "can_research": true,
+   "category": "production",
+   "era": "era_2",
+   "name": {
+    "en": "Fractional Distillation",
+    "zh": "分馏"
+   },
+   "requires": [
+    "distillation"
+   ]
+  },
+  "gantry_cranes": {
+   "can_research": true,
+   "category": "military",
+   "era": "era_3",
+   "name": {
+    "en": "Gantry Cranes",
+    "zh": "龙门吊"
+   },
+   "requires": [
+    "hydraulic_cranes",
+    "screw_frigate"
+   ]
+  },
+  "general_staff": {
+   "can_research": true,
+   "category": "military",
+   "era": "era_2",
+   "name": {
+    "en": "General Staff",
+    "zh": "总参谋部"
+   },
+   "requires": [
+    "army_reserves"
+   ]
+  },
+  "gunsmithing": {
+   "can_research": true,
+   "category": "military",
+   "era": "era_1",
+   "name": {
+    "en": "Gunsmithing",
+    "zh": "枪械制造"
+   },
+   "requires": [
+    "standing_army"
+   ]
+  },
+  "handcranked_machine_gun": {
+   "can_research": true,
+   "category": "military",
+   "era": "era_3",
+   "name": {
+    "en": "Handcranked Machine Gun",
+    "zh": "手动转柄机枪"
+   },
+   "requires": [
+    "repeaters",
+    "breech_loading_artillery"
+   ]
+  },
+  "human_rights": {
+   "can_research": true,
+   "category": "society",
+   "era": "era_3",
+   "name": {
+    "en": "Human Rights",
+    "zh": "人权"
+   },
+   "requires": [
+    "egalitarianism"
+   ]
+  },
+  "hydraulic_cranes": {
+   "can_research": true,
+   "category": "military",
+   "era": "era_2",
+   "name": {
+    "en": "Hydraulic Cranes",
+    "zh": "液压起重机"
+   },
+   "requires": [
+    "drydocks"
+   ]
+  },
+  "identification_documents": {
+   "can_research": true,
+   "category": "society",
+   "era": "era_3",
+   "name": {
+    "en": "Identification Documents",
+    "zh": "身份证件"
+   },
+   "requires": [
+    "central_archives"
+   ]
+  },
+  "improved_fertilizer": {
+   "can_research": true,
+   "category": "production",
+   "era": "era_3",
+   "name": {
+    "en": "Improved Fertilizer",
+    "zh": "改良化肥"
+   },
+   "requires": [
+    "intensive_agriculture"
+   ]
+  },
+  "intensive_agriculture": {
+   "can_research": true,
+   "category": "production",
+   "era": "era_2",
+   "name": {
+    "en": "Intensive Agriculture",
+    "zh": "集约农业"
+   },
+   "requires": [
+    "enclosure"
+   ]
+  },
+  "international_exchange_standards": {
+   "can_research": true,
+   "category": "society",
+   "era": "era_4",
+   "name": {
+    "en": "International Exchange Standards",
+    "zh": "国际汇率标准"
+   },
+   "requires": [
+    "mutual_funds"
+   ]
+  },
+  "international_relations": {
+   "can_research": true,
+   "category": "society",
+   "era": "era_1",
+   "name": {
+    "en": "International Relations",
+    "zh": "国际关系"
+   },
+   "requires": [
+    "tech_bureaucracy"
+   ]
+  },
+  "international_trade": {
+   "can_research": true,
+   "category": "society",
+   "era": "era_1",
+   "name": {
+    "en": "International Trade",
+    "zh": "国际贸易"
+   },
+   "requires": [
+    "tech_bureaucracy"
+   ]
+  },
+  "investment_banks": {
+   "can_research": true,
+   "category": "society",
+   "era": "era_3",
+   "name": {
+    "en": "Investment Banks",
+    "zh": "投资银行"
+   },
+   "requires": [
+    "joint_stock_companies",
+    "mutual_funds"
+   ]
+  },
+  "ironclad_tech": {
+   "can_research": true,
+   "category": "military",
+   "era": "era_3",
+   "name": {
+    "en": "Ironclad",
+    "zh": "铁甲舰"
+   },
+   "requires": [
+    "screw_frigate"
+   ]
+  },
+  "jeune_ecole": {
+   "can_research": true,
+   "category": "military",
+   "era": "era_3",
+   "name": {
+    "en": "Jeune École",
+    "zh": "绿水学派"
+   },
+   "requires": [
+    "self_propelled_torpedoes"
+   ]
+  },
+  "joint_stock_companies": {
+   "can_research": true,
+   "category": "society",
+   "era": "era_2",
+   "name": {
+    "en": "Joint-Stock Companies",
+    "zh": "股份公司"
+   },
+   "requires": [
+    "banking",
+    "corporate_charters"
+   ]
+  },
+  "labor_movement": {
+   "can_research": true,
+   "category": "society",
+   "era": "era_2",
+   "name": {
+    "en": "Labor Movement",
+    "zh": "劳工运动"
+   },
+   "requires": [
+    "mass_communication",
+    "egalitarianism"
+   ]
+  },
+  "landing_craft": {
+   "can_research": true,
+   "category": "military",
+   "era": "era_4",
+   "name": {
+    "en": "Landing Craft",
+    "zh": "登陆艇"
+   },
+   "requires": [
+    "jeune_ecole",
+    "monitor_tech"
+   ]
+  },
+  "lathe": {
+   "can_research": true,
+   "category": "production",
+   "era": "era_1",
+   "name": {
+    "en": "Lathe",
+    "zh": "车床"
+   },
+   "requires": [
+    "cotton_gin"
+   ]
+  },
+  "law_enforcement": {
+   "can_research": true,
+   "category": "society",
+   "era": "era_1",
+   "name": {
+    "en": "Law Enforcement",
+    "zh": "执法"
+   },
+   "requires": [
+    "tech_bureaucracy",
+    "urban_planning"
+   ]
+  },
+  "line_infantry": {
+   "can_research": true,
+   "category": "military",
+   "era": "era_1",
+   "name": {
+    "en": "Line Infantry",
+    "zh": "线列步兵"
+   },
+   "requires": [
+    "mandatory_service",
+    "military_drill"
+   ]
+  },
+  "logistics": {
+   "can_research": true,
+   "category": "military",
+   "era": "era_2",
+   "name": {
+    "en": "Logistics",
+    "zh": "后勤学"
+   },
+   "requires": [
+    "napoleonic_warfare",
+    "army_reserves"
+   ]
+  },
+  "macroeconomics": {
+   "can_research": true,
+   "category": "society",
+   "era": "era_5",
+   "name": {
+    "en": "Macroeconomics",
+    "zh": "宏观经济学"
+   },
+   "requires": [
+    "international_exchange_standards",
+    "corporate_management"
+   ]
+  },
+  "malaria_prevention": {
+   "can_research": true,
+   "category": "society",
+   "era": "era_4",
+   "name": {
+    "en": "Malaria Prevention",
+    "zh": "疟疾预防"
+   },
+   "requires": [
+    "civilizing_mission"
+   ]
+  },
+  "mandatory_service": {
+   "can_research": true,
+   "category": "military",
+   "era": "era_1",
+   "name": {
+    "en": "Mandatory Service",
+    "zh": "强制兵役"
+   },
+   "requires": [
+    "standing_army"
+   ]
+  },
+  "manufacturies": {
+   "can_research": true,
+   "category": "production",
+   "era": "era_1",
+   "name": {
+    "en": "Manufacturies",
+    "zh": "制造厂"
+   },
+   "requires": []
+  },
+  "mass_communication": {
+   "can_research": true,
+   "category": "society",
+   "era": "era_1",
+   "name": {
+    "en": "Mass Communication",
+    "zh": "大众传播"
+   },
+   "requires": [
+    "democracy"
+   ]
+  },
+  "mass_propaganda": {
+   "can_research": true,
+   "category": "society",
+   "era": "era_5",
+   "name": {
+    "en": "Mass Propaganda",
+    "zh": "大众宣传"
+   },
+   "requires": [
+    "political_agitation",
+    "film"
+   ]
+  },
+  "mass_surveillance": {
+   "can_research": true,
+   "category": "society",
+   "era": "era_5",
+   "name": {
+    "en": "Mass Surveillance",
+    "zh": "大众监控"
+   },
+   "requires": [
+    "central_planning"
+   ]
+  },
+  "mechanical_tools": {
+   "can_research": true,
+   "category": "production",
+   "era": "era_2",
+   "name": {
+    "en": "Mechanical Tools",
+    "zh": "机械工具"
+   },
+   "requires": [
+    "lathe",
+    "steelworking"
+   ]
+  },
+  "mechanized_farming": {
+   "can_research": true,
+   "category": "production",
+   "era": "era_4",
+   "name": {
+    "en": "Mechanized Farming",
+    "zh": "机械化耕作"
+   },
+   "requires": [
+    "threshing_machine"
+   ]
+  },
+  "mechanized_workshops": {
+   "can_research": true,
+   "category": "production",
+   "era": "era_2",
+   "name": {
+    "en": "Mechanized Workshops",
+    "zh": "机械化工坊"
+   },
+   "requires": [
+    "canneries",
+    "mechanical_tools"
+   ]
+  },
+  "medical_degrees": {
+   "can_research": true,
+   "category": "society",
+   "era": "era_1",
+   "name": {
+    "en": "Medical Degrees",
+    "zh": "医学学位"
+   },
+   "requires": [
+    "academia"
+   ]
+  },
+  "military_aviation": {
+   "can_research": true,
+   "category": "military",
+   "era": "era_4",
+   "name": {
+    "en": "Military Aviation",
+    "zh": "军用航空"
+   },
+   "requires": [
+    "handcranked_machine_gun"
+   ]
+  },
+  "military_drill": {
+   "can_research": true,
+   "category": "military",
+   "era": "era_1",
+   "name": {
+    "en": "Military Drill",
+    "zh": "军事操练"
+   },
+   "requires": [
+    "standing_army"
+   ]
+  },
+  "military_statistics": {
+   "can_research": true,
+   "category": "military",
+   "era": "era_3",
+   "name": {
+    "en": "Military Statistics",
+    "zh": "军事统计学"
+   },
+   "requires": [
+    "electric_telegraph",
+    "general_staff"
+   ]
+  },
+  "mobile_armor": {
+   "can_research": true,
+   "category": "military",
+   "era": "era_5",
+   "name": {
+    "en": "Mobile Armor",
+    "zh": "机动装甲"
+   },
+   "requires": [
+    "concrete_fortifications",
+    "nco_training"
+   ]
+  },
+  "modern_financial_instruments": {
+   "can_research": true,
+   "category": "society",
+   "era": "era_5",
+   "name": {
+    "en": "Modern Financial Instruments",
+    "zh": "现代金融工具"
+   },
+   "requires": [
+    "international_exchange_standards"
+   ]
+  },
+  "modern_nursing": {
+   "can_research": true,
+   "category": "military",
+   "era": "era_3",
+   "name": {
+    "en": "Modern Nursing",
+    "zh": "现代护理"
+   },
+   "requires": [
+    "triage"
+   ]
+  },
+  "modern_sewerage": {
+   "can_research": true,
+   "category": "society",
+   "era": "era_2",
+   "name": {
+    "en": "Modern Sewerage",
+    "zh": "现代排水系统"
+   },
+   "requires": [
+    "urban_planning"
+   ]
+  },
+  "monitor_tech": {
+   "can_research": true,
+   "category": "military",
+   "era": "era_3",
+   "name": {
+    "en": "Modern Ironclad",
+    "zh": "现代铁甲舰"
+   },
+   "requires": [
+    "ironclad_tech",
+    "breech_loading_artillery"
+   ]
+  },
+  "multilateral_alliances": {
+   "can_research": true,
+   "category": "society",
+   "era": "era_4",
+   "name": {
+    "en": "Multilateral Alliances",
+    "zh": "多边联盟"
+   },
+   "requires": [
+    "pan-nationalism"
+   ]
+  },
+  "mutual_funds": {
+   "can_research": true,
+   "category": "society",
+   "era": "era_3",
+   "name": {
+    "en": "Mutual Funds",
+    "zh": "共同基金"
+   },
+   "requires": [
+    "central_banking",
+    "postal_savings"
+   ]
+  },
+  "napoleonic_warfare": {
+   "can_research": true,
+   "category": "military",
+   "era": "era_1",
+   "name": {
+    "en": "Napoleonic Warfare",
+    "zh": "拿破仑战术"
+   },
+   "requires": [
+    "line_infantry",
+    "artillery"
+   ]
+  },
+  "nationalism": {
+   "can_research": true,
+   "category": "society",
+   "era": "era_2",
+   "name": {
+    "en": "Nationalism",
+    "zh": "民族主义"
+   },
+   "requires": [
+    "mass_communication",
+    "international_relations"
+   ]
+  },
+  "navigation": {
+   "can_research": true,
+   "category": "military",
+   "era": "era_1",
+   "name": {
+    "en": "Navigation",
+    "zh": "导航"
+   },
+   "requires": []
+  },
+  "nco_training": {
+   "can_research": true,
+   "category": "military",
+   "era": "era_5",
+   "name": {
+    "en": "NCO Training",
+    "zh": "士官训练"
+   },
+   "requires": [
+    "wargaming",
+    "trench_works"
+   ]
+  },
+  "nitrogen_fixation": {
+   "can_research": true,
+   "category": "production",
+   "era": "era_4",
+   "name": {
+    "en": "Nitrogen Fixation",
+    "zh": "固氮"
+   },
+   "requires": [
+    "improved_fertilizer"
+   ]
+  },
+  "nitroglycerin": {
+   "can_research": true,
+   "category": "production",
+   "era": "era_2",
+   "name": {
+    "en": "Nitroglycerin",
+    "zh": "硝化甘油"
+   },
+   "requires": [
+    "intensive_agriculture",
+    "prospecting"
+   ]
+  },
+  "oil_turbine": {
+   "can_research": true,
+   "category": "production",
+   "era": "era_5",
+   "name": {
+    "en": "Oil Turbine",
+    "zh": "油轮机"
+   },
+   "requires": [
+    "steam_turbine"
+   ]
+  },
+  "open_hearth_process": {
+   "can_research": true,
+   "category": "production",
+   "era": "era_3",
+   "name": {
+    "en": "Open Hearth Process",
+    "zh": "平炉炼钢法"
+   },
+   "requires": [
+    "bessemer_process"
+   ]
+  },
+  "organized_sports": {
+   "can_research": true,
+   "category": "society",
+   "era": "era_2",
+   "name": {
+    "en": "Organized Sports",
+    "zh": "组织运动"
+   },
+   "requires": [
+    "nationalism"
+   ]
+  },
+  "paddle_steamer": {
+   "can_research": true,
+   "category": "military",
+   "era": "era_1",
+   "name": {
+    "en": "Paddle Steamer",
+    "zh": "明轮蒸汽船"
+   },
+   "requires": [
+    "admiralty"
+   ]
+  },
+  "pan-nationalism": {
+   "can_research": true,
+   "category": "society",
+   "era": "era_3",
+   "name": {
+    "en": "Pan-nationalism",
+    "zh": "泛民族主义"
+   },
+   "requires": [
+    "nationalism"
+   ]
+  },
+  "pasteurization": {
+   "can_research": true,
+   "category": "production",
+   "era": "era_4",
+   "name": {
+    "en": "Pasteurization",
+    "zh": "巴氏灭菌法"
+   },
+   "requires": [
+    "vacuum_canning",
+    "electrical_capacitors"
+   ]
+  },
+  "paved_roads": {
+   "can_research": true,
+   "category": "society",
+   "era": "era_5",
+   "name": {
+    "en": "Paved Roads",
+    "zh": "平整道路"
+   },
+   "requires": [
+    "elevator"
+   ]
+  },
+  "percussion_cap": {
+   "can_research": true,
+   "category": "military",
+   "era": "era_2",
+   "name": {
+    "en": "Percussion Cap",
+    "zh": "火帽"
+   },
+   "requires": [
+    "gunsmithing"
+   ]
+  },
+  "pharmaceuticals": {
+   "can_research": true,
+   "category": "society",
+   "era": "era_2",
+   "name": {
+    "en": "Pharmaceuticals",
+    "zh": "药物"
+   },
+   "requires": [
+    "medical_degrees"
+   ]
+  },
+  "philosophical_pragmatism": {
+   "can_research": true,
+   "category": "society",
+   "era": "era_3",
+   "name": {
+    "en": "Philosophical Pragmatism",
+    "zh": "哲学实用主义"
+   },
+   "requires": [
+    "psychiatry"
+   ]
+  },
+  "plastics": {
+   "can_research": true,
+   "category": "production",
+   "era": "era_4",
+   "name": {
+    "en": "Plastics",
+    "zh": "塑料"
+   },
+   "requires": [
+    "reinforced_concrete"
+   ]
+  },
+  "pneumatic_tools": {
+   "can_research": true,
+   "category": "production",
+   "era": "era_4",
+   "name": {
+    "en": "Pneumatic Tools",
+    "zh": "气动工具"
+   },
+   "requires": [
+    "rotary_valve_engine",
+    "reinforced_concrete"
+   ]
+  },
+  "political_agitation": {
+   "can_research": true,
+   "category": "society",
+   "era": "era_4",
+   "name": {
+    "en": "Political Agitation",
+    "zh": "政治煽动"
+   },
+   "requires": [
+    "anarchism",
+    "socialism",
+    "corporatism"
+   ]
+  },
+  "postal_savings": {
+   "can_research": true,
+   "category": "society",
+   "era": "era_2",
+   "name": {
+    "en": "Postal Savings",
+    "zh": "邮政储蓄"
+   },
+   "requires": [
+    "stock_exchange"
+   ]
+  },
+  "power_of_the_purse": {
+   "can_research": true,
+   "category": "military",
+   "era": "era_2",
+   "name": {
+    "en": "Power of the Purse",
+    "zh": "钱袋权"
+   },
+   "requires": [
+    "admiralty"
+   ]
+  },
+  "pre_dreadnought_tech": {
+   "can_research": true,
+   "category": "military",
+   "era": "era_4",
+   "name": {
+    "en": "Pre-Dreadnought",
+    "zh": "前无畏舰"
+   },
+   "requires": [
+    "ironclad_tech"
+   ]
+  },
+  "prospecting": {
+   "can_research": true,
+   "category": "production",
+   "era": "era_1",
+   "name": {
+    "en": "Prospecting",
+    "zh": "勘探"
+   },
+   "requires": [
+    "shaft_mining"
+   ]
+  },
+  "psychiatry": {
+   "can_research": true,
+   "category": "society",
+   "era": "era_2",
+   "name": {
+    "en": "Psychiatry",
+    "zh": "精神病学"
+   },
+   "requires": [
+    "empiricism"
+   ]
+  },
+  "psychoanalysis": {
+   "can_research": true,
+   "category": "society",
+   "era": "era_4",
+   "name": {
+    "en": "Psychoanalysis",
+    "zh": "精神分析"
+   },
+   "requires": [
+    "philosophical_pragmatism"
+   ]
+  },
+  "pumpjacks": {
+   "can_research": true,
+   "category": "production",
+   "era": "era_3",
+   "name": {
+    "en": "Pumpjacks",
+    "zh": "泵水机"
+   },
+   "requires": [
+    "steam_donkey",
+    "dynamite"
+   ]
+  },
+  "quinine": {
+   "can_research": true,
+   "category": "society",
+   "era": "era_2",
+   "name": {
+    "en": "Quinine",
+    "zh": "奎宁"
+   },
+   "requires": [
+    "colonization",
+    "pharmaceuticals"
+   ]
+  },
+  "radio": {
+   "can_research": true,
+   "category": "production",
+   "era": "era_4",
+   "name": {
+    "en": "Radio",
+    "zh": "无线电"
+   },
+   "requires": [
+    "telephone"
+   ]
+  },
+  "railways": {
+   "can_research": true,
+   "category": "production",
+   "era": "era_2",
+   "name": {
+    "en": "Railways",
+    "zh": "铁路"
+   },
+   "requires": [
+    "mechanical_tools",
+    "atmospheric_engine"
+   ]
+  },
+  "rationalism": {
+   "can_research": true,
+   "category": "society",
+   "era": "era_1",
+   "name": {
+    "en": "Rationalism",
+    "zh": "理性主义"
+   },
+   "requires": []
+  },
+  "realism": {
+   "can_research": true,
+   "category": "society",
+   "era": "era_2",
+   "name": {
+    "en": "Realism",
+    "zh": "现实主义"
+   },
+   "requires": [
+    "romanticism"
+   ]
+  },
+  "reinforced_concrete": {
+   "can_research": true,
+   "category": "production",
+   "era": "era_3",
+   "name": {
+    "en": "Reinforced Concrete",
+    "zh": "钢筋混凝土"
+   },
+   "requires": [
+    "bessemer_process"
+   ]
+  },
+  "repeaters": {
+   "can_research": true,
+   "category": "military",
+   "era": "era_3",
+   "name": {
+    "en": "Repeaters",
+    "zh": "连发器"
+   },
+   "requires": [
+    "rifling"
+   ]
+  },
+  "rifling": {
+   "can_research": true,
+   "category": "military",
+   "era": "era_2",
+   "name": {
+    "en": "Rifling",
+    "zh": "膛线"
+   },
+   "requires": [
+    "percussion_cap"
+   ]
+  },
+  "romanticism": {
+   "can_research": true,
+   "category": "society",
+   "era": "era_1",
+   "name": {
+    "en": "Romanticism",
+    "zh": "浪漫主义"
+   },
+   "requires": [
+    "academia"
+   ]
+  },
+  "rotary_valve_engine": {
+   "can_research": true,
+   "category": "production",
+   "era": "era_3",
+   "name": {
+    "en": "Rotary Valve Engine",
+    "zh": "旋转阀发动机"
+   },
+   "requires": [
+    "watertube_boiler"
+   ]
+  },
+  "rubber_mastication": {
+   "can_research": true,
+   "category": "production",
+   "era": "era_3",
+   "name": {
+    "en": "Rubber Mastication",
+    "zh": "橡胶塑炼"
+   },
+   "requires": [
+    "fractional_distillation",
+    "chemical_bleaching"
+   ]
+  },
+  "screw_frigate": {
+   "can_research": true,
+   "category": "military",
+   "era": "era_2",
+   "name": {
+    "en": "Screw Frigate",
+    "zh": "螺旋桨蒸汽护卫舰"
+   },
+   "requires": [
+    "paddle_steamer"
+   ]
+  },
+  "sea_lane_strategies": {
+   "can_research": true,
+   "category": "military",
+   "era": "era_4",
+   "name": {
+    "en": "Sea Lane Strategies",
+    "zh": "海中航线战略"
+   },
+   "requires": [
+    "jeune_ecole"
+   ]
+  },
+  "self_propelled_torpedoes": {
+   "can_research": true,
+   "category": "military",
+   "era": "era_3",
+   "name": {
+    "en": "Self-Propelled Torpedoes",
+    "zh": "自航式鱼雷"
+   },
+   "requires": [
+    "power_of_the_purse"
+   ]
+  },
+  "sericulture": {
+   "can_research": false,
+   "category": "production",
+   "era": "era_1",
+   "name": {
+    "en": "Sericulture",
+    "zh": "养蚕学"
+   },
+   "requires": []
+  },
+  "shaft_mining": {
+   "can_research": true,
+   "category": "production",
+   "era": "era_1",
+   "name": {
+    "en": "Shaft Mining",
+    "zh": "竖井开采"
+   },
+   "requires": [
+    "enclosure",
+    "manufacturies"
+   ]
+  },
+  "shell_gun": {
+   "can_research": true,
+   "category": "military",
+   "era": "era_2",
+   "name": {
+    "en": "Shell Gun",
+    "zh": "霰弹炮"
+   },
+   "requires": [
+    "artillery"
+   ]
+  },
+  "shift_work": {
+   "can_research": true,
+   "category": "production",
+   "era": "era_3",
+   "name": {
+    "en": "Shift Work",
+    "zh": "轮班工作"
+   },
+   "requires": [
+    "mechanized_workshops"
+   ]
+  },
+  "socialism": {
+   "can_research": true,
+   "category": "society",
+   "era": "era_3",
+   "name": {
+    "en": "Socialism",
+    "zh": "社会主义"
+   },
+   "requires": [
+    "labor_movement",
+    "dialectics"
+   ]
+  },
+  "standing_army": {
+   "can_research": true,
+   "category": "military",
+   "era": "era_1",
+   "name": {
+    "en": "Standing Army",
+    "zh": "常备军"
+   },
+   "requires": []
+  },
+  "steam_donkey": {
+   "can_research": true,
+   "category": "production",
+   "era": "era_3",
+   "name": {
+    "en": "Steam Donkey",
+    "zh": "辅助蒸汽机"
+   },
+   "requires": [
+    "intensive_agriculture"
+   ]
+  },
+  "steam_turbine": {
+   "can_research": true,
+   "category": "production",
+   "era": "era_4",
+   "name": {
+    "en": "Steam Turbine",
+    "zh": "蒸汽轮机"
+   },
+   "requires": [
+    "electrical_generation"
+   ]
+  },
+  "steel_frame_buildings": {
+   "can_research": true,
+   "category": "society",
+   "era": "era_3",
+   "name": {
+    "en": "Steel-Frame Buildings",
+    "zh": "钢框架结构建筑"
+   },
+   "requires": [
+    "modern_sewerage"
+   ]
+  },
+  "steel_railway_cars": {
+   "can_research": true,
+   "category": "production",
+   "era": "era_3",
+   "name": {
+    "en": "Steel Railway Cars",
+    "zh": "钢制车厢"
+   },
+   "requires": [
+    "railways"
+   ]
+  },
+  "steelworking": {
+   "can_research": true,
+   "category": "production",
+   "era": "era_1",
+   "name": {
+    "en": "Steelworking",
+    "zh": "炼钢"
+   },
+   "requires": [
+    "shaft_mining"
+   ]
+  },
+  "stock_exchange": {
+   "can_research": true,
+   "category": "society",
+   "era": "era_1",
+   "name": {
+    "en": "Stock Exchange",
+    "zh": "证券交易所"
+   },
+   "requires": [
+    "international_trade"
+   ]
+  },
+  "stormtroopers": {
+   "can_research": true,
+   "category": "military",
+   "era": "era_5",
+   "name": {
+    "en": "Stormtroopers",
+    "zh": "突击队"
+   },
+   "requires": [
+    "wargaming",
+    "trench_works"
+   ]
+  },
+  "submarine": {
+   "can_research": true,
+   "category": "military",
+   "era": "era_4",
+   "name": {
+    "en": "Submarine",
+    "zh": "潜艇"
+   },
+   "requires": [
+    "self_propelled_torpedoes"
+   ]
+  },
+  "tech_bureaucracy": {
+   "can_research": true,
+   "category": "society",
+   "era": "era_1",
+   "name": {
+    "en": "Bureaucracy",
+    "zh": "官僚体系"
+   },
+   "requires": [
+    "urbanization"
+   ]
+  },
+  "telephone": {
+   "can_research": true,
+   "category": "production",
+   "era": "era_4",
+   "name": {
+    "en": "Telephone",
+    "zh": "电话"
+   },
+   "requires": [
+    "shift_work",
+    "electrical_generation"
+   ]
+  },
+  "threshing_machine": {
+   "can_research": true,
+   "category": "production",
+   "era": "era_3",
+   "name": {
+    "en": "Threshing Machines",
+    "zh": "脱粒机"
+   },
+   "requires": [
+    "steam_donkey"
+   ]
+  },
+  "trench_works": {
+   "can_research": true,
+   "category": "military",
+   "era": "era_4",
+   "name": {
+    "en": "Trench Works",
+    "zh": "堑壕工事"
+   },
+   "requires": [
+    "general_staff",
+    "electric_telegraph"
+   ]
+  },
+  "triage": {
+   "can_research": true,
+   "category": "military",
+   "era": "era_2",
+   "name": {
+    "en": "Triage",
+    "zh": "分诊"
+   },
+   "requires": [
+    "logistics"
+   ]
+  },
+  "urban_planning": {
+   "can_research": true,
+   "category": "society",
+   "era": "era_1",
+   "name": {
+    "en": "Urban Planning",
+    "zh": "城镇规划"
+   },
+   "requires": [
+    "urbanization"
+   ]
+  },
+  "urbanization": {
+   "can_research": true,
+   "category": "society",
+   "era": "era_1",
+   "name": {
+    "en": "Urbanization",
+    "zh": "城镇化"
+   },
+   "requires": []
+  },
+  "vacuum_canning": {
+   "can_research": true,
+   "category": "production",
+   "era": "era_3",
+   "name": {
+    "en": "Vacuum Canning",
+    "zh": "真空装罐"
+   },
+   "requires": [
+    "mechanized_workshops"
+   ]
+  },
+  "vulcanization": {
+   "can_research": true,
+   "category": "production",
+   "era": "era_3",
+   "name": {
+    "en": "Vulcanization",
+    "zh": "硫化"
+   },
+   "requires": [
+    "rubber_mastication"
+   ]
+  },
+  "war_propaganda": {
+   "can_research": true,
+   "category": "military",
+   "era": "era_4",
+   "name": {
+    "en": "War Propaganda",
+    "zh": "战争宣传"
+   },
+   "requires": [
+    "enlistment_offices"
+   ]
+  },
+  "wargaming": {
+   "can_research": true,
+   "category": "military",
+   "era": "era_4",
+   "name": {
+    "en": "Wargaming",
+    "zh": "兵棋推演"
+   },
+   "requires": [
+    "military_statistics"
+   ]
+  },
+  "watertube_boiler": {
+   "can_research": true,
+   "category": "production",
+   "era": "era_2",
+   "name": {
+    "en": "Water-tube Boiler",
+    "zh": "水管锅炉"
+   },
+   "requires": [
+    "atmospheric_engine"
+   ]
+  },
+  "zeppelins": {
+   "can_research": true,
+   "category": "society",
+   "era": "era_4",
+   "name": {
+    "en": "Zeppelins",
+    "zh": "齐柏林飞艇"
+   },
+   "requires": [
+    "steel_frame_buildings"
+   ]
+  }
+ }
+}

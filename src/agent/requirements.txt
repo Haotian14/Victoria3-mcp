@@ -1,0 +1,2 @@
+# MCP server 的依赖。
+mcp>=2.0

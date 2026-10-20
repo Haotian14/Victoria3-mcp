@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "victoria3": {
+      "command": "python",
+      "args": ["src/agent/server.py"],
+      "env": {}
+    }
+  }
+}

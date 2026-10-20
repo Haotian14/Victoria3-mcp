@@ -1,0 +1,187 @@
+{
+ "game_version": "1.13.11",
+ "law_groups": {
+  "lawgroup_army_model": {
+   "category": "power_structure",
+   "name": {
+    "en": "Army Model",
+    "zh": "军队类型"
+   }
+  },
+  "lawgroup_bureaucracy": {
+   "category": "power_structure",
+   "name": {
+    "en": "Bureaucracy",
+    "zh": "官僚体制"
+   }
+  },
+  "lawgroup_caste_hegemony": {
+   "category": "power_structure",
+   "name": {
+    "en": "Caste Hegemony",
+    "zh": "种姓支配权"
+   }
+  },
+  "lawgroup_childrens_rights": {
+   "category": "human_rights",
+   "name": {
+    "en": "Children's Rights",
+    "zh": "儿童权利"
+   }
+  },
+  "lawgroup_church_and_state": {
+   "category": "power_structure",
+   "name": {
+    "en": "Church and State",
+    "zh": "教会与国家"
+   }
+  },
+  "lawgroup_citizenship": {
+   "category": "power_structure",
+   "name": {
+    "en": "Citizenship",
+    "zh": "公民权"
+   }
+  },
+  "lawgroup_colonization": {
+   "category": "economy",
+   "name": {
+    "en": "Colonization",
+    "zh": "殖民机构"
+   }
+  },
+  "lawgroup_distribution_of_power": {
+   "category": "power_structure",
+   "name": {
+    "en": "Distribution of Power",
+    "zh": "权力分配"
+   }
+  },
+  "lawgroup_economic_system": {
+   "category": "economy",
+   "name": {
+    "en": "Economic System",
+    "zh": "经济体制"
+   }
+  },
+  "lawgroup_edo_social_system": {
+   "category": "power_structure",
+   "name": {
+    "en": "lawgroup_edo_social_system",
+    "zh": "江户等级制度"
+   }
+  },
+  "lawgroup_education_system": {
+   "category": "economy",
+   "name": {
+    "en": "Education System",
+    "zh": "教育体制"
+   }
+  },
+  "lawgroup_free_speech": {
+   "category": "human_rights",
+   "name": {
+    "en": "Free Speech",
+    "zh": "言论自由"
+   }
+  },
+  "lawgroup_governance_principles": {
+   "category": "power_structure",
+   "name": {
+    "en": "Governance Principles",
+    "zh": "治理原则"
+   }
+  },
+  "lawgroup_health_system": {
+   "category": "economy",
+   "name": {
+    "en": "Health System",
+    "zh": "卫生系统"
+   }
+  },
+  "lawgroup_internal_security": {
+   "category": "power_structure",
+   "name": {
+    "en": "Internal Security",
+    "zh": "国内安全"
+   }
+  },
+  "lawgroup_labor_rights": {
+   "category": "human_rights",
+   "name": {
+    "en": "Labor Rights",
+    "zh": "劳动者权益"
+   }
+  },
+  "lawgroup_labour_associations": {
+   "category": "human_rights",
+   "name": {
+    "en": "Labor Associations",
+    "zh": "劳工组织"
+   }
+  },
+  "lawgroup_land_reform": {
+   "category": "economy",
+   "name": {
+    "en": "Land Reform",
+    "zh": "土地改革"
+   }
+  },
+  "lawgroup_migration": {
+   "category": "human_rights",
+   "name": {
+    "en": "Migration",
+    "zh": "移民制度"
+   }
+  },
+  "lawgroup_navy_model": {
+   "category": "power_structure",
+   "name": {
+    "en": "Navy Model",
+    "zh": "海军模式"
+   }
+  },
+  "lawgroup_policing": {
+   "category": "economy",
+   "name": {
+    "en": "Policing",
+    "zh": "警察机构"
+   }
+  },
+  "lawgroup_rights_of_women": {
+   "category": "human_rights",
+   "name": {
+    "en": "Rights of Women",
+    "zh": "女性权利"
+   }
+  },
+  "lawgroup_slavery": {
+   "category": "human_rights",
+   "name": {
+    "en": "Slavery",
+    "zh": "奴隶制"
+   }
+  },
+  "lawgroup_taxation": {
+   "category": "economy",
+   "name": {
+    "en": "Taxation",
+    "zh": "赋税"
+   }
+  },
+  "lawgroup_trade_policy": {
+   "category": "economy",
+   "name": {
+    "en": "Trade Policy",
+    "zh": "贸易政策"
+   }
+  },
+  "lawgroup_welfare": {
+   "category": "human_rights",
+   "name": {
+    "en": "Welfare",
+    "zh": "社会福利"
+   }
+  }
+ }
+}

@@ -1,0 +1,429 @@
+{
+ "game_version": "1.13.11",
+ "goods": {
+  "aeroplanes": {
+   "category": "military",
+   "cost": 80,
+   "name": {
+    "en": "Aeroplanes",
+    "zh": "飞机"
+   }
+  },
+  "ammunition": {
+   "category": "military",
+   "cost": 50,
+   "name": {
+    "en": "Ammunition",
+    "zh": "弹药"
+   }
+  },
+  "artillery": {
+   "category": "military",
+   "cost": 70,
+   "name": {
+    "en": "Artillery",
+    "zh": "火炮"
+   }
+  },
+  "automobiles": {
+   "category": "luxury",
+   "cost": 100,
+   "name": {
+    "en": "Automobiles",
+    "zh": "汽车"
+   }
+  },
+  "clippers": {
+   "category": "industrial",
+   "cost": 60,
+   "name": {
+    "en": "Clippers",
+    "zh": "帆船"
+   }
+  },
+  "clothes": {
+   "category": "staple",
+   "cost": 30,
+   "name": {
+    "en": "Clothes",
+    "zh": "衣物"
+   }
+  },
+  "coal": {
+   "category": "industrial",
+   "cost": 30,
+   "name": {
+    "en": "Coal",
+    "zh": "煤炭"
+   }
+  },
+  "coffee": {
+   "category": "luxury",
+   "cost": 50,
+   "name": {
+    "en": "Coffee",
+    "zh": "咖啡"
+   }
+  },
+  "dye": {
+   "category": "industrial",
+   "cost": 40,
+   "name": {
+    "en": "Dye",
+    "zh": "染料"
+   }
+  },
+  "electricity": {
+   "category": "staple",
+   "cost": 30,
+   "name": {
+    "en": "Electricity",
+    "zh": "电力"
+   }
+  },
+  "engines": {
+   "category": "industrial",
+   "cost": 60,
+   "name": {
+    "en": "Engines",
+    "zh": "发动机"
+   }
+  },
+  "explosives": {
+   "category": "industrial",
+   "cost": 50,
+   "name": {
+    "en": "Explosives",
+    "zh": "炸药"
+   }
+  },
+  "fabric": {
+   "category": "staple",
+   "cost": 20,
+   "name": {
+    "en": "Fabric",
+    "zh": "织物"
+   }
+  },
+  "fertilizer": {
+   "category": "industrial",
+   "cost": 30,
+   "name": {
+    "en": "Fertilizer",
+    "zh": "肥料"
+   }
+  },
+  "fine_art": {
+   "category": "luxury",
+   "cost": 200,
+   "name": {
+    "en": "Fine Art",
+    "zh": "艺术品"
+   }
+  },
+  "fish": {
+   "category": "staple",
+   "cost": 20,
+   "name": {
+    "en": "Fish",
+    "zh": "鱼类"
+   }
+  },
+  "fruit": {
+   "category": "luxury",
+   "cost": 30,
+   "name": {
+    "en": "Fruit",
+    "zh": "水果"
+   }
+  },
+  "furniture": {
+   "category": "staple",
+   "cost": 30,
+   "name": {
+    "en": "Furniture",
+    "zh": "家具"
+   }
+  },
+  "glass": {
+   "category": "industrial",
+   "cost": 40,
+   "name": {
+    "en": "Glass",
+    "zh": "玻璃"
+   }
+  },
+  "gold": {
+   "category": "luxury",
+   "cost": 100,
+   "name": {
+    "en": "Gold",
+    "zh": "黄金"
+   }
+  },
+  "grain": {
+   "category": "staple",
+   "cost": 20,
+   "name": {
+    "en": "Grain",
+    "zh": "谷物"
+   }
+  },
+  "groceries": {
+   "category": "staple",
+   "cost": 30,
+   "name": {
+    "en": "Groceries",
+    "zh": "加工食品"
+   }
+  },
+  "hardwood": {
+   "category": "industrial",
+   "cost": 40,
+   "name": {
+    "en": "Hardwood",
+    "zh": "硬木"
+   }
+  },
+  "iron": {
+   "category": "industrial",
+   "cost": 40,
+   "name": {
+    "en": "Iron",
+    "zh": "铁"
+   }
+  },
+  "ironclads": {
+   "category": "military",
+   "cost": 80,
+   "name": {
+    "en": "Ironclads",
+    "zh": "铁甲舰"
+   }
+  },
+  "lead": {
+   "category": "industrial",
+   "cost": 40,
+   "name": {
+    "en": "Lead",
+    "zh": "铅"
+   }
+  },
+  "liquor": {
+   "category": "luxury",
+   "cost": 30,
+   "name": {
+    "en": "Liquor",
+    "zh": "烈酒"
+   }
+  },
+  "luxury_clothes": {
+   "category": "luxury",
+   "cost": 60,
+   "name": {
+    "en": "Luxury Clothes",
+    "zh": "高档衣物"
+   }
+  },
+  "luxury_furniture": {
+   "category": "luxury",
+   "cost": 60,
+   "name": {
+    "en": "Luxury Furniture",
+    "zh": "高档家具"
+   }
+  },
+  "manowars": {
+   "category": "military",
+   "cost": 70,
+   "name": {
+    "en": "Man-o-Wars",
+    "zh": "风帆战舰"
+   }
+  },
+  "meat": {
+   "category": "luxury",
+   "cost": 30,
+   "name": {
+    "en": "Meat",
+    "zh": "肉类"
+   }
+  },
+  "merchant_marine": {
+   "category": "staple",
+   "cost": 50,
+   "name": {
+    "en": "Merchant Marine",
+    "zh": "商船"
+   }
+  },
+  "oil": {
+   "category": "industrial",
+   "cost": 40,
+   "name": {
+    "en": "Oil",
+    "zh": "油"
+   }
+  },
+  "opium": {
+   "category": "luxury",
+   "cost": 50,
+   "name": {
+    "en": "Opium",
+    "zh": "鸦片"
+   }
+  },
+  "paper": {
+   "category": "staple",
+   "cost": 30,
+   "name": {
+    "en": "Paper",
+    "zh": "纸张"
+   }
+  },
+  "porcelain": {
+   "category": "luxury",
+   "cost": 70,
+   "name": {
+    "en": "Porcelain",
+    "zh": "瓷器"
+   }
+  },
+  "radios": {
+   "category": "luxury",
+   "cost": 80,
+   "name": {
+    "en": "Radios",
+    "zh": "无线电"
+   }
+  },
+  "rubber": {
+   "category": "industrial",
+   "cost": 40,
+   "name": {
+    "en": "Rubber",
+    "zh": "橡胶"
+   }
+  },
+  "services": {
+   "category": "staple",
+   "cost": 30,
+   "name": {
+    "en": "Services",
+    "zh": "服务"
+   }
+  },
+  "silk": {
+   "category": "industrial",
+   "cost": 40,
+   "name": {
+    "en": "Silk",
+    "zh": "丝绸"
+   }
+  },
+  "small_arms": {
+   "category": "military",
+   "cost": 60,
+   "name": {
+    "en": "Small Arms",
+    "zh": "轻武器"
+   }
+  },
+  "steamers": {
+   "category": "industrial",
+   "cost": 70,
+   "name": {
+    "en": "Steamers",
+    "zh": "蒸汽船"
+   }
+  },
+  "steel": {
+   "category": "industrial",
+   "cost": 50,
+   "name": {
+    "en": "Steel",
+    "zh": "钢"
+   }
+  },
+  "sugar": {
+   "category": "luxury",
+   "cost": 30,
+   "name": {
+    "en": "Sugar",
+    "zh": "糖"
+   }
+  },
+  "sulfur": {
+   "category": "industrial",
+   "cost": 50,
+   "name": {
+    "en": "Sulfur",
+    "zh": "硫磺"
+   }
+  },
+  "tanks": {
+   "category": "military",
+   "cost": 80,
+   "name": {
+    "en": "Tanks",
+    "zh": "坦克"
+   }
+  },
+  "tea": {
+   "category": "luxury",
+   "cost": 50,
+   "name": {
+    "en": "Tea",
+    "zh": "茶叶"
+   }
+  },
+  "telephones": {
+   "category": "luxury",
+   "cost": 70,
+   "name": {
+    "en": "Telephones",
+    "zh": "电话机"
+   }
+  },
+  "tobacco": {
+   "category": "luxury",
+   "cost": 40,
+   "name": {
+    "en": "Tobacco",
+    "zh": "烟草"
+   }
+  },
+  "tools": {
+   "category": "industrial",
+   "cost": 40,
+   "name": {
+    "en": "Tools",
+    "zh": "工具"
+   }
+  },
+  "transportation": {
+   "category": "staple",
+   "cost": 30,
+   "name": {
+    "en": "Transportation",
+    "zh": "运力"
+   }
+  },
+  "wine": {
+   "category": "luxury",
+   "cost": 50,
+   "name": {
+    "en": "Wine",
+    "zh": "葡萄酒"
+   }
+  },
+  "wood": {
+   "category": "staple",
+   "cost": 20,
+   "name": {
+    "en": "Wood",
+    "zh": "木材"
+   }
+  }
+ }
+}

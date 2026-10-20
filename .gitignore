@@ -1,0 +1,32 @@
+# ---- 本地配置（含各人不同的游戏路径，不进仓库）----
+config.json
+
+# ---- C++ 编译产物（第二阶段桥接层）----
+build/
+*.obj
+*.lib
+*.exp
+*.pdb
+*.ilk
+.vs/
+
+# ---- Python ----
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/
+.pytest_cache/
+
+# ---- 运行时产物 ----
+logs/
+*.log
+
+# ---- 玩家自己的存档，不进仓库 ----
+*.v3
+
+# ---- 编辑器 / 系统 ----
+.idea/
+.vscode/
+Thumbs.db
+desktop.ini
