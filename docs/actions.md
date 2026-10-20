@@ -5,19 +5,21 @@
 
 可达性：**直达** = 从玩家国家沿列表能走到对象，照现有做法即可；**窗口** = 对象只存在于界面窗口 / 弹窗 / 草稿里，要像改组政府那样构造（见 docs/bridge.md）；**组合** = 军事 / 地图类，要组合编队、前线、海域等多个对象；**界面** = 只影响界面显示（改名、开关、定位），不影响局面；**待查** = 接收对象还没归类。
 
-**进度：命令 132 / 265 已验证；按操作种类（只差档位的算一种）92 / 225。**
+**进度：命令 138 / 265 已验证；按操作种类（只差档位的算一种）98 / 225。**
 
-按可达性（操作种类，已验证 / 总数）：直达 88 / 110，窗口 4 / 31，组合 0 / 77，界面 0 / 7。
+按可达性（操作种类，已验证 / 总数）：直达 93 / 110，窗口 5 / 31，组合 0 / 77，界面 0 / 7。
 
 不在本表、但同样要打通的：立即存档（目前用自动存档）、暂停 / 调速（`TimeKeeper`，已验证，不经 Execute）。事件选项在「事件」一节（`EventOption.Select`）。每条命令用的路径与核实方式见 docs/bridge.md「已验证的玩家动作」。
 
-## 国家（45 / 50）
+## 国家（47 / 50）
 
 | 状态 | 可达性 | 命令 | 例子 | 界面文件 |
 |---|---|---|---|---|
 | ✓ `Actions.default_construction_fleet` | 直达 | `Country.ClearDefaultConstructionFleet` | `Country.ClearDefaultConstructionFleet` | right_click_menu.gui |
 | ✓ `Actions.company` | 直达 | `Country.CreateCompany` | `GetPlayer.CreateCompany(CompanyType.Self)` | companies_panel.gui |
+| ✓ `Actions.country_command` | 直达 | `Country.DeclareBankruptcy` | `Country.DeclareBankruptcy` | budget_panel.gui |
 | ✓ `Actions.country_command` | 直达 | `Country.DemobilizeAllArmies` | `Country.DemobilizeAllArmies` | panel_military.gui |
+| ✓ `Actions.country_command` | 直达 | `Country.LeavePowerBloc` | `GetPlayer.LeavePowerBloc` | power_bloc_panel.gui |
 | ✓ `Actions.country_command` | 直达 | `Country.MobilizeAllArmies` | `Country.MobilizeAllArmies` | panel_military.gui |
 | ✓ `Actions.country_command` | 直达 | `Country.PauseConstruction` | `Country.PauseConstruction` | building_browser_panel.gui, production_methods.gui … |
 | ✓ `Actions.country_command` | 直达 | `Country.PauseShipConstruction` | `Country.PauseShipConstruction` | production_methods.gui |
@@ -60,9 +62,7 @@
 | ✓ `Actions.set_tax` | 直达 | `Country.SetTaxLevelVeryHigh` | `GetPlayer.SetTaxLevelVeryHigh` | budget_panel.gui |
 | ✓ `Actions.set_tax` | 直达 | `Country.SetTaxLevelVeryLow` | `GetPlayer.SetTaxLevelVeryLow` | budget_panel.gui |
 | ✓ `Actions.negotiate` | 直达 | `Country.StartNegotiationWith` | `AccessPlayer.StartNegotiationWith(InterestGroup.Self)` | right_click_menu.gui |
-|  | 直达 | `Country.DeclareBankruptcy` | `Country.DeclareBankruptcy` | budget_panel.gui |
 |  | 直达 | `Country.Kick` | `Country.GetPowerBloc.Kick(Country.Self)` | right_click_menu.gui |
-|  | 直达 | `Country.LeavePowerBloc` | `GetPlayer.LeavePowerBloc` | power_bloc_panel.gui |
 |  | 界面 | `Country.ToggleIgnoreCountryFormation` | `GetPlayer.ToggleIgnoreCountryFormation(CountryFormation.Self)` | country_formation_panel.gui, culture_panel.gui |
 |  | 界面 | `Country.ToggleIgnoreDecision` | `GetPlayer.ToggleIgnoreDecision(Decision.Self)` | journal.gui |
 
@@ -179,7 +179,7 @@
 |---|---|---|---|---|
 | ✓ `Actions.choose_event_option` | 窗口 | `EventOption.Select` | `EventOption.Select` | eventwindow.gui |
 
-## 外交（13 / 37）
+## 外交（16 / 37）
 
 | 状态 | 可达性 | 命令 | 例子 | 界面文件 |
 |---|---|---|---|---|
@@ -191,17 +191,17 @@
 | ✓ `Actions.play_stance` | 直达 | `DiplomaticPlay.LeanTowardsTarget` | `DiplomaticPlay.LeanTowardsTarget(GetPlayer)` | diplomatic_play_panel.gui |
 | ✓ `Actions.play_stance` | 直达 | `DiplomaticPlay.SupportInitiator` | `DiplomaticPlay.SupportInitiator(GetPlayer)` | right_click_menu.gui, sway_country_panel.gui |
 | ✓ `Actions.play_stance` | 直达 | `DiplomaticPlay.SupportTarget` | `DiplomaticPlay.SupportTarget(GetPlayer)` | right_click_menu.gui, sway_country_panel.gui |
+| ✓ `Actions.play_stance` | 直达 | `DiplomaticPlay.Yield` | `DiplomaticPlay.Yield(GetPlayer)` | diplomatic_play_panel.gui, right_click_menu.gui |
 | ✓ `Actions.start_play` | 直达 | `DiplomaticPlayType.GetStartCommandCountry` | `DiplomaticPlayType.GetStartCommandCountry(GetPlayer.Self,Country.Self)` | country_panel.gui |
 | ✓ `Actions.start_play` | 直达 | `DiplomaticPlayType.GetStartCommandState` | `DiplomaticPlayType.GetStartCommandState(GetPlayer,State.Self)` | country_panel.gui |
+| ✓ `Actions.kick_from_bloc` | 直达 | `PowerBloc.Kick` | `PowerBloc.Kick(Country.Self)` | power_bloc_panel.gui |
+| ✓ `Actions.upgrade_principle` | 直达 | `PowerBlocPrinciple.UpgradeToNextLevel` | `PowerBlocPrinciple.UpgradeToNextLevel` | custom_tooltip.gui, power_bloc_panel.gui |
 | ✓ `Actions.withdraw_treaty` | 直达 | `Treaty.WithdrawFromTreaty` | `Treaty.WithdrawFromTreaty` | treaty_panel.gui |
 | ✓ `Actions.war_goal` | 直达 | `WarGoal.ToggleIsPressedInPotentialPeaceDeal` | `WarGoal.ToggleIsPressedInPotentialPeaceDeal(GetPlayer.Self)` | add_wargoal_panel.gui, map_markers.gui |
 | ✓ `Actions.diplomatic_action` | 窗口 | `DiplomaticActionWindow.ExecuteAction` | `DiplomaticActionWindow.ExecuteAction` | popups.gui |
 |  | 直达 | `CountryFormation.SupportCandidate` | `CountryFormation.SupportCandidate(GetPlayer,Country.Self)` | country_formation_panel.gui |
 |  | 直达 | `DiplomaticAction.ExecuteAction` | `DiplomaticAction.ExecuteAction` | country_panel.gui, power_bloc_panel.gui … |
 |  | 直达 | `DiplomaticPlay.SwitchSide` | `DiplomaticPlay.SwitchSide(GetPlayer)` | diplomatic_play_panel.gui, right_click_menu.gui |
-|  | 直达 | `DiplomaticPlay.Yield` | `DiplomaticPlay.Yield(GetPlayer)` | diplomatic_play_panel.gui, right_click_menu.gui |
-|  | 直达 | `PowerBloc.Kick` | `PowerBloc.Kick(Country.Self)` | power_bloc_panel.gui |
-|  | 直达 | `PowerBlocPrinciple.UpgradeToNextLevel` | `PowerBlocPrinciple.UpgradeToNextLevel` | custom_tooltip.gui, power_bloc_panel.gui |
 |  | 直达 | `Proposal.AcceptActionProposal` | `Proposal.GetDiplomaticAction.AcceptActionProposal` | popups.gui |
 |  | 直达 | `Proposal.AcceptDiplomaticDemand` | `Proposal.GetDiplomaticDemand.AcceptDiplomaticDemand` | popups.gui |
 |  | 直达 | `Proposal.AcceptSway` | `Proposal.GetDiplomaticPlay.GetIncomingSway(Proposal.GetActor.Self,Proposal.GetRecipient.Self).AcceptSway` | popups.gui |
@@ -221,11 +221,12 @@
 |  | 窗口 | `WarGoalDraft.AddTreatyWarGoal` | `WarGoalDraft.GetDiplomaticPlay.AddTreatyWarGoal(WarGoalDraft.Self,ArticleDraft.Self)` | right_click_menu.gui |
 |  | 窗口 | `WarGoalDraft.AddWarGoal` | `WarGoalDraft.GetDiplomaticPlay.AddWarGoal(WarGoalDraft.Self)` | right_click_menu.gui |
 
-## 军事（2 / 90）
+## 军事（3 / 90）
 
 | 状态 | 可达性 | 命令 | 例子 | 界面文件 |
 |---|---|---|---|---|
 | ✓ `Actions.accept_peace` | 直达 | `War.ToggleAcceptPeace` | `War.ToggleAcceptPeace(GetPlayer.Self)` | war_panel.gui |
+| ✓ `Actions.peace` | 窗口 | `WarPanel.Capitulate` | `WarPanel.GetWar.Capitulate(GetPlayer.Self)` | war_panel.gui |
 | ✓ `Actions.peace` | 窗口 | `WarPanel.ProposePeaceDeal` | `WarPanel.GetWar.ProposePeaceDeal(GetPlayer.Self)` | war_panel.gui |
 |  | 窗口 | `DecommissionSupplyShipsWindow.GetDecommissionCommand` | `DecommissionSupplyShipsWindow.GetDecommissionCommand` | popups.gui |
 |  | 窗口 | `InvasionPlannerPopup.StartInvasion` | `InvasionPlannerPopup.StartInvasion` | invasion_planner.gui |
@@ -235,7 +236,6 @@
 |  | 窗口 | `TransferFormationPopup.Confirm` | `TransferFormationPopup.Confirm` | transfer_formation.gui |
 |  | 窗口 | `TransportPlannerPopup.GetTransportCommand` | `TransportPlannerPopup.GetTransportCommand(MilitaryFormation.Self)` | right_click_menu.gui |
 |  | 窗口 | `TransportPlannerPopup.StartTransport` | `TransportPlannerPopup.StartTransport` | transport_planner.gui |
-|  | 窗口 | `WarPanel.Capitulate` | `WarPanel.GetWar.Capitulate(GetPlayer.Self)` | war_panel.gui |
 |  | 窗口 | `WarPanel.SetWhitePeace` | `WarPanel.GetWar.SetWhitePeace(GetPlayer.Self)` | war_panel.gui |
 |  | 组合 | `CombatUnit.GetDisbandUnitCommand` | `CombatUnit.GetMilitaryFormation.GetDisbandUnitCommand(CombatUnit.Self)` | military_formation_panel.gui |
 |  | 组合 | `Front.GetDeploySelectedFormationsCommand` | `Front.GetDeploySelectedFormationsCommand` | map_markers.gui |

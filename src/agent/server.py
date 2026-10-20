@@ -78,6 +78,8 @@ ACT_PARAMS = {
     "commander_action": "index（将领序号）, cmd: Promote/Unassign/Assign/Order, admiral=false, target（编队或命令序号）",
     "default_construction_fleet": "fleet（舰队序号，-1 清除）",
     "form_country": "formation: 可成立国家的中文名",
+    "kick_from_bloc": "member: 成员国中文名（集团领袖）",
+    "upgrade_principle": "index（集团原则序号）",
     "support_candidate": "formation, candidate（候选国序号）",
     "answer_proposal": "index（diplomacy 工具里 proposals 的序号）, accept: true/false",
 }

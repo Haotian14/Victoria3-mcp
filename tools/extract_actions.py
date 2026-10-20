@@ -106,6 +106,12 @@ VERIFIED = {
     "Country.SetDefaultConstructionFleet": "Actions.default_construction_fleet",
     "Country.ClearDefaultConstructionFleet": "Actions.default_construction_fleet",
     "CountryFormation.FormCountry": "Actions.form_country",
+    "PowerBloc.Kick": "Actions.kick_from_bloc",
+    "PowerBlocPrinciple.UpgradeToNextLevel": "Actions.upgrade_principle",
+    "Country.LeavePowerBloc": "Actions.country_command",
+    "Country.DeclareBankruptcy": "Actions.country_command",
+    "WarPanel.Capitulate": "Actions.peace",
+    "DiplomaticPlay.Yield": "Actions.play_stance",
     **{f"DiplomaticPlay.{s}": "Actions.play_stance" for s in (
         "DeclareNeutrality", "BeOnTheFence", "LeanTowardsInitiator", "LeanTowardsTarget",
         "SupportInitiator", "SupportTarget")},

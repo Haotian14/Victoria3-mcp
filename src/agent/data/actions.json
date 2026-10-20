@@ -795,8 +795,8 @@
   "domain": "国家",
   "reach": "直达",
   "family": "Country.DeclareBankruptcy",
-  "status": "未做",
-  "via": ""
+  "status": "已验证",
+  "via": "Actions.country_command"
  },
  {
   "receiver": "Country",
@@ -849,8 +849,8 @@
   "domain": "国家",
   "reach": "直达",
   "family": "Country.LeavePowerBloc",
-  "status": "未做",
-  "via": ""
+  "status": "已验证",
+  "via": "Actions.country_command"
  },
  {
   "receiver": "Country",
@@ -1964,8 +1964,8 @@
   "domain": "外交",
   "reach": "直达",
   "family": "DiplomaticPlay.Yield",
-  "status": "未做",
-  "via": ""
+  "status": "已验证",
+  "via": "Actions.play_stance"
  },
  {
   "receiver": "DiplomaticPlayConfirmation",
@@ -3324,8 +3324,8 @@
   "domain": "外交",
   "reach": "直达",
   "family": "PowerBloc.Kick",
-  "status": "未做",
-  "via": ""
+  "status": "已验证",
+  "via": "Actions.kick_from_bloc"
  },
  {
   "receiver": "PowerBlocFormation",
@@ -3361,8 +3361,8 @@
   "domain": "外交",
   "reach": "直达",
   "family": "PowerBlocPrinciple.UpgradeToNextLevel",
-  "status": "未做",
-  "via": ""
+  "status": "已验证",
+  "via": "Actions.upgrade_principle"
  },
  {
   "receiver": "PowerBlocPrincipleSelectionWindow",
@@ -4808,8 +4808,8 @@
   "domain": "军事",
   "reach": "窗口",
   "family": "WarPanel.Capitulate",
-  "status": "未做",
-  "via": ""
+  "status": "已验证",
+  "via": "Actions.peace"
  },
  {
   "receiver": "WarPanel",

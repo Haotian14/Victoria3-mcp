@@ -149,6 +149,7 @@ def _diplo_window(k: int) -> str:
 
 
 FORMABLE = f"{PLAYER_MUT}.AccessFormableCountries"
+BLOC = f"{PLAYER_MUT}.AccessPowerBloc"
 ARMIES = f"{PLAYER_MUT}.GetMilitaryFormationsArmy"
 FLEETS = f"{PLAYER_MUT}.GetMilitaryFormationsFleet"
 
@@ -576,6 +577,29 @@ class Actions:
             return [plain(v or "") for v in self.b.read_many(probe_exprs, [(lst, names.index(who))])]
 
         return self._run(name, stmt, probe, None, path=path)
+
+    # ------------------------------------------------------------ 权力集团
+    def bloc(self) -> dict[str, Any]:
+        """玩家所在权力集团的成员与原则。"""
+        if self._probe(f"{PLAYER}.IsInPowerBloc") != "1":
+            return {"in_bloc": False}
+        return {"in_bloc": True, "name": self._probe(f"{BLOC}.GetNameNoFormatting"),
+                "members": [plain(r[0]) for r in self.b.rows(f"{BLOC}.GetMembers", ["Country.GetNameNoFormatting"])],
+                "principles": [plain(r[0]) for r in self.b.rows(f"{BLOC}.GetPrinciples", ["PowerBlocPrinciple.GetName"])]}
+
+    def kick_from_bloc(self, member: str) -> ActionResult:
+        """把成员踢出权力集团（集团领袖，PowerBloc.Kick(Country.Self)）。member 是成员国中文名。"""
+        path, names = self._find(f"{BLOC}.GetMembers", "Country.GetNameNoFormatting", member)
+        if not path:
+            return ActionResult(False, f"踢出 {member}", f"成员：{names}")
+        probe = lambda: self.bloc().get("members")   # noqa: E731
+        return self._run(f"把 {member} 踢出权力集团", f"{BLOC}.Kick(Country.Self)", probe, None, path=path)
+
+    def upgrade_principle(self, index: int) -> ActionResult:
+        """升级权力集团原则（花授权，PowerBlocPrinciple.UpgradeToNextLevel）。"""
+        probe = lambda: self.bloc().get("principles")   # noqa: E731
+        return self._run(f"升级集团原则 {index}", "PowerBlocPrinciple.UpgradeToNextLevel", probe, None,
+                         path=[(f"{BLOC}.GetPrinciples", index)])
 
     def form_country(self, formation: str) -> ActionResult:
         """成立国家（建国面板，CountryFormation.FormCountry）。formation 是可成立国家的中文名。"""
