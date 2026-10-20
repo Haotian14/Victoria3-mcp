@@ -91,6 +91,7 @@ DIPLO_ACTION_LISTS = [f"Get{k}{g}DiploActions" for g in ("General", "Overlord", 
 _TAG_REGION: dict[str, str] = {}    # 国家 tag → 它拥有的一个地区（按值取国家用）
 PLAYS = f"{PLAYER_MUT}.AccessActiveDiplomaticPlays"
 WARS = f"{PLAYER_MUT}.AccessWars"
+TREATIES = f"{PLAYER_MUT}.GetInForceTreaties"
 PEACE_FIELDS = ["War.HasActivePeaceDeal", "War.HasActiveWhitePeaceDeal", "War.GetCountryProposingPeace.GetTagName",
                 "War.GetDaysUntilPeaceDealFails"]
 # 提议：伪造的 TopFrontend（+0x30 是提议数组，读的时候游戏自己重建）
@@ -145,6 +146,15 @@ def _diplo_window(k: int) -> str:
     ExecuteAction（021caac0 → 021be590）只读这几项组装 CExecuteDiplomaticActionCommand。k 是外交行动在路径里的下标。"""
     return (f"0:d8:i=c{k}@10;0:dc:i=c{k}@14;0:e0:i=-1;0:e4:i=-1;0:e8:b=1;0:f0:q=c{k}@28;"
             f"0:f8:i=0;0:fc:i=2")
+
+
+FORMABLE = f"{PLAYER_MUT}.AccessFormableCountries"
+ARMIES = f"{PLAYER_MUT}.GetMilitaryFormationsArmy"
+FLEETS = f"{PLAYER_MUT}.GetMilitaryFormationsFleet"
+
+
+def _commander_list(admirals: bool, offers: bool) -> str:
+    return f"{PLAYER_MUT}.Access{'Admirals' if admirals else 'Generals'}{'Offer' if offers else ''}"
 
 
 def _diff(a: dict[str, Any], b: dict[str, Any]) -> dict[str, Any]:
@@ -332,6 +342,14 @@ class Actions:
             raise ValueError(f"找不到拥有地区的国家 {country}")
         return f"=GetStateRegion('{_TAG_REGION[country]}').GetLargestStateOwner"
 
+    def state_ref(self, region: str) -> list:
+        """某地区里最大那个州的路径（别国的州也行）：GetStateRegion(..).GetLargestStateInRegion 要求非 const 的地区，
+        建不起来；改为经地区的最大拥有国（「=表达式」）走它的 Country.AccessStates，按地区 id 找州。"""
+        rid = self.b.read(f"[GetStateRegion('{region}').GetID]")
+        owner = [(f"=GetStateRegion('{region}').GetLargestStateOwner", 0)]
+        ids = [r[0] for r in self.b.rows("Country.AccessStates", ["State.GetStateRegion.GetID"], path=owner)]
+        return owner + [("Country.AccessStates", ids.index(rid))] if rid in ids else []
+
     def diplomatic_actions(self, country: str) -> list[dict[str, Any]]:
         """对某国可用 / 可能的外交行动（国家面板「外交」下拉框里的那些）。"""
         ref = [(self.country_ref(country), 0)]
@@ -382,7 +400,9 @@ class Actions:
         t = f"GetDiplomaticPlayType('{play}')"
         if state:
             cmd = f"{t}.GetStartCommandState({PLAYER},State.Self)"
-            ref = [(f"=GetStateRegion('{state}').GetLargestStateInRegion", 0)]
+            ref = self.state_ref(state)
+            if not ref:
+                return ActionResult(False, f"发起 {play} → {state}", "找不到该地区的州")
         else:
             cmd = f"{t}.GetStartCommandCountry({PLAYER}.Self,Country.Self)"
             ref = [(self.country_ref(country), 0)]
@@ -446,6 +466,23 @@ class Actions:
 
         return self._run(f"博弈 {play}：{cmd}", f"DiplomaticPlay.{cmd}({PLAYER})", probe, None, path=ppath)
 
+    def treaties(self) -> list[dict[str, Any]]:
+        """生效中的条约。"""
+        return [{"index": i, "name": plain(n), "first": plain(f), "second": plain(s)}
+                for i, (n, f, s) in enumerate(self.b.rows(TREATIES, ["Treaty.GetNameNoFormatting",
+                                                                      "Treaty.GetFirstCountry.GetNameNoFormatting",
+                                                                      "Treaty.GetSecondCountry.GetNameNoFormatting"]))]
+
+    def withdraw_treaty(self, index: int) -> ActionResult:
+        """退出条约（条约面板的「退出」，Treaty.WithdrawFromTreaty）。index 是 treaties() 的序号。"""
+        ts = self.treaties()
+        if not 0 <= index < len(ts):
+            return ActionResult(False, f"退出条约 {index}", f"只有 {len(ts)} 个条约")
+        t = ts[index]
+        probe = lambda: [(x["name"], x["first"], x["second"]) for x in self.treaties()]   # noqa: E731
+        return self._run(f"退出条约「{t['name']}」（{t['first']}—{t['second']}）", "Treaty.WithdrawFromTreaty", probe,
+                         None, path=[(TREATIES, index)])
+
     def proposals(self) -> list[dict[str, Any]]:
         """别国发给玩家、待回复的提议（屏幕顶端的提议图标）。列表挂在界面对象 TopFrontend 上：
         TopFrontend.AccessProposals 每次都先清空 +0x30 的数组、再从游戏状态里按本地玩家重建，
@@ -480,6 +517,93 @@ class Actions:
                 return ActionResult(True, name, "", before, after)
             time.sleep(0.1)
         return ActionResult(False, name, "已执行但没看到生效", before, after)
+
+    # ------------------------------------------------------------ 人物：将领
+    def commanders(self, admirals: bool = False, offers: bool = False) -> list[dict[str, Any]]:
+        """将领（admirals=True 为海军将领）；offers=True 时是可招募的人选。"""
+        lst = _commander_list(admirals, offers)
+        return [{"index": i, "name": plain(n), "rank": plain(r), "order": plain(o)}
+                for i, (n, r, o) in enumerate(self.b.rows(lst, ["Character.GetFullName", "Character.GetRankName",
+                                                                 "Character.GetOrderType.GetName"]))]
+
+    def formations(self, fleets: bool = False) -> list[str]:
+        return [plain(r[0]) for r in self.b.rows(FLEETS if fleets else ARMIES, ["MilitaryFormation.GetNameNoFormatting"])]
+
+    def recruit_commander(self, index: int, admiral: bool = False, formation: int = -1,
+                          direct: bool = False) -> ActionResult:
+        """招募将领（人选来自 commanders(offers=True)）。formation 给定时直接编入该编队
+        （Character.GetRecruitCommand(MilitaryFormation.Self)），否则不编入（GetRecruitCommandNoFormation）；
+        direct=True 走招募面板上不经 Execute 的写法 Character.RecruitCharacterNoFormation。"""
+        offers = _commander_list(admiral, True)
+        path = [(offers, index)]
+        if formation >= 0:
+            path.append((FLEETS if admiral else ARMIES, formation))
+            cmd = "Character.GetRecruitCommand(MilitaryFormation.Self)"
+        else:
+            cmd = "Character.GetRecruitCommandNoFormation"
+        probe = lambda: len(self.commanders(admiral))   # noqa: E731
+        return self._run(f"招募{'海军' if admiral else ''}将领 {index}", cmd, probe, None, path=path,
+                         stmt="Character.RecruitCharacterNoFormation" if direct else "")
+
+    def commander_action(self, index: int, cmd: str, admiral: bool = False, target: int = -1) -> ActionResult:
+        """将领命令：Promote（晋升）/ Unassign（解除编队）/ Assign（编入第 target 个编队）/
+        Order（下达第 target 个命令，命令列表见 Character.AccessOrders）。"""
+        lst = _commander_list(admiral, False)
+        path = [(lst, index)]
+        # 编入 / 解除看所属编队（编入后要赶路：IsTravellingToFormation）
+        formation = ["Character.GetMilitaryFormation.GetNameNoFormatting", "Character.IsTravellingToFormation"]
+        if cmd == "Promote":
+            stmt, probe_exprs = "Character.GetPromoteCommand", ["Character.GetRankName"]
+        elif cmd == "Unassign":
+            stmt, probe_exprs = "Character.UnassignFromFormation", formation
+        elif cmd == "Assign":
+            path.append((FLEETS if admiral else ARMIES, target))
+            stmt, probe_exprs = "Character.AssignToFormation(MilitaryFormation.Self)", formation
+        elif cmd == "Order":
+            path.append(("Character.AccessOrders", target))
+            stmt, probe_exprs = ("Character.SelectOrder(CommanderOrderType.Self)",
+                                 ["Character.GetOrderType.GetName", "Character.GetNextOrderType.GetName"])
+        else:
+            raise ValueError("cmd 取 Promote / Unassign / Assign / Order")
+        who = plain(self.b.read("[Character.GetFullName]", path[:1]))
+        name = f"将领 {who}：{cmd}{'' if target < 0 else ' ' + str(target)}"
+
+        def probe():
+            # 将领列表按军衔排序：晋升、编入之后同一下标可能换了人，每次按名字重新找
+            names = [plain(r[0]) for r in self.b.rows(lst, ["Character.GetFullName"])]
+            if who not in names:
+                return None
+            return [plain(v or "") for v in self.b.read_many(probe_exprs, [(lst, names.index(who))])]
+
+        return self._run(name, stmt, probe, None, path=path)
+
+    def form_country(self, formation: str) -> ActionResult:
+        """成立国家（建国面板，CountryFormation.FormCountry）。formation 是可成立国家的中文名。"""
+        path, names = self._find(FORMABLE, "CountryFormation.GetName", formation)
+        if not path:
+            return ActionResult(False, f"成立「{formation}」", f"可成立的：{names}")
+        probe = lambda: self.b.read_many([f"{PLAYER}.GetTagName", f"{PLAYER}.GetNameNoFormatting"])   # noqa: E731
+        return self._run(f"成立「{formation}」", f"CountryFormation.FormCountry({PLAYER})", probe, None, path=path)
+
+    def support_candidate(self, formation: str, candidate: int) -> ActionResult:
+        """统一运动里支持某个候选国（CountryFormation.SupportCandidate）。candidate 是候选国列表的序号。"""
+        path, names = self._find(FORMABLE, "CountryFormation.GetName", formation)
+        if not path:
+            return ActionResult(False, f"支持「{formation}」候选国", f"可成立的：{names}")
+        cpath = path + [("CountryFormation.AccessFormationCandidates", candidate)]
+        probe = lambda: self._probe(f"CountryFormation.GetSupportedCandidateCountry({PLAYER}).GetNameNoFormatting",
+                                    path)   # noqa: E731
+        return self._run(f"支持「{formation}」候选国 {candidate}", f"CountryFormation.SupportCandidate({PLAYER},Country.Self)",
+                         probe, None, path=cpath)
+
+    def default_construction_fleet(self, fleet: int = -1) -> ActionResult:
+        """新造军舰默认编入的舰队（右键菜单）：fleet 是 formations(fleets=True) 的序号，-1 为清除。
+        **要用非 const 的玩家国家（PLAYER_MUT）**：经只读路径执行，游戏收下了却不生效。"""
+        probe = lambda: [r[0] for r in self.b.rows(FLEETS, ["MilitaryFormation.IsDefaultConstructionFleet"])]   # noqa: E731
+        if fleet < 0:
+            return self.command(f"{PLAYER_MUT}.ClearDefaultConstructionFleet", probe, name="清除默认造舰舰队")
+        return self.command(f"{PLAYER_MUT}.SetDefaultConstructionFleet(MilitaryFormation.Self)", probe,
+                            path=[(FLEETS, fleet)], name=f"默认造舰舰队 → {fleet}")
 
     # ------------------------------------------------------------ 谈判
     def negotiate(self, ig_index: int) -> ActionResult:

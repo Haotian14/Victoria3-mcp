@@ -106,6 +106,12 @@ stmt = Execute(ProductionMethod.GetSwitch(Building.Self))
 | 外交行动 | 伪造确认窗口后 `Execute(DiplomaticActionWindow.ExecuteAction)`（见下「外交」） | `=GetStateRegion('…').GetLargestStateOwner` → `Country.GetAvailableGeneralDiploActions` 等十个列表 |
 | 发起外交博弈 | `Execute(GetDiplomaticPlayType('dp_humiliation').GetStartCommandCountry(P.Self, Country.Self))`（界面先弹确认窗，确认发的就是它） | `=…`（目标国） |
 | 博弈表态 | `Execute(DiplomaticPlay.LeanTowardsTarget(P))` 等 | `PM.AccessActiveDiplomaticPlays` |
+| 战争：坚持战争目标 / 提和 / 接受和约 | `Execute(WarGoal.ToggleIsPressedInPotentialPeaceDeal(P.Self))`、`War.ProposePeaceDeal(P.Self)`、`War.ToggleAcceptPeace(P.Self)` | `PM.AccessWars` → `War.GetAttackersWarGoals`（界面经 `WarPanel.GetWar`，命令本身在 War 上） |
+| 退出条约 | `Execute(Treaty.WithdrawFromTreaty)` | `PM.GetInForceTreaties` |
+| 发起针对州的博弈 | `Execute(GetDiplomaticPlayType('dp_conquer_state').GetStartCommandState(P, State.Self))` | `=…GetLargestStateOwner` → `Country.AccessStates`（按 `State.GetStateRegion.GetID` 找） |
+| 将领：招募 / 晋升 / 编入 / 解除 / 下令 | `Execute(Character.GetRecruitCommandNoFormation)`、`GetRecruitCommand(MilitaryFormation.Self)`、`GetPromoteCommand`、`AssignToFormation(MilitaryFormation.Self)`、`UnassignFromFormation`、`SelectOrder(CommanderOrderType.Self)` | `PM.AccessGeneralsOffer` / `AccessGenerals`（海军 Admirals）、`PM.GetMilitaryFormationsArmy` / `Fleet`、`Character.AccessOrders` |
+| 默认造舰舰队 | `Execute(PM.SetDefaultConstructionFleet(MilitaryFormation.Self))` / `ClearDefaultConstructionFleet` | `PM.GetMilitaryFormationsFleet` |
+| 成立国家 | `Execute(CountryFormation.FormCountry(P))` | `PM.AccessFormableCountries` |
 | 公司特许状 | `Execute(Company.ToggleCharter(CompanyCharterType.Self))`；要选目标的用 `Company.ToggleBuildingCharter(GetCompanyCharterType('industry_charter').Self, GetBuildingType('…').Self)` / `ToggleRegionCharter(…, GetStateRegion('…').Self)` | `PM.GetCompanies` → `GetCompanyCharterTypes` |
 
 前置条件统一用 `IsValid(命令)`，原因用 `GetDesc(命令)`（界面按钮的灰显与提示就是这两个）。
@@ -134,7 +140,13 @@ stmt = Execute(ProductionMethod.GetSwitch(Building.Self))
 - 研究：正在研究的科技 + 研究队列（`GetResearchQueueTop` / `Bottom`；科技没有 `GetKey`，按中文名对回 id）；
 - 外交行动：`DiplomaticAction.IsActivePact`、能否再发、原因、`P.GetRelationsWith(Country.Self)`（驱逐外交官：关系 0 → -30）；
 - 博弈：玩家参与的博弈名单；表态看 `IsInitiatorLeaning` / `IsTargetLeaning` / `IsOnTheFence` / `IsInitiatorOrBacker` /
-  `IsTargetOrBacker`，中立后博弈从该国列表消失。退让（Yield）开场阶段不可用；转换阵营要到战争阶段。
+  `IsTargetOrBacker`，中立后博弈从该国列表消失。退让（Yield）开场阶段不可用；转换阵营要到战争阶段；
+- 战争：`WarGoal.IsPressedInPotentialPeaceDeal(P.Self)` / `IsPrimaryDemand`、`War.HasActivePeaceDeal`，结束后战争从列表消失；
+- 将领：**列表按军衔排序**，晋升、编入后同一下标会换人，核实时按名字重新找；军衔 `GetRankName`，所属编队
+  `GetMilitaryFormation` + `IsTravellingToFormation`（编入后要赶路），命令 `GetOrderType`；
+- 默认造舰舰队：各舰队的 `MilitaryFormation.IsDefaultConstructionFleet`。**经只读的玩家路径（GetMetaPlayer…）执行
+  `SetDefaultConstructionFleet`，游戏收下了却不生效，要用非 const 的 AccessMetaPlayer…**（税率之类不受影响）；
+- 成立国家：玩家的 tag（`GetTagName`，新格拉纳达成立大哥伦比亚后 CLM → GCO）。
 
 条件类命令的测试准备（只在测试局里用，测完重新载入 v3mcp_start_1836）：
 - 公司：大清开局没有可建立的公司，控制台 `ignore_company_requirements` 打开后再试，测完再输一次关掉；
@@ -145,6 +157,9 @@ stmt = Execute(ProductionMethod.GetSwitch(Building.Self))
   小市民可谈判；附属国上加拿大可强加法律），修正案用 `tag SWE`（瑞典的普鲁士式教育可废除）；
 - 经济：英国伦敦周边的建筑几乎每条命令都能用；建造队列先 `Building.QueueConstruction` 排几项；
   殖民用 `research quinine` 解锁纳马夸兰（`STATE_NAMAQUALAND`），殖民特许状用赫雷罗兰；
+- 外交：英国对法国、普鲁士、奥地利、俄国的外交行动；对托斯卡纳 / 尼德兰发起羞辱博弈，对两西西里发起征服西西里；
+  第三方表态 `tag SPA` / `tag FRA` / `tag SAR`；推进约 3 个月对尼德兰的博弈转为战争，英国提和后 `tag NET` 接受和约；
+- 成立国家：`tag CLM` 后控制台 `annex VNZ`、`annex ECU`，再成立大哥伦比亚；
 - 控制台没有 `effect` 命令，测试留下的修正去不掉，只能重新载入存档。
 
 ### 外交（路径步「=表达式」、伪造确认窗口、伪造 TopFrontend）

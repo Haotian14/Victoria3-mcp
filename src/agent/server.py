@@ -73,6 +73,12 @@ ACT_PARAMS = {
                 "side=Initiator/Target（博弈）或 Attackers/Defenders（战争）",
     "peace": "war: 战争序号, how: ProposePeaceDeal/SetWhitePeace/Capitulate（投降不可逆）",
     "accept_peace": "war: 战争序号（对方提出的和约，接受开关）",
+    "withdraw_treaty": "index（diplomacy 工具 treaties 的序号）",
+    "recruit_commander": "index（人选序号）, admiral=false, formation=-1（编队序号，-1 不编入）, direct=false",
+    "commander_action": "index（将领序号）, cmd: Promote/Unassign/Assign/Order, admiral=false, target（编队或命令序号）",
+    "default_construction_fleet": "fleet（舰队序号，-1 清除）",
+    "form_country": "formation: 可成立国家的中文名",
+    "support_candidate": "formation, candidate（候选国序号）",
     "answer_proposal": "index（diplomacy 工具里 proposals 的序号）, accept: true/false",
 }
 
@@ -324,6 +330,15 @@ def journal() -> dict[str, Any]:
         return {"ok": False, "error": str(e)}
 
 
+@server.tool(description="将领（admirals=true 为海军）、可招募人选（offers=true）与编队；用 act(kind=recruit_commander / commander_action) 操作。")
+def military(admirals: bool = False, offers: bool = False) -> dict[str, Any]:
+    a = Actions(bridge)
+    try:
+        return {"commanders": a.commanders(admirals, offers), "formations": a.formations(admirals)}
+    except (GameError, BridgeError) as e:
+        return {"ok": False, "error": str(e)}
+
+
 @server.tool(description="政府（private=true 为私人）建造队列，按队列顺序；用 act(kind=move_construction / cancel_construction) 调整。")
 def construction_queue(private: bool = False) -> list[dict[str, Any]] | dict[str, Any]:
     try:
@@ -340,7 +355,7 @@ def diplomacy(country: str = "") -> dict[str, Any]:
     a = Actions(bridge)
     try:
         out: dict[str, Any] = {"plays": a.plays(), "wars": a.wars(), "proposals": a.proposals(),
-                               "research_queue": a.research_queue()}
+                               "treaties": a.treaties(), "research_queue": a.research_queue()}
         if country:
             out["actions"] = a.diplomatic_actions(country)
         return out

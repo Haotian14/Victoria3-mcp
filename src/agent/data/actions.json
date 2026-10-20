@@ -452,8 +452,8 @@
   "domain": "人物",
   "reach": "直达",
   "family": "Character.AssignToFormation",
-  "status": "未做",
-  "via": ""
+  "status": "已验证",
+  "via": "Actions.commander_action"
  },
  {
   "receiver": "Character",
@@ -471,8 +471,8 @@
   "domain": "人物",
   "reach": "直达",
   "family": "Character.GetPromoteCommand",
-  "status": "未做",
-  "via": ""
+  "status": "已验证",
+  "via": "Actions.commander_action"
  },
  {
   "receiver": "Character",
@@ -489,8 +489,8 @@
   "domain": "人物",
   "reach": "直达",
   "family": "Character.GetRecruitCommand",
-  "status": "未做",
-  "via": ""
+  "status": "已验证",
+  "via": "Actions.recruit_commander"
  },
  {
   "receiver": "Character",
@@ -507,8 +507,8 @@
   "domain": "人物",
   "reach": "直达",
   "family": "Character.GetRecruitCommandNoFormation",
-  "status": "未做",
-  "via": ""
+  "status": "已验证",
+  "via": "Actions.recruit_commander"
  },
  {
   "receiver": "Character",
@@ -525,8 +525,8 @@
   "domain": "人物",
   "reach": "直达",
   "family": "Character.RecruitCharacterNoFormation",
-  "status": "未做",
-  "via": ""
+  "status": "已验证",
+  "via": "Actions.recruit_commander"
  },
  {
   "receiver": "Character",
@@ -543,8 +543,8 @@
   "domain": "人物",
   "reach": "直达",
   "family": "Character.SelectOrder",
-  "status": "未做",
-  "via": ""
+  "status": "已验证",
+  "via": "Actions.commander_action"
  },
  {
   "receiver": "Character",
@@ -561,8 +561,8 @@
   "domain": "人物",
   "reach": "直达",
   "family": "Character.UnassignFromFormation",
-  "status": "未做",
-  "via": ""
+  "status": "已验证",
+  "via": "Actions.commander_action"
  },
  {
   "receiver": "CombatUnit",
@@ -759,8 +759,8 @@
   "domain": "国家",
   "reach": "直达",
   "family": "Country.ClearDefaultConstructionFleet",
-  "status": "未做",
-  "via": ""
+  "status": "已验证",
+  "via": "Actions.default_construction_fleet"
  },
  {
   "receiver": "Country",
@@ -980,8 +980,8 @@
   "domain": "国家",
   "reach": "直达",
   "family": "Country.SetDefaultConstructionFleet",
-  "status": "未做",
-  "via": ""
+  "status": "已验证",
+  "via": "Actions.default_construction_fleet"
  },
  {
   "receiver": "Country",
@@ -1666,8 +1666,8 @@
   "domain": "外交",
   "reach": "直达",
   "family": "CountryFormation.FormCountry",
-  "status": "未做",
-  "via": ""
+  "status": "已验证",
+  "via": "Actions.form_country"
  },
  {
   "receiver": "CountryFormation",
@@ -2018,8 +2018,8 @@
   "domain": "外交",
   "reach": "直达",
   "family": "DiplomaticPlayType.GetStartCommandState",
-  "status": "未做",
-  "via": ""
+  "status": "已验证",
+  "via": "Actions.start_play"
  },
  {
   "receiver": "EventOption",
@@ -4681,8 +4681,8 @@
   "domain": "外交",
   "reach": "直达",
   "family": "Treaty.WithdrawFromTreaty",
-  "status": "未做",
-  "via": ""
+  "status": "已验证",
+  "via": "Actions.withdraw_treaty"
  },
  {
   "receiver": "TreatyDraft",
