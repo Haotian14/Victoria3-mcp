@@ -5,9 +5,9 @@
 
 可达性：**直达** = 从玩家国家沿列表能走到对象，照现有做法即可；**窗口** = 对象只存在于界面窗口 / 弹窗 / 草稿里，要像改组政府那样构造（见 docs/bridge.md）；**组合** = 军事 / 地图类，要组合编队、前线、海域等多个对象；**界面** = 只影响界面显示（改名、开关、定位），不影响局面；**待查** = 接收对象还没归类。
 
-**进度：命令 117 / 265 已验证；按操作种类（只差档位的算一种）77 / 225。**
+**进度：命令 120 / 265 已验证；按操作种类（只差档位的算一种）80 / 225。**
 
-按可达性（操作种类，已验证 / 总数）：直达 74 / 110，窗口 3 / 31，组合 0 / 77，界面 0 / 7。
+按可达性（操作种类，已验证 / 总数）：直达 76 / 110，窗口 4 / 31，组合 0 / 77，界面 0 / 7。
 
 不在本表、但同样要打通的：立即存档（目前用自动存档）、暂停 / 调速（`TimeKeeper`，已验证，不经 Execute）。事件选项在「事件」一节（`EventOption.Select`）。每条命令用的路径与核实方式见 docs/bridge.md「已验证的玩家动作」。
 
@@ -179,7 +179,7 @@
 |---|---|---|---|---|
 | ✓ `Actions.choose_event_option` | 窗口 | `EventOption.Select` | `EventOption.Select` | eventwindow.gui |
 
-## 外交（9 / 37）
+## 外交（10 / 37）
 
 | 状态 | 可达性 | 命令 | 例子 | 界面文件 |
 |---|---|---|---|---|
@@ -191,6 +191,7 @@
 | ✓ `Actions.play_stance` | 直达 | `DiplomaticPlay.SupportInitiator` | `DiplomaticPlay.SupportInitiator(GetPlayer)` | right_click_menu.gui, sway_country_panel.gui |
 | ✓ `Actions.play_stance` | 直达 | `DiplomaticPlay.SupportTarget` | `DiplomaticPlay.SupportTarget(GetPlayer)` | right_click_menu.gui, sway_country_panel.gui |
 | ✓ `Actions.start_play` | 直达 | `DiplomaticPlayType.GetStartCommandCountry` | `DiplomaticPlayType.GetStartCommandCountry(GetPlayer.Self,Country.Self)` | country_panel.gui |
+| ✓ `Actions.war_goal` | 直达 | `WarGoal.ToggleIsPressedInPotentialPeaceDeal` | `WarGoal.ToggleIsPressedInPotentialPeaceDeal(GetPlayer.Self)` | add_wargoal_panel.gui, map_markers.gui |
 | ✓ `Actions.diplomatic_action` | 窗口 | `DiplomaticActionWindow.ExecuteAction` | `DiplomaticActionWindow.ExecuteAction` | popups.gui |
 |  | 直达 | `CountryFormation.FormCountry` | `CountryFormation.FormCountry(GetPlayer)` | country_formation_panel.gui |
 |  | 直达 | `CountryFormation.SupportCandidate` | `CountryFormation.SupportCandidate(GetPlayer,Country.Self)` | country_formation_panel.gui |
@@ -210,7 +211,6 @@
 |  | 直达 | `Proposal.RejectSway` | `Proposal.GetDiplomaticPlay.GetIncomingSway(Proposal.GetActor.Self,Proposal.GetRecipient.Self).RejectSway` | popups.gui |
 |  | 直达 | `Treaty.WithdrawFromTreaty` | `Treaty.WithdrawFromTreaty` | treaty_panel.gui |
 |  | 直达 | `WarGoal.MakeWarGoalPrimaryDemand` | `WarGoal.MakeWarGoalPrimaryDemand(GetPlayer.Self)` | diplomatic_play_panel.gui |
-|  | 直达 | `WarGoal.ToggleIsPressedInPotentialPeaceDeal` | `WarGoal.ToggleIsPressedInPotentialPeaceDeal(GetPlayer.Self)` | add_wargoal_panel.gui, map_markers.gui |
 |  | 窗口 | `AddWarGoalPanel.AddWarGoal` | `AddWarGoalPanel.AccessDiplomaticPlay.AddWarGoal(WarGoalDraft.Self)` | add_wargoal_panel.gui |
 |  | 窗口 | `DiplomaticPlayConfirmation.ConfirmAction` | `DiplomaticPlayConfirmation.ConfirmAction` | popups.gui |
 |  | 窗口 | `PowerBlocFormation.Confirm` | `PowerBlocFormation.Confirm` | power_bloc_formation_panel.gui |
@@ -221,11 +221,12 @@
 |  | 窗口 | `WarGoalDraft.AddTreatyWarGoal` | `WarGoalDraft.GetDiplomaticPlay.AddTreatyWarGoal(WarGoalDraft.Self,ArticleDraft.Self)` | right_click_menu.gui |
 |  | 窗口 | `WarGoalDraft.AddWarGoal` | `WarGoalDraft.GetDiplomaticPlay.AddWarGoal(WarGoalDraft.Self)` | right_click_menu.gui |
 
-## 军事（0 / 90）
+## 军事（2 / 90）
 
 | 状态 | 可达性 | 命令 | 例子 | 界面文件 |
 |---|---|---|---|---|
-|  | 直达 | `War.ToggleAcceptPeace` | `War.ToggleAcceptPeace(GetPlayer.Self)` | war_panel.gui |
+| ✓ `Actions.accept_peace` | 直达 | `War.ToggleAcceptPeace` | `War.ToggleAcceptPeace(GetPlayer.Self)` | war_panel.gui |
+| ✓ `Actions.peace` | 窗口 | `WarPanel.ProposePeaceDeal` | `WarPanel.GetWar.ProposePeaceDeal(GetPlayer.Self)` | war_panel.gui |
 |  | 窗口 | `DecommissionSupplyShipsWindow.GetDecommissionCommand` | `DecommissionSupplyShipsWindow.GetDecommissionCommand` | popups.gui |
 |  | 窗口 | `InvasionPlannerPopup.StartInvasion` | `InvasionPlannerPopup.StartInvasion` | invasion_planner.gui |
 |  | 窗口 | `PanelMilitary.GetUpgradeAllUnitsInAllFormationsCommand` | `PanelMilitary.GetUpgradeAllUnitsInAllFormationsCommand` | panel_military.gui |
@@ -235,7 +236,6 @@
 |  | 窗口 | `TransportPlannerPopup.GetTransportCommand` | `TransportPlannerPopup.GetTransportCommand(MilitaryFormation.Self)` | right_click_menu.gui |
 |  | 窗口 | `TransportPlannerPopup.StartTransport` | `TransportPlannerPopup.StartTransport` | transport_planner.gui |
 |  | 窗口 | `WarPanel.Capitulate` | `WarPanel.GetWar.Capitulate(GetPlayer.Self)` | war_panel.gui |
-|  | 窗口 | `WarPanel.ProposePeaceDeal` | `WarPanel.GetWar.ProposePeaceDeal(GetPlayer.Self)` | war_panel.gui |
 |  | 窗口 | `WarPanel.SetWhitePeace` | `WarPanel.GetWar.SetWhitePeace(GetPlayer.Self)` | war_panel.gui |
 |  | 组合 | `CombatUnit.GetDisbandUnitCommand` | `CombatUnit.GetMilitaryFormation.GetDisbandUnitCommand(CombatUnit.Self)` | military_formation_panel.gui |
 |  | 组合 | `Front.GetDeploySelectedFormationsCommand` | `Front.GetDeploySelectedFormationsCommand` | map_markers.gui |

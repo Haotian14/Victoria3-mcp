@@ -90,6 +90,9 @@ DIPLO_ACTION_LISTS = [f"Get{k}{g}DiploActions" for g in ("General", "Overlord", 
                                                           "PowerBlocMember") for k in ("Available", "Potential")]
 _TAG_REGION: dict[str, str] = {}    # 国家 tag → 它拥有的一个地区（按值取国家用）
 PLAYS = f"{PLAYER_MUT}.AccessActiveDiplomaticPlays"
+WARS = f"{PLAYER_MUT}.AccessWars"
+PEACE_FIELDS = ["War.HasActivePeaceDeal", "War.HasActiveWhitePeaceDeal", "War.GetCountryProposingPeace.GetTagName",
+                "War.GetDaysUntilPeaceDealFails"]
 # 提议：伪造的 TopFrontend（+0x30 是提议数组，读的时候游戏自己重建）
 TOP_FRONTEND = "0:30:a=0"
 PROPOSALS = "TopFrontend.AccessProposals"
@@ -386,22 +389,47 @@ class Actions:
         probe = lambda: [p["name"] for p in self.plays()]   # noqa: E731
         return self._run(f"发起 {play} → {country or state}", cmd, probe, None, path=ref)
 
-    def war_goal(self, play: int, goal: int, cmd: str, side: str = "Initiator") -> ActionResult:
-        """外交博弈里的战争目标：cmd 取 MakeWarGoalPrimaryDemand（设为主要诉求）/
-        ToggleIsPressedInPotentialPeaceDeal（和谈时是否坚持）。play 是 plays() 的序号，goal 是该方的战争目标序号。"""
+    def war_goal(self, goal: int, cmd: str, play: int = -1, war: int = -1, side: str = "") -> ActionResult:
+        """战争目标：cmd 取 MakeWarGoalPrimaryDemand（设为主要诉求，博弈阶段）/
+        ToggleIsPressedInPotentialPeaceDeal（和谈时是否坚持，战争中）。目标在 plays() 的第 play 个博弈
+        （side 取 Initiator / Target，默认 Initiator）或 wars() 的第 war 场战争（side 取 Attackers / Defenders）里。"""
         if cmd not in ("MakeWarGoalPrimaryDemand", "ToggleIsPressedInPotentialPeaceDeal"):
             raise ValueError("cmd 取 MakeWarGoalPrimaryDemand / ToggleIsPressedInPotentialPeaceDeal")
-        ppath = [(PLAYS, play)]
-        goals = f"DiplomaticPlay.Get{side}WarGoals"
+        if war >= 0:
+            path = [(WARS, war), (f"War.Get{side or 'Attackers'}WarGoals", goal)]
+        else:
+            path = [(PLAYS, play), (f"DiplomaticPlay.Get{side or 'Initiator'}WarGoals", goal)]
+        fields = ["WarGoal.GetName", f"WarGoal.IsPressedInPotentialPeaceDeal({PLAYER}.Self)", "WarGoal.IsPrimaryDemand"]
+        probe = lambda: [plain(v or "") for v in self.b.read_many(fields, path)]   # noqa: E731
+        return self._run(f"战争目标 {goal}（{'战争 ' + str(war) if war >= 0 else '博弈 ' + str(play)}）：{cmd}",
+                         f"WarGoal.{cmd}({PLAYER}.Self)", probe, None, path=path)
 
-        def probe():
-            return {k: [plain(r[0]) for r in self.b.rows(f"DiplomaticPlay.Get{side}{k}WarGoals", ["WarGoal.GetName"],
-                                                         path=ppath)] for k in ("Primary", "Secondary")} | {
-                "pressed": [r[0] for r in self.b.rows(goals, ["IsValid(WarGoal.ToggleIsPressedInPotentialPeaceDeal("
-                                                               f"{PLAYER}.Self))"], path=ppath)]}
+    def wars(self) -> list[dict[str, Any]]:
+        return [{"index": i, "name": plain(n), "peace_offered": p == "1"}
+                for i, (n, p) in enumerate(self.b.rows(WARS, ["War.GetName", "War.HasActivePeaceDeal"]))]
 
-        return self._run(f"博弈 {play} 战争目标 {goal}：{cmd}", f"WarGoal.{cmd}({PLAYER}.Self)", probe, None,
-                         path=ppath + [(goals, goal)])
+    def peace(self, war: int, how: str) -> ActionResult:
+        """战争面板上的和谈按钮：ProposePeaceDeal（按坚持的战争目标提和）/ SetWhitePeace（提白和）/
+        Capitulate（投降，不可逆）。界面经 WarPanel.GetWar 取到战争，命令本身在 War 上，这里从玩家的战争列表走。"""
+        if how not in ("ProposePeaceDeal", "SetWhitePeace", "Capitulate"):
+            raise ValueError("how 取 ProposePeaceDeal / SetWhitePeace / Capitulate")
+        path = [(WARS, war)]
+        before_wars = [w["name"] for w in self.wars()]
+
+        def probe():   # 对方接受或投降后战争结束、从列表消失；否则看和约状态
+            names = [w["name"] for w in self.wars()]
+            if names != before_wars:
+                return {"wars": names}
+            return dict(zip(PEACE_FIELDS, self.b.read_many(PEACE_FIELDS, path)))
+
+        return self._run(f"战争 {war}：{how}", f"War.{how}({PLAYER}.Self)", probe, None, path=path)
+
+    def accept_peace(self, war: int) -> ActionResult:
+        """战争面板上「接受和约」的开关（War.ToggleAcceptPeace，要有正在谈的和约）。"""
+        path = [(WARS, war)]
+        probe = lambda: self.b.read_many([f"War.WouldAcceptActivePeaceDeal({PLAYER}.Self)", "War.HasActivePeaceDeal"],
+                                         path)   # noqa: E731
+        return self._run(f"战争 {war}：接受和约开关", f"War.ToggleAcceptPeace({PLAYER}.Self)", probe, None, path=path)
 
     def play_stance(self, play: int, cmd: str) -> ActionResult:
         """外交博弈中的表态：Yield（退让）/ DeclareNeutrality / BeOnTheFence / LeanTowardsInitiator /

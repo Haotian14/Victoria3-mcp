@@ -91,6 +91,9 @@ VERIFIED = {
     "DiplomaticAction.ExecuteWithConfirmation": "Actions.diplomatic_action",
     "DiplomaticActionWindow.ExecuteAction": "Actions.diplomatic_action",
     "DiplomaticPlayType.GetStartCommandCountry": "Actions.start_play",
+    "WarGoal.ToggleIsPressedInPotentialPeaceDeal": "Actions.war_goal",
+    "War.ToggleAcceptPeace": "Actions.accept_peace",
+    "WarPanel.ProposePeaceDeal": "Actions.peace",
     **{f"DiplomaticPlay.{s}": "Actions.play_stance" for s in (
         "DeclareNeutrality", "BeOnTheFence", "LeanTowardsInitiator", "LeanTowardsTarget",
         "SupportInitiator", "SupportTarget")},

@@ -4717,8 +4717,8 @@
   "domain": "军事",
   "reach": "直达",
   "family": "War.ToggleAcceptPeace",
-  "status": "未做",
-  "via": ""
+  "status": "已验证",
+  "via": "Actions.accept_peace"
  },
  {
   "receiver": "WarGoal",
@@ -4754,8 +4754,8 @@
   "domain": "外交",
   "reach": "直达",
   "family": "WarGoal.ToggleIsPressedInPotentialPeaceDeal",
-  "status": "未做",
-  "via": ""
+  "status": "已验证",
+  "via": "Actions.war_goal"
  },
  {
   "receiver": "WarGoalDraft",
@@ -4827,8 +4827,8 @@
   "domain": "军事",
   "reach": "窗口",
   "family": "WarPanel.ProposePeaceDeal",
-  "status": "未做",
-  "via": ""
+  "status": "已验证",
+  "via": "Actions.peace"
  },
  {
   "receiver": "WarPanel",

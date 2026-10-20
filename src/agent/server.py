@@ -69,7 +69,10 @@ ACT_PARAMS = {
     "start_play": "play: 博弈类型 key（dp_humiliation…）, country: tag 或 state: STATE_*",
     "play_stance": "play: plays 里的序号, cmd: Yield/DeclareNeutrality/BeOnTheFence/LeanTowardsInitiator/"
                    "LeanTowardsTarget/SupportInitiator/SupportTarget/SwitchSide",
-    "war_goal": "play, goal, cmd: MakeWarGoalPrimaryDemand/ToggleIsPressedInPotentialPeaceDeal, side=Initiator/Target",
+    "war_goal": "goal, cmd: MakeWarGoalPrimaryDemand/ToggleIsPressedInPotentialPeaceDeal, play=博弈序号 或 war=战争序号, "
+                "side=Initiator/Target（博弈）或 Attackers/Defenders（战争）",
+    "peace": "war: 战争序号, how: ProposePeaceDeal/SetWhitePeace/Capitulate（投降不可逆）",
+    "accept_peace": "war: 战争序号（对方提出的和约，接受开关）",
     "answer_proposal": "index（diplomacy 工具里 proposals 的序号）, accept: true/false",
 }
 
@@ -336,7 +339,8 @@ def construction_queue(private: bool = False) -> list[dict[str, Any]] | dict[str
 def diplomacy(country: str = "") -> dict[str, Any]:
     a = Actions(bridge)
     try:
-        out: dict[str, Any] = {"plays": a.plays(), "proposals": a.proposals(), "research_queue": a.research_queue()}
+        out: dict[str, Any] = {"plays": a.plays(), "wars": a.wars(), "proposals": a.proposals(),
+                               "research_queue": a.research_queue()}
         if country:
             out["actions"] = a.diplomatic_actions(country)
         return out
