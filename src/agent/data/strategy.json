@@ -1,0 +1,126 @@
+{
+  "_comment": "策略参数。来源：vic3.paradoxwikis.com（Construction、Budget 页，1.13）、社区攻略的共识（先建造部门、木材与布料要便宜、工具 → 铁 → 煤 → 钢），以及按游戏数据算出的建筑利润。改这里不用改代码。",
+  "tech_priority": [
+    "urban_planning",
+    "lathe",
+    "shaft_mining",
+    "rationalism",
+    "tech_bureaucracy",
+    "steelworking",
+    "mechanical_tools",
+    "atmospheric_engine",
+    "railways",
+    "intensive_agriculture",
+    "international_trade",
+    "academia",
+    "modern_sewerage",
+    "centralization",
+    "currency_standards",
+    "banking",
+    "crystal_glass",
+    "canneries",
+    "mechanized_workshops",
+    "bessemer_process",
+    "watertube_boiler",
+    "empiricism",
+    "fractional_distillation",
+    "stock_exchange",
+    "postal_savings",
+    "central_banking",
+    "nitroglycerin",
+    "chemical_bleaching",
+    "law_enforcement",
+    "medical_degrees",
+    "pharmaceuticals"
+  ],
+  "law_route": [
+    [
+      "lawgroup_economic_system",
+      "law_interventionism"
+    ],
+    [
+      "lawgroup_taxation",
+      "law_per_capita_based_taxation"
+    ],
+    [
+      "lawgroup_land_reform",
+      "law_tenant_farmers"
+    ],
+    [
+      "lawgroup_trade_policy",
+      "law_protectionism"
+    ],
+    [
+      "lawgroup_education_system",
+      "law_religious_schools"
+    ],
+    [
+      "lawgroup_health_system",
+      "law_charitable_health_system"
+    ],
+    [
+      "lawgroup_policing",
+      "law_local_police"
+    ],
+    [
+      "lawgroup_land_reform",
+      "law_commercialized_agriculture"
+    ],
+    [
+      "lawgroup_education_system",
+      "law_private_schools"
+    ],
+    [
+      "lawgroup_economic_system",
+      "law_laissez_faire"
+    ]
+  ],
+  "budget": {
+    "_comment": "税级按周结余调：入不敷出且国库撑不过 deficit_weeks 周就加税；结余充裕、国库超过金储备上限的 lower_when_reserve_over 倍就减税",
+    "deficit_weeks": 30,
+    "lower_when_reserve_over": 0.8,
+    "lower_when_surplus_over": 0.25,
+    "max_tax": "High",
+    "min_tax": "Low"
+  },
+  "construction": {
+    "_comment": "每月最多新排 max_new_per_month 个政府项目；队列短于 min_queue 或建造力没用满时才排。同一建筑每月最多 per_type_per_month 级",
+    "min_queue": 3,
+    "max_new_per_month": 4,
+    "per_type_per_month": 2,
+    "wage_mix": 1.1,
+    "infra_overuse_penalty": 0.6,
+    "low_employment": 0.8,
+    "low_employment_penalty": 0.3,
+    "oversupply_ratio": 0.6,
+    "oversupply_penalty": 0.5,
+    "repeat_penalty": 0.5,
+    "construction_sector_reserve_weeks": 8,
+    "tax_waste_admin": 0.05,
+    "labor_levels": 3,
+    "unincorporated_penalty": 0.5
+  },
+  "skip_buildings": [
+    "building_barrack",
+    "building_naval_base",
+    "building_conscription_center",
+    "building_army_logistics_center",
+    "building_naval_fortification",
+    "building_naval_administration",
+    "building_art_academy",
+    "building_manor_house",
+    "building_skyscraper",
+    "building_power_plant",
+    "building_trade_center",
+    "building_subsistence_farm",
+    "building_subsistence_rice_farm",
+    "building_subsistence_orchards",
+    "building_subsistence_pastures",
+    "building_urban_center",
+    "building_university",
+    "building_port",
+    "building_railway",
+    "building_construction_sector",
+    "building_government_administration"
+  ]
+}

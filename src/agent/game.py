@@ -91,7 +91,7 @@ def set_autosave(value: str) -> bool:
 
 
 def launch(save: str = "", restart: bool = False, autosave: str | None = "monthly",
-           timeout: int = 300) -> str:
+           timeout: int = 300, notifications: bool = False) -> str:
     """启动游戏并注入桥接层（scripts/launch.ps1），返回脚本输出。save 为空时继续最近的存档。"""
     if restart and running():
         subprocess.run(["taskkill", "/IM", "victoria3.exe", "/F"], capture_output=True)
@@ -106,6 +106,8 @@ def launch(save: str = "", restart: bool = False, autosave: str | None = "monthl
             "-TimeoutSec", str(timeout)]
     if save:
         args += ["-Save", save]
+    if not notifications:
+        args.append("-NoNotifications")   # 游戏的 -no_notifications：不弹窗、不自动暂停
     if running():
         args.append("-Attach")
     p = subprocess.run(args, capture_output=True, timeout=timeout + 60)
@@ -169,12 +171,18 @@ class Clock:
         self.set_speed(MAX_SPEED)
         self.resume()
         t0 = time.time()
+        stalled = 0
         try:
             while time.time() - t0 < timeout:
                 time.sleep(poll)
-                now = self.date()
+                prev, now = now, self.date()
                 if now >= target:
                     break
+                # 事件弹窗等会把游戏停住：日期一阵子没动就看看是不是暂停了，是就继续
+                stalled = stalled + 1 if now == prev else 0
+                if stalled >= 20 and self.paused():
+                    self.resume()
+                    stalled = 0
             else:
                 raise TimeoutError(f"{timeout} 秒内没有走到 {target}（停在 {now}）")
         finally:

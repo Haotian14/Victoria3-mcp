@@ -23,3 +23,9 @@ def test_date_parse():
     assert Date(1836, 12, 5).next_month() == Date(1837, 1, 1)
     assert Date(1837, 2, 1).months_since(Date(1836, 1, 1)) == 13
     assert Date(1836, 3, 1) > Date(1836, 2, 28)
+
+
+def test_plain_strips_condition_markup():
+    raw = ("simple_box!CHI156!flag_overlay!大清不可以已制定以下任一：\n  土地改革中的农奴制"
+           "（:dw_1813705710,oIEB/a4FAAA=,DATA_GAME_CONCEPT_TYPE_NAME_TOOLTIP,GameConceptTypeTooltip 法律）")
+    assert plain(raw) == "大清不可以已制定以下任一：；土地改革中的农奴制（法律）"

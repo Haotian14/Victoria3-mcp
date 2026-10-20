@@ -1,12 +1,10 @@
-"""MCP 入口。第一阶段只读：查静态数据、算建筑经济账、读存档。
+"""MCP 入口。策略全部在代码里（strategy/），这里只暴露薄工具：
 
-- search / lookup          查游戏定义（中英文名或 id）
-- country_state            玩家国家局面：国库、价格、科技、法律、各州建筑
-- rank_buildings           可建造建筑按每点建造力的增加值排序（可用存档里的本地价格）
-- building_economics       单个建筑逐个生产方式组的账
-- save_summary             读最近（或指定）的文本存档，列出顶层结构
-
-动作执行（第二阶段，游戏内桥接层）完成前，这里不会改动游戏状态。
+- play / step / advise     自动玩若干个月 / 只走一个月的决策 / 只看计划不执行
+- get_state / act / query  实时局面、手动下发一个动作、求任意界面表达式
+- launch_game / health     启动游戏（不经启动器、注入桥接层）/ 桥接层是否在线
+- search / lookup / rank_buildings / building_economics   查游戏定义、算建筑经济账
+- country_state / save_summary                             解析存档（兜底，慢）
 
 运行：python -m agent.server（工作目录 src/），或见仓库根目录的 .mcp.json。
 """
@@ -23,8 +21,13 @@ if __package__ in (None, ""):
 
 from mcp.server.mcpserver import MCPServer  # noqa: E402
 
-from agent import gamedata, paths, pdx, save, state  # noqa: E402
+from agent import gamedata, observe, paths, pdx, runner, save, state  # noqa: E402
+from agent.actions import Actions  # noqa: E402
+from agent.bridge import Bridge, BridgeError, GameError, plain  # noqa: E402
+from agent.game import Clock, launch, wait_in_game  # noqa: E402
 from agent.strategy import economy  # noqa: E402
+
+bridge = Bridge()
 
 server = MCPServer(
     name="victoria3",
@@ -172,6 +175,109 @@ def country_state(path: str = "", states_limit: int = 12) -> dict[str, Any]:
         "prices": prices,
         "states": states_out,
     }
+
+
+# ------------------------------------------------------------------ 游玩（经桥接层）
+
+@server.tool(description=(
+    "按策略自动玩 months 个月（每月：读局面 → 决策 → 执行并逐条核实 → 推进到下月 1 日）。"
+    "save 不为空时先重启游戏并载入该存档；tag 不为空时用控制台换成该国（如 PRU）。"
+    "baseline=true 时不做任何动作，只记录指标（对照组）。结果追加到 logs/runs.jsonl。"
+))
+def play(months: int = 12, save: str = "", tag: str = "", baseline: bool = False) -> dict[str, Any]:
+    if save:
+        launch(save=save, restart=True, autosave="yearly")
+    wait_in_game(bridge)
+    Clock(bridge).pause()
+    if tag:
+        bridge.console(f"tag {tag}")
+    label = ("baseline" if baseline else "strategy") + (f":{tag}" if tag else "")
+    s = runner.play(bridge, months, label=label, act=not baseline)
+    s.pop("history", None)
+    return s
+
+
+@server.tool(description="按策略走一个月的决策并执行（不推进时间），返回做了什么、为什么。")
+def step() -> dict[str, Any]:
+    return runner.step(bridge, runner.Memory())
+
+
+@server.tool(description="策略本月会怎么做、为什么（不执行）。")
+def advise() -> dict[str, Any]:
+    snap, plan = runner.advise(bridge)
+    return {"date": str(snap.date), "country": snap.name, "plan": plan.summary(12)}
+
+
+@server.tool(description=(
+    "实时局面（经桥接层，约 1.5 秒）：日期、国库与收支、GDP、建造力、税级、法律、市场价格，"
+    "以及各州（人口、基础设施、可招劳动力）与建筑（等级、雇佣、利润率、能否扩建）。states_limit 控制输出几个州。"
+))
+def get_state(states_limit: int = 8, buildings: bool = True) -> dict[str, Any]:
+    snap = observe.snapshot(bridge, with_buildings=buildings)
+    states_out = []
+    for s in sorted(snap.states, key=lambda s: -(s.population or 0))[:states_limit]:
+        states_out.append({
+            "id": s.id, "name": s.name, "population": s.population, "labor": s.labor,
+            "incorporated": s.incorporated, "infrastructure": s.infrastructure,
+            "infrastructure_usage": s.infrastructure_usage, "free_arable": s.free_arable,
+            "buildings": [{"building": k, "levels": r.levels, "queued": r.queued, "employment": r.employment,
+                           "profitability": r.profitability, "can_queue": r.can_queue}
+                          for k, r in s.buildings.items() if r.levels or r.queued]})
+    return {"date": str(snap.date), "country": snap.name, **snap.country, "tax_level": snap.tax_level,
+            "researching": snap.researching, "laws": {g: l.key or l.name for g, l in snap.laws.items()},
+            "prices": snap.prices, "states": states_out}
+
+
+@server.tool(description=(
+    "手动下发一个玩家动作（与点界面按钮等价，执行前后各读一次确认）。kind 取："
+    "set_tax(level: VeryLow/Low/Medium/High/VeryHigh)、research(tech)、enact_law(law)、"
+    "build(state: 州 id, building)、set_pm(state, building, pm)。"
+))
+def act(kind: str, level: str = "", tech: str = "", law: str = "", state: int = 0, building: str = "",
+        pm: str = "") -> dict[str, Any]:
+    a = Actions(bridge)
+    if kind == "set_tax":
+        r = a.set_tax(level)
+    elif kind == "research":
+        r = a.research(tech)
+    else:
+        snap = observe.snapshot(bridge)
+        if kind == "enact_law":
+            r = a.enact_law(law, snap)
+        elif kind == "build":
+            r = a.build(state, building, snap)
+        elif kind == "set_pm":
+            r = a.set_pm(state, building, pm, snap)
+        else:
+            return {"ok": False, "error": f"不认识的动作 {kind}"}
+    return {"ok": r.ok, "action": r.action, "detail": r.detail, "before": r.before, "after": r.after}
+
+
+@server.tool(description=(
+    "求一段界面表达式文本，如 \"[GetMetaPlayer.GetPlayedOrObservedCountry.GetGDP|2]\"。"
+    "可用的函数见游戏控制台 dump_data_types 的输出（logs/data_types/）。"
+))
+def query(text: str) -> dict[str, Any]:
+    try:
+        raw = bridge.read(text)
+        return {"ok": True, "raw": raw, "text": plain(raw)}
+    except (GameError, BridgeError) as e:
+        return {"ok": False, "error": str(e)}
+
+
+@server.tool(description="启动游戏（不经启动器，-debug_mode）并注入桥接层；save 为空时继续最近的存档。restart=true 先关掉正在运行的游戏。")
+def launch_game(save: str = "", restart: bool = False) -> dict[str, Any]:
+    out = launch(save=save, restart=restart, autosave="yearly")
+    wait_in_game(bridge)
+    return {"ok": True, "output": out.strip()[-400:]}
+
+
+@server.tool(description="桥接层是否在线，以及定位到的游戏函数。")
+def health() -> dict[str, Any]:
+    try:
+        return bridge.health()
+    except BridgeError as e:
+        return {"ok": False, "error": str(e)}
 
 
 def _shape(v: Any) -> str:

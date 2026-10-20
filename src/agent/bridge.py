@@ -43,13 +43,18 @@ class GameError(RuntimeError):
 # 界面文本里的格式标记：\x15tooltippable_name \x15tooltip:...,...,Tooltip 名字\x15!\x15!
 _MARKUP_TOOLTIP = re.compile(r"\x15tooltippable(?:_name)? \x15tooltip:\S+ ")
 _MARKUP_REST = re.compile(r"\x15!|\x15[A-Za-z_]+[ ;]?|#[A-Za-z_]+ |#!|@[a-z_]+!")
+# 条件说明里的内联提示「:dw_123,xxx,DATA_..._TOOLTIP,XxxTooltip 名字」→「名字」；图标前缀「simple_box!」「CHI156!」
+_INLINE_TOOLTIP = re.compile(r":dw_\d+,[^,]*,[A-Z_]+,[A-Za-z]+Tooltip ")
+_ICON_PREFIX = re.compile(r"\b[A-Za-z_]+\d*!(?=\S)")
 
 
 def plain(text: str) -> str:
-    """去掉界面格式标记，只留可读文字。"""
+    """去掉界面格式标记，只留可读文字；多行条件用「；」连起来。"""
     t = _MARKUP_TOOLTIP.sub("", text)
+    t = _INLINE_TOOLTIP.sub("", t)
     t = _MARKUP_REST.sub("", t)
-    return t.strip()
+    t = _ICON_PREFIX.sub("", t)
+    return re.sub(r"\s*\n\s*", "；", t).strip("；").strip()
 
 
 def number(text: str) -> float | None:

@@ -1,2 +1,4 @@
 # MCP server 的依赖。
 mcp>=2.0
+# 桥接层 HTTP 客户端
+httpx>=0.27

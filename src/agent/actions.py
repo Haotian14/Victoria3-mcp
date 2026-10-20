@@ -141,7 +141,9 @@ class Actions:
         return self._run(name, "Building.QueueConstruction", probe, lambda q: q > before, path=row.path)
 
     # ------------------------------------------------------------ 生产方式
-    def set_pm(self, state_id: int, building: str, pm: str, snap: Snapshot) -> ActionResult:
+    def set_pm(self, state_id: int, building: str, pm: str, snap: Snapshot,
+               acceptable: list[str] | None = None) -> ActionResult:
+        """acceptable：现行方式在其中就不换（策略给出的「差不多一样好」的方式）。"""
         s = snap.state(state_id)
         name = f"生产方式 {building} → {pm} @ {s.name if s else state_id}"
         row = s.buildings.get(building) if s else None
@@ -155,6 +157,8 @@ class Actions:
             options = [r[0] for r in self.b.rows(PM_OPTIONS, ["ProductionMethod.GetKey"], path=gpath)]
             if pm not in options:
                 continue
+            if acceptable and cur in acceptable:
+                return ActionResult(True, name, f"现行 {cur} 已可接受", cur, cur)
             ppath = gpath + [(PM_OPTIONS, options.index(pm))]
             probe = lambda: self.b.read("[Building.AccessProductionMethod(ProductionMethodGroup.Self).GetKey]", gpath)
             return self._run(name, "ProductionMethod.GetSwitch(Building.Self)", probe, lambda v: v == pm, path=ppath)

@@ -19,6 +19,7 @@ param(
     [string]$Save = '',
     [switch]$Restart,
     [switch]$Attach,
+    [switch]$NoNotifications,
     [string[]]$ExtraArgs = @(),
     [int]$Port = 8766,
     [int]$TimeoutSec = 240
@@ -114,6 +115,7 @@ if ($Attach) {
     $env:V3MCP_BRIDGE_LOG = Join-Path $Repo 'logs\bridge.log'
     $gameArgs = @('-debug_mode')
     if ($Save) { $gameArgs += "-loadsave=$Save" } else { $gameArgs += '-continuelastsave' }
+    if ($NoNotifications) { $gameArgs += '-no_notifications' }   # 不弹窗、不因事件自动暂停
     $gameArgs += $ExtraArgs
     Write-Host "[信息] 启动 $Exe $($gameArgs -join ' ')"
     $proc = Start-Process -FilePath $Exe -ArgumentList $gameArgs -WorkingDirectory $Bin -PassThru

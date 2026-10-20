@@ -49,6 +49,8 @@ COUNTRY_FIELDS = {
     "legitimacy": "GetGovernmentLegitimacy",
     "queue_government": "GetNumGovernmentConstructionsInQueue",
     "queue_private": "GetNumPrivateConstructionsInQueue",
+    "tax_waste": "GetAverageTaxWaste",           # 官僚不足时上升：建政府行政机构的信号
+    "unrealized_taxes": "GetUnrealizedTaxes",
 }
 
 
@@ -62,6 +64,8 @@ class BuildingRow:
     profitability: float | None     # 界面上的百分比
     cash: float | None
     can_queue: bool                 # IsValid(Building.QueueConstruction)
+    wage_rate: float | None = None  # GetWageRate：每 1000 名雇员每周的工资基数
+    employed: float | None = None   # 现有雇员数
 
 
 @dataclass
@@ -74,7 +78,15 @@ class StateRow:
     free_arable: int | None
     population: float | None
     gdp: float | None
+    incorporated: bool = True
+    isolated: bool = False          # 与市场不连通
+    unemployed: float = 0.0         # 失业的劳动年龄人口
     buildings: dict[str, BuildingRow] = field(default_factory=dict)
+
+    @property
+    def labor(self) -> float:
+        """可招的人：失业 + 自给农业里的农民（新建筑从他们中招人）。"""
+        return self.unemployed + sum(b.employed or 0 for k, b in self.buildings.items() if "subsistence" in k)
 
     @property
     def path(self) -> list[tuple[str, int]]:
@@ -157,11 +169,13 @@ def prices(b: Bridge) -> dict[str, dict[str, float | None]]:
 
 STATE_FIELDS = ["State.GetID", "State.GetNameNoFormatting", "State.GetInfrastructure|1",
                 "State.GetInfrastructureUsage|1", "State.GetNumFreeArableLand", "State.GetPopulationSize",
-                "State.GetYearlyGDP|0"]
+                "State.GetYearlyGDP|0", "State.IsIncorporated", "State.IsIsolatedFromMarket",
+                "State.GetNumUnemployedWorkingAdults"]
 
 BUILDING_FIELDS = ["Building.GetBuildingType.GetKey", "Building.GetTotalLevels", "Building.GetExpansionLevelsInQueue",
                    "Building.GetEmploymentPercentage|3", "Building.GetProfitability|1",
-                   "Building.GetCurrentCashReserves|0", "IsValid(Building.QueueConstruction)"]
+                   "Building.GetCurrentCashReserves|0", "IsValid(Building.QueueConstruction)",
+                   "Building.GetWageRate|3", "Building.GetNoOfEmployed"]
 
 
 def states(b: Bridge, with_buildings: bool = True) -> list[StateRow]:
@@ -169,7 +183,8 @@ def states(b: Bridge, with_buildings: bool = True) -> list[StateRow]:
     for i, r in enumerate(b.rows(STATES, STATE_FIELDS)):
         sid = _f(r[0])
         out.append(StateRow(i, int(sid) if sid is not None else -1, r[1], _f(r[2]), _f(r[3]),
-                            int(_f(r[4]) or 0), _f(r[5]), _f(r[6])))
+                            int(_f(r[4]) or 0), _f(r[5]), _f(r[6]), incorporated=r[7] == "1",
+                            isolated=r[8] == "1", unemployed=_f(r[9]) or 0.0))
     if with_buildings:
         for s in out:
             buildings(b, s)
@@ -185,7 +200,32 @@ def buildings(b: Bridge, s: StateRow) -> None:
                 continue
             s.buildings[key] = BuildingRow(
                 key=key, path=s.path + [(lst, j)], levels=int(_f(r[1]) or 0), queued=int(_f(r[2]) or 0),
-                employment=_f(r[3]), profitability=_f(r[4]), cash=_f(r[5]), can_queue=r[6] == "1")
+                employment=_f(r[3]), profitability=_f(r[4]), cash=_f(r[5]), can_queue=r[6] == "1",
+                wage_rate=_f(r[7]) if row_built(r) else None, employed=_f(r[8]))
+
+
+def row_built(r: list[str]) -> bool:
+    """已建成（有等级）的建筑才有有意义的工资率。"""
+    return (_f(r[1]) or 0) > 0
+
+
+def researched(b: Bridge) -> set[str]:
+    """已研究的科技：一次往返把全部科技问一遍。"""
+    keys = list(gamedata.get().techs)
+    vals = b.read_many([f"GetTechnology('{k}').HasResearchedTech({PLAYER}.Self)" for k in keys])
+    return {k for k, v in zip(keys, vals) if v == "1"}
+
+
+_costs: dict[str, float] = {}
+
+
+def construction_costs(b: Bridge) -> dict[str, float]:
+    """每种建筑的建造点数（GetRequiredConstruction），整局不变，读一次缓存。"""
+    if not _costs:
+        keys = [k for k, v in gamedata.get().buildings.items() if v.get("buildable")]
+        vals = b.read_many([f"GetBuildingType('{k}').GetRequiredConstruction|1" for k in keys])
+        _costs.update({k: float(v) for k, v in zip(keys, vals) if v and _f(v)})
+    return _costs
 
 
 def snapshot(b: Bridge, with_buildings: bool = True) -> Snapshot:
