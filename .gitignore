@@ -30,3 +30,6 @@ logs/
 .vscode/
 Thumbs.db
 desktop.ini
+
+# ---- 编译产物 ----
+bin/
