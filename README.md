@@ -63,7 +63,8 @@ python -m pip install -r src\agent\requirements.txt
 |---|---|
 | `search(text)` | 按 id 或中英文名查游戏定义 |
 | `lookup(kind, id)` | 读一条定义 |
-| `rank_buildings(techs?, laws?, prices?)` | 可建造建筑按每点建造力的每周增加值排序 |
+| `country_state(path?, states_limit?)` | 玩家国家局面：国库、收支、本地 / 世界价格、科技、法律、各州建筑 |
+| `rank_buildings(from_save?, techs?, laws?, prices?)` | 可建造建筑按每点建造力的每周增加值排序；`from_save` 用存档里的本地价格、科技与法律 |
 | `building_economics(building, ...)` | 单个建筑逐个生产方式组的账 |
 | `save_summary(path?)` | 读存档，列出顶层结构 |
 

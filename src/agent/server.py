@@ -1,7 +1,8 @@
 """MCP 入口。第一阶段只读：查静态数据、算建筑经济账、读存档。
 
 - search / lookup          查游戏定义（中英文名或 id）
-- rank_buildings           可建造建筑按每点建造力的增加值排序
+- country_state            玩家国家局面：国库、价格、科技、法律、各州建筑
+- rank_buildings           可建造建筑按每点建造力的增加值排序（可用存档里的本地价格）
 - building_economics       单个建筑逐个生产方式组的账
 - save_summary             读最近（或指定）的文本存档，列出顶层结构
 
@@ -22,7 +23,7 @@ if __package__ in (None, ""):
 
 from mcp.server.mcpserver import MCPServer  # noqa: E402
 
-from agent import gamedata, paths, pdx, save  # noqa: E402
+from agent import gamedata, paths, pdx, save, state  # noqa: E402
 from agent.strategy import economy  # noqa: E402
 
 server = MCPServer(
@@ -72,15 +73,24 @@ def lookup(kind: str, id: str) -> dict[str, Any]:
 
 @server.tool(description=(
     "可建造建筑按「每点建造力的每周增加值」排序（产出 − 投入，按商品价格；不含工资）。"
-    "techs 给定时只看已解锁的建筑与生产方式（自动补前置）；laws 给定时按法律过滤生产方式。"
-    "prices 覆盖商品价格（默认基准价）。"
+    "from_save=true 时用最新存档里玩家国家的本地价格、已研究科技、现行法律（解析约 15 秒，之后缓存）。"
+    "否则：techs 给定时只看已解锁的（自动补前置）；laws 给定时按法律过滤生产方式。"
+    "prices 覆盖商品价格（默认基准价）。尚未检查各州是否有对应资源。"
 ))
-def rank_buildings(techs: list[str] | None = None, laws: list[str] | None = None,
-                   prices: dict[str, float] | None = None, limit: int = 20) -> list[dict[str, Any]]:
+def rank_buildings(from_save: bool = False, techs: list[str] | None = None,
+                   laws: list[str] | None = None, prices: dict[str, float] | None = None,
+                   limit: int = 20) -> list[dict[str, Any]] | dict[str, Any]:
     gd = gamedata.get()
-    tech_set = gd.tech_closure(set(techs)) if techs is not None else None
-    law_set = set(laws) if laws is not None else None
-    merged = {**gd.base_prices(), **(prices or {})}
+    if from_save:
+        cs = _player_state()
+        if isinstance(cs, dict):
+            return cs
+        tech_set, law_set = cs.techs, cs.laws
+        merged = {**gd.base_prices(), **cs.prices, **(prices or {})}
+    else:
+        tech_set = gd.tech_closure(set(techs)) if techs is not None else None
+        law_set = set(laws) if laws is not None else None
+        merged = {**gd.base_prices(), **(prices or {})}
     return [_econ_dict(gd, e) for e in economy.rank_buildings(gd, merged, tech_set, law_set, limit)]
 
 
@@ -113,6 +123,55 @@ def save_summary(path: str = "") -> dict[str, Any]:
         return {"ok": False, "path": path, "error": "gamestate 顶层不是键值块"}
     keys = {k: _shape(v) for k, v in state.items()}
     return {"ok": True, "path": path, "header": raw.header, "date": state.get("date"), "keys": keys}
+
+
+def _player_state(path: str = "") -> state.CountryState | dict[str, Any]:
+    path = path or paths.latest_save() or ""
+    if not path:
+        return {"ok": False, "error": f"存档目录里没有 .v3：{paths.save_dir()}"}
+    try:
+        return state.extract(state.load_gamestate(path), gamedata.get())
+    except (OSError, save.SaveFormatError, pdx.ParseError, KeyError, ValueError) as e:
+        return {"ok": False, "path": path, "error": f"{type(e).__name__}: {e}"}
+
+
+@server.tool(description=(
+    "玩家国家的当前局面（读最新或指定存档）：国库、收支、税率、本地与世界市场价格（与基准价对比）、"
+    "已研究科技、现行法律，以及各州建筑（等级、生产方式、雇佣、利润）。"
+    "解析约 15 秒，存档未变时走缓存。"
+))
+def country_state(path: str = "", states_limit: int = 12) -> dict[str, Any]:
+    cs = _player_state(path)
+    if isinstance(cs, dict):
+        return cs
+    gd = gamedata.get()
+    base = gd.base_prices()
+    prices = {g: {"name": gd.name("goods", g), "local": round(p, 2),
+                  "world": round(cs.world_prices[g], 2) if g in cs.world_prices else None,
+                  "base": base.get(g)}
+              for g, p in sorted(cs.prices.items())}
+    states_out = []
+    for s in sorted(cs.states, key=lambda s: -sum(b.levels for b in s.buildings))[:states_limit]:
+        states_out.append({
+            "id": s.id, "region": s.region, "arable_land": s.arable_land,
+            "infrastructure": s.infrastructure, "infrastructure_usage": s.infrastructure_usage,
+            "buildings": [{"building": b.building, "name": gd.name("buildings", b.building),
+                           "levels": b.levels, "pms": b.pms, "staffing": b.staffing,
+                           "profit": round(b.profit, 1) if b.profit is not None else None}
+                          for b in sorted(s.buildings, key=lambda b: -b.levels)],
+        })
+    return {
+        "ok": True, "date": cs.date, "country_id": cs.country_id, "tag": cs.tag, "name": cs.name,
+        "government": cs.government, "tax_level": cs.tax_level,
+        "money": cs.money, "credit": cs.credit,
+        "weekly_income": round(cs.weekly_income, 1), "weekly_expense": round(cs.weekly_expense, 1),
+        "base_wage": cs.base_wage,
+        "techs": sorted(cs.techs),
+        "laws": [{"law": law, "name": gd.name("laws", law),
+                  "group": (gd.laws.get(law) or {}).get("group")} for law in sorted(cs.laws)],
+        "prices": prices,
+        "states": states_out,
+    }
 
 
 def _shape(v: Any) -> str:

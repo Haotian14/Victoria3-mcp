@@ -79,9 +79,10 @@ class Names:
 
 
 def extract_goods(names: Names) -> dict[str, Any]:
+    # 存档里的商品按定义顺序编号（market price_trend.channels、建筑 input_goods 的键），记下 index
     return {
-        k: {"name": names(k), "cost": v.get("cost"), "category": v.get("category")}
-        for k, v in load_dir("goods").items()
+        k: {"name": names(k), "cost": v.get("cost"), "category": v.get("category"), "index": i}
+        for i, (k, v) in enumerate(load_dir("goods").items())
     }
 
 
