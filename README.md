@@ -5,24 +5,34 @@
 
 **设计原则：不修改游戏文件夹的任何一个字节。**
 
-## 与 sts2-mcp 的差异
+## 怎么接上游戏
 
-sts2 是 .NET 游戏，CoreCLR Profiler 注入后靠反射就能读写所有对象。维多利亚 3 是
-Paradox 的 C++ 引擎（Clausewitz / Jomini），没有符号，直接读内存对象需要大量逆向且
-每次更新都会失效。所以分两阶段：
+sts2 是 .NET 游戏，注入后靠反射就能读写对象；维多利亚 3 是 Paradox 的 C++ 引擎（Jomini），没有符号。
+这里不去啃内存里的对象布局，而是借用游戏**界面自己用的数据系统**：
 
-| 阶段 | 内容 | 状态 |
+- 读：界面文本里的 `[GetMetaPlayer.GetPlayedOrObservedCountry.GetGDP]` 这类表达式，桥接层直接求值；
+- 写：界面按钮 `onclick = "[Execute(Law.StartEnacting)]"` 背后的命令，桥接层用同一条路径执行。
+
+所以动作与玩家点击完全等价（法律走推行流程、建造进队列、研究进研究槽），也不用截图或模拟按键。
+逆向细节与踩坑见 [docs/bridge.md](docs/bridge.md)。
+
+| 里程碑 | 内容 | 状态 |
 |---|---|---|
-| 一：只读 | 游戏定义抽取、存档解析、经济策略；AI 能看懂局面、给出该做什么 | 进行中 |
-| 二：动作 | 注入原生桥接 DLL，在 `127.0.0.1` 暴露与 sts2 同形的 `/state`、`/action/*` | 未开始 |
+| 1 指令通道 | V3Bridge.dll 注入，控制台命令、数据系统读取与执行，特征码定位 | ✓ |
+| 2 时间与存档 | 暂停、调速、推进到指定日期；每月自动存档 | ✓ |
+| 3 快速读状态 | `observe.py` 经桥接层 1.5 秒读全局面；存档解析作兜底 | ✓ |
+| 4 动作 API | 税率、研究、法律、建造、生产方式，执行前后各读一次确认 | ✓ |
+| 5 策略层 | — | 进行中 |
 
 ## 架构
 
 ```
-Claude Code ──MCP──> agent (Python)                    第二阶段：
-                      strategy/ 决策                    V3Bridge.dll（游戏进程内，C++）
-                      data/     静态数据（游戏定义）  ──HTTP──>  127.0.0.1
-                      save.py   读文本存档
+Claude Code ──MCP──> agent (Python)                      V3Bridge.dll（游戏进程内，C++）
+                      observe.py  实时局面  ──HTTP──>      127.0.0.1:8766
+                      actions.py  玩家动作                  ├ /console    控制台命令
+                      game.py     启动 / 时间 / 存档        ├ /data/read  界面表达式求值
+                      strategy/   决策                      ├ /data/exec  界面命令（onclick）
+                      state.py    解析存档（兜底）          └ /data/list  界面列表逐项求值
 ```
 
 ## 数据从哪来
