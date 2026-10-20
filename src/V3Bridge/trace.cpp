@@ -4,6 +4,7 @@
 #include <tlhelp32.h>
 
 #include <atomic>
+#include <cstring>
 #include <cstdio>
 #include <mutex>
 #include <vector>
@@ -15,6 +16,7 @@ struct Hit {
     DWORD tid;
     uint64_t regs[4];  // rcx rdx r8 r9
     uint64_t rsp;
+    uint64_t stackq[8];  // 命中时栈顶 8 个 qword（第 5 个起的参数在 rsp+0x28 之后）
     std::vector<uint64_t> frames;
 };
 
@@ -45,7 +47,8 @@ LONG CALLBACK on_exception(EXCEPTION_POINTERS* ep) {
     CONTEXT* c = ep->ContextRecord;
     if (c->Rip != g_target.load() || g_target.load() == 0) return EXCEPTION_CONTINUE_SEARCH;
     if (g_remaining.fetch_sub(1) > 0) {
-        Hit h{GetCurrentThreadId(), {c->Rcx, c->Rdx, c->R8, c->R9}, c->Rsp, {}};
+        Hit h{GetCurrentThreadId(), {c->Rcx, c->Rdx, c->R8, c->R9}, c->Rsp, {}, {}};
+        memcpy(h.stackq, reinterpret_cast<void*>(c->Rsp), sizeof h.stackq);
         unwind(*c, h.frames);
         std::lock_guard<std::mutex> lock(g_mu);
         g_hits.push_back(std::move(h));
@@ -121,7 +124,9 @@ std::string run(uint8_t* module_base, uint64_t rva, int hits, unsigned timeout_m
         const Hit& h = g_hits[i];
         if (i) o += ",";
         o += "{\"tid\":" + std::to_string(h.tid) + ",\"rcx\":" + hex64(h.regs[0]) + ",\"rdx\":" + hex64(h.regs[1]) +
-             ",\"r8\":" + hex64(h.regs[2]) + ",\"r9\":" + hex64(h.regs[3]) + ",\"rsp\":" + hex64(h.rsp) + ",\"stack\":[";
+             ",\"r8\":" + hex64(h.regs[2]) + ",\"r9\":" + hex64(h.regs[3]) + ",\"rsp\":" + hex64(h.rsp) + ",\"stackq\":[";
+        for (int k = 0; k < 8; ++k) o += (k ? "," : "") + hex64(h.stackq[k]);
+        o += "],\"stack\":[";
         for (size_t k = 0; k < h.frames.size(); ++k) o += (k ? "," : "") + rel(h.frames[k]);
         o += "]}";
     }

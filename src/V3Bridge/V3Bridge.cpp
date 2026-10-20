@@ -149,13 +149,20 @@ bool locate() {
 }
 
 // ---------------------------------------------------------------- 主线程执行
-enum class JobKind { Console, Read, Exec, Call };
+enum class JobKind { Console, Read, Exec, Call, Eval, List, ListExec };
 
 struct Job {
     JobKind kind = JobKind::Console;
-    bool flag = false;  // 数据语句的构建标志（实验中）
+    bool flag = false;      // /data/eval：CreateStatement 的第四个参数
     uint64_t call[5] = {};  // 开发用 /call：函数 rva 与四个参数
-    std::string cmd;
+    std::string cmd;        // 命令 / 文本 / 语句
+    // 列表：/data/list 与 /data/list_exec
+    std::string list;
+    std::vector<std::string> fields;
+    int limit = 0;
+    int index = -1;
+    std::string check, expect;
+    bool json = false;      // output 已经是 JSON（不再当字符串转义）
     bool ok = false;
     bool crashed = false;
     DWORD exception = 0;
@@ -194,7 +201,30 @@ bool seh_call(uint64_t fn, const uint64_t* a, uint64_t* ret, DWORD* code) {
     }
 }
 
+std::string json_escape(const std::string& s);
+
 void run_job(Job* job) {
+    if (job->kind == JobKind::List) {
+        std::vector<std::vector<std::string>> rows;
+        std::string err;
+        job->ok = datasys::list_read(job->list, job->fields, job->limit, &rows, &err);
+        if (!job->ok) { job->output = err; return; }
+        std::string o = "[";
+        for (size_t r = 0; r < rows.size(); ++r) {
+            o += r ? ",[" : "[";
+            for (size_t c = 0; c < rows[r].size(); ++c) o += (c ? ",\"" : "\"") + json_escape(rows[r][c]) + "\"";
+            o += "]";
+        }
+        job->output = o + "]";
+        job->json = true;
+        return;
+    }
+    if (job->kind == JobKind::ListExec) {
+        std::string err;
+        job->ok = datasys::list_exec(job->list, job->index, job->check, job->expect, job->cmd, &err);
+        job->output = err;
+        return;
+    }
     if (job->kind == JobKind::Call) {
         uint64_t ret = 0;
         job->ok = seh_call(reinterpret_cast<uint64_t>(g_mod.base) + job->call[0], job->call + 1, &ret, &job->exception);
@@ -209,9 +239,18 @@ void run_job(Job* job) {
         if (!job->ok) job->output = err + (job->output.empty() ? "" : "：" + job->output);
         return;
     }
+    if (job->kind == JobKind::Eval) {
+        alignas(16) uint8_t any[0x40] = {};
+        std::string err;
+        job->ok = datasys::eval_raw(job->cmd, job->flag, any, &err);
+        if (!job->ok) { job->output = err; return; }
+        char b[4];
+        for (uint8_t x : any) { snprintf(b, sizeof b, "%02x", x); job->output += b; }
+        return;
+    }
     if (job->kind == JobKind::Exec) {
         std::string err;
-        job->ok = datasys::exec(job->cmd, job->flag, &err);
+        job->ok = datasys::exec(job->cmd, &err);
         job->output = err;
         return;
     }
@@ -376,7 +415,9 @@ std::string health_json() {
              g_get_manager ? scan::hex(reinterpret_cast<void*>(g_get_manager), g_mod.base).c_str() : "",
              g_execute ? scan::hex(reinterpret_cast<void*>(g_execute), g_mod.base).c_str() : "",
              json_escape(g_locate_error).c_str());
-    return buf;
+    std::string h = buf;
+    h.pop_back();
+    return h + ",\"datasys\":" + datasys::describe() + "}";
 }
 
 void handle(SOCKET c) {
@@ -432,15 +473,39 @@ void handle(SOCKET c) {
         return;
     }
     // /console?cmd=  控制台命令；/data/read?text=  按本地化文本求值；/data/exec?stmt=  执行语句
-    if (path == "/console" || path == "/data/read" || path == "/data/exec" || path == "/call") {
+    if (path == "/console" || path == "/data/read" || path == "/data/exec" || path == "/call" ||
+        path == "/data/eval" || path == "/data/list" || path == "/data/list_exec") {
         if (!g_ready) {
             send_json(c, 503, "{\"ok\":false,\"error\":\"桥接层未就绪\",\"health\":" + health_json() + "}");
             return;
         }
         auto* job = new Job;
         const char* key = path == "/console" ? "cmd" : path == "/data/read" ? "text" : "stmt";
-        job->kind = path == "/console" ? JobKind::Console : path == "/data/read" ? JobKind::Read
-                  : path == "/data/exec" ? JobKind::Exec : JobKind::Call;
+        if (path == "/data/eval") job->kind = JobKind::Eval;
+        if (path == "/data/list" || path == "/data/list_exec") {
+            // list=列表语句；fields=以  分隔的若干段文本；index/check/expect/stmt 用于在某一项上执行
+            job->kind = path == "/data/list" ? JobKind::List : JobKind::ListExec;
+            job->list = query_param(query, "list");
+            if (job->list.empty()) job->list = query_param(body, "list");
+            std::string f = query_param(query, "fields");
+            if (f.empty()) f = query_param(body, "fields");
+            for (size_t a = 0, b; a <= f.size(); a = b + 1) {
+                b = f.find('', a);
+                if (b == std::string::npos) b = f.size();
+                if (b > a) job->fields.push_back(f.substr(a, b - a));
+            }
+            job->limit = atoi(query_param(query, "limit").c_str());
+            std::string idx = query_param(query, "index");
+            job->index = idx.empty() ? -1 : atoi(idx.c_str());
+            job->check = query_param(query, "check");
+            job->expect = query_param(query, "expect");
+            if (job->expect.empty()) job->expect = query_param(body, "expect");
+            key = "stmt";
+        }
+        if (job->kind == JobKind::Console || job->kind == JobKind::Read || job->kind == JobKind::Exec ||
+            job->kind == JobKind::Call)
+            job->kind = path == "/console" ? JobKind::Console : path == "/data/read" ? JobKind::Read
+                      : path == "/data/exec" ? JobKind::Exec : JobKind::Call;
         if (job->kind == JobKind::Call) {  // 开发用：在主线程调用 base+rva(a1..a4)
             job->call[0] = strtoull(query_param(query, "rva").c_str(), nullptr, 16);
             const char* names[] = {"a1", "a2", "a3", "a4"};
@@ -450,7 +515,7 @@ void handle(SOCKET c) {
         job->cmd = query_param(query, key);
         job->flag = query_param(query, "flag") == "1";
         if (job->cmd.empty()) job->cmd = query_param(body, key);
-        if (job->cmd.empty()) job->cmd = body;
+        if (job->cmd.empty() && job->kind != JobKind::List && job->kind != JobKind::ListExec) job->cmd = body;
         DWORD timeout = 60000;
         std::string t = query_param(query, "timeout");
         if (!t.empty()) timeout = strtoul(t.c_str(), nullptr, 10);
@@ -467,13 +532,22 @@ void handle(SOCKET c) {
         }
         std::string out = "{\"ok\":" + std::string(job->ok ? "true" : "false") +
                           ",\"crashed\":" + (job->crashed ? "true" : "false") +
-                          ",\"cmd\":\"" + json_escape(job->cmd) + "\",\"output\":\"" +
-                          json_escape(job->output) + "\",\"ms\":" + std::to_string(ms) + "}";
+                          ",\"cmd\":\"" + json_escape(job->cmd) + "\",\"output\":" +
+                          (job->json ? job->output : "\"" + json_escape(job->output) + "\"") +
+                          ",\"ms\":" + std::to_string(ms) + "}";
         delete job;
         send_json(c, 200, out);
         return;
     }
     send_json(c, 404, "{\"ok\":false,\"error\":\"未知路径\",\"path\":\"" + json_escape(path) + "\"}");
+}
+
+DWORD WINAPI serve_connection(LPVOID p) {
+    SOCKET c = reinterpret_cast<SOCKET>(p);
+    handle(c);
+    shutdown(c, SD_SEND);
+    closesocket(c);
+    return 0;
 }
 
 DWORD WINAPI wait_window(LPVOID) {
@@ -511,14 +585,16 @@ DWORD WINAPI server_main(LPVOID) {
     // 窗口在 HTTP 起来之后再等：加载期间 /health 也能回应，便于启动脚本判断进度
     CreateThread(nullptr, 0, wait_window, nullptr, 0, nullptr);
 
+    // 每个连接一个线程：/trace 会阻塞等待命中，期间仍要能接受别的请求。
+    // 游戏侧的任务都经 SendMessage 投递到主线程，天然串行，不需要另加锁。
     for (;;) {
         SOCKET c = accept(ls, nullptr, nullptr);
         if (c == INVALID_SOCKET) continue;
         DWORD tv = 120000;
         setsockopt(c, SOL_SOCKET, SO_RCVTIMEO, reinterpret_cast<const char*>(&tv), sizeof tv);
-        handle(c);
-        shutdown(c, SD_SEND);
-        closesocket(c);
+        HANDLE t = CreateThread(nullptr, 0, serve_connection, reinterpret_cast<LPVOID>(c), 0, nullptr);
+        if (t) CloseHandle(t);
+        else serve_connection(reinterpret_cast<LPVOID>(c));
     }
 }
 
