@@ -32,8 +32,8 @@
   "domain": "政治",
   "reach": "直达",
   "family": "Amendment.Repeal",
-  "status": "未做",
-  "via": ""
+  "status": "已验证",
+  "via": "Actions.repeal_amendment"
  },
  {
   "receiver": "Building",
@@ -1611,8 +1611,8 @@
   "domain": "国家",
   "reach": "直达",
   "family": "Country.StartNegotiationWith",
-  "status": "未做",
-  "via": ""
+  "status": "已验证",
+  "via": "Actions.negotiate"
  },
  {
   "receiver": "Country",
@@ -1702,8 +1702,8 @@
   "domain": "日志",
   "reach": "直达",
   "family": "Decision.TakeDecision",
-  "status": "未做",
-  "via": ""
+  "status": "已验证",
+  "via": "Actions.take_decision"
  },
  {
   "receiver": "DecommissionSupplyShipsWindow",
@@ -2636,8 +2636,8 @@
   "domain": "政治",
   "reach": "直达",
   "family": "Institution.StartChangingLevelTo",
-  "status": "未做",
-  "via": ""
+  "status": "已验证",
+  "via": "Actions.set_institution"
  },
  {
   "receiver": "Institution",
@@ -2654,8 +2654,8 @@
   "domain": "政治",
   "reach": "直达",
   "family": "Institution.StopSizeChange",
-  "status": "未做",
-  "via": ""
+  "status": "已验证",
+  "via": "Actions.stop_institution_change"
  },
  {
   "receiver": "Invasion",
@@ -2784,8 +2784,8 @@
   "domain": "政治",
   "reach": "直达",
   "family": "Law.StartImposing",
-  "status": "未做",
-  "via": ""
+  "status": "已验证",
+  "via": "Actions.impose_law"
  },
  {
   "receiver": "Law",
@@ -2804,8 +2804,8 @@
   "domain": "政治",
   "reach": "直达",
   "family": "Law.StopEnacting",
-  "status": "未做",
-  "via": ""
+  "status": "已验证",
+  "via": "Actions.stop_enacting"
  },
  {
   "receiver": "MilitaryFormation",
@@ -3286,8 +3286,8 @@
   "domain": "政治",
   "reach": "直达",
   "family": "PoliticalMovement.ToggleBolstering",
-  "status": "未做",
-  "via": ""
+  "status": "已验证",
+  "via": "Actions.toggle_movement"
  },
  {
   "receiver": "PoliticalMovement",
@@ -3306,8 +3306,8 @@
   "domain": "政治",
   "reach": "直达",
   "family": "PoliticalMovement.ToggleSuppression",
-  "status": "未做",
-  "via": ""
+  "status": "已验证",
+  "via": "Actions.toggle_movement"
  },
  {
   "receiver": "PowerBloc",
@@ -3647,8 +3647,8 @@
   "domain": "日志",
   "reach": "直达",
   "family": "ScriptedButton.ExecuteEffect",
-  "status": "未做",
-  "via": ""
+  "status": "已验证",
+  "via": "Actions.press_button"
  },
  {
   "receiver": "ScriptedGui",

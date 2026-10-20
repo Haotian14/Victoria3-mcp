@@ -41,8 +41,23 @@ EVENT_FIELDS = ["Event.GetKey", "Event.GetTitle", "Event.GetNumRemainingDays",
                 "Event.GetTopScope.GetRootScope.GetCountry.IsLocalPlayer"]
 EVENT_OPTIONS = "EventWindow.GetOptions"
 OPTION_FIELDS = ["EventOption.GetText", "EventOption.IsEnabled", "EventOption.IsDefaultOption"]
-SIGNATURE_FIELDS = ["GetGoldReserves", "GetPrestige", "GetGovernmentLegitimacy", "GetLawBeingEnacted.GetLawType.GetKey"]
+SIGNATURE_FIELDS = ["GetGoldReserves", "GetPrestige", "GetGovernmentLegitimacy", "GetLawBeingEnacted.GetLawType.GetKey",
+                    "IsEnactingLaw", "IsNegotiating"]   # 谈判事件答完 IsNegotiating 立刻变 0
 _ANSWERED: dict[int, int] = {}      # 本进程已回答的事件 id → 选项
+
+JOURNAL = f"{PLAYER_MUT}.AccessActiveJournalEntries"
+JE_BUTTONS = "JournalEntry.GetScriptedButtons"      # 只含可见的按钮
+BUTTON_CMD = "ScriptedButton.ExecuteEffect"
+DECISIONS = f"{PLAYER_MUT}.GetDecisions"
+DECISION_CMD = f"Decision.TakeDecision({PLAYER})"
+
+INSTITUTIONS = f"{PLAYER_MUT}.AccessInstitutions"
+INSTITUTION_LEVELS = "Institution.AccessInvestmentLevels"
+MOVEMENTS = f"{PLAYER_MUT}.AccessPoliticalMovements"
+AMENDMENTS = "Law.GetAllAmendments"
+SUBJECTS = f"{PLAYER_MUT}.GetSubjects"
+LAW_LISTS = ("AccessActivePowerStructureLaws", "AccessActiveEconomyLaws", "AccessActiveHumanRightsLaws",
+             "AccessActiveOtherLaws")
 
 
 def _event_window(event_id: int) -> str:
@@ -239,6 +254,120 @@ class Actions:
         sig["modifiers"] = sorted(plain(r[0]) for r in self.b.rows(f"{PLAYER_MUT}.GetTimedModifiers",
                                                                    ["TimedModifier.GetName"]))
         return sig
+
+    # ------------------------------------------------------------ 日志：剧本按钮、决议
+    def journal(self) -> dict[str, Any]:
+        """进行中的日志条目及其按钮（只列可见的，与界面一致），以及决议。"""
+        entries = []
+        for i, (key, name) in enumerate(self.b.rows(JOURNAL, ["JournalEntry.GetType.GetKey", "JournalEntry.GetName"])):
+            buttons = self.b.rows(JE_BUTTONS, ["ScriptedButton.GetName", f"IsValid({BUTTON_CMD})"], path=[(JOURNAL, i)])
+            entries.append({"key": key, "name": plain(name),
+                            "buttons": [{"name": plain(n), "possible": v == "1"} for n, v in buttons]})
+        decisions = [{"name": plain(n), "possible": v == "1"}
+                     for n, v in self.b.rows(DECISIONS, ["Decision.GetName", f"IsValid({DECISION_CMD})"])]
+        return {"journal_entries": entries, "decisions": decisions}
+
+    def press_button(self, entry: str, button: str) -> ActionResult:
+        """日志条目上的剧本按钮（ScriptedButton.ExecuteEffect）。entry 是条目 key，button 是按钮名字。"""
+        name = f"{entry} 的按钮「{button}」"
+        keys = [r[0] for r in self.b.rows(JOURNAL, ["JournalEntry.GetType.GetKey"])]
+        if entry not in keys:
+            return ActionResult(False, name, f"没有进行中的日志条目 {entry}：{keys}")
+        jpath = [(JOURNAL, keys.index(entry))]
+        names = [plain(r[0]) for r in self.b.rows(JE_BUTTONS, ["ScriptedButton.GetName"], path=jpath)]
+        if button not in names:
+            return ActionResult(False, name, f"这个条目没有可见的按钮「{button}」：{names}")
+
+        def probe():   # 按钮的可见与否跟着效果变（如「禁止鸦片贸易」按下后换成「解禁」），再加国家签名
+            return {"buttons": [plain(r[0]) for r in self.b.rows(JE_BUTTONS, ["ScriptedButton.GetName"], path=jpath)],
+                    **self._signature()}
+
+        return self._run(name, BUTTON_CMD, probe, None, path=jpath + [(JE_BUTTONS, names.index(button))])
+
+    def take_decision(self, decision: str) -> ActionResult:
+        """决议（Decision.TakeDecision）。decision 是决议名字（界面上的中文名）。"""
+        names = [plain(r[0]) for r in self.b.rows(DECISIONS, ["Decision.GetName"])]
+        if decision not in names:
+            return ActionResult(False, f"决议「{decision}」", f"没有这个决议：{names}")
+        return self._run(f"决议「{decision}」", DECISION_CMD, self._signature, None,
+                         path=[(DECISIONS, names.index(decision))])
+
+    # ------------------------------------------------------------ 政治：机构、运动、立法、修正案
+    def _find(self, lst: str, name_expr: str, name: str, path=None) -> tuple[list, list[str]]:
+        """在列表里按名字找一项，返回（路径或 []，全部名字）。"""
+        names = [plain(r[0]) for r in self.b.rows(lst, [name_expr], path=path)]
+        return ((path or []) + [(lst, names.index(name))] if name in names else []), names
+
+    def set_institution(self, institution: str, level: int) -> ActionResult:
+        """机构投入等级（政治面板「机构」页的等级按钮）。institution 是机构名字（如「教育」）。"""
+        name = f"机构「{institution}」投入 → {level}"
+        path, names = self._find(INSTITUTIONS, "Institution.GetNameNoFormatting", institution)
+        if not path:
+            return ActionResult(False, name, f"没有这个机构：{names}")
+        levels = [r[0] for r in self.b.rows(INSTITUTION_LEVELS, ["InstitutionInvestmentLevel.GetLevel"], path=path)]
+        if str(level) not in levels:
+            return ActionResult(False, name, f"可选等级：{levels}")
+        probe = lambda: self._probe("Institution.GetTargetInvestmentLevel", path)   # noqa: E731
+        return self._run(name, "Institution.StartChangingLevelTo(InstitutionInvestmentLevel.GetLevel)", probe,
+                         lambda v: v == str(level), path=path + [(INSTITUTION_LEVELS, levels.index(str(level)))])
+
+    def stop_institution_change(self, institution: str) -> ActionResult:
+        name = f"机构「{institution}」停止调整"
+        path, names = self._find(INSTITUTIONS, "Institution.GetNameNoFormatting", institution)
+        if not path:
+            return ActionResult(False, name, f"没有这个机构：{names}")
+        return self.command("Institution.StopSizeChange", "Institution.IsChangingLevel", path=path, target="0",
+                            name=name)
+
+    def toggle_movement(self, movement: str, action: str) -> ActionResult:
+        """扶持 / 压制政治运动（再按一次取消）。action：Bolstering / Suppression。"""
+        if action not in ("Bolstering", "Suppression"):
+            raise ValueError("action 取 Bolstering / Suppression")
+        name = f"{'扶持' if action == 'Bolstering' else '压制'}运动「{movement}」"
+        path, names = self._find(MOVEMENTS, "PoliticalMovement.GetNameNoFormatting", movement)
+        if not path:
+            return ActionResult(False, name, f"没有这个运动：{names}")
+        probe = "PoliticalMovement.IsBolstered" if action == "Bolstering" else "PoliticalMovement.IsSuppressed"
+        return self.command(f"PoliticalMovement.Toggle{action}", probe, path=path, name=name)
+
+    def stop_enacting(self) -> ActionResult:
+        """取消正在推行的法律（Law.StopEnacting，在该法律组的可选法律里）。"""
+        from agent.observe import laws as current_laws
+        for row in current_laws(self.b).values():
+            alts = self.b.rows(LAW_ALTERNATIVES, ["Law.IsBeingEnacted", "Law.GetLawType.GetName"], path=row.path)
+            for i, (enacting, law_name) in enumerate(alts):
+                if enacting == "1":
+                    return self.command("Law.StopEnacting", f"{PLAYER}.IsEnactingLaw",
+                                        path=row.path + [(LAW_ALTERNATIVES, i)], probe_path=[], target="0",
+                                        name=f"取消推行「{plain(law_name)}」")
+        return ActionResult(False, "取消推行法律", "没有正在推行的法律")
+
+    def impose_law(self, subject: str, law: str) -> ActionResult:
+        """对附属国强加法律（右键菜单里的 Law.StartImposing）。subject、law 都是界面上的中文名。"""
+        name = f"对「{subject}」强加「{law}」"
+        spath, names = self._find(SUBJECTS, "Country.GetNameNoFormatting", subject)
+        if not spath:
+            return ActionResult(False, name, f"没有这个附属国：{names}")
+        for lst in LAW_LISTS:
+            for i in range(len(self.b.rows(f"Country.{lst}", ["Law.GetGroup.GetKey"], path=spath))):
+                gpath = spath + [(f"Country.{lst}", i)]
+                path, _ = self._find(LAW_ALTERNATIVES, "Law.GetLawType.GetName", law, path=gpath)
+                if path:
+                    # 附属国要到之后的结算才开始推行；即时可读的是强加冷却（12 个月内不能再强加），命令随之不可用
+                    return self.command("Law.StartImposing", "IsValid(Law.StartImposing)", path=path, name=name)
+        return ActionResult(False, name, "这个附属国没有可选的这条法律")
+
+    def repeal_amendment(self, amendment: str) -> ActionResult:
+        """废除修正案（Amendment.Repeal，挂在现行法律上）。"""
+        from agent.observe import laws as current_laws
+        name = f"废除修正案「{amendment}」"
+        for row in current_laws(self.b).values():
+            path, _ = self._find(AMENDMENTS, "Amendment.GetNameNoFormatting", amendment, path=row.path)
+            if path:
+                probe = lambda p=row.path: sorted(   # noqa: E731
+                    plain(r[0]) for r in self.b.rows(AMENDMENTS, ["Amendment.GetNameNoFormatting"], path=p))
+                return self._run(name, "Amendment.Repeal", probe, lambda v: amendment not in v, path=path)
+        return ActionResult(False, name, "现行法律上没有这个修正案")
 
     # ------------------------------------------------------------ 研究
     def research(self, tech: str) -> ActionResult:

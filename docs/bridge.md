@@ -86,6 +86,14 @@ stmt = Execute(ProductionMethod.GetSwitch(Building.Self))
 | 暂停 / 恢复建造（含造船） | `Execute(P.PauseConstruction)` 等 | — |
 | 创建 / 解散公司 | `Execute(P.CreateCompany(CompanyType.Self))` / `RemoveCompany(Company.GetCompanyType.Self)` | `GetAvailableCompanies` / `GetCompanies` |
 | 事件选项 | `EventOption.Select`（界面上没有 Execute 包装） | 伪造的事件窗口 → `EventWindow.GetOptions`（`POST /data/fake`，见下） |
+| 与利益集团谈判 | `Execute(PM.StartNegotiationWith(InterestGroup.Self))`（PM = 非 const 玩家） | `AccessAllInterestGroups` |
+| 剧本按钮 | `Execute(ScriptedButton.ExecuteEffect)` | `AccessActiveJournalEntries` → `JournalEntry.GetScriptedButtons`（只含可见的） |
+| 决议 | `Execute(Decision.TakeDecision(P))` | `PM.GetDecisions` |
+| 机构投入 / 停止调整 | `Execute(Institution.StartChangingLevelTo(InstitutionInvestmentLevel.GetLevel))` / `StopSizeChange` | `AccessInstitutions` → `Institution.AccessInvestmentLevels` |
+| 扶持 / 压制运动 | `Execute(PoliticalMovement.ToggleBolstering)` / `ToggleSuppression` | `AccessPoliticalMovements` |
+| 取消推行法律 | `Execute(Law.StopEnacting)` | 现行法律 → `Law.GetLawAlternatives` 里 `IsBeingEnacted` 的那条 |
+| 对附属国强加法律 | `Execute(Law.StartImposing)` | `PM.GetSubjects` → 附属国的四个法律列表 → `Law.GetLawAlternatives` |
+| 废除修正案 | `Execute(Amendment.Repeal)` | 现行法律 → `Law.GetAllAmendments` |
 
 前置条件统一用 `IsValid(命令)`，原因用 `GetDesc(命令)`（界面按钮的灰显与提示就是这两个）。
 
@@ -94,12 +102,21 @@ stmt = Execute(ProductionMethod.GetSwitch(Building.Self))
 - 关税 / 补贴：`P.HasImportTariffsHigh(商品)` 等七个读数里为 1 的那个。**不要用** `Goods.GetStateImportTariffRate`
   之类的税率：暂停时它要等周结算才更新，命令明明生效了读数却不变；
 - 消费税：`Goods.IsTaxed(P)`；暂停建造：`P.IsConstructionPaused` / `IsShipConstructionPaused`；公司：`P.GetNumCompanies`；
-- 事件：选项效果五花八门，读一组「国家签名」（定时修正名单、国库、威望、合法性、在推行的法律）前后对比；
-  没有即时效果的选项（如只设变量）照实报「已选，无可读的即时变化」。
+- 事件：选项效果五花八门，读一组「国家签名」（定时修正名单、国库、威望、合法性、在推行的法律、是否在谈判）前后对比；
+  没有即时效果的选项（如只设变量）照实报「已选，无可读的即时变化」。分类事件（立法、谈判）答完会立刻从
+  `GetEventsByCategory` 里消失，谈判的 `IsNegotiating` 也立刻变 0；
+- 剧本按钮：按钮的可见性跟着效果变（「禁止鸦片贸易」按下后换成「取消鸦片禁令」），连同国家签名一起对比；决议看国家签名；
+- 机构：`Institution.GetTargetInvestmentLevel`（不在调整时读 0）、`IsChangingLevel`；运动：`IsBolstered` / `IsSuppressed`；
+  取消立法：`P.IsEnactingLaw`；修正案：现行法律上的修正案名单；
+- 强加法律：附属国要到之后的结算才开始推行，即时可读的是 12 个月的强加冷却——同一条命令的 `IsValid` 由 1 变 0。
 
 条件类命令的测试准备（只在测试局里用，测完重新载入 v3mcp_start_1836）：
 - 公司：大清开局没有可建立的公司，控制台 `ignore_company_requirements` 打开后再试，测完再输一次关掉；
 - 事件：控制台 `event 事件名` 给玩家国家触发（`hungry_forties.2`、`east_indies.3` 选项效果是看得见的定时修正）；
+- 剧本按钮 / 决议：`add_journal_entry je_opium_obsession` 给大清加鸦片条目（按钮「禁止鸦片贸易」）；
+  禁烟后 `invalidate_journal_entry je_opium_obsession`，决议「取消鸦片禁令」就出现；
+- 机构、谈判、强加法律、修正案：大清开局没有可调的机构、附属国，`tag GBR` 换成英国测（英国推行普选制时
+  小市民可谈判；附属国上加拿大可强加法律），修正案用 `tag SWE`（瑞典的普鲁士式教育可废除）；
 - 控制台没有 `effect` 命令，测试留下的修正去不掉，只能重新载入存档。
 
 ### 事件（`POST /events`、`POST /data/fake`）

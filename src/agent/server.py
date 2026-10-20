@@ -42,6 +42,14 @@ ACT_PARAMS = {
     "company": "key: 公司类型, create: true 创建 / false 解散",
     "negotiate": "ig_index: 利益集团下标",
     "choose_event_option": "event_id, option（events 工具列出的序号）",
+    "press_button": "entry: 日志条目 key, button: 按钮名字（journal 工具列出）",
+    "take_decision": "decision: 决议名字（journal 工具列出）",
+    "set_institution": "institution: 机构名字, level",
+    "stop_institution_change": "institution",
+    "toggle_movement": "movement: 运动名字, action: Bolstering/Suppression",
+    "stop_enacting": "（无参数）取消正在推行的法律",
+    "impose_law": "subject: 附属国名字, law: 法律名字",
+    "repeal_amendment": "amendment: 修正案名字",
 }
 
 server = MCPServer(
@@ -282,6 +290,14 @@ def act(kind: str, level: str = "", tech: str = "", law: str = "", state: int = 
         else:
             return {"ok": False, "error": f"不认识的动作 {kind}"}
     return {"ok": r.ok, "action": r.action, "detail": r.detail, "before": r.before, "after": r.after}
+
+
+@server.tool(description="进行中的日志条目与其按钮、可见的决议；用 act(kind=press_button / take_decision) 执行。")
+def journal() -> dict[str, Any]:
+    try:
+        return Actions(bridge).journal()
+    except (GameError, BridgeError) as e:
+        return {"ok": False, "error": str(e)}
 
 
 @server.tool(description="玩家待处理的事件（含弹窗事件）与可选项；用 act(kind=choose_event_option) 选择。")

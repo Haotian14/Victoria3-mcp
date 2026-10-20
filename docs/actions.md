@@ -5,13 +5,13 @@
 
 可达性：**直达** = 从玩家国家沿列表能走到对象，照现有做法即可；**窗口** = 对象只存在于界面窗口 / 弹窗 / 草稿里，要像改组政府那样构造（见 docs/bridge.md）；**组合** = 军事 / 地图类，要组合编队、前线、海域等多个对象；**界面** = 只影响界面显示（改名、开关、定位），不影响局面；**待查** = 接收对象还没归类。
 
-**进度：命令 61 / 265 已验证；按操作种类（只差档位的算一种）21 / 225。**
+**进度：命令 71 / 265 已验证；按操作种类（只差档位的算一种）31 / 225。**
 
-按可达性（操作种类，已验证 / 总数）：直达 19 / 110，窗口 2 / 31，组合 0 / 77，界面 0 / 7。
+按可达性（操作种类，已验证 / 总数）：直达 29 / 110，窗口 2 / 31，组合 0 / 77，界面 0 / 7。
 
 不在本表、但同样要打通的：立即存档（目前用自动存档）、暂停 / 调速（`TimeKeeper`，已验证，不经 Execute）。事件选项在「事件」一节（`EventOption.Select`）。每条命令用的路径与核实方式见 docs/bridge.md「已验证的玩家动作」。
 
-## 国家（40 / 50）
+## 国家（41 / 50）
 
 | 状态 | 可达性 | 命令 | 例子 | 界面文件 |
 |---|---|---|---|---|
@@ -55,6 +55,7 @@
 | ✓ `Actions.set_tax` | 直达 | `Country.SetTaxLevelMedium` | `GetPlayer.SetTaxLevelMedium` | budget_panel.gui |
 | ✓ `Actions.set_tax` | 直达 | `Country.SetTaxLevelVeryHigh` | `GetPlayer.SetTaxLevelVeryHigh` | budget_panel.gui |
 | ✓ `Actions.set_tax` | 直达 | `Country.SetTaxLevelVeryLow` | `GetPlayer.SetTaxLevelVeryLow` | budget_panel.gui |
+| ✓ `Actions.negotiate` | 直达 | `Country.StartNegotiationWith` | `AccessPlayer.StartNegotiationWith(InterestGroup.Self)` | right_click_menu.gui |
 |  | 直达 | `Country.ClearDefaultConstructionFleet` | `Country.ClearDefaultConstructionFleet` | right_click_menu.gui |
 |  | 直达 | `Country.DeclareBankruptcy` | `Country.DeclareBankruptcy` | budget_panel.gui |
 |  | 直达 | `Country.DemobilizeAllArmies` | `Country.DemobilizeAllArmies` | panel_military.gui |
@@ -62,7 +63,6 @@
 |  | 直达 | `Country.LeavePowerBloc` | `GetPlayer.LeavePowerBloc` | power_bloc_panel.gui |
 |  | 直达 | `Country.MobilizeAllArmies` | `Country.MobilizeAllArmies` | panel_military.gui |
 |  | 直达 | `Country.SetDefaultConstructionFleet` | `Country.SetDefaultConstructionFleet(MilitaryFormation.Self)` | right_click_menu.gui |
-|  | 直达 | `Country.StartNegotiationWith` | `AccessPlayer.StartNegotiationWith(InterestGroup.Self)` | right_click_menu.gui |
 |  | 界面 | `Country.ToggleIgnoreCountryFormation` | `GetPlayer.ToggleIgnoreCountryFormation(CountryFormation.Self)` | country_formation_panel.gui, culture_panel.gui |
 |  | 界面 | `Country.ToggleIgnoreDecision` | `GetPlayer.ToggleIgnoreDecision(Decision.Self)` | journal.gui |
 
@@ -127,19 +127,19 @@
 |  | 窗口 | `BuildingBrowserBuildingTypeItem.ToggleAllPrivatization` | `BuildingBrowserBuildingTypeItem.ToggleAllPrivatization` | building_details_panel.gui, right_click_menu.gui |
 |  | 窗口 | `BuildingBrowserBuildingTypeItem.ToggleAllSubsidies` | `BuildingBrowserBuildingTypeItem.ToggleAllSubsidies` | building_details_panel.gui, production_methods.gui |
 
-## 政治（2 / 9）
+## 政治（9 / 9）
 
 | 状态 | 可达性 | 命令 | 例子 | 界面文件 |
 |---|---|---|---|---|
+| ✓ `Actions.repeal_amendment` | 直达 | `Amendment.Repeal` | `Amendment.Repeal` | politics_panel_types.gui |
+| ✓ `Actions.set_institution` | 直达 | `Institution.StartChangingLevelTo` | `Institution.StartChangingLevelTo(InstitutionInvestmentLevel.GetLevel)` | politics_panel_institutions.gui |
+| ✓ `Actions.stop_institution_change` | 直达 | `Institution.StopSizeChange` | `Institution.StopSizeChange` | politics_panel_institutions.gui |
 | ✓ `Actions.enact_law` | 直达 | `Law.StartEnacting` | `Law.StartEnacting` | custom_tooltip.gui, politics_panel_change_law.gui … |
+| ✓ `Actions.impose_law` | 直达 | `Law.StartImposing` | `Law.StartImposing` | right_click_menu.gui |
+| ✓ `Actions.stop_enacting` | 直达 | `Law.StopEnacting` | `Law.StopEnacting` | custom_tooltip.gui, politics_panel_change_law.gui … |
+| ✓ `Actions.toggle_movement` | 直达 | `PoliticalMovement.ToggleBolstering` | `PoliticalMovement.ToggleBolstering` | custom_tooltip.gui, political_movement_panel.gui … |
+| ✓ `Actions.toggle_movement` | 直达 | `PoliticalMovement.ToggleSuppression` | `PoliticalMovement.ToggleSuppression` | custom_tooltip.gui, political_movement_panel.gui … |
 | ✓ `Actions.reform_government` | 窗口 | `ReformGovernment.Confirm` | `ReformGovernment.Confirm` | politics_panel_reform_government.gui |
-|  | 直达 | `Amendment.Repeal` | `Amendment.Repeal` | politics_panel_types.gui |
-|  | 直达 | `Institution.StartChangingLevelTo` | `Institution.StartChangingLevelTo(InstitutionInvestmentLevel.GetLevel)` | politics_panel_institutions.gui |
-|  | 直达 | `Institution.StopSizeChange` | `Institution.StopSizeChange` | politics_panel_institutions.gui |
-|  | 直达 | `Law.StartImposing` | `Law.StartImposing` | right_click_menu.gui |
-|  | 直达 | `Law.StopEnacting` | `Law.StopEnacting` | custom_tooltip.gui, politics_panel_change_law.gui … |
-|  | 直达 | `PoliticalMovement.ToggleBolstering` | `PoliticalMovement.ToggleBolstering` | custom_tooltip.gui, political_movement_panel.gui … |
-|  | 直达 | `PoliticalMovement.ToggleSuppression` | `PoliticalMovement.ToggleSuppression` | custom_tooltip.gui, political_movement_panel.gui … |
 
 ## 研究（1 / 5）
 
@@ -165,12 +165,12 @@
 |  | 窗口 | `RulerSelectionPopup.RandomizeRulersOffer` | `RulerSelectionPopup.RandomizeRulersOffer` | generate_character.gui |
 |  | 窗口 | `RulerSelectionPopup.SetRulerCommand` | `RulerSelectionPopup.SetRulerCommand(Character.Self)` | generate_character.gui |
 
-## 日志（0 / 3）
+## 日志（2 / 3）
 
 | 状态 | 可达性 | 命令 | 例子 | 界面文件 |
 |---|---|---|---|---|
-|  | 直达 | `Decision.TakeDecision` | `Decision.TakeDecision(GetPlayer)` | journal.gui |
-|  | 直达 | `ScriptedButton.ExecuteEffect` | `ScriptedButton.ExecuteEffect` | journal_entry.gui |
+| ✓ `Actions.take_decision` | 直达 | `Decision.TakeDecision` | `Decision.TakeDecision(GetPlayer)` | journal.gui |
+| ✓ `Actions.press_button` | 直达 | `ScriptedButton.ExecuteEffect` | `ScriptedButton.ExecuteEffect` | journal_entry.gui |
 |  | 直达 | `ScriptedGui.je_meiji_restoration_japanese_emperor_sgui` | `ScriptedGui.je_meiji_restoration_japanese_emperor_sgui` | journal_entry_widgets/ep2_japan_widgets.gui |
 
 ## 事件（1 / 1）

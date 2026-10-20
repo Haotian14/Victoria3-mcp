@@ -8,6 +8,11 @@ def test_plain_strips_tooltip_markup():
     assert plain("大清") == "大清"
 
 
+def test_plain_strips_indent_markup():
+    raw = "小于支持者\n\x15indent_newline:0 \x15!\x15indent_newline:6 \x15R X\x15!以下所有："
+    assert plain(raw) == "小于支持者；X以下所有："
+
+
 def test_number():
     assert number("108499851.86") == 108499851.86
     assert number("+82%") == 82.0
