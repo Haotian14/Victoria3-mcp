@@ -231,15 +231,23 @@ def get_state(states_limit: int = 8, buildings: bool = True) -> dict[str, Any]:
 @server.tool(description=(
     "手动下发一个玩家动作（与点界面按钮等价，执行前后各读一次确认）。kind 取："
     "set_tax(level: VeryLow/Low/Medium/High/VeryHigh)、research(tech)、enact_law(law)、"
-    "build(state: 州 id, building)、set_pm(state, building, pm)。"
+    "build(state: 州 id, building)、set_pm(state, building, pm)、"
+    "reform_government(government: 改组后全部在朝利益集团的名字，逗号分隔，如「士大夫,军队,乡村民众」)。"
 ))
 def act(kind: str, level: str = "", tech: str = "", law: str = "", state: int = 0, building: str = "",
-        pm: str = "") -> dict[str, Any]:
+        pm: str = "", government: str = "") -> dict[str, Any]:
     a = Actions(bridge)
     if kind == "set_tax":
         r = a.set_tax(level)
     elif kind == "research":
         r = a.research(tech)
+    elif kind == "reform_government":
+        igs = {ig.name: ig.index for ig in observe.interest_groups(bridge)}
+        names = [n.strip() for n in government.replace("，", ",").split(",") if n.strip()]
+        unknown = [n for n in names if n not in igs]
+        if unknown or not names:
+            return {"ok": False, "error": f"不认识的利益集团 {unknown}", "interest_groups": list(igs)}
+        r = a.reform_government([igs[n] for n in names])
     else:
         snap = observe.snapshot(bridge)
         if kind == "enact_law":

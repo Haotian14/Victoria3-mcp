@@ -36,4 +36,9 @@ bool eval_raw(const std::string& statement, bool flag, uint8_t* any_out, std::st
 bool list_read(const std::vector<PathStep>& path, const std::string& list, const std::vector<std::string>& fields,
                int limit, std::vector<std::vector<std::string>>* rows, std::string* error);
 
+// 改组政府：members 是 ig_list（玩家国家的利益集团列表）里的下标，即改组后的全部在朝集团。
+// 走 Execute(ReformGovernment.Confirm)，与玩家在政治面板点「确认」同一条命令。out 返回各集团 id
+bool reform_government(const std::string& ig_list, const std::vector<int>& members, std::string* out,
+                       std::string* error);
+
 }  // namespace datasys

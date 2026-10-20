@@ -28,6 +28,7 @@ FIELD_ERROR = "\x01"            # rows 里单个字段求值失败时以它开�
 
 PLAYER = "GetMetaPlayer.GetPlayedOrObservedCountry"     # 只读路径
 PLAYER_MUT = "AccessMetaPlayer.AccessPlayedOrObservedCountry"  # Access* 列表要求非 const
+IGS = f"{PLAYER_MUT}.AccessAllInterestGroups"                  # 本国全部利益集团（改组政府按它的下标）
 
 Path = list[tuple[str, int]]
 
@@ -147,6 +148,14 @@ class Bridge:
         r = self._request("POST", "/data/exec", {"stmt": stmt, **self._path(path)})
         if not r.get("ok"):
             raise GameError(f"{stmt}：{r.get('output')}")
+
+    def reform_government(self, members: list[int]) -> list[int]:
+        """改组政府：members 是玩家国家利益集团列表（IGS）里的下标，即改组后的全部在朝集团。
+        与玩家在政治面板点「确认」同一条命令（Execute(ReformGovernment.Confirm)）。返回各集团 id。"""
+        r = self._request("POST", "/gov/reform", {"list": IGS, "igs": ",".join(str(i) for i in members)})
+        if not r.get("ok"):
+            raise GameError(f"改组政府 {members}：{r.get('output')}")
+        return [int(x) for x in r["output"].strip("[]").split(",") if x]
 
     def rows(self, list_stmt: str, fields: list[str], path: Path | None = None, limit: int = 0) -> list[list[str]]:
         """界面列表逐项求值。fields 每项是不带方括号的表达式，如 "Technology.GetName"。

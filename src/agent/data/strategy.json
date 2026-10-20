@@ -75,6 +75,14 @@
       "law_laissez_faire"
     ]
   ],
+  "politics": {
+    "_comment": "法律按游戏预计的每个检查点概率估通过率（3 次推进先于 3 次受阻），低于 min_pass 不推（失败后两年不能再提）。目标被「立法成功概率」挡住或通过率太低时，拉一个支持它的在野集团进政府：只加不减（移出会激进化 25% 支持者），合法性低于 min_legitimacy_to_add、政府已有 max_government 个集团、距上次改组不到 reform_cooldown_months 个月时不加",
+    "min_pass": 0.5,
+    "min_legitimacy_to_add": 60,
+    "max_government": 4,
+    "min_clout_to_add": 0.05,
+    "reform_cooldown_months": 12
+  },
   "budget": {
     "_comment": "税级按周结余调：入不敷出且国库撑不过 deficit_weeks 周就加税；结余充裕、国库超过金储备上限的 lower_when_reserve_over 倍就减税",
     "deficit_weeks": 30,

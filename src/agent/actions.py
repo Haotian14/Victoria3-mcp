@@ -1,4 +1,4 @@
-"""玩家动作：税率、研究、法律、建造、生产方式。
+"""玩家动作：税率、研究、法律、改组政府、建造、生产方式。
 
 全部走界面按钮背后的同一条命令（Execute(...)），与玩家点击等价：法律要走推行流程、
 建造进建造队列、研究进研究槽，不直接改游戏状态。每个动作：
@@ -15,7 +15,7 @@ from typing import Any, Callable
 
 from agent import gamedata
 from agent.bridge import PLAYER, Bridge, GameError, plain
-from agent.observe import STATES, TAX_LEVELS, Snapshot
+from agent.observe import STATES, TAX_LEVELS, Snapshot, interest_groups
 
 PM_GROUPS = "Building.AccessProductionMethodGroups"
 PM_OPTIONS = "ProductionMethodGroup.AccessBuildingProductionMethods(Building.Self)"
@@ -97,6 +97,31 @@ class Actions:
             return "研究中" if vals[0] == "1" else "已完成" if vals[1] == "1" else "未研究"
 
         return self._run(f"研究 {tech}", f"{t}.Research({PLAYER}.Self)", probe, lambda s: s != "未研究")
+
+    # ------------------------------------------------------------ 政府
+    def reform_government(self, members: list[int]) -> ActionResult:
+        """members：改组后全部在朝集团在 IGS 列表里的下标。桥接层构造政治面板上的拟议对象，
+        再 Execute(ReformGovernment.Confirm)，与玩家点「确认」同一条命令（见 docs/bridge.md）。"""
+        def probe():
+            return sorted(ig.name for ig in interest_groups(self.b) if ig.in_gov)
+
+        igs = interest_groups(self.b)
+        want = sorted(igs[i].name for i in members if 0 <= i < len(igs))
+        name = f"改组政府为 {'、'.join(want)}"
+        before = probe()
+        if before == want:
+            return ActionResult(True, name, "已是目标状态", before, before)
+        if len(want) != len(members):
+            return ActionResult(False, name, "利益集团下标越界", before, before)
+        self.b.reform_government(members)
+        after = before
+        t0 = time.time()
+        while time.time() - t0 < 1.5:
+            after = probe()
+            if after == want:
+                return ActionResult(True, name, "", before, after)
+            time.sleep(0.1)
+        return ActionResult(False, name, "已执行但没看到生效", before, after)
 
     # ------------------------------------------------------------ 法律
     def enact_law(self, law: str, snap: Snapshot) -> ActionResult:

@@ -78,8 +78,41 @@ stmt = Execute(ProductionMethod.GetSwitch(Building.Self))
 | 建造 / 扩建 | `Execute(Building.QueueConstruction)` | 州 → 五个建筑列表之一（含未建的潜在建筑） |
 | 生产方式 | `Execute(ProductionMethod.GetSwitch(Building.Self))` | 州 → 建筑 → 方式组 → 方式 |
 | 暂停 / 调速 | `TimeKeeper.TogglePause`、`TimeKeeper.SetGameSpeed('(int32)4')` | — |
+| 改组政府 | `Execute(ReformGovernment.Confirm)` | 桥接层构造的拟议对象（`POST /gov/reform`，见下） |
 
 前置条件统一用 `IsValid(命令)`，原因用 `GetDesc(命令)`（界面按钮的灰显与提示就是这两个）。
+
+立法相关的读数（都在法律的可选项上，`Law.GetLawAlternatives` 之后）：
+- `Law.GetCheckpointSuccessChance` / `AdvanceChance` / `StallChance` / `DebateChance`：对**还没开始推行**的法律
+  也给预计值，已按当前政府、君主、运动算好；
+- `InterestGroup.IsEndorsingLawEnactment(Law.Self)` / `IsOpposingLawEnactment(Law.Self)`：立法时谁支持、谁反对
+  （再叠一层 `AccessAllInterestGroups` 的路径）。参数必须是 `Law.Self`，`Law.GetLawType.Self` 求值失败。
+  **不要用 `GetApprovalValueIfEnacted`**：那是推行后的认可度，和立法立场不是一回事
+  （大清乡村民众对佃农制认可度不变，却是支持者）。
+
+### 改组政府（`POST /gov/reform?list=<利益集团列表>&igs=0,1,3`）
+
+界面上的 `ReformGovernment`（`CReformGovernment`，没有虚表）挂在政治面板上：`PoliticsPanel.AccessReformGovernment`，
+上下文类型是界面对象，从玩家国家走不到，`InformationPanelBar.OpenPanelTab` 之类也是界面上下文、构建语句就失败。
+静态分析（capstone，1.13.11 地址仅作记录，桥接层不依赖）：
+- RTTI `.?AVCReformGovernmentCommand@@` → 虚表 → 构造函数 `011f09f0(cmd, 国家 id, CPdxArray<CInterestGroup*>*)`；
+- 唯一的界面调用方是 `ReformGovernment.Confirm` 的回调 `0228a140` → `02286390`：只读拟议对象的
+  **+0x18 名单 data / +0x24 个数**（元素是利益集团对象指针，对象 +0x08 是侵入式引用计数、+0x10 是 id），
+  玩家国家从全局取，make_shared 出命令后交回 CPdxAny，由外层 `Execute` 发出 —— 与推法律、建造同一条路；
+- `GetPredictedLegitimacy` 读的是缓存字段 +0xf4，由加入 / 移出名单时的更新函数（`02284470`）算，不是现算。
+
+所以桥接层构造一个只填名单的对象（名单元素直接用 `AccessAllInterestGroups` 列表项给出的对象指针），
+作为上下文执行 `Execute(ReformGovernment.Confirm)`。上下文类型 id 用不着知道：`make_ctx` 支持一个
+「顶替任何没配上的需求」的通配项。名单是**改组后的全部在朝集团**。
+
+实测（1836.1.1 大清）：士大夫 → 士大夫 + 军队 + 乡村民众，合法性 100 → 82；可推法律从 3 条变成 10 条
+（佃农制、农民产权、职业军队、国民警卫队……）。
+
+坑：
+- 第一次以为列表项是「句柄」、按 +0x08 读 id，结果三个集团读出来都是 7（那是引用计数），命令发出去政府没变；
+  用 `/data/eval` 取君主所属集团的指针、`/mem` 看对象头才对上 +0x10。
+- 规则（defines）：把集团**移出**政府会让它 25% 的支持者激进化（选举后 6 个月内免费，独裁制没有选举）；
+  每多一个超出编制的集团合法性 −20。策略只加不减。
 
 ## 存档
 

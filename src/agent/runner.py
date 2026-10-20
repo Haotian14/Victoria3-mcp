@@ -17,6 +17,8 @@ from agent.actions import ActionResult, Actions
 from agent.bridge import PLAYER, Bridge, GameError, plain
 from agent.game import Clock
 from agent.strategy import plan as planner
+from agent.strategy import politics
+from agent.strategy.config import cfg
 from agent.strategy.config import Decision
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
@@ -60,8 +62,11 @@ def advise(b: Bridge, mem: Memory | None = None) -> tuple[observe.Snapshot, plan
     """读局面、出计划，不执行。"""
     mem = mem or Memory()
     snap = observe.snapshot(b)
+    law = enacting(b)
+    # 推行中不能再提法律，也不改组政府：省掉逐条读成功率的几十次往返
+    options = [] if law else observe.law_options(b, snap.laws, politics.targets())
     plan = planner.decide(gamedata.get(), snap, observe.researched(b), observe.construction_costs(b),
-                          enacting(b), mem.pm_offset)
+                          law, mem.pm_offset, options)
     return snap, plan
 
 
@@ -73,6 +78,8 @@ def _do(a: Actions, d: Decision, snap: observe.Snapshot) -> ActionResult:
         return a.research(x["tech"])
     if d.kind == "enact_law":
         return a.enact_law(x["law"], snap)
+    if d.kind == "reform_government":
+        return a.reform_government(x["members"])
     if d.kind == "build":
         return a.build(x["state"], x["building"], snap)
     if d.kind == "set_pm":
@@ -102,7 +109,11 @@ def execute(b: Bridge, plan: planner.Plan, snap: observe.Snapshot, mem: Memory,
         if run(d).ok:
             break
     month = len(mem.history)
-    for d in plan.law:
+    reformed = False
+    if plan.reform and mem.blocked.get("reform", -1) <= month:
+        reformed = run(plan.reform).ok
+        mem.blocked["reform"] = month + cfg()["politics"]["reform_cooldown_months"]
+    for d in ([] if reformed else plan.law):      # 改组后成功率要按新政府重算，下个月再推
         law = d.args["law"]
         if mem.blocked.get(law, -1) > month:
             continue

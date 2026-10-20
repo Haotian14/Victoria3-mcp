@@ -149,7 +149,7 @@ bool locate() {
 }
 
 // ---------------------------------------------------------------- 主线程执行
-enum class JobKind { Console, Read, Exec, Call, Eval, List };
+enum class JobKind { Console, Read, Exec, Call, Eval, List, Reform };
 
 struct Job {
     JobKind kind = JobKind::Console;
@@ -160,7 +160,8 @@ struct Job {
     std::string list;                     // /data/list：要逐项求值的列表
     std::vector<std::string> fields;
     int limit = 0;
-    bool json = false;      // output 已经是 JSON（不再当字符串转义）
+    std::vector<int> members;  // /gov/reform：改组后在朝的利益集团（list 里的下标）
+    bool json = false;     // output 已经是 JSON（不再当字符串转义）
     bool ok = false;
     bool crashed = false;
     DWORD exception = 0;
@@ -215,6 +216,12 @@ void run_job(Job* job) {
         }
         job->output = o + "]";
         job->json = true;
+        return;
+    }
+    if (job->kind == JobKind::Reform) {
+        std::string ids, err;
+        job->ok = datasys::reform_government(job->list, job->members, &ids, &err);
+        job->output = job->ok ? ids : err;
         return;
     }
     if (job->kind == JobKind::Call) {
@@ -466,7 +473,7 @@ void handle(SOCKET c) {
     }
     // /console?cmd=  控制台命令；/data/read?text=  按本地化文本求值；/data/exec?stmt=  执行语句
     if (path == "/console" || path == "/data/read" || path == "/data/exec" || path == "/call" ||
-        path == "/data/eval" || path == "/data/list") {
+        path == "/data/eval" || path == "/data/list" || path == "/gov/reform") {
         if (!g_ready) {
             send_json(c, 503, "{\"ok\":false,\"error\":\"桥接层未就绪\",\"health\":" + health_json() + "}");
             return;
@@ -488,7 +495,19 @@ void handle(SOCKET c) {
             }
             job->limit = atoi(query_param(query, "limit").c_str());
         }
-        // 上下文路径：p0=列表&i0=下标&p1=...，按顺序逐层取项
+        if (path == "/gov/reform") {
+            // list=利益集团列表语句；igs=逗号分隔的下标（改组后的全部在朝集团）
+            job->kind = JobKind::Reform;
+            job->list = query_param(query, "list");
+            std::string igs = query_param(query, "igs");
+            for (size_t a = 0, b; a < igs.size(); a = b + 1) {
+                b = igs.find(',', a);
+                if (b == std::string::npos) b = igs.size();
+                if (b > a) job->members.push_back(atoi(igs.substr(a, b - a).c_str()));
+            }
+            job->cmd = "reform " + igs;
+        }
+        // 上下文路径：p0=列表&i0=下标&p1=...，按顺序逐层取项（/gov/reform 不用）
         for (int k = 0; k < 8; ++k) {
             std::string pk = "p" + std::to_string(k), ik = "i" + std::to_string(k);
             std::string lp = query_param(query, pk.c_str());

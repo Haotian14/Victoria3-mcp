@@ -12,7 +12,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 
 from agent import gamedata
-from agent.bridge import FIELD_ERROR, PLAYER, PLAYER_MUT, Bridge, number, plain
+from agent.bridge import FIELD_ERROR, IGS, PLAYER, PLAYER_MUT, Bridge, number, plain
 from agent.game import Date
 
 STATES = f"{PLAYER_MUT}.AccessStates"
@@ -102,6 +102,40 @@ class LawRow:
 
 
 @dataclass
+class IGRow:
+    index: int                      # 在 IGS 列表里的下标（改组政府按它）
+    name: str
+    clout: float
+    in_gov: bool
+    marginal: bool
+
+
+@dataclass
+class LawOption:
+    """路线上的一条目标法律：游戏给的能否推行、预计每个检查点的结果概率、各利益集团的态度。"""
+    group: str
+    key: str
+    name: str
+    path: list[tuple[str, int]]
+    valid: bool                     # IsValid(Law.StartEnacting)
+    why_not: str                    # 不能推行时游戏给的原因
+    success: float                  # 每个检查点：推进 / 有利事件 / 受阻 / 辩论
+    advance: float
+    stall: float
+    debate: float
+    stance: dict[str, int] = field(default_factory=dict)   # 利益集团名 → 立法时 +1 支持 / -1 反对 / 0 中立
+
+    @property
+    def support_only(self) -> bool:
+        """唯一的障碍是「立法成功概率高于 0%」：缺的是政府里的支持者，不是科技或前置法律。"""
+        parts = [p for p in self.why_not.split("；") if p]
+        return not self.valid and bool(parts) and all(CHANCE_REQUIREMENT in p for p in parts)
+
+
+CHANCE_REQUIREMENT = "立法成功概率高于0%"
+
+
+@dataclass
 class Snapshot:
     date: Date
     name: str
@@ -111,6 +145,7 @@ class Snapshot:
     laws: dict[str, LawRow]         # 法律组 → 现行法律
     prices: dict[str, dict[str, float | None]]   # 商品 → price / base / buy / sell
     states: list[StateRow]
+    igs: list[IGRow] = field(default_factory=list)
 
     def state(self, sid: int) -> StateRow | None:
         return next((s for s in self.states if s.id == sid), None)
@@ -228,7 +263,47 @@ def construction_costs(b: Bridge) -> dict[str, float]:
     return _costs
 
 
+def interest_groups(b: Bridge) -> list[IGRow]:
+    rows = b.rows(IGS, ["InterestGroup.GetNameNoFormatting", "InterestGroup.GetCloutAsFloat|3",
+                        "InterestGroup.IsInGovernment", "InterestGroup.IsMarginal"])
+    return [IGRow(i, plain(r[0]), _f(r[1]) or 0.0, r[2] == "1", r[3] == "1") for i, r in enumerate(rows)]
+
+
+LAW_ALTERNATIVES = "Law.GetLawAlternatives"
+CHANCE_FIELDS = ["IsValid(Law.StartEnacting)", "GetDesc(Law.StartEnacting)", "Law.GetCheckpointSuccessChance|3",
+                 "Law.GetCheckpointAdvanceChance|3", "Law.GetCheckpointStallChance|3", "Law.GetCheckpointDebateChance|3"]
+# 立法时集团的支持 / 反对（成功率、受阻率按它算）。注意不是 GetApprovalValueIfEnacted：
+# 后者是推行后的认可度，大清的乡村民众对佃农制认可度不变，却是支持者（把它拉进政府后推进率正好 +9.8%）
+STANCE_FIELDS = ["InterestGroup.GetNameNoFormatting", "InterestGroup.IsEndorsingLawEnactment(Law.Self)",
+                 "InterestGroup.IsOpposingLawEnactment(Law.Self)"]
+
+
+def law_options(b: Bridge, current: dict[str, LawRow], targets: list[tuple[str, str]]) -> list[LawOption]:
+    """targets：路线 [(法律组, 法律 id)]，跳过已是现行法律的。成功率是游戏按当前政府、君主、运动算的预计值；
+    态度是游戏判定的各集团立法时支持 / 反对（含集团领袖的意识形态）。"""
+    gd = gamedata.get()
+    out: list[LawOption] = []
+    for group, law in targets:
+        row = current.get(group)
+        info = gd.laws.get(law)
+        if row is None or info is None or row.key == law:
+            continue
+        names = set((info.get("name") or {}).values())
+        alts = [plain(n) for (n,) in b.rows(LAW_ALTERNATIVES, ["Law.GetLawType.GetName"], path=row.path)]
+        idx = next((i for i, n in enumerate(alts) if n in names), None)
+        if idx is None:
+            continue
+        path = row.path + [(LAW_ALTERNATIVES, idx)]
+        v = b.read_many(CHANCE_FIELDS, path)
+        opt = LawOption(group, law, alts[idx], path, v[0] == "1", plain(v[1] or ""),
+                        _f(v[2]) or 0.0, _f(v[3]) or 0.0, _f(v[4]) or 0.0, _f(v[5]) or 0.0)
+        for n, endorse, oppose in b.rows(IGS, STANCE_FIELDS, path=path):
+            opt.stance[plain(n)] = (endorse == "1") - (oppose == "1")
+        out.append(opt)
+    return out
+
+
 def snapshot(b: Bridge, with_buildings: bool = True) -> Snapshot:
     name, c, tax, tech, date = country(b)
     return Snapshot(date=date, name=name, country=c, tax_level=tax, researching=tech, laws=laws(b),
-                    prices=prices(b), states=states(b, with_buildings))
+                    prices=prices(b), states=states(b, with_buildings), igs=interest_groups(b))

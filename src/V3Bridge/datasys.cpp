@@ -244,6 +244,9 @@ bool to_ctx_entry(DataContext* dc, CtxEntry* e) {
 // 返回的数组指向 storage，调用方保证 storage 活得比求值久。
 std::string g_ctx_note;  // 最近一次没配上的上下文需求，失败时附在错误信息后面
 
+// 类型 id 取这个值的上下文项可以顶替任何没配上的需求：用于自己构造、拿不到类型 id 的界面对象
+constexpr int kAnyType = INT32_MIN;
+
 PdxArray make_ctx(void* stmt, const CtxEntry* items, int n_items, CtxEntry* storage, int cap) {
     PdxArray ctx;
     g_array_init(&ctx);
@@ -260,6 +263,13 @@ PdxArray make_ctx(void* stmt, const CtxEntry* items, int n_items, CtxEntry* stor
         for (int j = 0; j < n_items; ++j) {
             if (items[j].type_id == req[k]) {
                 storage[k] = items[j];
+                matched = true;
+            }
+        }
+        for (int j = 0; j < n_items && !matched; ++j) {
+            if (items[j].type_id == kAnyType) {
+                storage[k] = items[j];
+                storage[k].type_id = req[k];
                 matched = true;
             }
         }
@@ -618,6 +628,60 @@ bool list_read(const std::vector<PathStep>& path, const std::string& list, const
         rows->push_back(std::move(row));
     }
     return true;
+}
+
+// ---------------------------------------------------------------- 改组政府
+// 界面上「改组政府」的数据对象 CReformGovernment 挂在政治面板（PoliticsPanel）上，从玩家国家走不到。
+// ReformGovernment.Confirm（1.13.11 的 0228a140 → 02286390）只读这个对象里的拟议名单：
+//   +0x18 名单数组 data（元素是利益集团对象指针），+0x24 个数；
+//   利益集团对象：+0x08 侵入式引用计数（lock inc / dec），+0x10 利益集团 id；
+// 玩家国家取自全局，然后组装 CReformGovernmentCommand（make_shared）交回给 Execute 发出。
+// 所以这里自己构造一个只填了名单的对象（元素就是列表里取到的利益集团对象），
+// 再照常 Execute(ReformGovernment.Confirm)，与玩家点「确认」同一条路。
+namespace {
+
+constexpr int kMaxGovernment = 16;
+void* g_members[kMaxGovernment];
+alignas(16) uint8_t g_reform[0x400];  // 伪造的 CReformGovernment，只用到名单字段
+
+bool seh_read_int(const void* p, int* out) {
+    __try {
+        *out = *static_cast<const int*>(p);
+        return true;
+    } __except (EXCEPTION_EXECUTE_HANDLER) {
+        return false;
+    }
+}
+
+}  // namespace
+
+bool reform_government(const std::string& ig_list, const std::vector<int>& members, std::string* out,
+                       std::string* error) {
+    if (members.empty() || members.size() > kMaxGovernment) { *error = "政府成员个数不对"; return false; }
+    Access access;
+    std::vector<CtxEntry> items;
+    AnyBuf any;
+    Model m{};
+    int size = 0;
+    if (!open_model(ig_list, items, &any, &m, &size, error)) return false;
+    *out = "[";
+    for (size_t k = 0; k < members.size(); ++k) {
+        int i = members[k];
+        if (i < 0 || i >= size) { *error = "利益集团下标 " + std::to_string(i) + " 越界"; return false; }
+        CtxEntry e{};
+        if (!item_ctx(m, i, &e, error)) return false;
+        int id = -1;
+        if (!e.ptr || !seh_read_int(static_cast<uint8_t*>(e.ptr) + 0x10, &id)) { *error = "读不到利益集团 id"; return false; }
+        g_members[k] = e.ptr;
+        *out += (k ? "," : "") + std::to_string(id);
+    }
+    *out += "]";
+    memset(g_reform, 0, sizeof g_reform);
+    *reinterpret_cast<void***>(g_reform + 0x18) = g_members;
+    *reinterpret_cast<int*>(g_reform + 0x20) = kMaxGovernment;
+    *reinterpret_cast<int*>(g_reform + 0x24) = static_cast<int>(members.size());
+    CtxEntry reform{g_reform, kAnyType, false, {}};
+    return exec_in("Execute(ReformGovernment.Confirm)", &reform, 1, error);
 }
 
 }  // namespace datasys

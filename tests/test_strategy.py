@@ -2,7 +2,7 @@
 
 from agent import gamedata
 from agent.game import Date
-from agent.observe import BuildingRow, LawRow, Snapshot, StateRow
+from agent.observe import BuildingRow, IGRow, LawOption, LawRow, Snapshot, StateRow
 from agent.strategy import budget, construction, politics, research
 
 
@@ -44,12 +44,54 @@ def test_research_resolves_prerequisites_first():
     assert research.candidates(gd, set(), "lathe") == []
 
 
-def test_politics_skips_active_laws():
-    snap = _snap()
-    snap.laws = {"lawgroup_economic_system": LawRow("lawgroup_economic_system", "law_interventionism", "干预主义", [])}
-    laws = [d.args["law"] for d in politics.candidates(snap, None)]
-    assert "law_interventionism" not in laws and "law_laissez_faire" in laws
-    assert politics.candidates(snap, "某法律") == []
+def _opt(key: str, group: str = "lawgroup_land_reform", valid: bool = True, success: float = 0.5,
+         stall: float = 0.1, why: str = "", **stance: int) -> LawOption:
+    return LawOption(group, key, key, [], valid, why, success, 0.0, stall, 1 - success - stall, dict(stance))
+
+
+def _qing() -> Snapshot:
+    snap = _snap(legitimacy=100.0)
+    snap.laws = {"lawgroup_land_reform": LawRow("lawgroup_land_reform", "law_serfdom", "农奴制", []),
+                 "lawgroup_army_model": LawRow("lawgroup_army_model", "law_peasant_levies", "征召农兵", [])}
+    snap.igs = [IGRow(0, "士大夫", 0.50, True, False), IGRow(1, "军队", 0.15, False, False),
+                IGRow(2, "文人", 0.07, False, False), IGRow(3, "实业家", 0.30, False, True)]
+    return snap
+
+
+def test_pass_chance():
+    assert politics.pass_chance(_opt("a", success=0.0)) == 0.0
+    assert politics.pass_chance(_opt("a", stall=0.0)) == 1.0
+    # 推进 : 受阻 = 2 : 1 → 约 0.79；1 : 3 → 很低
+    assert abs(politics.pass_chance(_opt("a", success=0.48, stall=0.24)) - 0.790) < 0.01
+    assert politics.pass_chance(_opt("a", success=0.09, stall=0.27)) < 0.15
+
+
+def test_politics_only_enacts_likely_laws():
+    snap = _qing()
+    opts = [_opt("law_tenant_farmers", success=0.09, stall=0.24),
+            _opt("law_professional_army", "lawgroup_army_model", success=0.48, stall=0.24),
+            _opt("law_serfdom")]                                     # 已是现行法律
+    assert [d.args["law"] for d in politics.candidates(snap, opts, None)] == ["law_professional_army"]
+    assert politics.candidates(snap, opts, "某法律") == []
+
+
+def test_reform_adds_biggest_backer_of_blocked_law():
+    snap = _qing()
+    blocked = _opt("law_tenant_farmers", valid=False, why="立法成功概率高于0%", 士大夫=-1, 军队=1, 文人=1, 实业家=1)
+    d = politics.reform(snap, [blocked], None)
+    assert d and d.args == {"members": [0, 1], "add": "军队"}           # 边缘化的实业家不算
+    # 缺科技的不是政府能解决的
+    tech = _opt("law_tenant_farmers", valid=False, why="大清必须已发明浪漫主义；立法成功概率高于0%", 军队=1)
+    assert politics.reform(snap, [tech], None) is None
+
+
+def test_reform_waits_when_a_law_can_pass_or_legitimacy_low():
+    snap = _qing()
+    blocked = _opt("law_tenant_farmers", valid=False, why="立法成功概率高于0%", 军队=1)
+    ok = _opt("law_professional_army", "lawgroup_army_model", success=0.6, stall=0.1)
+    assert politics.reform(snap, [blocked, ok], None) is None
+    snap.country["legitimacy"] = 50.0
+    assert politics.reform(snap, [blocked], None) is None
 
 
 def test_construction_needs_labor():

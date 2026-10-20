@@ -21,7 +21,7 @@ sts2 是 .NET 游戏，注入后靠反射就能读写对象；维多利亚 3 是
 | 1 指令通道 | V3Bridge.dll 注入，控制台命令、数据系统读取与执行，特征码定位 | ✓ |
 | 2 时间与存档 | 暂停、调速、推进到指定日期；每月自动存档 | ✓ |
 | 3 快速读状态 | `observe.py` 经桥接层 1.5 秒读全局面；存档解析作兜底 | ✓ |
-| 4 动作 API | 税率、研究、法律、建造、生产方式，执行前后各读一次确认 | ✓ |
+| 4 动作 API | 税率、研究、法律、改组政府、建造、生产方式，执行前后各读一次确认 | ✓ |
 | 5 策略层 | 建造、生产方式、研究、法律、税率，规则在 `strategy/`、参数在 `data/strategy.json` | ✓ |
 | 6 runner 与 MCP | 每月决策一次；`play` / `step` / `advise`；每局写 `logs/runs.jsonl` | ✓ |
 | 7 自测 | 大清与普鲁士各跑十年：GDP 分别比不干预的基线高 5% / 7%（v4），过程见 docs/strategy.md | ✓（持续改进） |
@@ -46,7 +46,7 @@ Claude Code ──MCP──> agent (Python)                      V3Bridge.dll（
 | `construction.py` | 队列不够长或建造力没用满时补项目：先建造部门，税收浪费高时补行政机构，其余按「每点建造力的周利润」排序（市场价、当地工资率、已解锁的生产方式），扣掉缺劳动力、未并入、基础设施超用、供过于求的州 |
 | `production.py` | 已建成的建筑每组挑「增加值 − 工资」最高的已解锁生产方式；差距不到 10% 不换；投入在本国无人卖的方式不选 |
 | `research.py` | 按优先表推进，缺前置先研究前置；表走完按时代补位 |
-| `politics.py` | 按法律路线推行（同一时间一条），可否推行以游戏判定为准 |
+| `politics.py` | 按游戏预计的通过率推路线上的法律（同一时间一条，低于 50% 不推）；只差支持者时把支持它的在野集团加进政府 |
 | `budget.py` | 只调税级：赤字且国库撑不过 30 周就加税，国库近储备上限且结余大就减税 |
 
 ## 数据从哪来
@@ -120,6 +120,7 @@ POST /data/read?text=              界面表达式文本求值："[GetMetaPlayer
 POST /data/exec?stmt=              执行界面命令："Execute(Building.QueueConstruction)"
 POST /data/list?list=&fields=      界面列表逐项求值（fields 以 \x1f 分隔）
      &p0=&i0=&p1=&i1=...           上下文路径：逐层取列表项（州 → 建筑 → 生产方式组 → 生产方式）
+POST /gov/reform?list=&igs=0,1,3   改组政府：igs 是改组后全部在朝集团在 list 里的下标
 ```
 
 游戏侧失败是 HTTP 200 + `ok:false`（附游戏给的原因）。开发用的 `/trace`、`/mem`、`/call`、`/data/eval` 见 docs/bridge.md。
