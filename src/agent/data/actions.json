@@ -1,0 +1,4851 @@
+[
+ {
+  "receiver": "AddWarGoalPanel",
+  "command": "AddWarGoal",
+  "examples": [
+   "AddWarGoalPanel.AccessDiplomaticPlay.AddWarGoal(WarGoalDraft.Self)"
+  ],
+  "files": [
+   "add_wargoal_panel.gui"
+  ],
+  "confirm": false,
+  "count": 2,
+  "executed": true,
+  "domain": "外交",
+  "reach": "窗口",
+  "family": "AddWarGoalPanel.AddWarGoal",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "Amendment",
+  "command": "Repeal",
+  "examples": [
+   "Amendment.Repeal"
+  ],
+  "files": [
+   "politics_panel_types.gui"
+  ],
+  "confirm": true,
+  "count": 4,
+  "executed": true,
+  "domain": "政治",
+  "reach": "直达",
+  "family": "Amendment.Repeal",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "Building",
+  "command": "CancelConstruction",
+  "examples": [
+   "Building.CancelConstruction"
+  ],
+  "files": [
+   "building_details_panel.gui",
+   "goods_local_prices_panel.gui",
+   "goods_state_panel.gui",
+   "map_list_panel.gui",
+   "right_click_menu.gui",
+   "states_panel.gui",
+   "states_panel_buildings.gui",
+   "strait_panel.gui"
+  ],
+  "confirm": false,
+  "count": 17,
+  "executed": true,
+  "domain": "经济",
+  "reach": "直达",
+  "family": "Building.CancelConstruction",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "Building",
+  "command": "Downsize",
+  "examples": [
+   "Building.Downsize"
+  ],
+  "files": [
+   "building_details_panel.gui",
+   "goods_state_panel.gui",
+   "map_list_panel.gui",
+   "right_click_menu.gui",
+   "states_panel.gui",
+   "strait_panel.gui"
+  ],
+  "confirm": true,
+  "count": 28,
+  "executed": true,
+  "domain": "经济",
+  "reach": "直达",
+  "family": "Building.Downsize",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "Building",
+  "command": "NationalizeBuildingLevels",
+  "examples": [
+   "Building.NationalizeBuildingLevels('(int32)1')"
+  ],
+  "files": [
+   "building_details_panel.gui",
+   "right_click_menu.gui"
+  ],
+  "confirm": false,
+  "count": 3,
+  "executed": false,
+  "domain": "经济",
+  "reach": "直达",
+  "family": "Building.NationalizeBuildingLevels",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "Building",
+  "command": "PauseConstructionOutput",
+  "examples": [
+   "Building.PauseConstructionOutput"
+  ],
+  "files": [
+   "production_methods.gui"
+  ],
+  "confirm": false,
+  "count": 2,
+  "executed": true,
+  "domain": "经济",
+  "reach": "直达",
+  "family": "Building.PauseConstructionOutput",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "Building",
+  "command": "QueueConstruction",
+  "examples": [
+   "Building.QueueConstruction"
+  ],
+  "files": [
+   "build_urban_buildings_menu.gui",
+   "building_details_panel.gui",
+   "goods_local_prices_panel.gui",
+   "right_click_menu.gui",
+   "states_panel.gui"
+  ],
+  "confirm": false,
+  "count": 22,
+  "executed": true,
+  "domain": "经济",
+  "reach": "直达",
+  "family": "Building.QueueConstruction",
+  "status": "已验证",
+  "via": "Actions.build"
+ },
+ {
+  "receiver": "Building",
+  "command": "QueueMilitaryConstruction",
+  "examples": [
+   "Building.QueueMilitaryConstruction(MilitaryFormation.Self,CombatUnitType.Self)"
+  ],
+  "files": [
+   "building_details_panel.gui"
+  ],
+  "confirm": false,
+  "count": 7,
+  "executed": true,
+  "domain": "经济",
+  "reach": "直达",
+  "family": "Building.QueueMilitaryConstruction",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "Building",
+  "command": "ResetProductionMethodsToStandard",
+  "examples": [
+   "Building.ResetProductionMethodsToStandard",
+   "Building.GetBuildingType.ResetProductionMethodsToStandard"
+  ],
+  "files": [
+   "right_click_menu.gui"
+  ],
+  "confirm": false,
+  "count": 8,
+  "executed": true,
+  "domain": "经济",
+  "reach": "直达",
+  "family": "Building.ResetProductionMethodsToStandard",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "Building",
+  "command": "ResumeConstructionOutput",
+  "examples": [
+   "Building.ResumeConstructionOutput"
+  ],
+  "files": [
+   "production_methods.gui"
+  ],
+  "confirm": false,
+  "count": 2,
+  "executed": true,
+  "domain": "经济",
+  "reach": "直达",
+  "family": "Building.ResumeConstructionOutput",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "Building",
+  "command": "ToggleAutoExpand",
+  "examples": [
+   "Building.ToggleAutoExpand"
+  ],
+  "files": [
+   "building_details_panel.gui"
+  ],
+  "confirm": false,
+  "count": 4,
+  "executed": true,
+  "domain": "经济",
+  "reach": "直达",
+  "family": "Building.ToggleAutoExpand",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "Building",
+  "command": "ToggleAutoExpandOff",
+  "examples": [
+   "Building.ToggleAutoExpandOff"
+  ],
+  "files": [
+   "right_click_menu.gui"
+  ],
+  "confirm": false,
+  "count": 4,
+  "executed": true,
+  "domain": "经济",
+  "reach": "直达",
+  "family": "Building.ToggleAutoExpandOff",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "Building",
+  "command": "ToggleAutoExpandOn",
+  "examples": [
+   "Building.ToggleAutoExpandOn"
+  ],
+  "files": [
+   "right_click_menu.gui"
+  ],
+  "confirm": false,
+  "count": 4,
+  "executed": true,
+  "domain": "经济",
+  "reach": "直达",
+  "family": "Building.ToggleAutoExpandOn",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "Building",
+  "command": "TogglePrivatization",
+  "examples": [
+   "Building.TogglePrivatization"
+  ],
+  "files": [
+   "building_details_panel.gui",
+   "right_click_menu.gui"
+  ],
+  "confirm": false,
+  "count": 11,
+  "executed": true,
+  "domain": "经济",
+  "reach": "直达",
+  "family": "Building.TogglePrivatization",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "Building",
+  "command": "ToggleSubsidies",
+  "examples": [
+   "Building.ToggleSubsidies"
+  ],
+  "files": [
+   "building_details_panel.gui",
+   "right_click_menu.gui",
+   "states_panel.gui",
+   "states_panel_buildings.gui"
+  ],
+  "confirm": false,
+  "count": 20,
+  "executed": true,
+  "domain": "经济",
+  "reach": "直达",
+  "family": "Building.ToggleSubsidies",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "Building",
+  "command": "ToggleSubsidiesOff",
+  "examples": [
+   "Building.ToggleSubsidiesOff"
+  ],
+  "files": [
+   "right_click_menu.gui"
+  ],
+  "confirm": false,
+  "count": 4,
+  "executed": true,
+  "domain": "经济",
+  "reach": "直达",
+  "family": "Building.ToggleSubsidiesOff",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "Building",
+  "command": "ToggleSubsidiesOn",
+  "examples": [
+   "Building.ToggleSubsidiesOn"
+  ],
+  "files": [
+   "right_click_menu.gui"
+  ],
+  "confirm": false,
+  "count": 4,
+  "executed": true,
+  "domain": "经济",
+  "reach": "直达",
+  "family": "Building.ToggleSubsidiesOn",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "BuildingBrowserBuildingTypeItem",
+  "command": "RemoveAllPrivatization",
+  "examples": [
+   "BuildingBrowserBuildingTypeItem.RemoveAllPrivatization"
+  ],
+  "files": [
+   "right_click_menu.gui"
+  ],
+  "confirm": false,
+  "count": 4,
+  "executed": true,
+  "domain": "经济",
+  "reach": "窗口",
+  "family": "BuildingBrowserBuildingTypeItem.RemoveAllPrivatization",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "BuildingBrowserBuildingTypeItem",
+  "command": "ToggleAllAutoExpand",
+  "examples": [
+   "BuildingBrowserBuildingTypeItem.ToggleAllAutoExpand"
+  ],
+  "files": [
+   "building_details_panel.gui"
+  ],
+  "confirm": false,
+  "count": 6,
+  "executed": true,
+  "domain": "经济",
+  "reach": "窗口",
+  "family": "BuildingBrowserBuildingTypeItem.ToggleAllAutoExpand",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "BuildingBrowserBuildingTypeItem",
+  "command": "ToggleAllPrivatization",
+  "examples": [
+   "BuildingBrowserBuildingTypeItem.ToggleAllPrivatization"
+  ],
+  "files": [
+   "building_details_panel.gui",
+   "right_click_menu.gui"
+  ],
+  "confirm": false,
+  "count": 15,
+  "executed": true,
+  "domain": "经济",
+  "reach": "窗口",
+  "family": "BuildingBrowserBuildingTypeItem.ToggleAllPrivatization",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "BuildingBrowserBuildingTypeItem",
+  "command": "ToggleAllSubsidies",
+  "examples": [
+   "BuildingBrowserBuildingTypeItem.ToggleAllSubsidies"
+  ],
+  "files": [
+   "building_details_panel.gui",
+   "production_methods.gui"
+  ],
+  "confirm": false,
+  "count": 12,
+  "executed": true,
+  "domain": "经济",
+  "reach": "窗口",
+  "family": "BuildingBrowserBuildingTypeItem.ToggleAllSubsidies",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "BuildingType",
+  "command": "ResetProductionMethodsToStandard",
+  "examples": [
+   "BuildingType.ResetProductionMethodsToStandard"
+  ],
+  "files": [
+   "right_click_menu.gui"
+  ],
+  "confirm": false,
+  "count": 2,
+  "executed": true,
+  "domain": "经济",
+  "reach": "直达",
+  "family": "BuildingType.ResetProductionMethodsToStandard",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "BuildingType",
+  "command": "ToggleMonopoly",
+  "examples": [
+   "BuildingType.ToggleMonopoly"
+  ],
+  "files": [
+   "right_click_menu.gui"
+  ],
+  "confirm": false,
+  "count": 8,
+  "executed": true,
+  "domain": "经济",
+  "reach": "直达",
+  "family": "BuildingType.ToggleMonopoly",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "Character",
+  "command": "AssignToFormation",
+  "examples": [
+   "Character.AssignToFormation(MilitaryFormation.Self)"
+  ],
+  "files": [
+   "right_click_menu.gui"
+  ],
+  "confirm": false,
+  "count": 8,
+  "executed": true,
+  "domain": "人物",
+  "reach": "直达",
+  "family": "Character.AssignToFormation",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "Character",
+  "command": "GetPromoteCommand",
+  "examples": [
+   "Character.GetPromoteCommand"
+  ],
+  "files": [
+   "character_panel.gui",
+   "right_click_menu.gui"
+  ],
+  "confirm": true,
+  "count": 6,
+  "executed": true,
+  "domain": "人物",
+  "reach": "直达",
+  "family": "Character.GetPromoteCommand",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "Character",
+  "command": "GetRecruitCommand",
+  "examples": [
+   "Character.GetRecruitCommand(MilitaryFormation.Self)"
+  ],
+  "files": [
+   "right_click_menu.gui"
+  ],
+  "confirm": false,
+  "count": 6,
+  "executed": true,
+  "domain": "人物",
+  "reach": "直达",
+  "family": "Character.GetRecruitCommand",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "Character",
+  "command": "GetRecruitCommandNoFormation",
+  "examples": [
+   "Character.GetRecruitCommandNoFormation"
+  ],
+  "files": [
+   "generate_character.gui"
+  ],
+  "confirm": false,
+  "count": 1,
+  "executed": false,
+  "domain": "人物",
+  "reach": "直达",
+  "family": "Character.GetRecruitCommandNoFormation",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "Character",
+  "command": "RecruitCharacterNoFormation",
+  "examples": [
+   "Character.RecruitCharacterNoFormation"
+  ],
+  "files": [
+   "generate_character.gui"
+  ],
+  "confirm": false,
+  "count": 1,
+  "executed": true,
+  "domain": "人物",
+  "reach": "直达",
+  "family": "Character.RecruitCharacterNoFormation",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "Character",
+  "command": "SelectOrder",
+  "examples": [
+   "Character.SelectOrder(CommanderOrderType.Self)"
+  ],
+  "files": [
+   "right_click_menu.gui"
+  ],
+  "confirm": false,
+  "count": 4,
+  "executed": true,
+  "domain": "人物",
+  "reach": "直达",
+  "family": "Character.SelectOrder",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "Character",
+  "command": "UnassignFromFormation",
+  "examples": [
+   "Character.UnassignFromFormation"
+  ],
+  "files": [
+   "right_click_menu.gui"
+  ],
+  "confirm": false,
+  "count": 4,
+  "executed": true,
+  "domain": "人物",
+  "reach": "直达",
+  "family": "Character.UnassignFromFormation",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "CombatUnit",
+  "command": "GetDisbandUnitCommand",
+  "examples": [
+   "CombatUnit.GetMilitaryFormation.GetDisbandUnitCommand(CombatUnit.Self)"
+  ],
+  "files": [
+   "military_formation_panel.gui"
+  ],
+  "confirm": false,
+  "count": 2,
+  "executed": true,
+  "domain": "军事",
+  "reach": "组合",
+  "family": "CombatUnit.GetDisbandUnitCommand",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "Company",
+  "command": "ToggleBuildingCharter",
+  "examples": [
+   "Company.ToggleBuildingCharter(CompanyCharterType.Self,BuildingType.Self)"
+  ],
+  "files": [
+   "right_click_menu.gui"
+  ],
+  "confirm": true,
+  "count": 8,
+  "executed": true,
+  "domain": "经济",
+  "reach": "直达",
+  "family": "Company.ToggleBuildingCharter",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "Company",
+  "command": "ToggleCharter",
+  "examples": [
+   "Company.ToggleCharter(CompanyCharterType.Self)"
+  ],
+  "files": [
+   "company_panel.gui"
+  ],
+  "confirm": true,
+  "count": 22,
+  "executed": true,
+  "domain": "经济",
+  "reach": "直达",
+  "family": "Company.ToggleCharter",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "Company",
+  "command": "ToggleRegionCharter",
+  "examples": [
+   "Company.ToggleRegionCharter(CompanyCharterType.Self,StateRegion.Self)"
+  ],
+  "files": [
+   "right_click_menu.gui"
+  ],
+  "confirm": true,
+  "count": 5,
+  "executed": true,
+  "domain": "经济",
+  "reach": "直达",
+  "family": "Company.ToggleRegionCharter",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "CompanyChangeNamePopup",
+  "command": "Confirm",
+  "examples": [
+   "CompanyChangeNamePopup.Confirm"
+  ],
+  "files": [
+   "companies_panel.gui"
+  ],
+  "confirm": false,
+  "count": 2,
+  "executed": true,
+  "domain": "其他",
+  "reach": "界面",
+  "family": "CompanyChangeNamePopup.Confirm",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "ConstructionQueueElement",
+  "command": "CancelConstruction",
+  "examples": [
+   "ConstructionQueueElement.CancelConstruction"
+  ],
+  "files": [
+   "construction_queue.gui"
+  ],
+  "confirm": false,
+  "count": 2,
+  "executed": true,
+  "domain": "经济",
+  "reach": "直达",
+  "family": "ConstructionQueueElement.CancelConstruction",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "ConstructionQueueElement",
+  "command": "MoveDown",
+  "examples": [
+   "ConstructionQueueElement.MoveDown"
+  ],
+  "files": [
+   "construction_queue.gui"
+  ],
+  "confirm": false,
+  "count": 2,
+  "executed": true,
+  "domain": "经济",
+  "reach": "直达",
+  "family": "ConstructionQueueElement.MoveDown",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "ConstructionQueueElement",
+  "command": "MoveToBottom",
+  "examples": [
+   "ConstructionQueueElement.MoveToBottom"
+  ],
+  "files": [
+   "construction_queue.gui"
+  ],
+  "confirm": false,
+  "count": 1,
+  "executed": true,
+  "domain": "经济",
+  "reach": "直达",
+  "family": "ConstructionQueueElement.MoveToBottom",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "ConstructionQueueElement",
+  "command": "MoveToTop",
+  "examples": [
+   "ConstructionQueueElement.MoveToTop"
+  ],
+  "files": [
+   "construction_queue.gui"
+  ],
+  "confirm": false,
+  "count": 1,
+  "executed": true,
+  "domain": "经济",
+  "reach": "直达",
+  "family": "ConstructionQueueElement.MoveToTop",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "ConstructionQueueElement",
+  "command": "MoveUp",
+  "examples": [
+   "ConstructionQueueElement.MoveUp"
+  ],
+  "files": [
+   "construction_queue.gui"
+  ],
+  "confirm": false,
+  "count": 2,
+  "executed": true,
+  "domain": "经济",
+  "reach": "直达",
+  "family": "ConstructionQueueElement.MoveUp",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "Country",
+  "command": "ClearDefaultConstructionFleet",
+  "examples": [
+   "Country.ClearDefaultConstructionFleet"
+  ],
+  "files": [
+   "right_click_menu.gui"
+  ],
+  "confirm": false,
+  "count": 1,
+  "executed": true,
+  "domain": "国家",
+  "reach": "直达",
+  "family": "Country.ClearDefaultConstructionFleet",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "Country",
+  "command": "CreateCompany",
+  "examples": [
+   "GetPlayer.CreateCompany(CompanyType.Self)"
+  ],
+  "files": [
+   "companies_panel.gui"
+  ],
+  "confirm": true,
+  "count": 2,
+  "executed": true,
+  "domain": "国家",
+  "reach": "直达",
+  "family": "Country.CreateCompany",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "Country",
+  "command": "DeclareBankruptcy",
+  "examples": [
+   "Country.DeclareBankruptcy"
+  ],
+  "files": [
+   "budget_panel.gui"
+  ],
+  "confirm": true,
+  "count": 4,
+  "executed": true,
+  "domain": "国家",
+  "reach": "直达",
+  "family": "Country.DeclareBankruptcy",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "Country",
+  "command": "DemobilizeAllArmies",
+  "examples": [
+   "Country.DemobilizeAllArmies"
+  ],
+  "files": [
+   "panel_military.gui"
+  ],
+  "confirm": true,
+  "count": 3,
+  "executed": true,
+  "domain": "国家",
+  "reach": "直达",
+  "family": "Country.DemobilizeAllArmies",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "Country",
+  "command": "Kick",
+  "examples": [
+   "Country.GetPowerBloc.Kick(Country.Self)"
+  ],
+  "files": [
+   "right_click_menu.gui"
+  ],
+  "confirm": true,
+  "count": 2,
+  "executed": true,
+  "domain": "国家",
+  "reach": "直达",
+  "family": "Country.Kick",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "Country",
+  "command": "LeavePowerBloc",
+  "examples": [
+   "GetPlayer.LeavePowerBloc"
+  ],
+  "files": [
+   "power_bloc_panel.gui"
+  ],
+  "confirm": true,
+  "count": 4,
+  "executed": true,
+  "domain": "国家",
+  "reach": "直达",
+  "family": "Country.LeavePowerBloc",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "Country",
+  "command": "MobilizeAllArmies",
+  "examples": [
+   "Country.MobilizeAllArmies"
+  ],
+  "files": [
+   "panel_military.gui"
+  ],
+  "confirm": true,
+  "count": 5,
+  "executed": true,
+  "domain": "国家",
+  "reach": "直达",
+  "family": "Country.MobilizeAllArmies",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "Country",
+  "command": "PauseConstruction",
+  "examples": [
+   "Country.PauseConstruction"
+  ],
+  "files": [
+   "building_browser_panel.gui",
+   "production_methods.gui",
+   "timemanip.gui"
+  ],
+  "confirm": false,
+  "count": 8,
+  "executed": true,
+  "domain": "国家",
+  "reach": "直达",
+  "family": "Country.PauseConstruction",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "Country",
+  "command": "PauseShipConstruction",
+  "examples": [
+   "Country.PauseShipConstruction"
+  ],
+  "files": [
+   "production_methods.gui"
+  ],
+  "confirm": false,
+  "count": 2,
+  "executed": true,
+  "domain": "国家",
+  "reach": "直达",
+  "family": "Country.PauseShipConstruction",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "Country",
+  "command": "RemoveCompany",
+  "examples": [
+   "GetPlayer.RemoveCompany(CompanyType.Self)"
+  ],
+  "files": [
+   "companies_panel.gui",
+   "company_panel.gui"
+  ],
+  "confirm": true,
+  "count": 4,
+  "executed": true,
+  "domain": "国家",
+  "reach": "直达",
+  "family": "Country.RemoveCompany",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "Country",
+  "command": "ResumeConstruction",
+  "examples": [
+   "Country.ResumeConstruction"
+  ],
+  "files": [
+   "building_browser_panel.gui",
+   "production_methods.gui",
+   "timemanip.gui"
+  ],
+  "confirm": false,
+  "count": 8,
+  "executed": true,
+  "domain": "国家",
+  "reach": "直达",
+  "family": "Country.ResumeConstruction",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "Country",
+  "command": "ResumeShipConstruction",
+  "examples": [
+   "Country.ResumeShipConstruction"
+  ],
+  "files": [
+   "production_methods.gui"
+  ],
+  "confirm": false,
+  "count": 2,
+  "executed": true,
+  "domain": "国家",
+  "reach": "直达",
+  "family": "Country.ResumeShipConstruction",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "Country",
+  "command": "SetDefaultConstructionFleet",
+  "examples": [
+   "Country.SetDefaultConstructionFleet(MilitaryFormation.Self)"
+  ],
+  "files": [
+   "right_click_menu.gui"
+  ],
+  "confirm": false,
+  "count": 2,
+  "executed": true,
+  "domain": "国家",
+  "reach": "直达",
+  "family": "Country.SetDefaultConstructionFleet",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "Country",
+  "command": "SetExportSubventionsHigh",
+  "examples": [
+   "GetPlayer.SetExportSubventionsHigh(Goods.Self)"
+  ],
+  "files": [
+   "budget_panel.gui"
+  ],
+  "confirm": false,
+  "count": 2,
+  "executed": true,
+  "domain": "国家",
+  "reach": "直达",
+  "family": "Country.SetExportSubventions*",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "Country",
+  "command": "SetExportSubventionsLow",
+  "examples": [
+   "GetPlayer.SetExportSubventionsLow(Goods.Self)"
+  ],
+  "files": [
+   "budget_panel.gui"
+  ],
+  "confirm": false,
+  "count": 2,
+  "executed": true,
+  "domain": "国家",
+  "reach": "直达",
+  "family": "Country.SetExportSubventions*",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "Country",
+  "command": "SetExportSubventionsMax",
+  "examples": [
+   "GetPlayer.SetExportSubventionsMax(Goods.Self)"
+  ],
+  "files": [
+   "budget_panel.gui"
+  ],
+  "confirm": false,
+  "count": 2,
+  "executed": true,
+  "domain": "国家",
+  "reach": "直达",
+  "family": "Country.SetExportSubventions*",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "Country",
+  "command": "SetExportTariffsHigh",
+  "examples": [
+   "GetPlayer.SetExportTariffsHigh(Goods.Self)"
+  ],
+  "files": [
+   "budget_panel.gui"
+  ],
+  "confirm": false,
+  "count": 2,
+  "executed": true,
+  "domain": "国家",
+  "reach": "直达",
+  "family": "Country.SetExportTariffs*",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "Country",
+  "command": "SetExportTariffsLow",
+  "examples": [
+   "GetPlayer.SetExportTariffsLow(Goods.Self)"
+  ],
+  "files": [
+   "budget_panel.gui"
+  ],
+  "confirm": false,
+  "count": 2,
+  "executed": true,
+  "domain": "国家",
+  "reach": "直达",
+  "family": "Country.SetExportTariffs*",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "Country",
+  "command": "SetExportTariffsMax",
+  "examples": [
+   "GetPlayer.SetExportTariffsMax(Goods.Self)"
+  ],
+  "files": [
+   "budget_panel.gui"
+  ],
+  "confirm": false,
+  "count": 2,
+  "executed": true,
+  "domain": "国家",
+  "reach": "直达",
+  "family": "Country.SetExportTariffs*",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "Country",
+  "command": "SetExportTariffsNone",
+  "examples": [
+   "GetPlayer.SetExportTariffsNone(Goods.Self)"
+  ],
+  "files": [
+   "budget_panel.gui"
+  ],
+  "confirm": false,
+  "count": 2,
+  "executed": true,
+  "domain": "国家",
+  "reach": "直达",
+  "family": "Country.SetExportTariffs*",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "Country",
+  "command": "SetGovernmentWageLevelHigh",
+  "examples": [
+   "GetPlayer.SetGovernmentWageLevelHigh"
+  ],
+  "files": [
+   "budget_panel.gui"
+  ],
+  "confirm": false,
+  "count": 3,
+  "executed": true,
+  "domain": "国家",
+  "reach": "直达",
+  "family": "Country.SetGovernmentWageLevel*",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "Country",
+  "command": "SetGovernmentWageLevelLow",
+  "examples": [
+   "GetPlayer.SetGovernmentWageLevelLow"
+  ],
+  "files": [
+   "budget_panel.gui"
+  ],
+  "confirm": false,
+  "count": 3,
+  "executed": true,
+  "domain": "国家",
+  "reach": "直达",
+  "family": "Country.SetGovernmentWageLevel*",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "Country",
+  "command": "SetGovernmentWageLevelMedium",
+  "examples": [
+   "GetPlayer.SetGovernmentWageLevelMedium"
+  ],
+  "files": [
+   "budget_panel.gui"
+  ],
+  "confirm": false,
+  "count": 3,
+  "executed": true,
+  "domain": "国家",
+  "reach": "直达",
+  "family": "Country.SetGovernmentWageLevel*",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "Country",
+  "command": "SetGovernmentWageLevelVeryHigh",
+  "examples": [
+   "GetPlayer.SetGovernmentWageLevelVeryHigh"
+  ],
+  "files": [
+   "budget_panel.gui"
+  ],
+  "confirm": false,
+  "count": 3,
+  "executed": true,
+  "domain": "国家",
+  "reach": "直达",
+  "family": "Country.SetGovernmentWageLevel*",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "Country",
+  "command": "SetGovernmentWageLevelVeryLow",
+  "examples": [
+   "GetPlayer.SetGovernmentWageLevelVeryLow"
+  ],
+  "files": [
+   "budget_panel.gui"
+  ],
+  "confirm": false,
+  "count": 3,
+  "executed": true,
+  "domain": "国家",
+  "reach": "直达",
+  "family": "Country.SetGovernmentWageLevel*",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "Country",
+  "command": "SetImportSubventionsHigh",
+  "examples": [
+   "GetPlayer.SetImportSubventionsHigh(Goods.Self)"
+  ],
+  "files": [
+   "budget_panel.gui"
+  ],
+  "confirm": false,
+  "count": 2,
+  "executed": true,
+  "domain": "国家",
+  "reach": "直达",
+  "family": "Country.SetImportSubventions*",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "Country",
+  "command": "SetImportSubventionsLow",
+  "examples": [
+   "GetPlayer.SetImportSubventionsLow(Goods.Self)"
+  ],
+  "files": [
+   "budget_panel.gui"
+  ],
+  "confirm": false,
+  "count": 2,
+  "executed": true,
+  "domain": "国家",
+  "reach": "直达",
+  "family": "Country.SetImportSubventions*",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "Country",
+  "command": "SetImportSubventionsMax",
+  "examples": [
+   "GetPlayer.SetImportSubventionsMax(Goods.Self)"
+  ],
+  "files": [
+   "budget_panel.gui"
+  ],
+  "confirm": false,
+  "count": 2,
+  "executed": true,
+  "domain": "国家",
+  "reach": "直达",
+  "family": "Country.SetImportSubventions*",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "Country",
+  "command": "SetImportTariffsHigh",
+  "examples": [
+   "GetPlayer.SetImportTariffsHigh(Goods.Self)"
+  ],
+  "files": [
+   "budget_panel.gui"
+  ],
+  "confirm": false,
+  "count": 2,
+  "executed": true,
+  "domain": "国家",
+  "reach": "直达",
+  "family": "Country.SetImportTariffs*",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "Country",
+  "command": "SetImportTariffsLow",
+  "examples": [
+   "GetPlayer.SetImportTariffsLow(Goods.Self)"
+  ],
+  "files": [
+   "budget_panel.gui"
+  ],
+  "confirm": false,
+  "count": 2,
+  "executed": true,
+  "domain": "国家",
+  "reach": "直达",
+  "family": "Country.SetImportTariffs*",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "Country",
+  "command": "SetImportTariffsMax",
+  "examples": [
+   "GetPlayer.SetImportTariffsMax(Goods.Self)"
+  ],
+  "files": [
+   "budget_panel.gui"
+  ],
+  "confirm": false,
+  "count": 2,
+  "executed": true,
+  "domain": "国家",
+  "reach": "直达",
+  "family": "Country.SetImportTariffs*",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "Country",
+  "command": "SetImportTariffsNone",
+  "examples": [
+   "GetPlayer.SetImportTariffsNone(Goods.Self)"
+  ],
+  "files": [
+   "budget_panel.gui"
+  ],
+  "confirm": false,
+  "count": 2,
+  "executed": true,
+  "domain": "国家",
+  "reach": "直达",
+  "family": "Country.SetImportTariffs*",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "Country",
+  "command": "SetMilitaryWageLevelHigh",
+  "examples": [
+   "GetPlayer.SetMilitaryWageLevelHigh"
+  ],
+  "files": [
+   "budget_panel.gui"
+  ],
+  "confirm": false,
+  "count": 3,
+  "executed": true,
+  "domain": "国家",
+  "reach": "直达",
+  "family": "Country.SetMilitaryWageLevel*",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "Country",
+  "command": "SetMilitaryWageLevelLow",
+  "examples": [
+   "GetPlayer.SetMilitaryWageLevelLow"
+  ],
+  "files": [
+   "budget_panel.gui"
+  ],
+  "confirm": false,
+  "count": 3,
+  "executed": true,
+  "domain": "国家",
+  "reach": "直达",
+  "family": "Country.SetMilitaryWageLevel*",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "Country",
+  "command": "SetMilitaryWageLevelMedium",
+  "examples": [
+   "GetPlayer.SetMilitaryWageLevelMedium"
+  ],
+  "files": [
+   "budget_panel.gui"
+  ],
+  "confirm": false,
+  "count": 3,
+  "executed": true,
+  "domain": "国家",
+  "reach": "直达",
+  "family": "Country.SetMilitaryWageLevel*",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "Country",
+  "command": "SetMilitaryWageLevelVeryHigh",
+  "examples": [
+   "GetPlayer.SetMilitaryWageLevelVeryHigh"
+  ],
+  "files": [
+   "budget_panel.gui"
+  ],
+  "confirm": false,
+  "count": 3,
+  "executed": true,
+  "domain": "国家",
+  "reach": "直达",
+  "family": "Country.SetMilitaryWageLevel*",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "Country",
+  "command": "SetMilitaryWageLevelVeryLow",
+  "examples": [
+   "GetPlayer.SetMilitaryWageLevelVeryLow"
+  ],
+  "files": [
+   "budget_panel.gui"
+  ],
+  "confirm": false,
+  "count": 3,
+  "executed": true,
+  "domain": "国家",
+  "reach": "直达",
+  "family": "Country.SetMilitaryWageLevel*",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "Country",
+  "command": "SetSupplyShipConstructionLevelHigh",
+  "examples": [
+   "GetPlayer.SetSupplyShipConstructionLevelHigh"
+  ],
+  "files": [
+   "construction_panel.gui"
+  ],
+  "confirm": false,
+  "count": 3,
+  "executed": true,
+  "domain": "国家",
+  "reach": "直达",
+  "family": "Country.SetSupplyShipConstructionLevel*",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "Country",
+  "command": "SetSupplyShipConstructionLevelLow",
+  "examples": [
+   "GetPlayer.SetSupplyShipConstructionLevelLow"
+  ],
+  "files": [
+   "construction_panel.gui"
+  ],
+  "confirm": false,
+  "count": 3,
+  "executed": true,
+  "domain": "国家",
+  "reach": "直达",
+  "family": "Country.SetSupplyShipConstructionLevel*",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "Country",
+  "command": "SetSupplyShipConstructionLevelMedium",
+  "examples": [
+   "GetPlayer.SetSupplyShipConstructionLevelMedium"
+  ],
+  "files": [
+   "construction_panel.gui"
+  ],
+  "confirm": false,
+  "count": 3,
+  "executed": true,
+  "domain": "国家",
+  "reach": "直达",
+  "family": "Country.SetSupplyShipConstructionLevel*",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "Country",
+  "command": "SetSupplyShipConstructionLevelVeryHigh",
+  "examples": [
+   "GetPlayer.SetSupplyShipConstructionLevelVeryHigh"
+  ],
+  "files": [
+   "construction_panel.gui"
+  ],
+  "confirm": false,
+  "count": 3,
+  "executed": true,
+  "domain": "国家",
+  "reach": "直达",
+  "family": "Country.SetSupplyShipConstructionLevel*",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "Country",
+  "command": "SetSupplyShipConstructionLevelVeryLow",
+  "examples": [
+   "GetPlayer.SetSupplyShipConstructionLevelVeryLow"
+  ],
+  "files": [
+   "construction_panel.gui"
+  ],
+  "confirm": false,
+  "count": 3,
+  "executed": true,
+  "domain": "国家",
+  "reach": "直达",
+  "family": "Country.SetSupplyShipConstructionLevel*",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "Country",
+  "command": "SetTaxLevelHigh",
+  "examples": [
+   "GetPlayer.SetTaxLevelHigh"
+  ],
+  "files": [
+   "budget_panel.gui"
+  ],
+  "confirm": false,
+  "count": 3,
+  "executed": true,
+  "domain": "国家",
+  "reach": "直达",
+  "family": "Country.SetTaxLevel*",
+  "status": "已验证",
+  "via": "Actions.set_tax"
+ },
+ {
+  "receiver": "Country",
+  "command": "SetTaxLevelLow",
+  "examples": [
+   "GetPlayer.SetTaxLevelLow"
+  ],
+  "files": [
+   "budget_panel.gui"
+  ],
+  "confirm": false,
+  "count": 3,
+  "executed": true,
+  "domain": "国家",
+  "reach": "直达",
+  "family": "Country.SetTaxLevel*",
+  "status": "已验证",
+  "via": "Actions.set_tax"
+ },
+ {
+  "receiver": "Country",
+  "command": "SetTaxLevelMedium",
+  "examples": [
+   "GetPlayer.SetTaxLevelMedium"
+  ],
+  "files": [
+   "budget_panel.gui"
+  ],
+  "confirm": false,
+  "count": 3,
+  "executed": true,
+  "domain": "国家",
+  "reach": "直达",
+  "family": "Country.SetTaxLevel*",
+  "status": "已验证",
+  "via": "Actions.set_tax"
+ },
+ {
+  "receiver": "Country",
+  "command": "SetTaxLevelVeryHigh",
+  "examples": [
+   "GetPlayer.SetTaxLevelVeryHigh"
+  ],
+  "files": [
+   "budget_panel.gui"
+  ],
+  "confirm": false,
+  "count": 3,
+  "executed": true,
+  "domain": "国家",
+  "reach": "直达",
+  "family": "Country.SetTaxLevel*",
+  "status": "已验证",
+  "via": "Actions.set_tax"
+ },
+ {
+  "receiver": "Country",
+  "command": "SetTaxLevelVeryLow",
+  "examples": [
+   "GetPlayer.SetTaxLevelVeryLow"
+  ],
+  "files": [
+   "budget_panel.gui"
+  ],
+  "confirm": false,
+  "count": 3,
+  "executed": true,
+  "domain": "国家",
+  "reach": "直达",
+  "family": "Country.SetTaxLevel*",
+  "status": "已验证",
+  "via": "Actions.set_tax"
+ },
+ {
+  "receiver": "Country",
+  "command": "StartNegotiationWith",
+  "examples": [
+   "AccessPlayer.StartNegotiationWith(InterestGroup.Self)",
+   "Country.StartNegotiationWith(InterestGroup.Self)"
+  ],
+  "files": [
+   "right_click_menu.gui"
+  ],
+  "confirm": false,
+  "count": 4,
+  "executed": true,
+  "domain": "国家",
+  "reach": "直达",
+  "family": "Country.StartNegotiationWith",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "Country",
+  "command": "ToggleIgnoreCountryFormation",
+  "examples": [
+   "GetPlayer.ToggleIgnoreCountryFormation(CountryFormation.Self)"
+  ],
+  "files": [
+   "country_formation_panel.gui",
+   "culture_panel.gui"
+  ],
+  "confirm": false,
+  "count": 4,
+  "executed": true,
+  "domain": "国家",
+  "reach": "界面",
+  "family": "Country.ToggleIgnoreCountryFormation",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "Country",
+  "command": "ToggleIgnoreDecision",
+  "examples": [
+   "GetPlayer.ToggleIgnoreDecision(Decision.Self)"
+  ],
+  "files": [
+   "journal.gui"
+  ],
+  "confirm": false,
+  "count": 2,
+  "executed": true,
+  "domain": "国家",
+  "reach": "界面",
+  "family": "Country.ToggleIgnoreDecision",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "CountryFormation",
+  "command": "FormCountry",
+  "examples": [
+   "CountryFormation.FormCountry(GetPlayer)"
+  ],
+  "files": [
+   "country_formation_panel.gui"
+  ],
+  "confirm": false,
+  "count": 4,
+  "executed": true,
+  "domain": "外交",
+  "reach": "直达",
+  "family": "CountryFormation.FormCountry",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "CountryFormation",
+  "command": "SupportCandidate",
+  "examples": [
+   "CountryFormation.SupportCandidate(GetPlayer,Country.Self)"
+  ],
+  "files": [
+   "country_formation_panel.gui"
+  ],
+  "confirm": false,
+  "count": 4,
+  "executed": true,
+  "domain": "外交",
+  "reach": "直达",
+  "family": "CountryFormation.SupportCandidate",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "Decision",
+  "command": "TakeDecision",
+  "examples": [
+   "Decision.TakeDecision(GetPlayer)"
+  ],
+  "files": [
+   "journal.gui"
+  ],
+  "confirm": false,
+  "count": 2,
+  "executed": true,
+  "domain": "日志",
+  "reach": "直达",
+  "family": "Decision.TakeDecision",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "DecommissionSupplyShipsWindow",
+  "command": "GetDecommissionCommand",
+  "examples": [
+   "DecommissionSupplyShipsWindow.GetDecommissionCommand"
+  ],
+  "files": [
+   "popups.gui"
+  ],
+  "confirm": true,
+  "count": 2,
+  "executed": true,
+  "domain": "军事",
+  "reach": "窗口",
+  "family": "DecommissionSupplyShipsWindow.GetDecommissionCommand",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "Decree",
+  "command": "GetRemoveCommand",
+  "examples": [
+   "Decree.GetRemoveCommand"
+  ],
+  "files": [
+   "right_click_menu.gui",
+   "states_panel.gui"
+  ],
+  "confirm": false,
+  "count": 6,
+  "executed": true,
+  "domain": "经济",
+  "reach": "直达",
+  "family": "Decree.GetRemoveCommand",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "DecreeType",
+  "command": "GetSetCommand",
+  "examples": [
+   "DecreeType.GetSetCommand(State.Self)"
+  ],
+  "files": [
+   "right_click_menu.gui"
+  ],
+  "confirm": false,
+  "count": 2,
+  "executed": true,
+  "domain": "经济",
+  "reach": "直达",
+  "family": "DecreeType.GetSetCommand",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "DiplomaticAction",
+  "command": "ExecuteAction",
+  "examples": [
+   "DiplomaticAction.ExecuteAction"
+  ],
+  "files": [
+   "country_panel.gui",
+   "power_bloc_panel.gui",
+   "right_click_menu.gui"
+  ],
+  "confirm": false,
+  "count": 10,
+  "executed": false,
+  "domain": "外交",
+  "reach": "直达",
+  "family": "DiplomaticAction.ExecuteAction",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "DiplomaticAction",
+  "command": "ExecuteWithConfirmation",
+  "examples": [
+   "DiplomaticAction.ExecuteWithConfirmation"
+  ],
+  "files": [
+   "country_panel.gui",
+   "power_bloc_panel.gui",
+   "right_click_menu.gui"
+  ],
+  "confirm": false,
+  "count": 6,
+  "executed": true,
+  "domain": "外交",
+  "reach": "直达",
+  "family": "DiplomaticAction.ExecuteWithConfirmation",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "DiplomaticActionWindow",
+  "command": "ExecuteAction",
+  "examples": [
+   "DiplomaticActionWindow.ExecuteAction"
+  ],
+  "files": [
+   "popups.gui"
+  ],
+  "confirm": false,
+  "count": 2,
+  "executed": true,
+  "domain": "外交",
+  "reach": "窗口",
+  "family": "DiplomaticActionWindow.ExecuteAction",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "DiplomaticPlay",
+  "command": "BeOnTheFence",
+  "examples": [
+   "DiplomaticPlay.BeOnTheFence(GetPlayer)"
+  ],
+  "files": [
+   "diplomatic_play_panel.gui"
+  ],
+  "confirm": true,
+  "count": 2,
+  "executed": true,
+  "domain": "外交",
+  "reach": "直达",
+  "family": "DiplomaticPlay.BeOnTheFence",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "DiplomaticPlay",
+  "command": "DeclareNeutrality",
+  "examples": [
+   "DiplomaticPlay.DeclareNeutrality(GetPlayer)"
+  ],
+  "files": [
+   "diplomatic_play_panel.gui",
+   "right_click_menu.gui"
+  ],
+  "confirm": true,
+  "count": 2,
+  "executed": true,
+  "domain": "外交",
+  "reach": "直达",
+  "family": "DiplomaticPlay.DeclareNeutrality",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "DiplomaticPlay",
+  "command": "LeanTowardsInitiator",
+  "examples": [
+   "DiplomaticPlay.LeanTowardsInitiator(GetPlayer)"
+  ],
+  "files": [
+   "diplomatic_play_panel.gui"
+  ],
+  "confirm": true,
+  "count": 2,
+  "executed": true,
+  "domain": "外交",
+  "reach": "直达",
+  "family": "DiplomaticPlay.LeanTowardsInitiator",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "DiplomaticPlay",
+  "command": "LeanTowardsTarget",
+  "examples": [
+   "DiplomaticPlay.LeanTowardsTarget(GetPlayer)"
+  ],
+  "files": [
+   "diplomatic_play_panel.gui"
+  ],
+  "confirm": true,
+  "count": 2,
+  "executed": true,
+  "domain": "外交",
+  "reach": "直达",
+  "family": "DiplomaticPlay.LeanTowardsTarget",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "DiplomaticPlay",
+  "command": "SupportInitiator",
+  "examples": [
+   "DiplomaticPlay.SupportInitiator(GetPlayer)"
+  ],
+  "files": [
+   "right_click_menu.gui",
+   "sway_country_panel.gui"
+  ],
+  "confirm": true,
+  "count": 5,
+  "executed": true,
+  "domain": "外交",
+  "reach": "直达",
+  "family": "DiplomaticPlay.SupportInitiator",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "DiplomaticPlay",
+  "command": "SupportTarget",
+  "examples": [
+   "DiplomaticPlay.SupportTarget(GetPlayer)"
+  ],
+  "files": [
+   "right_click_menu.gui",
+   "sway_country_panel.gui"
+  ],
+  "confirm": true,
+  "count": 5,
+  "executed": true,
+  "domain": "外交",
+  "reach": "直达",
+  "family": "DiplomaticPlay.SupportTarget",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "DiplomaticPlay",
+  "command": "SwitchSide",
+  "examples": [
+   "DiplomaticPlay.SwitchSide(GetPlayer)"
+  ],
+  "files": [
+   "diplomatic_play_panel.gui",
+   "right_click_menu.gui"
+  ],
+  "confirm": false,
+  "count": 10,
+  "executed": true,
+  "domain": "外交",
+  "reach": "直达",
+  "family": "DiplomaticPlay.SwitchSide",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "DiplomaticPlay",
+  "command": "Yield",
+  "examples": [
+   "DiplomaticPlay.Yield(GetPlayer)"
+  ],
+  "files": [
+   "diplomatic_play_panel.gui",
+   "right_click_menu.gui"
+  ],
+  "confirm": true,
+  "count": 4,
+  "executed": true,
+  "domain": "外交",
+  "reach": "直达",
+  "family": "DiplomaticPlay.Yield",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "DiplomaticPlayConfirmation",
+  "command": "ConfirmAction",
+  "examples": [
+   "DiplomaticPlayConfirmation.ConfirmAction"
+  ],
+  "files": [
+   "popups.gui"
+  ],
+  "confirm": false,
+  "count": 2,
+  "executed": true,
+  "domain": "外交",
+  "reach": "窗口",
+  "family": "DiplomaticPlayConfirmation.ConfirmAction",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "DiplomaticPlayType",
+  "command": "GetStartCommandCountry",
+  "examples": [
+   "DiplomaticPlayType.GetStartCommandCountry(GetPlayer.Self,Country.Self)"
+  ],
+  "files": [
+   "country_panel.gui"
+  ],
+  "confirm": false,
+  "count": 2,
+  "executed": false,
+  "domain": "外交",
+  "reach": "直达",
+  "family": "DiplomaticPlayType.GetStartCommandCountry",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "DiplomaticPlayType",
+  "command": "GetStartCommandState",
+  "examples": [
+   "DiplomaticPlayType.GetStartCommandState(GetPlayer,State.Self)"
+  ],
+  "files": [
+   "country_panel.gui"
+  ],
+  "confirm": false,
+  "count": 1,
+  "executed": false,
+  "domain": "外交",
+  "reach": "直达",
+  "family": "DiplomaticPlayType.GetStartCommandState",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "EventOption",
+  "command": "Select",
+  "examples": [
+   "EventOption.Select"
+  ],
+  "files": [
+   "eventwindow.gui"
+  ],
+  "confirm": false,
+  "count": 2,
+  "executed": true,
+  "domain": "事件",
+  "reach": "窗口",
+  "family": "EventOption.Select",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "Front",
+  "command": "GetDeploySelectedFormationsCommand",
+  "examples": [
+   "Front.GetDeploySelectedFormationsCommand"
+  ],
+  "files": [
+   "map_markers.gui"
+  ],
+  "confirm": false,
+  "count": 1,
+  "executed": true,
+  "domain": "军事",
+  "reach": "组合",
+  "family": "Front.GetDeploySelectedFormationsCommand",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "GetDraggedDatacontext",
+  "command": "MoveToIndex",
+  "examples": [
+   "GetDraggedDatacontext('ShipConstruction').MoveToIndex(ShipConstruction.GetIndex)",
+   "GetDraggedDatacontext('ConstructionQueueElement').MoveToIndex(ConstructionQueueElement.GetIndex)"
+  ],
+  "files": [
+   "construction_panel.gui",
+   "construction_queue.gui"
+  ],
+  "confirm": false,
+  "count": 2,
+  "executed": true,
+  "domain": "军事",
+  "reach": "界面",
+  "family": "GetDraggedDatacontext.MoveToIndex",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "Global",
+  "command": "CancelRetrofitShips",
+  "examples": [
+   "CancelRetrofitShips"
+  ],
+  "files": [
+   "construction_panel.gui"
+  ],
+  "confirm": true,
+  "count": 4,
+  "executed": true,
+  "domain": "军事",
+  "reach": "组合",
+  "family": "Global.CancelRetrofitShips",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "Global",
+  "command": "ChangeAllConstructionSpeed",
+  "examples": [
+   "ChangeAllConstructionSpeed(ProductionMethod.Self)"
+  ],
+  "files": [
+   "budget_panel.gui"
+  ],
+  "confirm": false,
+  "count": 2,
+  "executed": true,
+  "domain": "经济",
+  "reach": "直达",
+  "family": "Global.ChangeAllConstructionSpeed",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "Global",
+  "command": "CreateNavalMissionsForSelectedFleets",
+  "examples": [
+   "CreateNavalMissionsForSelectedFleets(NavalMissionType.AccessSelf)"
+  ],
+  "files": [
+   "right_click_menu.gui"
+  ],
+  "confirm": true,
+  "count": 2,
+  "executed": true,
+  "domain": "军事",
+  "reach": "组合",
+  "family": "Global.CreateNavalMissionsForSelectedFleets",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "Global",
+  "command": "DemobilizeSelectedArmies",
+  "examples": [
+   "DemobilizeSelectedArmies"
+  ],
+  "files": [
+   "military_formation_panel.gui"
+  ],
+  "confirm": true,
+  "count": 2,
+  "executed": true,
+  "domain": "军事",
+  "reach": "组合",
+  "family": "Global.DemobilizeSelectedArmies",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "Global",
+  "command": "MergeSelectedFormations",
+  "examples": [
+   "MergeSelectedFormations"
+  ],
+  "files": [
+   "military_formation_panel.gui"
+  ],
+  "confirm": false,
+  "count": 4,
+  "executed": true,
+  "domain": "军事",
+  "reach": "组合",
+  "family": "Global.MergeSelectedFormations",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "Global",
+  "command": "MobilizeSelectedArmies",
+  "examples": [
+   "MobilizeSelectedArmies"
+  ],
+  "files": [
+   "military_formation_panel.gui"
+  ],
+  "confirm": false,
+  "count": 2,
+  "executed": true,
+  "domain": "军事",
+  "reach": "组合",
+  "family": "Global.MobilizeSelectedArmies",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "Global",
+  "command": "PauseAllConstruction",
+  "examples": [
+   "PauseAllConstruction"
+  ],
+  "files": [
+   "budget_panel.gui"
+  ],
+  "confirm": false,
+  "count": 3,
+  "executed": true,
+  "domain": "经济",
+  "reach": "直达",
+  "family": "Global.PauseAllConstruction",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "Global",
+  "command": "RaiseConscriptsInSelectedArmies",
+  "examples": [
+   "RaiseConscriptsInSelectedArmies"
+  ],
+  "files": [
+   "military_formation_panel.gui"
+  ],
+  "confirm": false,
+  "count": 2,
+  "executed": true,
+  "domain": "军事",
+  "reach": "组合",
+  "family": "Global.RaiseConscriptsInSelectedArmies",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "Global",
+  "command": "RemoveNavalMissionForSelectedFleets",
+  "examples": [
+   "RemoveNavalMissionForSelectedFleets(NavalMissionType.Self)"
+  ],
+  "files": [
+   "right_click_menu.gui"
+  ],
+  "confirm": false,
+  "count": 2,
+  "executed": true,
+  "domain": "军事",
+  "reach": "组合",
+  "family": "Global.RemoveNavalMissionForSelectedFleets",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "Global",
+  "command": "ResumeAllConstruction",
+  "examples": [
+   "ResumeAllConstruction"
+  ],
+  "files": [
+   "budget_panel.gui"
+  ],
+  "confirm": false,
+  "count": 3,
+  "executed": true,
+  "domain": "经济",
+  "reach": "直达",
+  "family": "Global.ResumeAllConstruction",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "Global",
+  "command": "RetrofitShips",
+  "examples": [
+   "RetrofitShips"
+  ],
+  "files": [
+   "construction_panel.gui",
+   "right_click_menu.gui"
+  ],
+  "confirm": false,
+  "count": 3,
+  "executed": true,
+  "domain": "军事",
+  "reach": "组合",
+  "family": "Global.RetrofitShips",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "Global",
+  "command": "RetrofitShipsAndStation",
+  "examples": [
+   "RetrofitShipsAndStation"
+  ],
+  "files": [
+   "right_click_menu.gui"
+  ],
+  "confirm": false,
+  "count": 2,
+  "executed": true,
+  "domain": "军事",
+  "reach": "组合",
+  "family": "Global.RetrofitShipsAndStation",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "Global",
+  "command": "SetCharacterOrderForSelectedFormations",
+  "examples": [
+   "SetCharacterOrderForSelectedFormations(CommanderOrderType.Self)"
+  ],
+  "files": [
+   "military_formation_panel.gui"
+  ],
+  "confirm": false,
+  "count": 2,
+  "executed": true,
+  "domain": "军事",
+  "reach": "组合",
+  "family": "Global.SetCharacterOrderForSelectedFormations",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "Global",
+  "command": "SetStrategicObjectiveForSelectedFormations",
+  "examples": [
+   "SetStrategicObjectiveForSelectedFormations(State.Self)"
+  ],
+  "files": [
+   "right_click_menu.gui"
+  ],
+  "confirm": false,
+  "count": 4,
+  "executed": true,
+  "domain": "军事",
+  "reach": "组合",
+  "family": "Global.SetStrategicObjectiveForSelectedFormations",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "Goods",
+  "command": "SetExportSubventionsHigh",
+  "examples": [
+   "Goods.GetMarket.GetOwner.SetExportSubventionsHigh(Goods.Self)"
+  ],
+  "files": [
+   "budget_panel.gui"
+  ],
+  "confirm": false,
+  "count": 1,
+  "executed": false,
+  "domain": "经济",
+  "reach": "直达",
+  "family": "Country.SetExportSubventions*",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "Goods",
+  "command": "SetExportSubventionsLow",
+  "examples": [
+   "Goods.GetMarket.GetOwner.SetExportSubventionsLow(Goods.Self)"
+  ],
+  "files": [
+   "budget_panel.gui"
+  ],
+  "confirm": false,
+  "count": 1,
+  "executed": false,
+  "domain": "经济",
+  "reach": "直达",
+  "family": "Country.SetExportSubventions*",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "Goods",
+  "command": "SetExportSubventionsMax",
+  "examples": [
+   "Goods.GetMarket.GetOwner.SetExportSubventionsMax(Goods.Self)"
+  ],
+  "files": [
+   "budget_panel.gui"
+  ],
+  "confirm": false,
+  "count": 1,
+  "executed": false,
+  "domain": "经济",
+  "reach": "直达",
+  "family": "Country.SetExportSubventions*",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "Goods",
+  "command": "SetExportTariffsHigh",
+  "examples": [
+   "Goods.GetMarket.GetOwner.SetExportTariffsHigh(Goods.Self)"
+  ],
+  "files": [
+   "budget_panel.gui"
+  ],
+  "confirm": false,
+  "count": 1,
+  "executed": false,
+  "domain": "经济",
+  "reach": "直达",
+  "family": "Country.SetExportTariffs*",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "Goods",
+  "command": "SetExportTariffsLow",
+  "examples": [
+   "Goods.GetMarket.GetOwner.SetExportTariffsLow(Goods.Self)"
+  ],
+  "files": [
+   "budget_panel.gui"
+  ],
+  "confirm": false,
+  "count": 1,
+  "executed": false,
+  "domain": "经济",
+  "reach": "直达",
+  "family": "Country.SetExportTariffs*",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "Goods",
+  "command": "SetExportTariffsMax",
+  "examples": [
+   "Goods.GetMarket.GetOwner.SetExportTariffsMax(Goods.Self)"
+  ],
+  "files": [
+   "budget_panel.gui"
+  ],
+  "confirm": false,
+  "count": 1,
+  "executed": false,
+  "domain": "经济",
+  "reach": "直达",
+  "family": "Country.SetExportTariffs*",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "Goods",
+  "command": "SetExportTariffsNone",
+  "examples": [
+   "Goods.GetMarket.GetOwner.SetExportTariffsNone(Goods.Self)"
+  ],
+  "files": [
+   "budget_panel.gui"
+  ],
+  "confirm": false,
+  "count": 1,
+  "executed": false,
+  "domain": "经济",
+  "reach": "直达",
+  "family": "Country.SetExportTariffs*",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "Goods",
+  "command": "SetImportSubventionsHigh",
+  "examples": [
+   "Goods.GetMarket.GetOwner.SetImportSubventionsHigh(Goods.Self)"
+  ],
+  "files": [
+   "budget_panel.gui"
+  ],
+  "confirm": false,
+  "count": 1,
+  "executed": false,
+  "domain": "经济",
+  "reach": "直达",
+  "family": "Country.SetImportSubventions*",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "Goods",
+  "command": "SetImportSubventionsLow",
+  "examples": [
+   "Goods.GetMarket.GetOwner.SetImportSubventionsLow(Goods.Self)"
+  ],
+  "files": [
+   "budget_panel.gui"
+  ],
+  "confirm": false,
+  "count": 1,
+  "executed": false,
+  "domain": "经济",
+  "reach": "直达",
+  "family": "Country.SetImportSubventions*",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "Goods",
+  "command": "SetImportSubventionsMax",
+  "examples": [
+   "Goods.GetMarket.GetOwner.SetImportSubventionsMax(Goods.Self)"
+  ],
+  "files": [
+   "budget_panel.gui"
+  ],
+  "confirm": false,
+  "count": 1,
+  "executed": false,
+  "domain": "经济",
+  "reach": "直达",
+  "family": "Country.SetImportSubventions*",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "Goods",
+  "command": "SetImportTariffsHigh",
+  "examples": [
+   "Goods.GetMarket.GetOwner.SetImportTariffsHigh(Goods.Self)"
+  ],
+  "files": [
+   "budget_panel.gui"
+  ],
+  "confirm": false,
+  "count": 1,
+  "executed": false,
+  "domain": "经济",
+  "reach": "直达",
+  "family": "Country.SetImportTariffs*",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "Goods",
+  "command": "SetImportTariffsLow",
+  "examples": [
+   "Goods.GetMarket.GetOwner.SetImportTariffsLow(Goods.Self)"
+  ],
+  "files": [
+   "budget_panel.gui"
+  ],
+  "confirm": false,
+  "count": 1,
+  "executed": false,
+  "domain": "经济",
+  "reach": "直达",
+  "family": "Country.SetImportTariffs*",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "Goods",
+  "command": "SetImportTariffsMax",
+  "examples": [
+   "Goods.GetMarket.GetOwner.SetImportTariffsMax(Goods.Self)"
+  ],
+  "files": [
+   "budget_panel.gui"
+  ],
+  "confirm": false,
+  "count": 1,
+  "executed": false,
+  "domain": "经济",
+  "reach": "直达",
+  "family": "Country.SetImportTariffs*",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "Goods",
+  "command": "SetImportTariffsNone",
+  "examples": [
+   "Goods.GetMarket.GetOwner.SetImportTariffsNone(Goods.Self)"
+  ],
+  "files": [
+   "budget_panel.gui"
+  ],
+  "confirm": false,
+  "count": 1,
+  "executed": false,
+  "domain": "经济",
+  "reach": "直达",
+  "family": "Country.SetImportTariffs*",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "Goods",
+  "command": "ToggleTaxation",
+  "examples": [
+   "Goods.ToggleTaxation(GetPlayer)",
+   "Goods.ToggleTaxation(GetMetaPlayer.GetPlayedOrObservedCountry)"
+  ],
+  "files": [
+   "add_consumption_tax_menu.gui",
+   "goods_panel.gui",
+   "right_click_menu.gui"
+  ],
+  "confirm": false,
+  "count": 13,
+  "executed": true,
+  "domain": "经济",
+  "reach": "直达",
+  "family": "Goods.ToggleTaxation",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "Hq",
+  "command": "GetStationSelectedFormationsCommand",
+  "examples": [
+   "Hq.GetStationSelectedFormationsCommand"
+  ],
+  "files": [
+   "map_markers.gui"
+  ],
+  "confirm": true,
+  "count": 2,
+  "executed": true,
+  "domain": "军事",
+  "reach": "组合",
+  "family": "Hq.GetStationSelectedFormationsCommand",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "Institution",
+  "command": "StartChangingLevelTo",
+  "examples": [
+   "Institution.StartChangingLevelTo(InstitutionInvestmentLevel.GetLevel)"
+  ],
+  "files": [
+   "politics_panel_institutions.gui"
+  ],
+  "confirm": false,
+  "count": 2,
+  "executed": true,
+  "domain": "政治",
+  "reach": "直达",
+  "family": "Institution.StartChangingLevelTo",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "Institution",
+  "command": "StopSizeChange",
+  "examples": [
+   "Institution.StopSizeChange"
+  ],
+  "files": [
+   "politics_panel_institutions.gui"
+  ],
+  "confirm": false,
+  "count": 2,
+  "executed": true,
+  "domain": "政治",
+  "reach": "直达",
+  "family": "Institution.StopSizeChange",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "Invasion",
+  "command": "Cancel",
+  "examples": [
+   "Invasion.Cancel"
+  ],
+  "files": [
+   "invasion_panel.gui",
+   "military_formation_panel.gui",
+   "right_click_menu.gui"
+  ],
+  "confirm": true,
+  "count": 6,
+  "executed": true,
+  "domain": "军事",
+  "reach": "组合",
+  "family": "Invasion.Cancel",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "Invasion",
+  "command": "DeployArmyToDefend",
+  "examples": [
+   "Invasion.DeployArmyToDefend(MilitaryFormation.Self)"
+  ],
+  "files": [
+   "right_click_menu.gui"
+  ],
+  "confirm": false,
+  "count": 2,
+  "executed": true,
+  "domain": "军事",
+  "reach": "组合",
+  "family": "Invasion.DeployArmyToDefend",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "Invasion",
+  "command": "DeployFleetToDefend",
+  "examples": [
+   "Invasion.DeployFleetToDefend(MilitaryFormation.Self)"
+  ],
+  "files": [
+   "right_click_menu.gui"
+  ],
+  "confirm": false,
+  "count": 2,
+  "executed": true,
+  "domain": "军事",
+  "reach": "组合",
+  "family": "Invasion.DeployFleetToDefend",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "Invasion",
+  "command": "GetDeploySelectedFormationsCommand",
+  "examples": [
+   "Invasion.GetDeploySelectedFormationsCommand"
+  ],
+  "files": [
+   "map_markers.gui"
+  ],
+  "confirm": false,
+  "count": 1,
+  "executed": true,
+  "domain": "军事",
+  "reach": "组合",
+  "family": "Invasion.GetDeploySelectedFormationsCommand",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "InvasionPlannerPopup",
+  "command": "StartInvasion",
+  "examples": [
+   "InvasionPlannerPopup.StartInvasion"
+  ],
+  "files": [
+   "invasion_planner.gui"
+  ],
+  "confirm": false,
+  "count": 2,
+  "executed": true,
+  "domain": "军事",
+  "reach": "窗口",
+  "family": "InvasionPlannerPopup.StartInvasion",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "Law",
+  "command": "StartEnacting",
+  "examples": [
+   "Law.StartEnacting"
+  ],
+  "files": [
+   "custom_tooltip.gui",
+   "politics_panel_change_law.gui",
+   "politics_panel_types.gui"
+  ],
+  "confirm": false,
+  "count": 10,
+  "executed": true,
+  "domain": "政治",
+  "reach": "直达",
+  "family": "Law.StartEnacting",
+  "status": "已验证",
+  "via": "Actions.enact_law"
+ },
+ {
+  "receiver": "Law",
+  "command": "StartImposing",
+  "examples": [
+   "Law.StartImposing"
+  ],
+  "files": [
+   "right_click_menu.gui"
+  ],
+  "confirm": true,
+  "count": 2,
+  "executed": true,
+  "domain": "政治",
+  "reach": "直达",
+  "family": "Law.StartImposing",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "Law",
+  "command": "StopEnacting",
+  "examples": [
+   "Law.StopEnacting"
+  ],
+  "files": [
+   "custom_tooltip.gui",
+   "politics_panel_change_law.gui",
+   "politics_panel_types.gui"
+  ],
+  "confirm": true,
+  "count": 10,
+  "executed": true,
+  "domain": "政治",
+  "reach": "直达",
+  "family": "Law.StopEnacting",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "MilitaryFormation",
+  "command": "CancelRetrofitShips",
+  "examples": [
+   "MilitaryFormation.CancelRetrofitShips"
+  ],
+  "files": [
+   "military_panel_formations.gui"
+  ],
+  "confirm": true,
+  "count": 4,
+  "executed": true,
+  "domain": "军事",
+  "reach": "组合",
+  "family": "MilitaryFormation.CancelRetrofitShips",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "MilitaryFormation",
+  "command": "CreateNavalMission",
+  "examples": [
+   "MilitaryFormation.CreateNavalMission(NavalMissionType.AccessSelf)"
+  ],
+  "files": [
+   "right_click_menu.gui"
+  ],
+  "confirm": true,
+  "count": 4,
+  "executed": true,
+  "domain": "军事",
+  "reach": "组合",
+  "family": "MilitaryFormation.CreateNavalMission",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "MilitaryFormation",
+  "command": "CreateNavalMissionWithPreviousArea",
+  "examples": [
+   "MilitaryFormation.CreateNavalMissionWithPreviousArea(NavalMissionType.AccessSelf)"
+  ],
+  "files": [
+   "right_click_menu.gui"
+  ],
+  "confirm": true,
+  "count": 4,
+  "executed": true,
+  "domain": "军事",
+  "reach": "组合",
+  "family": "MilitaryFormation.CreateNavalMissionWithPreviousArea",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "MilitaryFormation",
+  "command": "Demobilize",
+  "examples": [
+   "MilitaryFormation.Demobilize"
+  ],
+  "files": [
+   "military_formation_panel.gui",
+   "right_click_menu.gui"
+  ],
+  "confirm": true,
+  "count": 4,
+  "executed": true,
+  "domain": "军事",
+  "reach": "组合",
+  "family": "MilitaryFormation.Demobilize",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "MilitaryFormation",
+  "command": "Disband",
+  "examples": [
+   "MilitaryFormation.Disband"
+  ],
+  "files": [
+   "military_formation_panel.gui",
+   "military_panel_formations.gui",
+   "right_click_menu.gui"
+  ],
+  "confirm": true,
+  "count": 8,
+  "executed": true,
+  "domain": "军事",
+  "reach": "组合",
+  "family": "MilitaryFormation.Disband",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "MilitaryFormation",
+  "command": "DisembarkFormation",
+  "examples": [
+   "MilitaryFormation.DisembarkFormation"
+  ],
+  "files": [
+   "right_click_menu.gui"
+  ],
+  "confirm": false,
+  "count": 4,
+  "executed": true,
+  "domain": "军事",
+  "reach": "组合",
+  "family": "MilitaryFormation.DisembarkFormation",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "MilitaryFormation",
+  "command": "GetDisbandUnitTypeConscriptCommand",
+  "examples": [
+   "MilitaryFormation.GetDisbandUnitTypeConscriptCommand(CombatUnitType.Self)",
+   "MilitaryFormation.GetDisbandUnitTypeConscriptCommand(MilitaryFormationUnitEntry.GetUnitType.Self)"
+  ],
+  "files": [
+   "military_formation_panel.gui"
+  ],
+  "confirm": false,
+  "count": 6,
+  "executed": true,
+  "domain": "军事",
+  "reach": "组合",
+  "family": "MilitaryFormation.GetDisbandUnitTypeConscriptCommand",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "MilitaryFormation",
+  "command": "GetDisbandUnitTypeRegularCommand",
+  "examples": [
+   "MilitaryFormation.GetDisbandUnitTypeRegularCommand(CombatUnitType.Self)",
+   "MilitaryFormation.GetDisbandUnitTypeRegularCommand(MilitaryFormationUnitEntry.GetUnitType.Self)"
+  ],
+  "files": [
+   "military_formation_panel.gui"
+  ],
+  "confirm": false,
+  "count": 6,
+  "executed": true,
+  "domain": "军事",
+  "reach": "组合",
+  "family": "MilitaryFormation.GetDisbandUnitTypeRegularCommand",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "MilitaryFormation",
+  "command": "GetSetDefaultUnitTypeCommand",
+  "examples": [
+   "MilitaryFormation.GetSetDefaultUnitTypeCommand(CombatUnitType.Self)"
+  ],
+  "files": [
+   "military_formation_panel.gui"
+  ],
+  "confirm": false,
+  "count": 2,
+  "executed": true,
+  "domain": "军事",
+  "reach": "组合",
+  "family": "MilitaryFormation.GetSetDefaultUnitTypeCommand",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "MilitaryFormation",
+  "command": "GetUpgradeConscriptUnitTypeCommand",
+  "examples": [
+   "MilitaryFormation.GetUpgradeConscriptUnitTypeCommand(MilitaryFormationUnitEntry.GetUnitType.Self)"
+  ],
+  "files": [
+   "military_formation_panel.gui"
+  ],
+  "confirm": false,
+  "count": 2,
+  "executed": true,
+  "domain": "军事",
+  "reach": "组合",
+  "family": "MilitaryFormation.GetUpgradeConscriptUnitTypeCommand",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "MilitaryFormation",
+  "command": "GetUpgradeRegularUnitTypeCommand",
+  "examples": [
+   "MilitaryFormation.GetUpgradeRegularUnitTypeCommand(MilitaryFormationUnitEntry.GetUnitType.Self)"
+  ],
+  "files": [
+   "military_formation_panel.gui"
+  ],
+  "confirm": false,
+  "count": 4,
+  "executed": true,
+  "domain": "军事",
+  "reach": "组合",
+  "family": "MilitaryFormation.GetUpgradeRegularUnitTypeCommand",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "MilitaryFormation",
+  "command": "GetUpgradeUnitGroupCommand",
+  "examples": [
+   "MilitaryFormation.GetUpgradeUnitGroupCommand(CombatUnitGroup.Self)"
+  ],
+  "files": [
+   "military_formation_panel.gui"
+  ],
+  "confirm": false,
+  "count": 8,
+  "executed": true,
+  "domain": "军事",
+  "reach": "组合",
+  "family": "MilitaryFormation.GetUpgradeUnitGroupCommand",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "MilitaryFormation",
+  "command": "Mobilize",
+  "examples": [
+   "MilitaryFormation.Mobilize"
+  ],
+  "files": [
+   "military_formation_panel.gui",
+   "panel_military.gui",
+   "right_click_menu.gui"
+  ],
+  "confirm": false,
+  "count": 6,
+  "executed": true,
+  "domain": "军事",
+  "reach": "组合",
+  "family": "MilitaryFormation.Mobilize",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "MilitaryFormation",
+  "command": "RaiseConscripts",
+  "examples": [
+   "MilitaryFormation.RaiseConscripts"
+  ],
+  "files": [
+   "military_formation_panel.gui",
+   "right_click_menu.gui"
+  ],
+  "confirm": false,
+  "count": 5,
+  "executed": true,
+  "domain": "军事",
+  "reach": "组合",
+  "family": "MilitaryFormation.RaiseConscripts",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "MilitaryFormation",
+  "command": "RecallForRepairs",
+  "examples": [
+   "MilitaryFormation.RecallForRepairs"
+  ],
+  "files": [
+   "right_click_menu.gui"
+  ],
+  "confirm": false,
+  "count": 2,
+  "executed": true,
+  "domain": "军事",
+  "reach": "组合",
+  "family": "MilitaryFormation.RecallForRepairs",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "MilitaryFormation",
+  "command": "RemoveNavalMission",
+  "examples": [
+   "MilitaryFormation.RemoveNavalMission"
+  ],
+  "files": [
+   "right_click_menu.gui"
+  ],
+  "confirm": false,
+  "count": 8,
+  "executed": true,
+  "domain": "军事",
+  "reach": "组合",
+  "family": "MilitaryFormation.RemoveNavalMission",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "MilitaryFormation",
+  "command": "RetrofitShips",
+  "examples": [
+   "MilitaryFormation.RetrofitShips"
+  ],
+  "files": [
+   "military_panel_formations.gui",
+   "right_click_menu.gui"
+  ],
+  "confirm": false,
+  "count": 3,
+  "executed": true,
+  "domain": "军事",
+  "reach": "组合",
+  "family": "MilitaryFormation.RetrofitShips",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "MilitaryFormation",
+  "command": "RetrofitShipsAndStation",
+  "examples": [
+   "MilitaryFormation.RetrofitShipsAndStation"
+  ],
+  "files": [
+   "right_click_menu.gui"
+  ],
+  "confirm": false,
+  "count": 2,
+  "executed": true,
+  "domain": "军事",
+  "reach": "组合",
+  "family": "MilitaryFormation.RetrofitShipsAndStation",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "MilitaryFormation",
+  "command": "SelectSupplyPriority",
+  "examples": [
+   "MilitaryFormation.SelectSupplyPriority('low')",
+   "MilitaryFormation.SelectSupplyPriority('medium')",
+   "MilitaryFormation.SelectSupplyPriority('high')"
+  ],
+  "files": [
+   "military_formation_panel.gui"
+  ],
+  "confirm": false,
+  "count": 9,
+  "executed": true,
+  "domain": "军事",
+  "reach": "组合",
+  "family": "MilitaryFormation.SelectSupplyPriority",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "MilitaryFormationBorrowSetting",
+  "command": "GetBorrowingCommand",
+  "examples": [
+   "MilitaryFormationBorrowSetting.GetBorrowingCommand"
+  ],
+  "files": [
+   "military_formation_panel.gui"
+  ],
+  "confirm": false,
+  "count": 2,
+  "executed": true,
+  "domain": "军事",
+  "reach": "组合",
+  "family": "MilitaryFormationBorrowSetting.GetBorrowingCommand",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "MilitaryFormationChangeNamePopup",
+  "command": "Confirm",
+  "examples": [
+   "MilitaryFormationChangeNamePopup.Confirm"
+  ],
+  "files": [
+   "military_formation_panel.gui"
+  ],
+  "confirm": false,
+  "count": 2,
+  "executed": true,
+  "domain": "其他",
+  "reach": "界面",
+  "family": "MilitaryFormationChangeNamePopup.Confirm",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "MilitaryFormationWrapped",
+  "command": "EmbarkFormation",
+  "examples": [
+   "MilitaryFormationWrapped.EmbarkFormation(MilitaryFormation.Self)"
+  ],
+  "files": [
+   "right_click_menu.gui"
+  ],
+  "confirm": false,
+  "count": 3,
+  "executed": true,
+  "domain": "军事",
+  "reach": "组合",
+  "family": "MilitaryFormationWrapped.EmbarkFormation",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "MobilizationOption",
+  "command": "Toggle",
+  "examples": [
+   "MobilizationOption.Toggle(MilitaryFormation.AccessSelf)"
+  ],
+  "files": [
+   "military_formation_panel.gui",
+   "panel_military.gui"
+  ],
+  "confirm": true,
+  "count": 19,
+  "executed": true,
+  "domain": "军事",
+  "reach": "组合",
+  "family": "MobilizationOption.Toggle",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "MobilizationOption",
+  "command": "ToggleForSelected",
+  "examples": [
+   "MobilizationOption.ToggleForSelected"
+  ],
+  "files": [
+   "military_formation_panel.gui"
+  ],
+  "confirm": true,
+  "count": 9,
+  "executed": true,
+  "domain": "军事",
+  "reach": "组合",
+  "family": "MobilizationOption.ToggleForSelected",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "PanelMilitary",
+  "command": "GetUpgradeAllUnitsInAllFormationsCommand",
+  "examples": [
+   "PanelMilitary.GetUpgradeAllUnitsInAllFormationsCommand"
+  ],
+  "files": [
+   "panel_military.gui"
+  ],
+  "confirm": false,
+  "count": 2,
+  "executed": true,
+  "domain": "军事",
+  "reach": "窗口",
+  "family": "PanelMilitary.GetUpgradeAllUnitsInAllFormationsCommand",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "PoliticalMovement",
+  "command": "ToggleBolstering",
+  "examples": [
+   "PoliticalMovement.ToggleBolstering"
+  ],
+  "files": [
+   "custom_tooltip.gui",
+   "political_movement_panel.gui",
+   "right_click_menu.gui"
+  ],
+  "confirm": false,
+  "count": 12,
+  "executed": true,
+  "domain": "政治",
+  "reach": "直达",
+  "family": "PoliticalMovement.ToggleBolstering",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "PoliticalMovement",
+  "command": "ToggleSuppression",
+  "examples": [
+   "PoliticalMovement.ToggleSuppression"
+  ],
+  "files": [
+   "custom_tooltip.gui",
+   "political_movement_panel.gui",
+   "right_click_menu.gui"
+  ],
+  "confirm": false,
+  "count": 12,
+  "executed": true,
+  "domain": "政治",
+  "reach": "直达",
+  "family": "PoliticalMovement.ToggleSuppression",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "PowerBloc",
+  "command": "Kick",
+  "examples": [
+   "PowerBloc.Kick(Country.Self)"
+  ],
+  "files": [
+   "power_bloc_panel.gui"
+  ],
+  "confirm": true,
+  "count": 2,
+  "executed": true,
+  "domain": "外交",
+  "reach": "直达",
+  "family": "PowerBloc.Kick",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "PowerBlocFormation",
+  "command": "Confirm",
+  "examples": [
+   "PowerBlocFormation.Confirm"
+  ],
+  "files": [
+   "power_bloc_formation_panel.gui"
+  ],
+  "confirm": true,
+  "count": 2,
+  "executed": true,
+  "domain": "外交",
+  "reach": "窗口",
+  "family": "PowerBlocFormation.Confirm",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "PowerBlocPrinciple",
+  "command": "UpgradeToNextLevel",
+  "examples": [
+   "PowerBlocPrinciple.UpgradeToNextLevel"
+  ],
+  "files": [
+   "custom_tooltip.gui",
+   "power_bloc_panel.gui"
+  ],
+  "confirm": false,
+  "count": 2,
+  "executed": false,
+  "domain": "外交",
+  "reach": "直达",
+  "family": "PowerBlocPrinciple.UpgradeToNextLevel",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "PowerBlocPrincipleSelectionWindow",
+  "command": "SubmitPrincipleSelection",
+  "examples": [
+   "PowerBlocPrincipleSelectionWindow.SubmitPrincipleSelection"
+  ],
+  "files": [
+   "principle_selection_window.gui"
+  ],
+  "confirm": false,
+  "count": 2,
+  "executed": true,
+  "domain": "外交",
+  "reach": "窗口",
+  "family": "PowerBlocPrincipleSelectionWindow.SubmitPrincipleSelection",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "PrestigeGoodChangeNamePopup",
+  "command": "Confirm",
+  "examples": [
+   "PrestigeGoodChangeNamePopup.Confirm"
+  ],
+  "files": [
+   "market_panel.gui"
+  ],
+  "confirm": false,
+  "count": 2,
+  "executed": true,
+  "domain": "其他",
+  "reach": "界面",
+  "family": "PrestigeGoodChangeNamePopup.Confirm",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "ProductionMethod",
+  "command": "GetSwitch",
+  "examples": [
+   "ProductionMethod.GetSwitch"
+  ],
+  "files": [],
+  "confirm": false,
+  "count": 0,
+  "executed": true,
+  "domain": "经济",
+  "reach": "直达",
+  "family": "ProductionMethod.GetSwitch",
+  "status": "已验证",
+  "via": "Actions.set_pm"
+ },
+ {
+  "receiver": "Proposal",
+  "command": "AcceptActionProposal",
+  "examples": [
+   "Proposal.GetDiplomaticAction.AcceptActionProposal"
+  ],
+  "files": [
+   "popups.gui"
+  ],
+  "confirm": false,
+  "count": 4,
+  "executed": true,
+  "domain": "外交",
+  "reach": "直达",
+  "family": "Proposal.AcceptActionProposal",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "Proposal",
+  "command": "AcceptDiplomaticDemand",
+  "examples": [
+   "Proposal.GetDiplomaticDemand.AcceptDiplomaticDemand"
+  ],
+  "files": [
+   "popups.gui"
+  ],
+  "confirm": false,
+  "count": 2,
+  "executed": true,
+  "domain": "外交",
+  "reach": "直达",
+  "family": "Proposal.AcceptDiplomaticDemand",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "Proposal",
+  "command": "AcceptSway",
+  "examples": [
+   "Proposal.GetDiplomaticPlay.GetIncomingSway(Proposal.GetActor.Self,Proposal.GetRecipient.Self).AcceptSway"
+  ],
+  "files": [
+   "popups.gui"
+  ],
+  "confirm": false,
+  "count": 2,
+  "executed": true,
+  "domain": "外交",
+  "reach": "直达",
+  "family": "Proposal.AcceptSway",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "Proposal",
+  "command": "AcceptTreatyProposal",
+  "examples": [
+   "Proposal.GetTreaty.AcceptTreatyProposal"
+  ],
+  "files": [
+   "popups.gui"
+  ],
+  "confirm": false,
+  "count": 2,
+  "executed": true,
+  "domain": "外交",
+  "reach": "直达",
+  "family": "Proposal.AcceptTreatyProposal",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "Proposal",
+  "command": "DeclineActionProposal",
+  "examples": [
+   "Proposal.GetDiplomaticAction.DeclineActionProposal"
+  ],
+  "files": [
+   "popups.gui"
+  ],
+  "confirm": false,
+  "count": 6,
+  "executed": true,
+  "domain": "外交",
+  "reach": "直达",
+  "family": "Proposal.DeclineActionProposal",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "Proposal",
+  "command": "DeclineTreatyProposal",
+  "examples": [
+   "Proposal.GetTreaty.DeclineTreatyProposal"
+  ],
+  "files": [
+   "popups.gui"
+  ],
+  "confirm": true,
+  "count": 2,
+  "executed": true,
+  "domain": "外交",
+  "reach": "直达",
+  "family": "Proposal.DeclineTreatyProposal",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "Proposal",
+  "command": "RejectDiplomaticDemand",
+  "examples": [
+   "Proposal.GetDiplomaticDemand.RejectDiplomaticDemand"
+  ],
+  "files": [
+   "popups.gui"
+  ],
+  "confirm": false,
+  "count": 2,
+  "executed": true,
+  "domain": "外交",
+  "reach": "直达",
+  "family": "Proposal.RejectDiplomaticDemand",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "Proposal",
+  "command": "RejectSway",
+  "examples": [
+   "Proposal.GetDiplomaticPlay.GetIncomingSway(Proposal.GetActor.Self,Proposal.GetRecipient.Self).RejectSway"
+  ],
+  "files": [
+   "popups.gui"
+  ],
+  "confirm": false,
+  "count": 2,
+  "executed": true,
+  "domain": "外交",
+  "reach": "直达",
+  "family": "Proposal.RejectSway",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "ReformGovernment",
+  "command": "Confirm",
+  "examples": [
+   "ReformGovernment.Confirm"
+  ],
+  "files": [
+   "politics_panel_reform_government.gui"
+  ],
+  "confirm": true,
+  "count": 4,
+  "executed": true,
+  "domain": "政治",
+  "reach": "窗口",
+  "family": "ReformGovernment.Confirm",
+  "status": "已验证",
+  "via": "Actions.reform_government"
+ },
+ {
+  "receiver": "ReleaseCountryWindow",
+  "command": "ReleaseCountry",
+  "examples": [
+   "ReleaseCountryWindow.ReleaseCountry"
+  ],
+  "files": [
+   "popups.gui"
+  ],
+  "confirm": false,
+  "count": 2,
+  "executed": true,
+  "domain": "外交",
+  "reach": "窗口",
+  "family": "ReleaseCountryWindow.ReleaseCountry",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "RulerSelectionPopup",
+  "command": "RandomizeRulersOffer",
+  "examples": [
+   "RulerSelectionPopup.RandomizeRulersOffer"
+  ],
+  "files": [
+   "generate_character.gui"
+  ],
+  "confirm": false,
+  "count": 1,
+  "executed": true,
+  "domain": "人物",
+  "reach": "窗口",
+  "family": "RulerSelectionPopup.RandomizeRulersOffer",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "RulerSelectionPopup",
+  "command": "SetRulerCommand",
+  "examples": [
+   "RulerSelectionPopup.SetRulerCommand(Character.Self)"
+  ],
+  "files": [
+   "generate_character.gui"
+  ],
+  "confirm": true,
+  "count": 2,
+  "executed": true,
+  "domain": "人物",
+  "reach": "窗口",
+  "family": "RulerSelectionPopup.SetRulerCommand",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "ScriptedButton",
+  "command": "ExecuteEffect",
+  "examples": [
+   "ScriptedButton.ExecuteEffect"
+  ],
+  "files": [
+   "journal_entry.gui"
+  ],
+  "confirm": false,
+  "count": 2,
+  "executed": true,
+  "domain": "日志",
+  "reach": "直达",
+  "family": "ScriptedButton.ExecuteEffect",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "ScriptedGui",
+  "command": "je_meiji_restoration_japanese_emperor_sgui",
+  "examples": [
+   "ScriptedGui.je_meiji_restoration_japanese_emperor_sgui"
+  ],
+  "files": [
+   "journal_entry_widgets/ep2_japan_widgets.gui"
+  ],
+  "confirm": false,
+  "count": 1,
+  "executed": true,
+  "domain": "日志",
+  "reach": "直达",
+  "family": "ScriptedGui.je_meiji_restoration_japanese_emperor_sgui",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "SeaNodeMovementMarker",
+  "command": "AddSeaRegionToSelectedFleetMissions",
+  "examples": [
+   "SeaNodeMovementMarker.GetSeaNode.AddSeaRegionToSelectedFleetMissions"
+  ],
+  "files": [
+   "map_markers.gui"
+  ],
+  "confirm": false,
+  "count": 3,
+  "executed": true,
+  "domain": "军事",
+  "reach": "组合",
+  "family": "SeaNodeMovementMarker.AddSeaRegionToSelectedFleetMissions",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "SeaNodeMovementMarker",
+  "command": "AssignSelectedFleetsToNewMissionInRegion",
+  "examples": [
+   "SeaNodeMovementMarker.GetSeaNode.AssignSelectedFleetsToNewMissionInRegion(GetDefine('NMilitary','NAVAL_MISSION_TYPE_PROJECT_POWER'))"
+  ],
+  "files": [
+   "map_markers.gui"
+  ],
+  "confirm": true,
+  "count": 6,
+  "executed": true,
+  "domain": "军事",
+  "reach": "组合",
+  "family": "SeaNodeMovementMarker.AssignSelectedFleetsToNewMissionInRegion",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "Ship",
+  "command": "AssignAsFlagship",
+  "examples": [
+   "Ship.AssignAsFlagship"
+  ],
+  "files": [
+   "ship_panel.gui"
+  ],
+  "confirm": true,
+  "count": 2,
+  "executed": true,
+  "domain": "军事",
+  "reach": "组合",
+  "family": "Ship.AssignAsFlagship",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "Ship",
+  "command": "CancelRetrofit",
+  "examples": [
+   "Ship.CancelRetrofit"
+  ],
+  "files": [
+   "combat_unit_types.gui",
+   "ship_panel.gui"
+  ],
+  "confirm": false,
+  "count": 4,
+  "executed": true,
+  "domain": "军事",
+  "reach": "组合",
+  "family": "Ship.CancelRetrofit",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "Ship",
+  "command": "ChangeTemplate",
+  "examples": [
+   "Ship.ChangeTemplate(ShipTemplate.Self)"
+  ],
+  "files": [
+   "right_click_menu.gui"
+  ],
+  "confirm": false,
+  "count": 2,
+  "executed": true,
+  "domain": "军事",
+  "reach": "组合",
+  "family": "Ship.ChangeTemplate",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "Ship",
+  "command": "Decommission",
+  "examples": [
+   "Ship.Decommission"
+  ],
+  "files": [
+   "ship_panel.gui"
+  ],
+  "confirm": false,
+  "count": 1,
+  "executed": false,
+  "domain": "军事",
+  "reach": "组合",
+  "family": "Ship.Decommission",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "Ship",
+  "command": "Retrofit",
+  "examples": [
+   "Ship.Retrofit"
+  ],
+  "files": [
+   "combat_unit_types.gui",
+   "ship_panel.gui"
+  ],
+  "confirm": false,
+  "count": 4,
+  "executed": true,
+  "domain": "军事",
+  "reach": "组合",
+  "family": "Ship.Retrofit",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "Ship",
+  "command": "SetNextFlagshipOrnament",
+  "examples": [
+   "Ship.SetNextFlagshipOrnament"
+  ],
+  "files": [
+   "ship_panel.gui"
+  ],
+  "confirm": false,
+  "count": 2,
+  "executed": true,
+  "domain": "军事",
+  "reach": "组合",
+  "family": "Ship.SetNextFlagshipOrnament",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "Ship",
+  "command": "SetPrevFlagshipOrnament",
+  "examples": [
+   "Ship.SetPrevFlagshipOrnament"
+  ],
+  "files": [
+   "ship_panel.gui"
+  ],
+  "confirm": false,
+  "count": 2,
+  "executed": true,
+  "domain": "军事",
+  "reach": "组合",
+  "family": "Ship.SetPrevFlagshipOrnament",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "Ship",
+  "command": "ToggleFlagshipSignalFlags",
+  "examples": [
+   "Ship.ToggleFlagshipSignalFlags"
+  ],
+  "files": [
+   "ship_panel.gui"
+  ],
+  "confirm": false,
+  "count": 1,
+  "executed": true,
+  "domain": "军事",
+  "reach": "组合",
+  "family": "Ship.ToggleFlagshipSignalFlags",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "Ship",
+  "command": "UnassignAsFlagship",
+  "examples": [
+   "Ship.UnassignAsFlagship"
+  ],
+  "files": [
+   "ship_panel.gui"
+  ],
+  "confirm": true,
+  "count": 2,
+  "executed": true,
+  "domain": "军事",
+  "reach": "组合",
+  "family": "Ship.UnassignAsFlagship",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "ShipChangeNamePopup",
+  "command": "Confirm",
+  "examples": [
+   "ShipChangeNamePopup.Confirm"
+  ],
+  "files": [
+   "ship_panel.gui"
+  ],
+  "confirm": false,
+  "count": 2,
+  "executed": true,
+  "domain": "其他",
+  "reach": "界面",
+  "family": "ShipChangeNamePopup.Confirm",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "ShipConstruction",
+  "command": "Cancel",
+  "examples": [
+   "ShipConstruction.Cancel"
+  ],
+  "files": [
+   "construction_panel.gui"
+  ],
+  "confirm": true,
+  "count": 4,
+  "executed": true,
+  "domain": "军事",
+  "reach": "组合",
+  "family": "ShipConstruction.Cancel",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "ShipConstruction",
+  "command": "MoveDown",
+  "examples": [
+   "ShipConstruction.MoveDown"
+  ],
+  "files": [
+   "construction_panel.gui"
+  ],
+  "confirm": false,
+  "count": 2,
+  "executed": true,
+  "domain": "军事",
+  "reach": "组合",
+  "family": "ShipConstruction.MoveDown",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "ShipConstruction",
+  "command": "MoveToBottom",
+  "examples": [
+   "ShipConstruction.MoveToBottom"
+  ],
+  "files": [
+   "construction_panel.gui"
+  ],
+  "confirm": false,
+  "count": 1,
+  "executed": true,
+  "domain": "军事",
+  "reach": "组合",
+  "family": "ShipConstruction.MoveToBottom",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "ShipConstruction",
+  "command": "MoveToTop",
+  "examples": [
+   "ShipConstruction.MoveToTop"
+  ],
+  "files": [
+   "construction_panel.gui"
+  ],
+  "confirm": false,
+  "count": 1,
+  "executed": true,
+  "domain": "军事",
+  "reach": "组合",
+  "family": "ShipConstruction.MoveToTop",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "ShipConstruction",
+  "command": "MoveUp",
+  "examples": [
+   "ShipConstruction.MoveUp"
+  ],
+  "files": [
+   "construction_panel.gui"
+  ],
+  "confirm": false,
+  "count": 2,
+  "executed": true,
+  "domain": "军事",
+  "reach": "组合",
+  "family": "ShipConstruction.MoveUp",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "ShipDesignerPopup",
+  "command": "CreateTemplate",
+  "examples": [
+   "ShipDesignerPopup.CreateTemplate"
+  ],
+  "files": [
+   "ship_designer_popup.gui"
+  ],
+  "confirm": false,
+  "count": 2,
+  "executed": true,
+  "domain": "军事",
+  "reach": "窗口",
+  "family": "ShipDesignerPopup.CreateTemplate",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "ShipDesignerPopup",
+  "command": "EditTemplate",
+  "examples": [
+   "ShipDesignerPopup.EditTemplate"
+  ],
+  "files": [
+   "ship_designer_popup.gui"
+  ],
+  "confirm": false,
+  "count": 2,
+  "executed": true,
+  "domain": "军事",
+  "reach": "窗口",
+  "family": "ShipDesignerPopup.EditTemplate",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "ShipSelection",
+  "command": "ChangeTemplate",
+  "examples": [
+   "ShipSelection.ChangeTemplate(ShipTemplate.Self)"
+  ],
+  "files": [
+   "right_click_menu.gui"
+  ],
+  "confirm": false,
+  "count": 2,
+  "executed": true,
+  "domain": "军事",
+  "reach": "组合",
+  "family": "ShipSelection.ChangeTemplate",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "ShipSelection",
+  "command": "Decommission",
+  "examples": [
+   "ShipSelection.Decommission"
+  ],
+  "files": [
+   "combat_unit_types.gui"
+  ],
+  "confirm": true,
+  "count": 2,
+  "executed": true,
+  "domain": "军事",
+  "reach": "组合",
+  "family": "ShipSelection.Decommission",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "ShipSelection",
+  "command": "Retrofit",
+  "examples": [
+   "ShipSelection.Retrofit"
+  ],
+  "files": [
+   "combat_unit_types.gui"
+  ],
+  "confirm": true,
+  "count": 2,
+  "executed": true,
+  "domain": "军事",
+  "reach": "组合",
+  "family": "ShipSelection.Retrofit",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "ShipTemplate",
+  "command": "CancelConstruction",
+  "examples": [
+   "ShipTemplate.CancelConstruction"
+  ],
+  "files": [
+   "right_click_menu.gui"
+  ],
+  "confirm": false,
+  "count": 2,
+  "executed": true,
+  "domain": "军事",
+  "reach": "组合",
+  "family": "ShipTemplate.CancelConstruction",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "ShipTemplate",
+  "command": "CancelConstructionForFleet",
+  "examples": [
+   "ShipTemplate.CancelConstructionForFleet(MilitaryFormation.Self)"
+  ],
+  "files": [
+   "right_click_menu.gui"
+  ],
+  "confirm": false,
+  "count": 12,
+  "executed": true,
+  "domain": "军事",
+  "reach": "组合",
+  "family": "ShipTemplate.CancelConstructionForFleet",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "ShipTemplate",
+  "command": "DeleteTemplate",
+  "examples": [
+   "ShipTemplate.DeleteTemplate"
+  ],
+  "files": [
+   "right_click_menu.gui"
+  ],
+  "confirm": true,
+  "count": 2,
+  "executed": true,
+  "domain": "军事",
+  "reach": "组合",
+  "family": "ShipTemplate.DeleteTemplate",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "ShipTemplate",
+  "command": "QueueConstruction",
+  "examples": [
+   "ShipTemplate.QueueConstruction"
+  ],
+  "files": [
+   "right_click_menu.gui"
+  ],
+  "confirm": false,
+  "count": 5,
+  "executed": true,
+  "domain": "军事",
+  "reach": "组合",
+  "family": "ShipTemplate.QueueConstruction",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "ShipTemplate",
+  "command": "QueueConstructionForFleet",
+  "examples": [
+   "ShipTemplate.QueueConstructionForFleet(MilitaryFormation.Self)"
+  ],
+  "files": [
+   "right_click_menu.gui"
+  ],
+  "confirm": false,
+  "count": 12,
+  "executed": true,
+  "domain": "军事",
+  "reach": "组合",
+  "family": "ShipTemplate.QueueConstructionForFleet",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "ShipTemplate",
+  "command": "SetAsDefaultForCountry",
+  "examples": [
+   "ShipTemplate.SetAsDefaultForCountry"
+  ],
+  "files": [
+   "right_click_menu.gui"
+  ],
+  "confirm": false,
+  "count": 2,
+  "executed": true,
+  "domain": "军事",
+  "reach": "组合",
+  "family": "ShipTemplate.SetAsDefaultForCountry",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "ShipTemplate",
+  "command": "SetAsDefaultForFleet",
+  "examples": [
+   "ShipTemplate.SetAsDefaultForFleet(MilitaryFormation.Self)"
+  ],
+  "files": [
+   "right_click_menu.gui"
+  ],
+  "confirm": false,
+  "count": 12,
+  "executed": true,
+  "domain": "军事",
+  "reach": "组合",
+  "family": "ShipTemplate.SetAsDefaultForFleet",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "State",
+  "command": "AbandonColony",
+  "examples": [
+   "State.AbandonColony"
+  ],
+  "files": [
+   "states_panel.gui"
+  ],
+  "confirm": true,
+  "count": 4,
+  "executed": true,
+  "domain": "经济",
+  "reach": "直达",
+  "family": "State.AbandonColony",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "State",
+  "command": "Colonize",
+  "examples": [
+   "State.GetStateRegion.Colonize"
+  ],
+  "files": [
+   "right_click_menu.gui"
+  ],
+  "confirm": true,
+  "count": 2,
+  "executed": true,
+  "domain": "经济",
+  "reach": "直达",
+  "family": "State.Colonize",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "State",
+  "command": "GetStationSelectedFormationsCommand",
+  "examples": [
+   "State.GetStationSelectedFormationsCommand"
+  ],
+  "files": [
+   "right_click_menu.gui"
+  ],
+  "confirm": true,
+  "count": 3,
+  "executed": true,
+  "domain": "经济",
+  "reach": "直达",
+  "family": "State.GetStationSelectedFormationsCommand",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "State",
+  "command": "IncorporateState",
+  "examples": [
+   "State.IncorporateState"
+  ],
+  "files": [
+   "right_click_menu.gui",
+   "states_panel.gui"
+  ],
+  "confirm": false,
+  "count": 6,
+  "executed": true,
+  "domain": "经济",
+  "reach": "直达",
+  "family": "State.IncorporateState",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "State",
+  "command": "TogglePauseColonization",
+  "examples": [
+   "State.TogglePauseColonization"
+  ],
+  "files": [
+   "states_panel.gui"
+  ],
+  "confirm": false,
+  "count": 8,
+  "executed": true,
+  "domain": "经济",
+  "reach": "直达",
+  "family": "State.TogglePauseColonization",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "State",
+  "command": "UnincorporateState",
+  "examples": [
+   "State.UnincorporateState"
+  ],
+  "files": [
+   "right_click_menu.gui",
+   "states_panel.gui"
+  ],
+  "confirm": true,
+  "count": 6,
+  "executed": true,
+  "domain": "经济",
+  "reach": "直达",
+  "family": "State.UnincorporateState",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "StateNameChangePopup",
+  "command": "Confirm",
+  "examples": [
+   "StateNameChangePopup.Confirm"
+  ],
+  "files": [
+   "states_panel.gui"
+  ],
+  "confirm": false,
+  "count": 2,
+  "executed": true,
+  "domain": "其他",
+  "reach": "窗口",
+  "family": "StateNameChangePopup.Confirm",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "Strait",
+  "command": "SetControllerTollRateHighTolls",
+  "examples": [
+   "Strait.SetControllerTollRateHighTolls(Country.Self)"
+  ],
+  "files": [
+   "strait_panel.gui"
+  ],
+  "confirm": false,
+  "count": 3,
+  "executed": true,
+  "domain": "军事",
+  "reach": "组合",
+  "family": "Strait.SetControllerTollRateHighTolls",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "Strait",
+  "command": "SetControllerTollRateLowTolls",
+  "examples": [
+   "Strait.SetControllerTollRateLowTolls(Country.Self)"
+  ],
+  "files": [
+   "strait_panel.gui"
+  ],
+  "confirm": false,
+  "count": 3,
+  "executed": true,
+  "domain": "军事",
+  "reach": "组合",
+  "family": "Strait.SetControllerTollRateLowTolls",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "Strait",
+  "command": "SetControllerTollRateMediumTolls",
+  "examples": [
+   "Strait.SetControllerTollRateMediumTolls(Country.Self)"
+  ],
+  "files": [
+   "strait_panel.gui"
+  ],
+  "confirm": false,
+  "count": 3,
+  "executed": true,
+  "domain": "军事",
+  "reach": "组合",
+  "family": "Strait.SetControllerTollRateMediumTolls",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "Strait",
+  "command": "SetControllerTollRateNoTolls",
+  "examples": [
+   "Strait.SetControllerTollRateNoTolls(Country.Self)"
+  ],
+  "files": [
+   "strait_panel.gui"
+  ],
+  "confirm": false,
+  "count": 3,
+  "executed": true,
+  "domain": "军事",
+  "reach": "组合",
+  "family": "Strait.SetControllerTollRateNoTolls",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "Strait",
+  "command": "SetStateAccessClosed",
+  "examples": [
+   "Strait.SetStateAccessClosed(State.Self)"
+  ],
+  "files": [
+   "strait_panel.gui"
+  ],
+  "confirm": false,
+  "count": 2,
+  "executed": true,
+  "domain": "军事",
+  "reach": "组合",
+  "family": "Strait.SetStateAccessClosed",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "Strait",
+  "command": "SetStateAccessNoMilitary",
+  "examples": [
+   "Strait.SetStateAccessNoMilitary(State.Self)"
+  ],
+  "files": [
+   "strait_panel.gui"
+  ],
+  "confirm": false,
+  "count": 2,
+  "executed": true,
+  "domain": "军事",
+  "reach": "组合",
+  "family": "Strait.SetStateAccessNoMilitary",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "Strait",
+  "command": "SetStateAccessOpen",
+  "examples": [
+   "Strait.SetStateAccessOpen(State.Self)"
+  ],
+  "files": [
+   "strait_panel.gui"
+  ],
+  "confirm": false,
+  "count": 2,
+  "executed": true,
+  "domain": "军事",
+  "reach": "组合",
+  "family": "Strait.SetStateAccessOpen",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "Strait",
+  "command": "SetStateAllowedCountriesNoEnemies",
+  "examples": [
+   "Strait.SetStateAllowedCountriesNoEnemies(State.Self)"
+  ],
+  "files": [
+   "strait_panel.gui"
+  ],
+  "confirm": false,
+  "count": 2,
+  "executed": true,
+  "domain": "军事",
+  "reach": "组合",
+  "family": "Strait.SetStateAllowedCountriesNoEnemies",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "Strait",
+  "command": "SetStateAllowedCountriesOnlyAllies",
+  "examples": [
+   "Strait.SetStateAllowedCountriesOnlyAllies(State.Self)"
+  ],
+  "files": [
+   "strait_panel.gui"
+  ],
+  "confirm": false,
+  "count": 2,
+  "executed": true,
+  "domain": "军事",
+  "reach": "组合",
+  "family": "Strait.SetStateAllowedCountriesOnlyAllies",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "Strait",
+  "command": "SetStateAllowedCountriesOnlyController",
+  "examples": [
+   "Strait.SetStateAllowedCountriesOnlyController(State.Self)"
+  ],
+  "files": [
+   "strait_panel.gui"
+  ],
+  "confirm": false,
+  "count": 4,
+  "executed": true,
+  "domain": "军事",
+  "reach": "组合",
+  "family": "Strait.SetStateAllowedCountriesOnlyController",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "SwayCountryPanel",
+  "command": "CreateSway",
+  "examples": [
+   "SwayCountryPanel.AccessDiplomaticPlay.CreateSway(GetPlayer.Self,SwayCountryPanel.GetCountry,SwayOffer.Self)"
+  ],
+  "files": [
+   "right_click_menu.gui",
+   "sway_country_panel.gui"
+  ],
+  "confirm": true,
+  "count": 6,
+  "executed": true,
+  "domain": "外交",
+  "reach": "窗口",
+  "family": "SwayCountryPanel.CreateSway",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "TechTreeLine",
+  "command": "Research",
+  "examples": [
+   "TechTreeLine.GetTargetTech.Research(GetPlayer.Self)"
+  ],
+  "files": [
+   "tech_tree.gui"
+  ],
+  "confirm": false,
+  "count": 2,
+  "executed": false,
+  "domain": "研究",
+  "reach": "窗口",
+  "family": "TechTreeLine.Research",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "Technology",
+  "command": "AddToQueueWithUnlocks",
+  "examples": [
+   "Technology.AddToQueueWithUnlocks(GetPlayer.Self)"
+  ],
+  "files": [
+   "custom_tooltip.gui",
+   "tech_tree.gui"
+  ],
+  "confirm": false,
+  "count": 8,
+  "executed": true,
+  "domain": "研究",
+  "reach": "直达",
+  "family": "Technology.AddToQueueWithUnlocks",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "Technology",
+  "command": "RemoveFromQueue",
+  "examples": [
+   "Technology.RemoveFromQueue(GetPlayer.Self)"
+  ],
+  "files": [
+   "tech_tree.gui"
+  ],
+  "confirm": false,
+  "count": 6,
+  "executed": true,
+  "domain": "研究",
+  "reach": "直达",
+  "family": "Technology.RemoveFromQueue",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "Technology",
+  "command": "Research",
+  "examples": [
+   "Technology.Research(GetPlayer.Self)"
+  ],
+  "files": [
+   "custom_tooltip.gui",
+   "tech_tree.gui"
+  ],
+  "confirm": false,
+  "count": 5,
+  "executed": false,
+  "domain": "研究",
+  "reach": "直达",
+  "family": "Technology.Research",
+  "status": "已验证",
+  "via": "Actions.research"
+ },
+ {
+  "receiver": "Technology",
+  "command": "ResearchWithUnlocks",
+  "examples": [
+   "Technology.ResearchWithUnlocks(GetPlayer.Self)"
+  ],
+  "files": [
+   "custom_tooltip.gui",
+   "tech_tree.gui"
+  ],
+  "confirm": false,
+  "count": 10,
+  "executed": true,
+  "domain": "研究",
+  "reach": "直达",
+  "family": "Technology.ResearchWithUnlocks",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "TransferFormationPopup",
+  "command": "Confirm",
+  "examples": [
+   "TransferFormationPopup.Confirm"
+  ],
+  "files": [
+   "transfer_formation.gui"
+  ],
+  "confirm": true,
+  "count": 8,
+  "executed": true,
+  "domain": "军事",
+  "reach": "窗口",
+  "family": "TransferFormationPopup.Confirm",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "TransportPlannerPopup",
+  "command": "GetTransportCommand",
+  "examples": [
+   "TransportPlannerPopup.GetTransportCommand(MilitaryFormation.Self)"
+  ],
+  "files": [
+   "right_click_menu.gui"
+  ],
+  "confirm": false,
+  "count": 2,
+  "executed": false,
+  "domain": "军事",
+  "reach": "窗口",
+  "family": "TransportPlannerPopup.GetTransportCommand",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "TransportPlannerPopup",
+  "command": "StartTransport",
+  "examples": [
+   "TransportPlannerPopup.StartTransport"
+  ],
+  "files": [
+   "transport_planner.gui"
+  ],
+  "confirm": false,
+  "count": 2,
+  "executed": true,
+  "domain": "军事",
+  "reach": "窗口",
+  "family": "TransportPlannerPopup.StartTransport",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "Treaty",
+  "command": "WithdrawFromTreaty",
+  "examples": [
+   "Treaty.WithdrawFromTreaty"
+  ],
+  "files": [
+   "treaty_panel.gui"
+  ],
+  "confirm": true,
+  "count": 2,
+  "executed": true,
+  "domain": "外交",
+  "reach": "直达",
+  "family": "Treaty.WithdrawFromTreaty",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "TreatyDraft",
+  "command": "SendProposal",
+  "examples": [
+   "TreatyDraft.SendProposal"
+  ],
+  "files": [
+   "treaty_draft_panel.gui"
+  ],
+  "confirm": false,
+  "count": 2,
+  "executed": true,
+  "domain": "外交",
+  "reach": "窗口",
+  "family": "TreatyDraft.SendProposal",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "War",
+  "command": "ToggleAcceptPeace",
+  "examples": [
+   "War.ToggleAcceptPeace(GetPlayer.Self)"
+  ],
+  "files": [
+   "war_panel.gui"
+  ],
+  "confirm": false,
+  "count": 2,
+  "executed": true,
+  "domain": "军事",
+  "reach": "直达",
+  "family": "War.ToggleAcceptPeace",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "WarGoal",
+  "command": "MakeWarGoalPrimaryDemand",
+  "examples": [
+   "WarGoal.MakeWarGoalPrimaryDemand(GetPlayer.Self)"
+  ],
+  "files": [
+   "diplomatic_play_panel.gui"
+  ],
+  "confirm": false,
+  "count": 2,
+  "executed": true,
+  "domain": "外交",
+  "reach": "直达",
+  "family": "WarGoal.MakeWarGoalPrimaryDemand",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "WarGoal",
+  "command": "ToggleIsPressedInPotentialPeaceDeal",
+  "examples": [
+   "WarGoal.ToggleIsPressedInPotentialPeaceDeal(GetPlayer.Self)"
+  ],
+  "files": [
+   "add_wargoal_panel.gui",
+   "map_markers.gui"
+  ],
+  "confirm": false,
+  "count": 8,
+  "executed": true,
+  "domain": "外交",
+  "reach": "直达",
+  "family": "WarGoal.ToggleIsPressedInPotentialPeaceDeal",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "WarGoalDraft",
+  "command": "AddTreatyWarGoal",
+  "examples": [
+   "WarGoalDraft.GetDiplomaticPlay.AddTreatyWarGoal(WarGoalDraft.Self,ArticleDraft.Self)"
+  ],
+  "files": [
+   "right_click_menu.gui"
+  ],
+  "confirm": false,
+  "count": 1,
+  "executed": false,
+  "domain": "外交",
+  "reach": "窗口",
+  "family": "WarGoalDraft.AddTreatyWarGoal",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "WarGoalDraft",
+  "command": "AddWarGoal",
+  "examples": [
+   "WarGoalDraft.GetDiplomaticPlay.AddWarGoal(WarGoalDraft.Self)"
+  ],
+  "files": [
+   "right_click_menu.gui"
+  ],
+  "confirm": false,
+  "count": 2,
+  "executed": true,
+  "domain": "外交",
+  "reach": "窗口",
+  "family": "WarGoalDraft.AddWarGoal",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "WarPanel",
+  "command": "Capitulate",
+  "examples": [
+   "WarPanel.GetWar.Capitulate(GetPlayer.Self)"
+  ],
+  "files": [
+   "war_panel.gui"
+  ],
+  "confirm": true,
+  "count": 2,
+  "executed": true,
+  "domain": "军事",
+  "reach": "窗口",
+  "family": "WarPanel.Capitulate",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "WarPanel",
+  "command": "ProposePeaceDeal",
+  "examples": [
+   "WarPanel.GetWar.ProposePeaceDeal(GetPlayer.Self)",
+   "WarPanel.GetWar.ProposePeaceDeal(GetPlayer)"
+  ],
+  "files": [
+   "war_panel.gui"
+  ],
+  "confirm": false,
+  "count": 2,
+  "executed": true,
+  "domain": "军事",
+  "reach": "窗口",
+  "family": "WarPanel.ProposePeaceDeal",
+  "status": "未做",
+  "via": ""
+ },
+ {
+  "receiver": "WarPanel",
+  "command": "SetWhitePeace",
+  "examples": [
+   "WarPanel.GetWar.SetWhitePeace(GetPlayer.Self)"
+  ],
+  "files": [
+   "war_panel.gui"
+  ],
+  "confirm": false,
+  "count": 2,
+  "executed": true,
+  "domain": "军事",
+  "reach": "窗口",
+  "family": "WarPanel.SetWhitePeace",
+  "status": "未做",
+  "via": ""
+ }
+]

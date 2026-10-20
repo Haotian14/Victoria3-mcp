@@ -14,7 +14,7 @@ sts2 是 .NET 游戏，注入后靠反射就能读写对象；维多利亚 3 是
 - 写：界面按钮 `onclick = "[Execute(Law.StartEnacting)]"` 背后的命令，桥接层用同一条路径执行。
 
 所以动作与玩家点击完全等价（法律走推行流程、建造进队列、研究进研究槽），也不用截图或模拟按键。
-逆向细节与踩坑见 [docs/bridge.md](docs/bridge.md)。
+逆向细节与踩坑见 [docs/bridge.md](docs/bridge.md)。玩家能做的全部操作（界面按钮背后的游戏命令）及打通进度见 [docs/actions.md](docs/actions.md)。
 
 | 里程碑 | 内容 | 状态 |
 |---|---|---|
@@ -58,7 +58,7 @@ Claude Code ──MCP──> agent (Python)                      V3Bridge.dll（
 | `game/localization/` | 中英文名 | 界面名字 → 游戏 id |
 | 存档（`*.v3`，文本格式） | 完整局面 | 兜底、核对（解析约 20 秒） |
 
-刷新静态数据（游戏更新后）：`python tools/extract_gamedata.py`
+刷新静态数据（游戏更新后）：`python tools/extract_gamedata.py`；刷新玩家操作清单：`python tools/extract_actions.py`
 
 ## 环境要求
 
@@ -145,7 +145,7 @@ src/agent/data/      静态数据（tools/ 生成）与策略参数（strategy.j
 scripts/             启动、游玩、验收脚本
 tools/               数据抽取脚本
 tests/               单测（构造的数据，不需要游戏）
-docs/                逆向记录（bridge.md）、策略说明（strategy.md）
+docs/                逆向记录（bridge.md）、策略说明（strategy.md）、玩家操作清单（actions.md）
 ```
 
 ## 边界
