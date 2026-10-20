@@ -51,7 +51,7 @@ struct DataContext {
 };
 
 constexpr size_t kStmtSize = 0x200;        // SPdxDataStatement 实际 0x138，留余量
-constexpr size_t kStmtReqTypes = 0xb8;     // int* 需要的上下文类型
+constexpr size_t kStmtReqTypes = 0xb8;     // 需要的上下文类型（每项 8 字节）
 constexpr size_t kStmtReqCount = 0xc4;     // int  个数
 constexpr size_t kStmtCall = 0x18;         // 末端调用（CallVoid 的第一个参数）
 constexpr size_t kLocEntrySize = 0x178;    // BuildLocData 产出的每一段
@@ -74,7 +74,15 @@ using ModelSizeFn = int (*)(void* impl, void* storage);
 using ModelItemFn = void* (*)(void* impl, DataContext* out, void* storage, int index);
 using DcConvertFn = void (*)(DataContext* dc, CtxEntry* out);
 
+// 游戏状态访问作用域（引擎自己的 RAII，界面更新时就处在 Interface 访问下）：
+// ctor(scope, access, hidden_access, reason)，dtor(scope)。部分数据函数断言必须在这个作用域里调用。
+using AccessCtorFn = void* (*)(void* scope, int access, int hidden, const char* reason);
+using AccessDtorFn = void (*)(void* scope);
+constexpr int kAccessInterface = 1;
+
 uint8_t* g_base = nullptr;
+AccessCtorFn g_access_ctor = nullptr;
+AccessDtorFn g_access_dtor = nullptr;
 ArrayInitFn g_array_init = nullptr;
 EmptyTypeFn g_empty_type = nullptr;
 StmtCtorFn g_stmt_ctor = nullptr;
@@ -234,16 +242,31 @@ bool to_ctx_entry(DataContext* dc, CtxEntry* e) {
 
 // 按语句的需求排好上下文数组。items 里类型对得上的就填进去，其余留空（全局表达式用不到）。
 // 返回的数组指向 storage，调用方保证 storage 活得比求值久。
+std::string g_ctx_note;  // 最近一次没配上的上下文需求，失败时附在错误信息后面
+
 PdxArray make_ctx(void* stmt, const CtxEntry* items, int n_items, CtxEntry* storage, int cap) {
     PdxArray ctx;
     g_array_init(&ctx);
+    g_ctx_note.clear();
     int n = stmt ? *reinterpret_cast<int*>(static_cast<uint8_t*>(stmt) + kStmtReqCount) : 0;
     if (n <= 0 || n > cap) return ctx;
-    const int* req = *reinterpret_cast<int**>(static_cast<uint8_t*>(stmt) + kStmtReqTypes);
+    // 需求表每项 8 字节，类型 id 在低 4 字节（游戏里按 [base + k*8] 读）
+    const uint8_t* req_base = *reinterpret_cast<uint8_t**>(static_cast<uint8_t*>(stmt) + kStmtReqTypes);
+    int req[16];
+    for (int k = 0; k < n; ++k) req[k] = *reinterpret_cast<const int*>(req_base + k * 8);
     for (int k = 0; k < n; ++k) {
         storage[k] = CtxEntry{nullptr, *g_default_id(), true, {}};
+        bool matched = false;
         for (int j = 0; j < n_items; ++j) {
-            if (items[j].type_id == req[k]) storage[k] = items[j];
+            if (items[j].type_id == req[k]) {
+                storage[k] = items[j];
+                matched = true;
+            }
+        }
+        if (!matched) {
+            g_ctx_note += "（需要上下文类型 " + std::to_string(req[k]) + "，路径提供了";
+            for (int j = 0; j < n_items; ++j) g_ctx_note += " " + std::to_string(items[j].type_id);
+            g_ctx_note += "）";
         }
     }
     ctx.data = storage;
@@ -279,7 +302,7 @@ bool read_in(const std::string& text, const CtxEntry* items, int n_items, std::s
     if (!seh_fetch(result, &loc, &ctx, &scr)) { *error = exc_text("求值"); return false; }
     auto* s = reinterpret_cast<GameString*>(result);
     out->assign(s->c_str(), s->size);
-    if (result[0x20]) { *error = "求值失败（看 error.log）"; return false; }
+    if (result[0x20]) { *error = "求值失败（看 error.log）" + g_ctx_note; return false; }
     // 解析出的段与结果字符串由游戏分配，这里不释放（每次几百字节）
     return true;
 }
@@ -301,7 +324,7 @@ bool exec_in(const std::string& statement, const CtxEntry* items, int n_items, s
     int r = seh_exec(stmt, &ctx, &scr, any);
     seh_destroy(stmt);
     if (r < 0) { *error = exc_text("执行"); return false; }
-    if (r == 0) { *error = "执行失败（看 error.log）"; return false; }
+    if (r == 0) { *error = "执行失败（看 error.log）" + g_ctx_note; return false; }
     return true;
 }
 
@@ -322,7 +345,7 @@ bool eval_in(const std::string& statement, bool flag, const CtxEntry* items, int
     int r = seh_eval(stmt, &ctx, &scr, any_out);
     seh_destroy(stmt);
     if (r < 0) { *error = exc_text("求值"); return false; }
-    if (r == 0) { *error = "求值失败（看 error.log）"; return false; }
+    if (r == 0) { *error = "求值失败（看 error.log）" + g_ctx_note; return false; }
     return true;
 }
 
@@ -391,6 +414,21 @@ bool function_bounds(uint8_t* addr, uint8_t** begin, size_t* size) {
 }
 
 std::string g_describe;
+
+// 在 Interface 访问作用域里执行：与界面更新时同样的前提
+struct Access {
+    alignas(16) uint8_t scope[0x80] = {};
+    bool on = false;
+    Access() {
+        if (g_access_ctor) {
+            g_access_ctor(scope, kAccessInterface, 0, "V3Bridge");
+            on = true;
+        }
+    }
+    ~Access() {
+        if (on) g_access_dtor(scope);
+    }
+};
 
 }  // namespace
 
@@ -475,6 +513,40 @@ bool locate(uint8_t* base, std::string* error) {
     if (!site) return fail("找不到 CPdxArray::Init");
     uint8_t* array_init = call_target_after(site, 3);
 
+    // 访问作用域：SetAccessToDestroyed 所在函数之后紧挨着的两个函数就是作用域的构造与析构；
+    // 用「构造函数第一个 lea 指向的全局」与 SetAccessToDestroyed 写的全局是否一致来核对
+    s = scan::find_cstring(mod.rdata, "NGameState::SetAccessToDestroyed");
+    if (!s || scan::find_lea_refs(mod.text, s, refs, 4) == 0) return fail("找不到 SetAccessToDestroyed");
+    uint8_t* destroyed = scan::function_start(refs[0]);
+    uint8_t* access_global = nullptr;
+    {
+        uint8_t* db = nullptr;
+        size_t ds = 0;
+        if (!function_bounds(destroyed, &db, &ds)) return fail("SetAccessToDestroyed 没有展开信息");
+        uint8_t* w = scan::find_pattern(db, ds, "89 05");  // mov dword [rip+disp], eax
+        if (w) access_global = w + 6 + *reinterpret_cast<int32_t*>(w + 2);
+    }
+    uint8_t* actor = nullptr;
+    uint8_t* adtor = nullptr;
+    {
+        uint8_t* db = nullptr;
+        size_t ds = 0;
+        function_bounds(destroyed, &db, &ds);
+        uint8_t* p = db + ds;
+        while (*p == 0xCC) ++p;  // 跳过函数间的填充
+        actor = p;
+        uint8_t* ab = nullptr;
+        size_t as = 0;
+        if (!function_bounds(actor, &ab, &as) || ab != actor) return fail("访问作用域构造函数边界不对");
+        uint8_t* l = scan::find_pattern(ab, as, "48 8D 05");
+        if (!l || l + 7 + *reinterpret_cast<int32_t*>(l + 3) != access_global) return fail("访问作用域构造函数核对失败");
+        p = ab + as;
+        while (*p == 0xCC) ++p;
+        adtor = p;
+    }
+    g_access_ctor = reinterpret_cast<AccessCtorFn>(actor);
+    g_access_dtor = reinterpret_cast<AccessDtorFn>(adtor);
+
     g_array_init = reinterpret_cast<ArrayInitFn>(array_init);
     g_empty_type = reinterpret_cast<EmptyTypeFn>(empty);
     g_stmt_ctor = reinterpret_cast<StmtCtorFn>(ctor);
@@ -492,7 +564,8 @@ bool locate(uint8_t* base, std::string* error) {
     g_describe = "{\"fetch\":\"" + h(fetch) + "\",\"eval\":\"" + h(eval) + "\",\"resolve\":\"" + h(resolve) +
                  "\",\"call_void\":\"" + h(call_void) + "\",\"create\":\"" + h(create) + "\",\"build_loc\":\"" +
                  h(build) + "\",\"stmt_ctor\":\"" + h(ctor) + "\",\"stmt_dtor\":\"" + h(dtor) +
-                 "\",\"array_init\":\"" + h(array_init) + "\",\"factory\":\"" + h(factory) + "\"}";
+                 "\",\"array_init\":\"" + h(array_init) + "\",\"factory\":\"" + h(factory) +
+                 "\",\"access_ctor\":\"" + h(actor) + "\",\"access_dtor\":\"" + h(adtor) + "\"}";
     return true;
 }
 
@@ -501,6 +574,7 @@ bool ready() { return g_eval != nullptr; }
 std::string describe() { return g_describe.empty() ? "null" : g_describe; }
 
 bool read(const std::vector<PathStep>& path, const std::string& text, std::string* out, std::string* error) {
+    Access access;
     std::vector<CtxEntry> items;
     std::vector<AnyBuf> anys;
     if (!walk(path, &items, &anys, error)) return false;
@@ -508,6 +582,7 @@ bool read(const std::vector<PathStep>& path, const std::string& text, std::strin
 }
 
 bool exec(const std::vector<PathStep>& path, const std::string& statement, std::string* error) {
+    Access access;
     std::vector<CtxEntry> items;
     std::vector<AnyBuf> anys;
     if (!walk(path, &items, &anys, error)) return false;
@@ -515,11 +590,13 @@ bool exec(const std::vector<PathStep>& path, const std::string& statement, std::
 }
 
 bool eval_raw(const std::string& statement, bool flag, uint8_t* any_out, std::string* error) {
+    Access access;
     return eval_in(statement, flag, nullptr, 0, any_out, error);
 }
 
 bool list_read(const std::vector<PathStep>& path, const std::string& list, const std::vector<std::string>& fields,
                int limit, std::vector<std::vector<std::string>>* rows, std::string* error) {
+    Access access;
     std::vector<CtxEntry> items;
     std::vector<AnyBuf> anys;
     if (!walk(path, &items, &anys, error)) return false;
