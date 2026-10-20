@@ -4,7 +4,8 @@
 - console(cmd)            控制台命令（debug_mode 下可用）
 - read / read_many        按界面表达式求值，"[GetMetaPlayer.GetPlayedOrObservedCountry.GetGDP|2]"
 - exec                    执行语句，与界面 onclick 同一条路径（玩家动作）
-- rows / exec_on          界面列表（datamodel）逐项求值、在某一项上执行
+- rows                    界面列表（datamodel）逐项求值
+- path=[(列表, 下标), ...] 逐层取列表项作为上下文，在某一项上读或执行
 
 游戏侧失败（表达式不合法、动作不可用）是 HTTP 200 + ok:false；连不上 / 协议错误才抛 BridgeError。
 """
@@ -27,6 +28,8 @@ FIELD_ERROR = "\x01"            # rows 里单个字段求值失败时以它开�
 
 PLAYER = "GetMetaPlayer.GetPlayedOrObservedCountry"     # 只读路径
 PLAYER_MUT = "AccessMetaPlayer.AccessPlayedOrObservedCountry"  # Access* 列表要求非 const
+
+Path = list[tuple[str, int]]
 
 
 class BridgeError(RuntimeError):
@@ -96,40 +99,55 @@ class Bridge:
         return self._request("POST", "/console", {"cmd": cmd})
 
     # ------------------------------------------------------------ 数据系统
-    def read(self, text: str) -> str:
+    # path：上下文路径 [(列表语句, 下标), ...]，逐层取列表项作为后续表达式的上下文，
+    # 如 [(f"{PLAYER_MUT}.AccessStates", 3)] 之后就能写 "State.GetName"。
+
+    @staticmethod
+    def _path(path: Path | None) -> dict[str, Any]:
+        q: dict[str, Any] = {}
+        for k, (lst, idx) in enumerate(path or []):
+            q[f"p{k}"] = lst
+            q[f"i{k}"] = idx
+        return q
+
+    def read(self, text: str, path: Path | None = None) -> str:
         """一段界面文本（可含多个 [..]）的求值结果，原样返回。失败抛 GameError。"""
-        r = self._request("POST", "/data/read", {"text": text})
+        r = self._request("POST", "/data/read", {"text": text, **self._path(path)})
         if not r.get("ok"):
             raise GameError(f"{text}：{r.get('output')}")
         return r["output"]
 
-    def read_many(self, exprs: list[str]) -> list[str]:
-        """一次往返求多个表达式（不带方括号）。任一失败整批失败 —— 调用方应只放确定可求值的。"""
+    def read_many(self, exprs: list[str], path: Path | None = None) -> list[str | None]:
+        """一次往返求多个表达式（不带方括号）。整批失败时逐个重试，求不出的位置给 None。
+        带 path 时每段只能有一个需要上下文的表达式，所以逐个求。"""
         if not exprs:
             return []
-        out = self.read(SEP.join(f"[{e}]" for e in exprs))
-        parts = out.split(SEP)
-        if len(parts) != len(exprs):
-            raise GameError(f"read_many 结果个数不符：{len(parts)} != {len(exprs)}")
-        return parts
+        if not path:
+            try:
+                parts = self.read(SEP.join(f"[{e}]" for e in exprs)).split(SEP)
+                if len(parts) == len(exprs):
+                    return parts
+            except GameError:
+                pass
+        out: list[str | None] = []
+        for e in exprs:
+            try:
+                out.append(self.read(f"[{e}]", path))
+            except GameError:
+                out.append(None)
+        return out
 
-    def exec(self, stmt: str) -> None:
-        """执行语句（不带方括号），如 "Execute(GetPlayer.SetTaxLevelHigh)"。失败抛 GameError。"""
-        r = self._request("POST", "/data/exec", {"stmt": stmt})
+    def exec(self, stmt: str, path: Path | None = None) -> None:
+        """执行语句（不带方括号），如 "Execute(Building.QueueConstruction)"。失败抛 GameError。"""
+        r = self._request("POST", "/data/exec", {"stmt": stmt, **self._path(path)})
         if not r.get("ok"):
             raise GameError(f"{stmt}：{r.get('output')}")
 
-    def rows(self, list_stmt: str, fields: list[str], limit: int = 0) -> list[list[str]]:
-        """界面列表逐项求值。fields 每项是一段带一个 [..] 的文本，如 "[Technology.GetName]"。
+    def rows(self, list_stmt: str, fields: list[str], path: Path | None = None, limit: int = 0) -> list[list[str]]:
+        """界面列表逐项求值。fields 每项是不带方括号的表达式，如 "Technology.GetName"。
         单个字段失败时该格以 FIELD_ERROR 开头，不影响其他格。"""
-        r = self._request("POST", "/data/list", {"list": list_stmt, "fields": SEP.join(fields), "limit": limit})
+        r = self._request("POST", "/data/list", {"list": list_stmt, "fields": SEP.join(f"[{f}]" for f in fields),
+                                                 "limit": limit, **self._path(path)})
         if not r.get("ok"):
             raise GameError(f"{list_stmt}：{r.get('output')}")
         return r["output"]
-
-    def exec_on(self, list_stmt: str, index: int, stmt: str, check: str = "", expect: str = "") -> None:
-        """在列表第 index 项的上下文里执行 stmt。给了 check 时先核对该项 check 文本等于 expect。"""
-        r = self._request("POST", "/data/list_exec",
-                          {"list": list_stmt, "index": index, "stmt": stmt, "check": check, "expect": expect})
-        if not r.get("ok"):
-            raise GameError(f"{list_stmt}[{index}] {stmt}：{r.get('output')}")

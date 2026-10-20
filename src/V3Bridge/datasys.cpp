@@ -333,13 +333,18 @@ struct Model {
     void* storage;
 };
 
-bool open_model(const std::string& list, uint8_t* any, Model* m, int* size, std::string* error) {
-    if (!eval_in(list, true, nullptr, 0, any, error)) return false;
-    uint64_t type = *reinterpret_cast<uint64_t*>(any);
-    uint8_t* model = (type & 1) ? *reinterpret_cast<uint8_t**>(any + 8) : any + 8;
+struct AnyBuf {
+    alignas(16) uint8_t b[0x80];
+};
+
+bool open_model(const std::string& list, const std::vector<CtxEntry>& items, AnyBuf* any, Model* m, int* size,
+                std::string* error) {
+    if (!eval_in(list, true, items.data(), static_cast<int>(items.size()), any->b, error)) return false;
+    uint64_t type = *reinterpret_cast<uint64_t*>(any->b);
+    uint8_t* model = (type & 1) ? *reinterpret_cast<uint8_t**>(any->b + 8) : any->b + 8;
     m->impl = *reinterpret_cast<void**>(model);
     m->storage = model + 8;
-    if (!m->impl) { *error = "不是数据模型（列表）"; return false; }
+    if (!m->impl) { *error = "不是数据模型（列表）：" + list; return false; }
     *size = seh_model_size(m->impl, m->storage);
     if (*size < 0) { *error = exc_text("取列表长度"); return false; }
     return true;
@@ -349,6 +354,27 @@ bool item_ctx(const Model& m, int i, CtxEntry* e, std::string* error) {
     DataContext dc{};
     if (!seh_model_item(m.impl, &dc, m.storage, i)) { *error = exc_text("取列表项"); return false; }
     if (!to_ctx_entry(&dc, e)) { *error = "列表项没有可用的上下文"; return false; }
+    return true;
+}
+
+// 沿路径逐层取列表项，累积成上下文：[(Country.AccessStates, 3), (State.GetPotentialUrbanBuildings, 0)]
+// 之后的表达式就能同时用 State 与 Building。anys 保存各层列表的求值结果，调用方用完前不能释放。
+bool walk(const std::vector<PathStep>& path, std::vector<CtxEntry>* items, std::vector<AnyBuf>* anys,
+          std::string* error) {
+    anys->reserve(path.size() + 1);
+    for (const PathStep& step : path) {
+        anys->emplace_back();
+        Model m{};
+        int size = 0;
+        if (!open_model(step.list, *items, &anys->back(), &m, &size, error)) return false;
+        if (step.index < 0 || step.index >= size) {
+            *error = step.list + " 下标 " + std::to_string(step.index) + " 越界（共 " + std::to_string(size) + " 项）";
+            return false;
+        }
+        CtxEntry e{};
+        if (!item_ctx(m, step.index, &e, error)) return false;
+        items->push_back(e);
+    }
     return true;
 }
 
@@ -474,58 +500,47 @@ bool ready() { return g_eval != nullptr; }
 
 std::string describe() { return g_describe.empty() ? "null" : g_describe; }
 
-bool read(const std::string& text, std::string* out, std::string* error) {
-    return read_in(text, nullptr, 0, out, error);
+bool read(const std::vector<PathStep>& path, const std::string& text, std::string* out, std::string* error) {
+    std::vector<CtxEntry> items;
+    std::vector<AnyBuf> anys;
+    if (!walk(path, &items, &anys, error)) return false;
+    return read_in(text, items.data(), static_cast<int>(items.size()), out, error);
 }
 
-bool exec(const std::string& statement, std::string* error) { return exec_in(statement, nullptr, 0, error); }
+bool exec(const std::vector<PathStep>& path, const std::string& statement, std::string* error) {
+    std::vector<CtxEntry> items;
+    std::vector<AnyBuf> anys;
+    if (!walk(path, &items, &anys, error)) return false;
+    return exec_in(statement, items.data(), static_cast<int>(items.size()), error);
+}
 
 bool eval_raw(const std::string& statement, bool flag, uint8_t* any_out, std::string* error) {
     return eval_in(statement, flag, nullptr, 0, any_out, error);
 }
 
-bool list_read(const std::string& list, const std::vector<std::string>& fields, int limit,
-               std::vector<std::vector<std::string>>* rows, std::string* error) {
-    alignas(16) uint8_t any[0x80] = {};
+bool list_read(const std::vector<PathStep>& path, const std::string& list, const std::vector<std::string>& fields,
+               int limit, std::vector<std::vector<std::string>>* rows, std::string* error) {
+    std::vector<CtxEntry> items;
+    std::vector<AnyBuf> anys;
+    if (!walk(path, &items, &anys, error)) return false;
+    anys.emplace_back();
     Model m{};
     int size = 0;
-    if (!open_model(list, any, &m, &size, error)) return false;
+    if (!open_model(list, items, &anys.back(), &m, &size, error)) return false;
     if (limit > 0 && size > limit) size = limit;
+    items.emplace_back();
     for (int i = 0; i < size; ++i) {
-        CtxEntry e{};
         std::vector<std::string> row;
-        if (!item_ctx(m, i, &e, error)) return false;
+        if (!item_ctx(m, i, &items.back(), error)) return false;
         for (const std::string& f : fields) {
             std::string v, err;
-            if (!read_in(f, &e, 1, &v, &err)) v = "\x01" + err;  // 单个字段失败不中断整张表，以 \x01 开头标出
+            // 单个字段失败不中断整张表，以  开头标出
+            if (!read_in(f, items.data(), static_cast<int>(items.size()), &v, &err)) v = "" + err;
             row.push_back(v);
         }
         rows->push_back(std::move(row));
     }
     return true;
-}
-
-bool list_exec(const std::string& list, int index, const std::string& check, const std::string& expect,
-               const std::string& statement, std::string* error) {
-    alignas(16) uint8_t any[0x80] = {};
-    Model m{};
-    int size = 0;
-    if (!open_model(list, any, &m, &size, error)) return false;
-    if (index < 0 || index >= size) {
-        *error = "下标越界（列表有 " + std::to_string(size) + " 项）";
-        return false;
-    }
-    CtxEntry e{};
-    if (!item_ctx(m, index, &e, error)) return false;
-    if (!check.empty()) {  // 先核对这一项还是调用方以为的那一项，列表在两次请求之间可能变了
-        std::string v;
-        if (!read_in(check, &e, 1, &v, error)) return false;
-        if (v != expect) {
-            *error = "核对失败：第 " + std::to_string(index) + " 项是 " + v;
-            return false;
-        }
-    }
-    return exec_in(statement, &e, 1, error);
 }
 
 }  // namespace datasys

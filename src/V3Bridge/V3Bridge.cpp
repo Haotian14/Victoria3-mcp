@@ -149,19 +149,17 @@ bool locate() {
 }
 
 // ---------------------------------------------------------------- 主线程执行
-enum class JobKind { Console, Read, Exec, Call, Eval, List, ListExec };
+enum class JobKind { Console, Read, Exec, Call, Eval, List };
 
 struct Job {
     JobKind kind = JobKind::Console;
     bool flag = false;      // /data/eval：CreateStatement 的第四个参数
     uint64_t call[5] = {};  // 开发用 /call：函数 rva 与四个参数
     std::string cmd;        // 命令 / 文本 / 语句
-    // 列表：/data/list 与 /data/list_exec
-    std::string list;
+    std::vector<datasys::PathStep> path;  // 数据系统的上下文路径（p0/i0, p1/i1 ...）
+    std::string list;                     // /data/list：要逐项求值的列表
     std::vector<std::string> fields;
     int limit = 0;
-    int index = -1;
-    std::string check, expect;
     bool json = false;      // output 已经是 JSON（不再当字符串转义）
     bool ok = false;
     bool crashed = false;
@@ -207,7 +205,7 @@ void run_job(Job* job) {
     if (job->kind == JobKind::List) {
         std::vector<std::vector<std::string>> rows;
         std::string err;
-        job->ok = datasys::list_read(job->list, job->fields, job->limit, &rows, &err);
+        job->ok = datasys::list_read(job->path, job->list, job->fields, job->limit, &rows, &err);
         if (!job->ok) { job->output = err; return; }
         std::string o = "[";
         for (size_t r = 0; r < rows.size(); ++r) {
@@ -217,12 +215,6 @@ void run_job(Job* job) {
         }
         job->output = o + "]";
         job->json = true;
-        return;
-    }
-    if (job->kind == JobKind::ListExec) {
-        std::string err;
-        job->ok = datasys::list_exec(job->list, job->index, job->check, job->expect, job->cmd, &err);
-        job->output = err;
         return;
     }
     if (job->kind == JobKind::Call) {
@@ -235,7 +227,7 @@ void run_job(Job* job) {
     }
     if (job->kind == JobKind::Read) {
         std::string err;
-        job->ok = datasys::read(job->cmd, &job->output, &err);
+        job->ok = datasys::read(job->path, job->cmd, &job->output, &err);
         if (!job->ok) job->output = err + (job->output.empty() ? "" : "：" + job->output);
         return;
     }
@@ -250,7 +242,7 @@ void run_job(Job* job) {
     }
     if (job->kind == JobKind::Exec) {
         std::string err;
-        job->ok = datasys::exec(job->cmd, &err);
+        job->ok = datasys::exec(job->path, job->cmd, &err);
         job->output = err;
         return;
     }
@@ -474,7 +466,7 @@ void handle(SOCKET c) {
     }
     // /console?cmd=  控制台命令；/data/read?text=  按本地化文本求值；/data/exec?stmt=  执行语句
     if (path == "/console" || path == "/data/read" || path == "/data/exec" || path == "/call" ||
-        path == "/data/eval" || path == "/data/list" || path == "/data/list_exec") {
+        path == "/data/eval" || path == "/data/list") {
         if (!g_ready) {
             send_json(c, 503, "{\"ok\":false,\"error\":\"桥接层未就绪\",\"health\":" + health_json() + "}");
             return;
@@ -482,9 +474,9 @@ void handle(SOCKET c) {
         auto* job = new Job;
         const char* key = path == "/console" ? "cmd" : path == "/data/read" ? "text" : "stmt";
         if (path == "/data/eval") job->kind = JobKind::Eval;
-        if (path == "/data/list" || path == "/data/list_exec") {
-            // list=列表语句；fields=以  分隔的若干段文本；index/check/expect/stmt 用于在某一项上执行
-            job->kind = path == "/data/list" ? JobKind::List : JobKind::ListExec;
+        if (path == "/data/list") {
+            // list=列表语句；fields=以  分隔的若干段文本
+            job->kind = JobKind::List;
             job->list = query_param(query, "list");
             if (job->list.empty()) job->list = query_param(body, "list");
             std::string f = query_param(query, "fields");
@@ -495,12 +487,16 @@ void handle(SOCKET c) {
                 if (b > a) job->fields.push_back(f.substr(a, b - a));
             }
             job->limit = atoi(query_param(query, "limit").c_str());
-            std::string idx = query_param(query, "index");
-            job->index = idx.empty() ? -1 : atoi(idx.c_str());
-            job->check = query_param(query, "check");
-            job->expect = query_param(query, "expect");
-            if (job->expect.empty()) job->expect = query_param(body, "expect");
-            key = "stmt";
+        }
+        // 上下文路径：p0=列表&i0=下标&p1=...，按顺序逐层取项
+        for (int k = 0; k < 8; ++k) {
+            std::string pk = "p" + std::to_string(k), ik = "i" + std::to_string(k);
+            std::string lp = query_param(query, pk.c_str());
+            if (lp.empty()) lp = query_param(body, pk.c_str());
+            if (lp.empty()) break;
+            std::string ip = query_param(query, ik.c_str());
+            if (ip.empty()) ip = query_param(body, ik.c_str());
+            job->path.push_back({lp, atoi(ip.c_str())});
         }
         if (job->kind == JobKind::Console || job->kind == JobKind::Read || job->kind == JobKind::Exec ||
             job->kind == JobKind::Call)
@@ -515,7 +511,7 @@ void handle(SOCKET c) {
         job->cmd = query_param(query, key);
         job->flag = query_param(query, "flag") == "1";
         if (job->cmd.empty()) job->cmd = query_param(body, key);
-        if (job->cmd.empty() && job->kind != JobKind::List && job->kind != JobKind::ListExec) job->cmd = body;
+        if (job->cmd.empty() && job->kind != JobKind::List && body.find('=') == std::string::npos) job->cmd = body;
         DWORD timeout = 60000;
         std::string t = query_param(query, "timeout");
         if (!t.empty()) timeout = strtoul(t.c_str(), nullptr, 10);
