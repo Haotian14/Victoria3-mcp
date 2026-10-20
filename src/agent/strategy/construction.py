@@ -61,8 +61,14 @@ def slots(snap: Snapshot) -> int:
     if cap and used < cap * 0.95:
         n = max(n, 2)
     n = min(n, c["max_new_per_month"])
+    # 国库超过储备上限的一半：钱闲着没用，多排（储备软上限以上的结余收益递减）
+    limit = snap.country.get("gold_limit") or 0.0
+    if limit and (snap.country.get("money") or 0.0) > limit * 0.5:
+        n = max(n, c["max_new_rich"])
     balance = snap.country.get("balance") or 0.0
     money = snap.country.get("money") or 0.0
+    if money <= 0 and balance <= 0:
+        return 0                     # 已在借债：先别再加开支
     if balance < 0:
         # 赤字时：国库撑得住才继续排，且最多一个
         if money < -balance * cfg()["budget"]["deficit_weeks"]:
@@ -88,11 +94,27 @@ def candidates(gd: GameData, snap: Snapshot, researched: set[str], costs: dict[s
     money = snap.country.get("money") or 0.0
     expenses = snap.country.get("expenses") or 0.0
     balance = snap.country.get("balance") or 0.0
-    if _queued(snap, SECTOR) == 0 and (balance > 0 or money > expenses * c["construction_sector_reserve_weeks"]):
-        s = _best_state(snap, SECTOR)
-        if s:
-            out.append(Decision("build", {"state": s.id, "building": SECTOR},
-                                f"扩建造部门（{s.name}，人口最多）", score=1e9))
+    # 建造部门：每级每周要吃 75 木 + 25 布（木制建筑）外加工资，建多了预算撑不住（普鲁士自测：
+    # 8 个月加了 16 级，开支从 6.5 万涨到 14.5 万，国库见底、借债、GDP 反降）。
+    # 所以按收入定上限：现有 + 在建级数 × 每级周成本 ≤ 收入 × sector_budget_share；结余为正才加。
+    prices0 = _prices(gd, snap)
+    wages0, wage_all0 = _wage_rates(snap)
+    sector_cost = -economy.building_economics(gd, SECTOR, prices0, researched,
+                                              {l.key for l in snap.laws.values() if l.key},
+                                              wage_all0 * c["wage_mix"] / 1000.0).profit
+    income = snap.country.get("income") or 0.0
+    have = sum(s.buildings[SECTOR].levels + s.buildings[SECTOR].queued for s in snap.states if SECTOR in s.buildings)
+    cap_levels = int(income * c["sector_budget_share"] / sector_cost) if sector_cost > 0 else 0
+    want = min(c["construction_sector_max_parallel"], cap_levels - have)
+    if balance > income * c["sector_min_surplus"] and money > expenses * c["construction_sector_reserve_weeks"] and want > 0:
+        ok = sorted((s for s in snap.states if SECTOR in s.buildings and s.buildings[SECTOR].can_queue
+                     and s.incorporated), key=lambda s: -(s.population or 0))
+        for i in range(max(0, want - _queued(snap, SECTOR))):
+            if ok:
+                s = ok[i % len(ok)]
+                out.append(Decision("build", {"state": s.id, "building": SECTOR},
+                                    f"扩建造部门（{s.name}；已有 {have} 级，按收入可养 {cap_levels} 级，"
+                                    f"每级周成本 {sector_cost:,.0f}）", score=1e9 - i))
     if (snap.country.get("tax_waste") or 0.0) > c["tax_waste_admin"] and _queued(snap, ADMIN) == 0:
         s = _best_state(snap, ADMIN)
         if s:
@@ -120,7 +142,7 @@ def candidates(gd: GameData, snap: Snapshot, researched: set[str], costs: dict[s
                 econ_cache[ck] = economy.building_economics(gd, key, prices, researched, laws, wage, costs.get(key))
             econ = econ_cache[ck]
             score = econ.profit_per_construction
-            if not score or score <= 0:
+            if not score or score < c["min_profit_per_point"]:
                 continue
             notes = []
             if labor < econ.workers * c["labor_levels"]:

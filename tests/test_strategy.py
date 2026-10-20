@@ -70,3 +70,17 @@ def test_construction_stops_when_broke():
     snap = _snap(balance=-100_000.0, money=100_000.0)
     assert construction.slots(snap) == 0
     assert construction.slots(_snap(queue_government=10.0)) == 0
+
+
+def test_construction_sector_sized_to_income():
+    gd = gamedata.get()
+    st = StateRow(1, 1, "首府", 100.0, 10.0, 50, 2_000_000.0, None)
+    st.buildings = {"building_construction_sector": _row("building_construction_sector", 2)}
+    poor = _snap(income=5_000.0, expenses=4_000.0, balance=1_000.0, money=1_000_000.0)
+    poor.states = [st]
+    assert not [d for d in construction.candidates(gd, poor, set(gd.techs), {})
+                if d.args["building"] == "building_construction_sector"]
+    rich = _snap(income=500_000.0, expenses=300_000.0, balance=200_000.0, money=5_000_000.0)
+    rich.states = [st]
+    assert [d for d in construction.candidates(gd, rich, set(gd.techs), {})
+            if d.args["building"] == "building_construction_sector"]

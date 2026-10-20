@@ -22,6 +22,8 @@ from agent.strategy.config import Decision
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 LOG_DIR = os.path.join(ROOT, "logs")
 
+LAW_RETRY_MONTHS = 12
+
 METRICS = ("gdp", "money", "balance", "income", "expenses", "construction", "construction_used",
            "sol", "literacy", "population", "prestige")
 
@@ -32,6 +34,7 @@ class Memory:
     history: list[dict[str, Any]] = field(default_factory=list)
     counts: dict[str, list[int]] = field(default_factory=dict)   # 动作种类 → [生效, 失败]
     log: list[str] = field(default_factory=list)
+    blocked: dict[str, int] = field(default_factory=dict)   # 法律 / 生产方式 → 到第几个月之前不再试
 
     def tally(self, r: ActionResult, kind: str) -> None:
         ok, bad = self.counts.setdefault(kind, [0, 0])
@@ -97,16 +100,27 @@ def execute(b: Bridge, plan: planner.Plan, snap: observe.Snapshot, mem: Memory,
     for d in plan.research:                       # 第一条成功即止
         if run(d).ok:
             break
+    month = len(mem.history)
     for d in plan.law:
-        if run(d).ok:
+        law = d.args["law"]
+        if mem.blocked.get(law, -1) > month:
+            continue
+        r = run(d)
+        if r.ok:
             break
+        if "不可执行" in r.detail:
+            mem.blocked[law] = month + LAW_RETRY_MONTHS   # 缺科技 / 支持不够：过一阵再看
     built = 0
     for d in plan.build:
         if built >= plan.build_slots:
             break
         built += run(d).ok
     for d in plan.pm:
-        run(d)
+        key = f"{d.args['state']}:{d.args['building']}:{d.args['pm']}"
+        if mem.blocked.get(key, -1) > month:
+            continue
+        if not run(d).ok:
+            mem.blocked[key] = month + LAW_RETRY_MONTHS   # 换不了（不可用 / 没有这个方式）：一年内不再试
     mem.pm_offset += len(plan.pm) or 1
     return results
 

@@ -98,7 +98,12 @@
     "construction_sector_reserve_weeks": 8,
     "tax_waste_admin": 0.05,
     "labor_levels": 3,
-    "unincorporated_penalty": 0.5
+    "unincorporated_penalty": 0.5,
+    "construction_sector_max_parallel": 4,
+    "max_new_rich": 6,
+    "sector_budget_share": 0.3,
+    "sector_min_surplus": 0.05,
+    "min_profit_per_point": 0.5
   },
   "skip_buildings": [
     "building_barrack",
@@ -121,6 +126,7 @@
     "building_port",
     "building_railway",
     "building_construction_sector",
-    "building_government_administration"
+    "building_government_administration",
+    "building_forbidden_city"
   ]
 }
