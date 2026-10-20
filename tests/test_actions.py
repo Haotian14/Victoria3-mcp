@@ -76,6 +76,20 @@ def test_event_window_spec_points_handle_and_option_array():
     assert _event_window(33554433) == "0:88:q=b1;0:110:a=0;1:10:i=33554433"
 
 
+def test_diplo_window_copies_countries_and_type_from_action():
+    spec = actions._diplo_window(1)
+    assert "0:d8:i=c1@10" in spec and "0:dc:i=c1@14" in spec and "0:f0:q=c1@28" in spec
+    assert "0:e0:i=-1" in spec and "0:e4:i=-1" in spec
+
+
+def test_proposal_kind_takes_first_valid_part():
+    assert actions._proposal_kind(["1", "", "0", "1"]) == "treaty"
+    assert actions._proposal_kind(["0", "increase_relations", "0", "0"]) == "action"
+    assert actions._proposal_kind(["\x01err", "\x01err", "1", "1"]) == "demand"
+    assert actions._proposal_kind(["0", "", "0", "1"]) == "sway"
+    assert actions._proposal_kind(["0", "", "0", "0"]) == "?"
+
+
 def test_diff_keeps_changed_fields_only():
     a = {"modifiers": ["x"], "GetPrestige": "10"}
     b = {"modifiers": ["x", "y"], "GetPrestige": "10"}

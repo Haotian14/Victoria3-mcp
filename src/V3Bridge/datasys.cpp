@@ -266,7 +266,8 @@ PdxArray make_ctx(void* stmt, const CtxEntry* items, int n_items, CtxEntry* stor
                 matched = true;
             }
         }
-        for (int j = 0; j < n_items && !matched; ++j) {
+        // 有多个通配项时取最后的（最近加入的，如伪造对象排在「=表达式」取到的国家之后）
+        for (int j = n_items - 1; j >= 0 && !matched; --j) {
             if (items[j].type_id == kAnyType) {
                 storage[k] = items[j];
                 storage[k].type_id = req[k];
@@ -397,6 +398,18 @@ bool walk(const std::vector<PathStep>& path, std::vector<CtxEntry>* items, std::
     anys->reserve(path.size() + 1);
     for (const PathStep& step : path) {
         anys->emplace_back();
+        if (!step.list.empty() && step.list[0] == '=') {
+            // 「=表达式」：按值求一个对象（如 GetStateRegion('STATE_X').GetLargestStateOwner），作为非 const 的通配上下文。
+            // 只读路径（Get*）求出的对象，后面接 Access* / 要求非 const 的列表时语句建不起来，这样绕过去；
+            // CPdxAny 是 { 类型信息*, 对象* }，const 与否只差类型信息
+            if (!eval_in(step.list.substr(1), true, items->data(), static_cast<int>(items->size()), anys->back().b,
+                         error))
+                return false;
+            void* obj = *reinterpret_cast<void**>(anys->back().b + 8);
+            if (!obj) { *error = step.list + " 求出的对象为空"; return false; }
+            items->push_back(CtxEntry{obj, kAnyType, false, {}});
+            continue;
+        }
         Model m{};
         int size = 0;
         if (!open_model(step.list, *items, &anys->back(), &m, &size, error)) return false;
@@ -653,6 +666,15 @@ bool seh_read_int(const void* p, int* out) {
     }
 }
 
+bool seh_read_ptr(const void* p, void** out) {
+    __try {
+        *out = *static_cast<void* const*>(p);
+        return true;
+    } __except (EXCEPTION_EXECUTE_HANDLER) {
+        return false;
+    }
+}
+
 }  // namespace
 
 bool reform_government(const std::string& ig_list, const std::vector<int>& members, std::string* out,
@@ -694,8 +716,8 @@ constexpr int kFakeBufs = 4;
 constexpr size_t kFakeSize = 0x1000;
 alignas(16) uint8_t g_fake[kFakeBufs][kFakeSize];
 
-bool parse_value(const std::string& v, const std::vector<CtxEntry>& items, int64_t* out, std::string* note,
-                 std::string* error) {
+bool parse_value(const std::string& v, const std::vector<CtxEntry>& items, bool wide, int64_t* out,
+                 std::string* note, std::string* error) {
     if (v.empty()) { *error = "空值"; return false; }
     if (v[0] == 'b') {
         int n = atoi(v.c_str() + 1);
@@ -711,12 +733,15 @@ bool parse_value(const std::string& v, const std::vector<CtxEntry>& items, int64
         if (at == std::string::npos) {
             *out = reinterpret_cast<int64_t>(p);
         } else {
+            uint8_t* src = p ? p + strtoul(v.c_str() + at + 1, nullptr, 16) : nullptr;
             int x = 0;
-            if (!p || !seh_read_int(p + strtoul(v.c_str() + at + 1, nullptr, 16), &x)) {
+            void* q = nullptr;
+            // 写 q（8 字节）时读指针，否则读 int32
+            if (!src || (wide ? !seh_read_ptr(src, &q) : !seh_read_int(src, &x))) {
                 *error = "读不到 " + v;
                 return false;
             }
-            *out = x;
+            *out = wide ? reinterpret_cast<int64_t>(q) : x;
         }
         char b[64];
         snprintf(b, sizeof b, "%s%s=0x%llx", note->empty() ? "" : ",", v.c_str(), static_cast<long long>(*out));
@@ -751,7 +776,7 @@ bool fill_fake(std::vector<CtxEntry>* items_io, const std::string& spec, std::st
             continue;
         }
         int64_t v = 0;
-        if (!parse_value(w.substr(eq + 1), items, &v, out, error)) return false;
+        if (!parse_value(w.substr(eq + 1), items, kind == 'q', &v, out, error)) return false;
         if (kind == 'b') *dst = static_cast<uint8_t>(v);
         else if (kind == 'i') *reinterpret_cast<int32_t*>(dst) = static_cast<int32_t>(v);
         else if (kind == 'q') *reinterpret_cast<int64_t*>(dst) = v;
@@ -833,15 +858,6 @@ bool locate_events() {
     }
     g_event_locate_error = "找不到事件对象库（命令虚表引用 " + std::to_string(n) + " 处）";
     return false;
-}
-
-bool seh_read_ptr(const void* p, void** out) {
-    __try {
-        *out = *static_cast<void* const*>(p);
-        return true;
-    } __except (EXCEPTION_EXECUTE_HANDLER) {
-        return false;
-    }
 }
 
 }  // namespace

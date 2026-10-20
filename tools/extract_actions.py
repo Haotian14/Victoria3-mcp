@@ -83,6 +83,17 @@ VERIFIED = {
     "Company.ToggleCharter": "Actions.toggle_charter",
     "Company.ToggleBuildingCharter": "Actions.target_charter",
     "Company.ToggleRegionCharter": "Actions.target_charter",
+    "Technology.ResearchWithUnlocks": "Actions.queue_research",
+    "Technology.AddToQueueWithUnlocks": "Actions.queue_research",
+    "Technology.RemoveFromQueue": "Actions.queue_research",
+    "Country.MobilizeAllArmies": "Actions.country_command",
+    "Country.DemobilizeAllArmies": "Actions.country_command",
+    "DiplomaticAction.ExecuteWithConfirmation": "Actions.diplomatic_action",
+    "DiplomaticActionWindow.ExecuteAction": "Actions.diplomatic_action",
+    "DiplomaticPlayType.GetStartCommandCountry": "Actions.start_play",
+    **{f"DiplomaticPlay.{s}": "Actions.play_stance" for s in (
+        "DeclareNeutrality", "BeOnTheFence", "LeanTowardsInitiator", "LeanTowardsTarget",
+        "SupportInitiator", "SupportTarget")},
     **{f"Country.{c}": "Actions.country_command" for c in (
         "PauseConstruction", "ResumeConstruction", "PauseShipConstruction", "ResumeShipConstruction")},
     **{f"Country.Set{k}{t}": via for k, via in (("GovernmentWageLevel", "Actions.set_wage"),

@@ -813,8 +813,8 @@
   "domain": "国家",
   "reach": "直达",
   "family": "Country.DemobilizeAllArmies",
-  "status": "未做",
-  "via": ""
+  "status": "已验证",
+  "via": "Actions.country_command"
  },
  {
   "receiver": "Country",
@@ -867,8 +867,8 @@
   "domain": "国家",
   "reach": "直达",
   "family": "Country.MobilizeAllArmies",
-  "status": "未做",
-  "via": ""
+  "status": "已验证",
+  "via": "Actions.country_command"
  },
  {
   "receiver": "Country",
@@ -1797,8 +1797,8 @@
   "domain": "外交",
   "reach": "直达",
   "family": "DiplomaticAction.ExecuteWithConfirmation",
-  "status": "未做",
-  "via": ""
+  "status": "已验证",
+  "via": "Actions.diplomatic_action"
  },
  {
   "receiver": "DiplomaticActionWindow",
@@ -1815,8 +1815,8 @@
   "domain": "外交",
   "reach": "窗口",
   "family": "DiplomaticActionWindow.ExecuteAction",
-  "status": "未做",
-  "via": ""
+  "status": "已验证",
+  "via": "Actions.diplomatic_action"
  },
  {
   "receiver": "DiplomaticPlay",
@@ -1833,8 +1833,8 @@
   "domain": "外交",
   "reach": "直达",
   "family": "DiplomaticPlay.BeOnTheFence",
-  "status": "未做",
-  "via": ""
+  "status": "已验证",
+  "via": "Actions.play_stance"
  },
  {
   "receiver": "DiplomaticPlay",
@@ -1852,8 +1852,8 @@
   "domain": "外交",
   "reach": "直达",
   "family": "DiplomaticPlay.DeclareNeutrality",
-  "status": "未做",
-  "via": ""
+  "status": "已验证",
+  "via": "Actions.play_stance"
  },
  {
   "receiver": "DiplomaticPlay",
@@ -1870,8 +1870,8 @@
   "domain": "外交",
   "reach": "直达",
   "family": "DiplomaticPlay.LeanTowardsInitiator",
-  "status": "未做",
-  "via": ""
+  "status": "已验证",
+  "via": "Actions.play_stance"
  },
  {
   "receiver": "DiplomaticPlay",
@@ -1888,8 +1888,8 @@
   "domain": "外交",
   "reach": "直达",
   "family": "DiplomaticPlay.LeanTowardsTarget",
-  "status": "未做",
-  "via": ""
+  "status": "已验证",
+  "via": "Actions.play_stance"
  },
  {
   "receiver": "DiplomaticPlay",
@@ -1907,8 +1907,8 @@
   "domain": "外交",
   "reach": "直达",
   "family": "DiplomaticPlay.SupportInitiator",
-  "status": "未做",
-  "via": ""
+  "status": "已验证",
+  "via": "Actions.play_stance"
  },
  {
   "receiver": "DiplomaticPlay",
@@ -1926,8 +1926,8 @@
   "domain": "外交",
   "reach": "直达",
   "family": "DiplomaticPlay.SupportTarget",
-  "status": "未做",
-  "via": ""
+  "status": "已验证",
+  "via": "Actions.play_stance"
  },
  {
   "receiver": "DiplomaticPlay",
@@ -2000,8 +2000,8 @@
   "domain": "外交",
   "reach": "直达",
   "family": "DiplomaticPlayType.GetStartCommandCountry",
-  "status": "未做",
-  "via": ""
+  "status": "已验证",
+  "via": "Actions.start_play"
  },
  {
   "receiver": "DiplomaticPlayType",
@@ -4553,8 +4553,8 @@
   "domain": "研究",
   "reach": "直达",
   "family": "Technology.AddToQueueWithUnlocks",
-  "status": "未做",
-  "via": ""
+  "status": "已验证",
+  "via": "Actions.queue_research"
  },
  {
   "receiver": "Technology",
@@ -4571,8 +4571,8 @@
   "domain": "研究",
   "reach": "直达",
   "family": "Technology.RemoveFromQueue",
-  "status": "未做",
-  "via": ""
+  "status": "已验证",
+  "via": "Actions.queue_research"
  },
  {
   "receiver": "Technology",
@@ -4609,8 +4609,8 @@
   "domain": "研究",
   "reach": "直达",
   "family": "Technology.ResearchWithUnlocks",
-  "status": "未做",
-  "via": ""
+  "status": "已验证",
+  "via": "Actions.queue_research"
  },
  {
   "receiver": "TransferFormationPopup",

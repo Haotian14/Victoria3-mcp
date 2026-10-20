@@ -5,17 +5,19 @@
 
 可达性：**直达** = 从玩家国家沿列表能走到对象，照现有做法即可；**窗口** = 对象只存在于界面窗口 / 弹窗 / 草稿里，要像改组政府那样构造（见 docs/bridge.md）；**组合** = 军事 / 地图类，要组合编队、前线、海域等多个对象；**界面** = 只影响界面显示（改名、开关、定位），不影响局面；**待查** = 接收对象还没归类。
 
-**进度：命令 103 / 265 已验证；按操作种类（只差档位的算一种）63 / 225。**
+**进度：命令 117 / 265 已验证；按操作种类（只差档位的算一种）77 / 225。**
 
-按可达性（操作种类，已验证 / 总数）：直达 61 / 110，窗口 2 / 31，组合 0 / 77，界面 0 / 7。
+按可达性（操作种类，已验证 / 总数）：直达 74 / 110，窗口 3 / 31，组合 0 / 77，界面 0 / 7。
 
 不在本表、但同样要打通的：立即存档（目前用自动存档）、暂停 / 调速（`TimeKeeper`，已验证，不经 Execute）。事件选项在「事件」一节（`EventOption.Select`）。每条命令用的路径与核实方式见 docs/bridge.md「已验证的玩家动作」。
 
-## 国家（41 / 50）
+## 国家（43 / 50）
 
 | 状态 | 可达性 | 命令 | 例子 | 界面文件 |
 |---|---|---|---|---|
 | ✓ `Actions.company` | 直达 | `Country.CreateCompany` | `GetPlayer.CreateCompany(CompanyType.Self)` | companies_panel.gui |
+| ✓ `Actions.country_command` | 直达 | `Country.DemobilizeAllArmies` | `Country.DemobilizeAllArmies` | panel_military.gui |
+| ✓ `Actions.country_command` | 直达 | `Country.MobilizeAllArmies` | `Country.MobilizeAllArmies` | panel_military.gui |
 | ✓ `Actions.country_command` | 直达 | `Country.PauseConstruction` | `Country.PauseConstruction` | building_browser_panel.gui, production_methods.gui … |
 | ✓ `Actions.country_command` | 直达 | `Country.PauseShipConstruction` | `Country.PauseShipConstruction` | production_methods.gui |
 | ✓ `Actions.company` | 直达 | `Country.RemoveCompany` | `GetPlayer.RemoveCompany(CompanyType.Self)` | companies_panel.gui, company_panel.gui |
@@ -58,10 +60,8 @@
 | ✓ `Actions.negotiate` | 直达 | `Country.StartNegotiationWith` | `AccessPlayer.StartNegotiationWith(InterestGroup.Self)` | right_click_menu.gui |
 |  | 直达 | `Country.ClearDefaultConstructionFleet` | `Country.ClearDefaultConstructionFleet` | right_click_menu.gui |
 |  | 直达 | `Country.DeclareBankruptcy` | `Country.DeclareBankruptcy` | budget_panel.gui |
-|  | 直达 | `Country.DemobilizeAllArmies` | `Country.DemobilizeAllArmies` | panel_military.gui |
 |  | 直达 | `Country.Kick` | `Country.GetPowerBloc.Kick(Country.Self)` | right_click_menu.gui |
 |  | 直达 | `Country.LeavePowerBloc` | `GetPlayer.LeavePowerBloc` | power_bloc_panel.gui |
-|  | 直达 | `Country.MobilizeAllArmies` | `Country.MobilizeAllArmies` | panel_military.gui |
 |  | 直达 | `Country.SetDefaultConstructionFleet` | `Country.SetDefaultConstructionFleet(MilitaryFormation.Self)` | right_click_menu.gui |
 |  | 界面 | `Country.ToggleIgnoreCountryFormation` | `GetPlayer.ToggleIgnoreCountryFormation(CountryFormation.Self)` | country_formation_panel.gui, culture_panel.gui |
 |  | 界面 | `Country.ToggleIgnoreDecision` | `GetPlayer.ToggleIgnoreDecision(Decision.Self)` | journal.gui |
@@ -141,14 +141,14 @@
 | ✓ `Actions.toggle_movement` | 直达 | `PoliticalMovement.ToggleSuppression` | `PoliticalMovement.ToggleSuppression` | custom_tooltip.gui, political_movement_panel.gui … |
 | ✓ `Actions.reform_government` | 窗口 | `ReformGovernment.Confirm` | `ReformGovernment.Confirm` | politics_panel_reform_government.gui |
 
-## 研究（1 / 5）
+## 研究（4 / 5）
 
 | 状态 | 可达性 | 命令 | 例子 | 界面文件 |
 |---|---|---|---|---|
+| ✓ `Actions.queue_research` | 直达 | `Technology.AddToQueueWithUnlocks` | `Technology.AddToQueueWithUnlocks(GetPlayer.Self)` | custom_tooltip.gui, tech_tree.gui |
+| ✓ `Actions.queue_research` | 直达 | `Technology.RemoveFromQueue` | `Technology.RemoveFromQueue(GetPlayer.Self)` | tech_tree.gui |
 | ✓ `Actions.research` | 直达 | `Technology.Research` | `Technology.Research(GetPlayer.Self)` | custom_tooltip.gui, tech_tree.gui |
-|  | 直达 | `Technology.AddToQueueWithUnlocks` | `Technology.AddToQueueWithUnlocks(GetPlayer.Self)` | custom_tooltip.gui, tech_tree.gui |
-|  | 直达 | `Technology.RemoveFromQueue` | `Technology.RemoveFromQueue(GetPlayer.Self)` | tech_tree.gui |
-|  | 直达 | `Technology.ResearchWithUnlocks` | `Technology.ResearchWithUnlocks(GetPlayer.Self)` | custom_tooltip.gui, tech_tree.gui |
+| ✓ `Actions.queue_research` | 直达 | `Technology.ResearchWithUnlocks` | `Technology.ResearchWithUnlocks(GetPlayer.Self)` | custom_tooltip.gui, tech_tree.gui |
 |  | 窗口 | `TechTreeLine.Research` | `TechTreeLine.GetTargetTech.Research(GetPlayer.Self)` | tech_tree.gui |
 
 ## 人物（0 / 9）
@@ -179,23 +179,24 @@
 |---|---|---|---|---|
 | ✓ `Actions.choose_event_option` | 窗口 | `EventOption.Select` | `EventOption.Select` | eventwindow.gui |
 
-## 外交（0 / 37）
+## 外交（9 / 37）
 
 | 状态 | 可达性 | 命令 | 例子 | 界面文件 |
 |---|---|---|---|---|
+| ✓ `Actions.diplomatic_action` | 直达 | `DiplomaticAction.ExecuteWithConfirmation` | `DiplomaticAction.ExecuteWithConfirmation` | country_panel.gui, power_bloc_panel.gui … |
+| ✓ `Actions.play_stance` | 直达 | `DiplomaticPlay.BeOnTheFence` | `DiplomaticPlay.BeOnTheFence(GetPlayer)` | diplomatic_play_panel.gui |
+| ✓ `Actions.play_stance` | 直达 | `DiplomaticPlay.DeclareNeutrality` | `DiplomaticPlay.DeclareNeutrality(GetPlayer)` | diplomatic_play_panel.gui, right_click_menu.gui |
+| ✓ `Actions.play_stance` | 直达 | `DiplomaticPlay.LeanTowardsInitiator` | `DiplomaticPlay.LeanTowardsInitiator(GetPlayer)` | diplomatic_play_panel.gui |
+| ✓ `Actions.play_stance` | 直达 | `DiplomaticPlay.LeanTowardsTarget` | `DiplomaticPlay.LeanTowardsTarget(GetPlayer)` | diplomatic_play_panel.gui |
+| ✓ `Actions.play_stance` | 直达 | `DiplomaticPlay.SupportInitiator` | `DiplomaticPlay.SupportInitiator(GetPlayer)` | right_click_menu.gui, sway_country_panel.gui |
+| ✓ `Actions.play_stance` | 直达 | `DiplomaticPlay.SupportTarget` | `DiplomaticPlay.SupportTarget(GetPlayer)` | right_click_menu.gui, sway_country_panel.gui |
+| ✓ `Actions.start_play` | 直达 | `DiplomaticPlayType.GetStartCommandCountry` | `DiplomaticPlayType.GetStartCommandCountry(GetPlayer.Self,Country.Self)` | country_panel.gui |
+| ✓ `Actions.diplomatic_action` | 窗口 | `DiplomaticActionWindow.ExecuteAction` | `DiplomaticActionWindow.ExecuteAction` | popups.gui |
 |  | 直达 | `CountryFormation.FormCountry` | `CountryFormation.FormCountry(GetPlayer)` | country_formation_panel.gui |
 |  | 直达 | `CountryFormation.SupportCandidate` | `CountryFormation.SupportCandidate(GetPlayer,Country.Self)` | country_formation_panel.gui |
 |  | 直达 | `DiplomaticAction.ExecuteAction` | `DiplomaticAction.ExecuteAction` | country_panel.gui, power_bloc_panel.gui … |
-|  | 直达 | `DiplomaticAction.ExecuteWithConfirmation` | `DiplomaticAction.ExecuteWithConfirmation` | country_panel.gui, power_bloc_panel.gui … |
-|  | 直达 | `DiplomaticPlay.BeOnTheFence` | `DiplomaticPlay.BeOnTheFence(GetPlayer)` | diplomatic_play_panel.gui |
-|  | 直达 | `DiplomaticPlay.DeclareNeutrality` | `DiplomaticPlay.DeclareNeutrality(GetPlayer)` | diplomatic_play_panel.gui, right_click_menu.gui |
-|  | 直达 | `DiplomaticPlay.LeanTowardsInitiator` | `DiplomaticPlay.LeanTowardsInitiator(GetPlayer)` | diplomatic_play_panel.gui |
-|  | 直达 | `DiplomaticPlay.LeanTowardsTarget` | `DiplomaticPlay.LeanTowardsTarget(GetPlayer)` | diplomatic_play_panel.gui |
-|  | 直达 | `DiplomaticPlay.SupportInitiator` | `DiplomaticPlay.SupportInitiator(GetPlayer)` | right_click_menu.gui, sway_country_panel.gui |
-|  | 直达 | `DiplomaticPlay.SupportTarget` | `DiplomaticPlay.SupportTarget(GetPlayer)` | right_click_menu.gui, sway_country_panel.gui |
 |  | 直达 | `DiplomaticPlay.SwitchSide` | `DiplomaticPlay.SwitchSide(GetPlayer)` | diplomatic_play_panel.gui, right_click_menu.gui |
 |  | 直达 | `DiplomaticPlay.Yield` | `DiplomaticPlay.Yield(GetPlayer)` | diplomatic_play_panel.gui, right_click_menu.gui |
-|  | 直达 | `DiplomaticPlayType.GetStartCommandCountry` | `DiplomaticPlayType.GetStartCommandCountry(GetPlayer.Self,Country.Self)` | country_panel.gui |
 |  | 直达 | `DiplomaticPlayType.GetStartCommandState` | `DiplomaticPlayType.GetStartCommandState(GetPlayer,State.Self)` | country_panel.gui |
 |  | 直达 | `PowerBloc.Kick` | `PowerBloc.Kick(Country.Self)` | power_bloc_panel.gui |
 |  | 直达 | `PowerBlocPrinciple.UpgradeToNextLevel` | `PowerBlocPrinciple.UpgradeToNextLevel` | custom_tooltip.gui, power_bloc_panel.gui |
@@ -211,7 +212,6 @@
 |  | 直达 | `WarGoal.MakeWarGoalPrimaryDemand` | `WarGoal.MakeWarGoalPrimaryDemand(GetPlayer.Self)` | diplomatic_play_panel.gui |
 |  | 直达 | `WarGoal.ToggleIsPressedInPotentialPeaceDeal` | `WarGoal.ToggleIsPressedInPotentialPeaceDeal(GetPlayer.Self)` | add_wargoal_panel.gui, map_markers.gui |
 |  | 窗口 | `AddWarGoalPanel.AddWarGoal` | `AddWarGoalPanel.AccessDiplomaticPlay.AddWarGoal(WarGoalDraft.Self)` | add_wargoal_panel.gui |
-|  | 窗口 | `DiplomaticActionWindow.ExecuteAction` | `DiplomaticActionWindow.ExecuteAction` | popups.gui |
 |  | 窗口 | `DiplomaticPlayConfirmation.ConfirmAction` | `DiplomaticPlayConfirmation.ConfirmAction` | popups.gui |
 |  | 窗口 | `PowerBlocFormation.Confirm` | `PowerBlocFormation.Confirm` | power_bloc_formation_panel.gui |
 |  | 窗口 | `PowerBlocPrincipleSelectionWindow.SubmitPrincipleSelection` | `PowerBlocPrincipleSelectionWindow.SubmitPrincipleSelection` | principle_selection_window.gui |

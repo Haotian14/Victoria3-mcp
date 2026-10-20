@@ -101,6 +101,11 @@ stmt = Execute(ProductionMethod.GetSwitch(Building.Self))
 | 州法令 | `Execute(DecreeType.GetSetCommand(State.Self))` / `Decree.GetRemoveCommand` | 州 → `State.GetPotentialDecrees` / `State.AccessDecrees` |
 | 并入 / 取消并入、暂停殖民、放弃殖民地 | `Execute(State.IncorporateState)` 等 | 州 |
 | 殖民 | `Execute(GetStateRegion('STATE_X').Colonize)`（界面写 `State.GetStateRegion.Colonize`） | — |
+| 研究队列 | `Execute(GetTechnology('x').ResearchWithUnlocks(P.Self))` / `AddToQueueWithUnlocks` / `RemoveFromQueue` | — |
+| 动员 / 复员全部军队 | `Execute(P.MobilizeAllArmies)` / `DemobilizeAllArmies`（要在外交博弈或战争中） | — |
+| 外交行动 | 伪造确认窗口后 `Execute(DiplomaticActionWindow.ExecuteAction)`（见下「外交」） | `=GetStateRegion('…').GetLargestStateOwner` → `Country.GetAvailableGeneralDiploActions` 等十个列表 |
+| 发起外交博弈 | `Execute(GetDiplomaticPlayType('dp_humiliation').GetStartCommandCountry(P.Self, Country.Self))`（界面先弹确认窗，确认发的就是它） | `=…`（目标国） |
+| 博弈表态 | `Execute(DiplomaticPlay.LeanTowardsTarget(P))` 等 | `PM.AccessActiveDiplomaticPlays` |
 | 公司特许状 | `Execute(Company.ToggleCharter(CompanyCharterType.Self))`；要选目标的用 `Company.ToggleBuildingCharter(GetCompanyCharterType('industry_charter').Self, GetBuildingType('…').Self)` / `ToggleRegionCharter(…, GetStateRegion('…').Self)` | `PM.GetCompanies` → `GetCompanyCharterTypes` |
 
 前置条件统一用 `IsValid(命令)`，原因用 `GetDesc(命令)`（界面按钮的灰显与提示就是这两个）。
@@ -125,7 +130,11 @@ stmt = Execute(ProductionMethod.GetSwitch(Building.Self))
   （「所有生产方式都已调整为国家标准」「该生产方式已在所有建筑中激活」「我们在这里已经有殖民地」）；
 - 殖民地下一次结算才作为州出现，用 `State.IsGrowingColony` 认（`IsBeingColonized` 不是它）；
 - 法令：州的现行法令名单；并入：`IsIncorporated` + `IsIncorporating`（对正在并入的州「取消并入」是停下并入）；
-- 特许状：公司的 `HasAny*CharterActive` / `Company.GetActiveCharters(类型)`；授予后几年内不能撤销（游戏规则，GetDesc 会说）。
+- 特许状：公司的 `HasAny*CharterActive` / `Company.GetActiveCharters(类型)`；授予后几年内不能撤销（游戏规则，GetDesc 会说）；
+- 研究：正在研究的科技 + 研究队列（`GetResearchQueueTop` / `Bottom`；科技没有 `GetKey`，按中文名对回 id）；
+- 外交行动：`DiplomaticAction.IsActivePact`、能否再发、原因、`P.GetRelationsWith(Country.Self)`（驱逐外交官：关系 0 → -30）；
+- 博弈：玩家参与的博弈名单；表态看 `IsInitiatorLeaning` / `IsTargetLeaning` / `IsOnTheFence` / `IsInitiatorOrBacker` /
+  `IsTargetOrBacker`，中立后博弈从该国列表消失。退让（Yield）开场阶段不可用；转换阵营要到战争阶段。
 
 条件类命令的测试准备（只在测试局里用，测完重新载入 v3mcp_start_1836）：
 - 公司：大清开局没有可建立的公司，控制台 `ignore_company_requirements` 打开后再试，测完再输一次关掉；
@@ -137,6 +146,26 @@ stmt = Execute(ProductionMethod.GetSwitch(Building.Self))
 - 经济：英国伦敦周边的建筑几乎每条命令都能用；建造队列先 `Building.QueueConstruction` 排几项；
   殖民用 `research quinine` 解锁纳马夸兰（`STATE_NAMAQUALAND`），殖民特许状用赫雷罗兰；
 - 控制台没有 `effect` 命令，测试留下的修正去不掉，只能重新载入存档。
+
+### 外交（路径步「=表达式」、伪造确认窗口、伪造 TopFrontend）
+
+- **按值取对象作上下文**：数据系统没有全部国家的列表，也没有按 tag 取国家的函数。`GetStateRegion('STATE_X')`
+  是全局函数，`.GetLargestStateOwner` 就是该地区的国家，但它是只读（const）的，后面接 `GetAvailable…DiploActions`
+  这种要求非 const 的列表时语句建不起来（error.log：`requires non const promote`）。桥接层的路径步支持
+  `p0==表达式`：按值求出对象（CPdxAny 是 `{类型信息*, 对象*}`，const 与否只差类型信息），作为非 const 的通配上下文。
+  tag → 地区 在 Python 里扫一遍全部地区的 `GetLargestStateOwner.GetTagName` 缓存起来；
+- 有多个通配上下文时取最近加入的（伪造对象排在「=表达式」之后）；
+- **外交行动**：国家面板按钮的 onclick 是 `DiplomaticAction.ExecuteWithConfirmation`（不经 Execute）。它（1.13.11 的
+  `01fdea30`）看外交行动类型 +0x48 的「需要确认」位：不需要的直接组装命令发出（关系类），需要的（宿敌、驱逐外交官……）
+  打开确认窗口 `DiplomaticActionWindow`，玩家点确认才发。**直接 `Execute(DiplomaticAction.ExecuteAction)` 游戏收下了
+  却什么也不做**（改善关系执行后协定没有建立）。确认窗口构造函数 `021bd860`：+0xd8 / +0xdc 两国 id
+  （外交行动对象 +0x10 / +0x14）、+0xe0 / +0xe4 选的州（-1）、+0xe8 = 1、+0xf0 外交行动类型指针（对象 +0x28）、
+  +0xf8 义务、+0xfc = 2；`DiplomaticActionWindow.ExecuteAction`（`021caac0` → `021be590`）只读这几项组装
+  `CExecuteDiplomaticActionCommand`。所以一律伪造确认窗口（spec 用 `cK@偏移` 从路径上的外交行动对象抄，
+  `q` 类型读 8 字节指针）再 `Execute(DiplomaticActionWindow.ExecuteAction)`，需不需要确认的都对；
+- **提议**（别国发来的条约、外交行动、要求、拉拢）挂在界面对象 `TopFrontend.AccessProposals` 上。它的回调先调
+  `02361860` 清空 +0x30 的数组、再从游戏状态按本地玩家重建，所以伪造对象只要 +0x30 一个空数组（spec `0:30:a=0`）。
+  接受 / 拒绝的命令与 popups.gui 的写法一致（`Proposal.GetTreaty.AcceptTreatyProposal` 等）。
 
 ### 事件（`POST /events`、`POST /data/fake`）
 

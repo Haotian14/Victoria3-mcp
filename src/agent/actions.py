@@ -15,7 +15,7 @@ from typing import Any, Callable
 
 from agent import gamedata
 from agent.bridge import IGS, PLAYER, PLAYER_MUT, Bridge, GameError, plain
-from agent.observe import STATES, TAX_LEVELS, Snapshot, interest_groups
+from agent.observe import STATES, TAX_LEVELS, Snapshot, _name_index, interest_groups
 
 PM_GROUPS = "Building.AccessProductionMethodGroups"
 PM_OPTIONS = "ProductionMethodGroup.AccessBuildingProductionMethods(Building.Self)"
@@ -86,6 +86,40 @@ STATE_COMMANDS = {
     "IncorporateState": _INCORPORATION, "UnincorporateState": _INCORPORATION,
     "TogglePauseColonization": ["State.IsColonizationPaused"], "AbandonColony": ["State.IsGrowingColony"],
 }
+DIPLO_ACTION_LISTS = [f"Get{k}{g}DiploActions" for g in ("General", "Overlord", "Subject", "PowerBlocLeader",
+                                                          "PowerBlocMember") for k in ("Available", "Potential")]
+_TAG_REGION: dict[str, str] = {}    # 国家 tag → 它拥有的一个地区（按值取国家用）
+PLAYS = f"{PLAYER_MUT}.AccessActiveDiplomaticPlays"
+# 提议：伪造的 TopFrontend（+0x30 是提议数组，读的时候游戏自己重建）
+TOP_FRONTEND = "0:30:a=0"
+PROPOSALS = "TopFrontend.AccessProposals"
+PROPOSAL_KINDS = ("treaty", "action", "demand", "sway")
+PROPOSAL_FIELDS = ["Proposal.GetName", "Proposal.GetActor.GetNameNoFormatting", "Proposal.GetTreaty.IsValid",
+                   "Proposal.GetDiplomaticAction.GetType.GetKey", "Proposal.GetDiplomaticDemand.IsValid",
+                   "Proposal.GetDiplomaticPlay.IsValid"]
+
+
+def _proposal_kind(flags: list[str]) -> str:
+    """提议种类：条约 / 外交行动 / 外交要求 / 拉拢，按 PROPOSAL_FIELDS 后四格哪一项有效判断。"""
+    for kind, v in zip(PROPOSAL_KINDS, flags):
+        if v and not v.startswith("\x01") and v != "0":
+            return kind
+    return "?"
+_SWAY = "Proposal.GetDiplomaticPlay.GetIncomingSway(Proposal.GetActor.Self,Proposal.GetRecipient.Self)"
+PROPOSAL_COMMANDS = {   # 种类 → (接受, 拒绝)，与 popups.gui 里的写法一致
+    "treaty": ("Proposal.GetTreaty.AcceptTreatyProposal", "Proposal.GetTreaty.DeclineTreatyProposal"),
+    "action": ("Proposal.GetDiplomaticAction.AcceptActionProposal", "Proposal.GetDiplomaticAction.DeclineActionProposal"),
+    "demand": ("Proposal.GetDiplomaticDemand.AcceptDiplomaticDemand",
+               "Proposal.GetDiplomaticDemand.RejectDiplomaticDemand"),
+    "sway": (f"{_SWAY}.AcceptSway", f"{_SWAY}.RejectSway"),
+}
+PLAY_STANCES = ("Yield", "DeclareNeutrality", "BeOnTheFence", "LeanTowardsInitiator", "LeanTowardsTarget",
+                "SupportInitiator", "SupportTarget", "SwitchSide")
+PLAY_SIDES = ("IsInitiatorOrBacker", "IsTargetOrBacker", "IsInitiatorLeaning", "IsTargetLeaning", "IsOnTheFence",
+              "IsCommittedParticipant", "IsInvolved")
+# 外交行动的核实：协定是否生效、还能否再发、原因、两国关系（一次性的行动如驱逐外交官看关系与可用性）
+DIPLO_PROBES = ["DiplomaticAction.IsActivePact", "IsValid(DiplomaticAction.ExecuteAction)",
+                "GetDesc(DiplomaticAction.ExecuteAction)", f"{PLAYER}.GetRelationsWith(Country.Self)"]
 GOV_QUEUE = f"{PLAYER_MUT}.AccessGovernmentConstructionQueue"
 PRIVATE_QUEUE = f"{PLAYER_MUT}.AccessPrivateConstructionQueue"
 QUEUE_FIELDS = ["ConstructionQueueElement.GetBuilding.GetBuildingType.GetKey",
@@ -99,6 +133,15 @@ def _event_window(event_id: int) -> str:
     """伪造的事件窗口（EventWindow）：+0x88 指向事件句柄（+0x10 是事件 id），+0x110 是选项数组。
     0 号缓冲区就是窗口，1 号是句柄。"""
     return f"0:88:q=b1;0:110:a=0;1:10:i={event_id}"
+
+
+def _diplo_window(k: int) -> str:
+    """伪造的外交行动确认窗口（DiplomaticActionWindow，构造函数 1.13.11 的 021bd860）：
+    +0xd8 / +0xdc 两国 id（外交行动对象 +0x10 / +0x14），+0xe0 / +0xe4 选的州（-1 = 不选），+0xe8 标记 1，
+    +0xf0 外交行动类型指针（对象 +0x28），+0xf8 义务（0 = 不动用 / 不承诺），+0xfc 2。
+    ExecuteAction（021caac0 → 021be590）只读这几项组装 CExecuteDiplomaticActionCommand。k 是外交行动在路径里的下标。"""
+    return (f"0:d8:i=c{k}@10;0:dc:i=c{k}@14;0:e0:i=-1;0:e4:i=-1;0:e8:b=1;0:f0:q=c{k}@28;"
+            f"0:f8:i=0;0:fc:i=2")
 
 
 def _diff(a: dict[str, Any], b: dict[str, Any]) -> dict[str, Any]:
@@ -139,14 +182,15 @@ class Actions:
             return None
 
     def _run(self, name: str, cmd: str, probe: Callable[[], Any], expect: Callable[[Any], bool] | None,
-             path=None, wait: float = 1.5) -> ActionResult:
-        """expect 为 None 时只要求前后读数不同（开关类命令没有固定的目标值）。"""
+             path=None, wait: float = 1.5, stmt: str = "") -> ActionResult:
+        """expect 为 None 时只要求前后读数不同（开关类命令没有固定的目标值）。
+        stmt 给定时执行它而不是 Execute(cmd)（界面 onclick 不经 Execute 的，如外交行动），前置仍按 IsValid(cmd)。"""
         before = probe()
         if expect is not None and expect(before):
             return ActionResult(True, name, "已是目标状态", before, before)
         if self.b.read(f"[IsValid({cmd})]", path) != "1":
             return ActionResult(False, name, f"不可执行：{self._why_not(cmd, path) or '游戏判定不可用'}", before, before)
-        self.b.exec(f"Execute({cmd})", path)
+        self.b.exec(stmt or f"Execute({cmd})", path)
         done = expect or (lambda v: v != before)
         after = before
         t0 = time.time()
@@ -266,6 +310,148 @@ class Actions:
         probe = lambda: sorted(plain(r[0]) for r in self.b.rows(   # noqa: E731
             f"Company.GetActiveCharters({t})", ["CompanyCharter.GetNameNoFormatting"], path=cpath))
         return self._run(name, cmd, probe, None, path=cpath)
+
+    # ------------------------------------------------------------ 外交
+    def country_ref(self, country: str) -> str:
+        """把国家（tag 如 FRA，或 STATE_* 地区键）变成路径上的一步「=表达式」：桥接层按值求出该国作为
+        非 const 上下文（数据系统没有全部国家的列表，也没有按 tag 取国家的函数，经它拥有的地区取）。"""
+        if country.startswith("STATE_"):
+            return f"=GetStateRegion('{country}').GetLargestStateOwner"
+        if not _TAG_REGION:
+            keys = gamedata.state_regions()
+            for i in range(0, len(keys), 80):
+                part = keys[i:i + 80]
+                for k, tag in zip(part, self.b.read_many([f"GetStateRegion('{k}').GetLargestStateOwner.GetTagName"
+                                                          for k in part])):
+                    if tag:
+                        _TAG_REGION.setdefault(plain(tag), k)
+        if country not in _TAG_REGION:
+            raise ValueError(f"找不到拥有地区的国家 {country}")
+        return f"=GetStateRegion('{_TAG_REGION[country]}').GetLargestStateOwner"
+
+    def diplomatic_actions(self, country: str) -> list[dict[str, Any]]:
+        """对某国可用 / 可能的外交行动（国家面板「外交」下拉框里的那些）。"""
+        ref = [(self.country_ref(country), 0)]
+        out = []
+        for lst in DIPLO_ACTION_LISTS:
+            for key, name, valid, why in self.b.rows(f"Country.{lst}", ["DiplomaticAction.GetType.GetKey",
+                                                                         "DiplomaticAction.GetNameNoFormatting",
+                                                                         "IsValid(DiplomaticAction.ExecuteAction)",
+                                                                         "GetDesc(DiplomaticAction.ExecuteAction)"],
+                                                     path=ref):
+                out.append({"action": key, "name": plain(name), "list": lst, "valid": valid == "1",
+                            "why_not": plain(why)[:200]})
+        return out
+
+    def diplomatic_action(self, country: str, action: str) -> ActionResult:
+        """对某国执行外交行动。action 是外交行动类型 key（increase_relations、embargo …）。
+        界面按钮的 onclick 是 DiplomaticAction.ExecuteWithConfirmation：不需确认的直接发命令，需要确认的
+        （宿敌、驱逐外交官……）弹出确认窗口 DiplomaticActionWindow，玩家点「确认」才发。这里一律走确认窗口那条：
+        桥接层伪造窗口（字段从外交行动对象抄，见 _diplo_window），执行 DiplomaticActionWindow.ExecuteAction。
+        **直接 Execute(DiplomaticAction.ExecuteAction) 游戏收下了却什么也不做**。要选州的外交行动不在这里。"""
+        name = f"对 {country}：{action}"
+        ref = [(self.country_ref(country), 0)]
+        for lst in DIPLO_ACTION_LISTS:
+            keys = [r[0] for r in self.b.rows(f"Country.{lst}", ["DiplomaticAction.GetType.GetKey"], path=ref)]
+            if action in keys:
+                path = ref + [(f"Country.{lst}", keys.index(action))]
+                probe = lambda p=path: [plain(v or "") for v in self.b.read_many(DIPLO_PROBES, p)]   # noqa: E731
+                before = probe()
+                if self.b.read("[IsValid(DiplomaticAction.ExecuteAction)]", path) != "1":
+                    return ActionResult(False, name, f"不可执行：{self._why_not('DiplomaticAction.ExecuteAction', path)}",
+                                        before, before)
+                self.b.exec_fake("Execute(DiplomaticActionWindow.ExecuteAction)", _diplo_window(len(path) - 1),
+                                 path=path)
+                return self._settle(name, probe, before)
+        return ActionResult(False, name, "没有这个外交行动")
+
+    def plays(self) -> list[dict[str, Any]]:
+        """玩家参与的外交博弈。"""
+        return [{"index": i, "name": plain(n), "initiator": plain(x), "target": plain(t)}
+                for i, (n, x, t) in enumerate(self.b.rows(PLAYS, ["DiplomaticPlay.GetName",
+                                                                    "DiplomaticPlay.GetInitiator.GetNameNoFormatting",
+                                                                    "DiplomaticPlay.GetTarget.GetNameNoFormatting"]))]
+
+    def start_play(self, play: str, country: str = "", state: str = "") -> ActionResult:
+        """发起外交博弈（国家面板的博弈按钮；界面先弹确认窗口，确认发的就是这条命令）。
+        play 是博弈类型 key（dp_humiliation、dp_make_protectorate、dp_conquer_state …）；
+        目标是国家（country：tag）或州（state：STATE_* 地区键，取该地区最大的州）。"""
+        t = f"GetDiplomaticPlayType('{play}')"
+        if state:
+            cmd = f"{t}.GetStartCommandState({PLAYER},State.Self)"
+            ref = [(f"=GetStateRegion('{state}').GetLargestStateInRegion", 0)]
+        else:
+            cmd = f"{t}.GetStartCommandCountry({PLAYER}.Self,Country.Self)"
+            ref = [(self.country_ref(country), 0)]
+        probe = lambda: [p["name"] for p in self.plays()]   # noqa: E731
+        return self._run(f"发起 {play} → {country or state}", cmd, probe, None, path=ref)
+
+    def war_goal(self, play: int, goal: int, cmd: str, side: str = "Initiator") -> ActionResult:
+        """外交博弈里的战争目标：cmd 取 MakeWarGoalPrimaryDemand（设为主要诉求）/
+        ToggleIsPressedInPotentialPeaceDeal（和谈时是否坚持）。play 是 plays() 的序号，goal 是该方的战争目标序号。"""
+        if cmd not in ("MakeWarGoalPrimaryDemand", "ToggleIsPressedInPotentialPeaceDeal"):
+            raise ValueError("cmd 取 MakeWarGoalPrimaryDemand / ToggleIsPressedInPotentialPeaceDeal")
+        ppath = [(PLAYS, play)]
+        goals = f"DiplomaticPlay.Get{side}WarGoals"
+
+        def probe():
+            return {k: [plain(r[0]) for r in self.b.rows(f"DiplomaticPlay.Get{side}{k}WarGoals", ["WarGoal.GetName"],
+                                                         path=ppath)] for k in ("Primary", "Secondary")} | {
+                "pressed": [r[0] for r in self.b.rows(goals, ["IsValid(WarGoal.ToggleIsPressedInPotentialPeaceDeal("
+                                                               f"{PLAYER}.Self))"], path=ppath)]}
+
+        return self._run(f"博弈 {play} 战争目标 {goal}：{cmd}", f"WarGoal.{cmd}({PLAYER}.Self)", probe, None,
+                         path=ppath + [(goals, goal)])
+
+    def play_stance(self, play: int, cmd: str) -> ActionResult:
+        """外交博弈中的表态：Yield（退让）/ DeclareNeutrality / BeOnTheFence / LeanTowardsInitiator /
+        LeanTowardsTarget / SupportInitiator / SupportTarget / SwitchSide。"""
+        if cmd not in PLAY_STANCES:
+            raise ValueError(f"cmd 取 {PLAY_STANCES}")
+        ppath = [(PLAYS, play)]
+        before_plays = [p["name"] for p in self.plays()]
+
+        def probe():   # 表态改变博弈里的阵营；退让 / 中立后玩家不再参与，博弈从列表里消失
+            if [p["name"] for p in self.plays()] != before_plays:
+                return {"plays": [p["name"] for p in self.plays()]}
+            return dict(zip(PLAY_SIDES, self.b.read_many([f"DiplomaticPlay.{s}({PLAYER})" for s in PLAY_SIDES], ppath)))
+
+        return self._run(f"博弈 {play}：{cmd}", f"DiplomaticPlay.{cmd}({PLAYER})", probe, None, path=ppath)
+
+    def proposals(self) -> list[dict[str, Any]]:
+        """别国发给玩家、待回复的提议（屏幕顶端的提议图标）。列表挂在界面对象 TopFrontend 上：
+        TopFrontend.AccessProposals 每次都先清空 +0x30 的数组、再从游戏状态里按本地玩家重建，
+        所以伪造一个只有 +0x30 空数组的对象就能读（见 docs/bridge.md）。"""
+        rows = self.b.rows_fake(PROPOSALS, PROPOSAL_FIELDS, TOP_FRONTEND)
+        return [{"index": i, "name": plain(n), "actor": plain(a), "kind": _proposal_kind(flags)}
+                for i, (n, a, *flags) in enumerate(rows)]
+
+    def answer_proposal(self, index: int, accept: bool) -> ActionResult:
+        """接受 / 拒绝提议：条约、外交行动、外交要求、外交博弈中的拉拢（与提议弹窗上的按钮同一条命令）。"""
+        props = self.proposals()
+        if not 0 <= index < len(props):
+            return ActionResult(False, f"回复提议 {index}", f"只有 {len(props)} 个提议")
+        p = props[index]
+        if p["kind"] not in PROPOSAL_COMMANDS:
+            return ActionResult(False, f"回复提议 {index}", f"认不出提议种类：{p}")
+        cmd = PROPOSAL_COMMANDS[p["kind"]][0 if accept else 1]
+        name = f"{'接受' if accept else '拒绝'}「{p['name']}」（{p['actor']}）"
+        before = [q["name"] for q in props]
+        if self.b.read_fake(f"[IsValid({cmd})]", TOP_FRONTEND, path=[(PROPOSALS, index)]) != "1":
+            return ActionResult(False, name, "不可执行", before, before)
+        self.b.exec_fake(f"Execute({cmd})", TOP_FRONTEND, path=[(PROPOSALS, index)])
+        return self._settle(name, lambda: [q["name"] for q in self.proposals()], before)
+
+    def _settle(self, name: str, probe: Callable[[], Any], before: Any, wait: float = 1.5) -> ActionResult:
+        """命令已发出：轮询到读数变化为止。"""
+        after = before
+        t0 = time.time()
+        while time.time() - t0 < wait:
+            after = probe()
+            if after != before:
+                return ActionResult(True, name, "", before, after)
+            time.sleep(0.1)
+        return ActionResult(False, name, "已执行但没看到生效", before, after)
 
     # ------------------------------------------------------------ 谈判
     def negotiate(self, ig_index: int) -> ActionResult:
@@ -585,6 +771,25 @@ class Actions:
             return "研究中" if vals[0] == "1" else "已完成" if vals[1] == "1" else "未研究"
 
         return self._run(f"研究 {tech}", f"{t}.Research({PLAYER}.Self)", probe, lambda s: s != "未研究")
+
+    def research_queue(self) -> list[str]:
+        """研究队列（正在研究的不在内），按顺序。科技没有 GetKey，按中文名对回游戏 id。"""
+        by_name = _name_index("technologies")
+        return [by_name.get(plain(r[0]), plain(r[0])) for lst in ("GetResearchQueueTop", "GetResearchQueueBottom")
+                for r in self.b.rows(f"{PLAYER_MUT}.{lst}", ["Technology.GetNameNoFormatting"])]
+
+    def queue_research(self, tech: str, how: str = "AddToQueueWithUnlocks") -> ActionResult:
+        """科技树上的按钮：how 取 ResearchWithUnlocks（点击：连同前置一起，前置先研究）/
+        AddToQueueWithUnlocks（Shift 点击：连同前置加进队尾）/ RemoveFromQueue（移出队列）。"""
+        if how not in ("ResearchWithUnlocks", "AddToQueueWithUnlocks", "RemoveFromQueue"):
+            raise ValueError("how 取 ResearchWithUnlocks / AddToQueueWithUnlocks / RemoveFromQueue")
+        t = f"GetTechnology('{tech}')"
+
+        def probe():
+            return {"researching": self._probe(f"{PLAYER}.GetCurrentlyResearchedTechnology.GetNameNoFormatting"),
+                    "queue": self.research_queue()}
+
+        return self._run(f"{tech}：{how}", f"{t}.{how}({PLAYER}.Self)", probe, None)
 
     # ------------------------------------------------------------ 政府
     def reform_government(self, members: list[int]) -> ActionResult:

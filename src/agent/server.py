@@ -64,6 +64,13 @@ ACT_PARAMS = {
     "toggle_charter": "company: 公司类型 key, charter: 特许状中文名（如 贸易权）",
     "target_charter": "company, charter: industry_charter/monopoly_charter/colonization_charter, "
                       "building: building_* 或 region: STATE_*（再执行一次是撤销）",
+    "queue_research": "tech, how: ResearchWithUnlocks/AddToQueueWithUnlocks/RemoveFromQueue",
+    "diplomatic_action": "country: tag 或 STATE_* 地区键, action: 外交行动 key（diplomacy 工具列出）",
+    "start_play": "play: 博弈类型 key（dp_humiliation…）, country: tag 或 state: STATE_*",
+    "play_stance": "play: plays 里的序号, cmd: Yield/DeclareNeutrality/BeOnTheFence/LeanTowardsInitiator/"
+                   "LeanTowardsTarget/SupportInitiator/SupportTarget/SwitchSide",
+    "war_goal": "play, goal, cmd: MakeWarGoalPrimaryDemand/ToggleIsPressedInPotentialPeaceDeal, side=Initiator/Target",
+    "answer_proposal": "index（diplomacy 工具里 proposals 的序号）, accept: true/false",
 }
 
 server = MCPServer(
@@ -319,6 +326,21 @@ def construction_queue(private: bool = False) -> list[dict[str, Any]] | dict[str
     try:
         return Actions(bridge).construction_queue(private)
     except (GameError, BridgeError) as e:
+        return {"ok": False, "error": str(e)}
+
+
+@server.tool(description=(
+    "外交：country 给定时列出对该国（tag 或 STATE_* 地区键）可用 / 可能的外交行动及原因；"
+    "另外总是返回玩家参与的外交博弈（plays）、研究队列和待回复的提议（proposals）。"
+))
+def diplomacy(country: str = "") -> dict[str, Any]:
+    a = Actions(bridge)
+    try:
+        out: dict[str, Any] = {"plays": a.plays(), "proposals": a.proposals(), "research_queue": a.research_queue()}
+        if country:
+            out["actions"] = a.diplomatic_actions(country)
+        return out
+    except (GameError, BridgeError, ValueError) as e:
         return {"ok": False, "error": str(e)}
 
 

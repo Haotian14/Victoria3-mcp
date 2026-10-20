@@ -76,3 +76,17 @@ class GameData:
 @lru_cache(maxsize=1)
 def get() -> GameData:
     return GameData()
+
+
+@lru_cache(maxsize=1)
+def state_regions() -> list[str]:
+    """全部地区键（STATE_*），直接读游戏目录 map_data/state_regions（只读）。"""
+    import glob
+    import re
+
+    from agent import paths
+    keys: list[str] = []
+    for f in sorted(glob.glob(os.path.join(paths.game_dir(), "game", "map_data", "state_regions", "*.txt"))):
+        with open(f, encoding="utf-8-sig") as fh:
+            keys += re.findall(r"^(STATE_\w+)\s*=", fh.read(), re.M)
+    return keys

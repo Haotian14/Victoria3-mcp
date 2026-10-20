@@ -12,6 +12,8 @@ namespace datasys {
 // 上下文路径的一步：对 list 求值（界面 datamodel 用的那种列表），取第 index 项作为上下文。
 // 例：{AccessMetaPlayer.AccessPlayedOrObservedCountry.AccessStates, 3}, {State.GetPotentialUrbanBuildings, 0}
 // 之后的表达式里就能用 State 与 Building。
+// list 以 = 开头时不是列表，而是按值求一个对象作为非 const 的通配上下文（index 不用），
+// 例：{=GetStateRegion('STATE_ILE_DE_FRANCE').GetLargestStateOwner, 0} 之后就能用 Country.GetAvailable…DiploActions。
 struct PathStep {
     std::string list;
     int index;
