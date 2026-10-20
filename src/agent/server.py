@@ -50,6 +50,20 @@ ACT_PARAMS = {
     "stop_enacting": "（无参数）取消正在推行的法律",
     "impose_law": "subject: 附属国名字, law: 法律名字",
     "repeal_amendment": "amendment: 修正案名字",
+    "move_construction": "index（construction_queue 里的序号）, how: Up/Down/ToTop/ToBottom, private=false",
+    "cancel_construction": "index, private=false",
+    "building_action": "state: 州 id 或州名, building: building_* 键, cmd: ToggleSubsidies/ToggleSubsidiesOn/"
+                       "ToggleSubsidiesOff/ToggleAutoExpand(On/Off)/TogglePrivatization/Nationalize(levels)/Downsize/"
+                       "CancelConstruction/PauseConstructionOutput/ResumeConstructionOutput/"
+                       "ResetProductionMethodsToStandard/GetBuildingType.ResetProductionMethodsToStandard",
+    "construction_speed": "pm: 建造部门生产方式（全部换成它），或 pause: true/false（暂停 / 恢复全部建造）",
+    "set_decree": "state, decree: 法令中文名",
+    "remove_decree": "state, decree",
+    "state_action": "state, cmd: IncorporateState/UnincorporateState/TogglePauseColonization/AbandonColony",
+    "colonize": "region: STATE_* 键",
+    "toggle_charter": "company: 公司类型 key, charter: 特许状中文名（如 贸易权）",
+    "target_charter": "company, charter: industry_charter/monopoly_charter/colonization_charter, "
+                      "building: building_* 或 region: STATE_*（再执行一次是撤销）",
 }
 
 server = MCPServer(
@@ -296,6 +310,14 @@ def act(kind: str, level: str = "", tech: str = "", law: str = "", state: int = 
 def journal() -> dict[str, Any]:
     try:
         return Actions(bridge).journal()
+    except (GameError, BridgeError) as e:
+        return {"ok": False, "error": str(e)}
+
+
+@server.tool(description="政府（private=true 为私人）建造队列，按队列顺序；用 act(kind=move_construction / cancel_construction) 调整。")
+def construction_queue(private: bool = False) -> list[dict[str, Any]] | dict[str, Any]:
+    try:
+        return Actions(bridge).construction_queue(private)
     except (GameError, BridgeError) as e:
         return {"ok": False, "error": str(e)}
 

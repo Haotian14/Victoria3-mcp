@@ -94,6 +94,14 @@ stmt = Execute(ProductionMethod.GetSwitch(Building.Self))
 | 取消推行法律 | `Execute(Law.StopEnacting)` | 现行法律 → `Law.GetLawAlternatives` 里 `IsBeingEnacted` 的那条 |
 | 对附属国强加法律 | `Execute(Law.StartImposing)` | `PM.GetSubjects` → 附属国的四个法律列表 → `Law.GetLawAlternatives` |
 | 废除修正案 | `Execute(Amendment.Repeal)` | 现行法律 → `Law.GetAllAmendments` |
+| 建造队列上移 / 下移 / 置顶 / 置底 / 取消 | `Execute(ConstructionQueueElement.MoveUp)` 等 | `PM.AccessGovernmentConstructionQueue`（或 `AccessPrivateConstructionQueue`；界面用的分页列表依赖面板） |
+| 建筑：补贴、自动扩建、私有化、国有化、缩减、取消建造、暂停建造部门产出、生产方式恢复默认 | `Execute(Building.ToggleSubsidies)`、`Building.NationalizeBuildingLevels('(int32)1')` 等 | 州 → `State.AccessBuildings` |
+| 按类型恢复生产方式 | `Execute(Building.GetBuildingType.ResetProductionMethodsToStandard)`（界面同写法） | 同上 |
+| 全部建造部门换方式 / 暂停 / 恢复 | `Execute(ChangeAllConstructionSpeed(ProductionMethod.Self))`、`PauseAllConstruction` | `AccessConstructionSpeeds`（全局） |
+| 州法令 | `Execute(DecreeType.GetSetCommand(State.Self))` / `Decree.GetRemoveCommand` | 州 → `State.GetPotentialDecrees` / `State.AccessDecrees` |
+| 并入 / 取消并入、暂停殖民、放弃殖民地 | `Execute(State.IncorporateState)` 等 | 州 |
+| 殖民 | `Execute(GetStateRegion('STATE_X').Colonize)`（界面写 `State.GetStateRegion.Colonize`） | — |
+| 公司特许状 | `Execute(Company.ToggleCharter(CompanyCharterType.Self))`；要选目标的用 `Company.ToggleBuildingCharter(GetCompanyCharterType('industry_charter').Self, GetBuildingType('…').Self)` / `ToggleRegionCharter(…, GetStateRegion('…').Self)` | `PM.GetCompanies` → `GetCompanyCharterTypes` |
 
 前置条件统一用 `IsValid(命令)`，原因用 `GetDesc(命令)`（界面按钮的灰显与提示就是这两个）。
 
@@ -108,7 +116,16 @@ stmt = Execute(ProductionMethod.GetSwitch(Building.Self))
 - 剧本按钮：按钮的可见性跟着效果变（「禁止鸦片贸易」按下后换成「取消鸦片禁令」），连同国家签名一起对比；决议看国家签名；
 - 机构：`Institution.GetTargetInvestmentLevel`（不在调整时读 0）、`IsChangingLevel`；运动：`IsBolstered` / `IsSuppressed`；
   取消立法：`P.IsEnactingLaw`；修正案：现行法律上的修正案名单；
-- 强加法律：附属国要到之后的结算才开始推行，即时可读的是 12 个月的强加冷却——同一条命令的 `IsValid` 由 1 变 0。
+- 强加法律：附属国要到之后的结算才开始推行，即时可读的是 12 个月的强加冷却——同一条命令的 `IsValid` 由 1 变 0；
+- 建造队列：整条队列的（建筑, 州）顺序与预期的新顺序比；取消看队列长度；
+- 建筑：`IsSubsidized` / `IsAutoExpanding` / `CanBePrivatized`（私有化开关就翻它）/ `GetNumLevelsCanBeNationalized` /
+  `GetTotalLevels` / `GetExpansionLevelsInQueue` / `IsConstructionOutputPaused` / 各方式组现行生产方式。
+  **州里的建筑列表按等级排序**：缩减、取消建造之后同一下标会换成别的建筑，核实时每次按建筑 key 重新找路径；
+- 按类型恢复生产方式、全部建造部门换方式、殖民：作用范围大或要到结算才落地，看同一命令变为不可用
+  （「所有生产方式都已调整为国家标准」「该生产方式已在所有建筑中激活」「我们在这里已经有殖民地」）；
+- 殖民地下一次结算才作为州出现，用 `State.IsGrowingColony` 认（`IsBeingColonized` 不是它）；
+- 法令：州的现行法令名单；并入：`IsIncorporated` + `IsIncorporating`（对正在并入的州「取消并入」是停下并入）；
+- 特许状：公司的 `HasAny*CharterActive` / `Company.GetActiveCharters(类型)`；授予后几年内不能撤销（游戏规则，GetDesc 会说）。
 
 条件类命令的测试准备（只在测试局里用，测完重新载入 v3mcp_start_1836）：
 - 公司：大清开局没有可建立的公司，控制台 `ignore_company_requirements` 打开后再试，测完再输一次关掉；
@@ -117,6 +134,8 @@ stmt = Execute(ProductionMethod.GetSwitch(Building.Self))
   禁烟后 `invalidate_journal_entry je_opium_obsession`，决议「取消鸦片禁令」就出现；
 - 机构、谈判、强加法律、修正案：大清开局没有可调的机构、附属国，`tag GBR` 换成英国测（英国推行普选制时
   小市民可谈判；附属国上加拿大可强加法律），修正案用 `tag SWE`（瑞典的普鲁士式教育可废除）；
+- 经济：英国伦敦周边的建筑几乎每条命令都能用；建造队列先 `Building.QueueConstruction` 排几项；
+  殖民用 `research quinine` 解锁纳马夸兰（`STATE_NAMAQUALAND`），殖民特许状用赫雷罗兰；
 - 控制台没有 `effect` 命令，测试留下的修正去不掉，只能重新载入存档。
 
 ### 事件（`POST /events`、`POST /data/fake`）

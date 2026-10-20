@@ -35,6 +35,10 @@ COUNTRY_COMMANDS = {
 }
 COMPANY_TYPES = f"{PLAYER_MUT}.GetAvailableCompanies"
 COMPANIES = f"{PLAYER_MUT}.GetCompanies"
+CHARTER_TYPES = "GetCompanyCharterTypes"
+CHARTER_PROBES = ["Company.HasAnyTradeCharterActive", "Company.HasAnyIndustryCharterActive",
+                  "Company.HasAnyInvestmentCharterActive", "Company.HasAnyMonopolyCharterActive",
+                  "Company.HasAnyColonizationCharterActive"]
 
 # 事件：每个事件作为上下文求的字段（最后一项判断是不是玩家的事件）
 EVENT_FIELDS = ["Event.GetKey", "Event.GetTitle", "Event.GetNumRemainingDays",
@@ -56,6 +60,37 @@ INSTITUTION_LEVELS = "Institution.AccessInvestmentLevels"
 MOVEMENTS = f"{PLAYER_MUT}.AccessPoliticalMovements"
 AMENDMENTS = "Law.GetAllAmendments"
 SUBJECTS = f"{PLAYER_MUT}.GetSubjects"
+# 建筑命令 → 核实读数（PMS = 各方式组的现行生产方式）
+BUILDING_COMMANDS = {
+    "CancelConstruction": "Building.GetExpansionLevelsInQueue",
+    "Downsize": "Building.GetTotalLevels",
+    "Nationalize": "Building.GetNumLevelsCanBeNationalized",
+    "PauseConstructionOutput": "Building.IsConstructionOutputPaused",
+    "ResumeConstructionOutput": "Building.IsConstructionOutputPaused",
+    "ToggleAutoExpand": "Building.IsAutoExpanding",
+    "ToggleAutoExpandOn": "Building.IsAutoExpanding",
+    "ToggleAutoExpandOff": "Building.IsAutoExpanding",
+    "TogglePrivatization": "Building.CanBePrivatized",
+    "ToggleSubsidies": "Building.IsSubsidized",
+    "ToggleSubsidiesOn": "Building.IsSubsidized",
+    "ToggleSubsidiesOff": "Building.IsSubsidized",
+    "ResetProductionMethodsToStandard": "PMS",
+    # 按类型恢复：作用于全国该类建筑，全部恢复后命令变为不可用（「所有生产方式都已调整为国家标准」）
+    "GetBuildingType.ResetProductionMethodsToStandard": "IsValid(Building.GetBuildingType.ResetProductionMethodsToStandard)",
+    "GetBuildingType.ToggleMonopoly": "Building.GetBuildingType.HasCountryMonopoly",
+}
+CONSTRUCTION_SPEEDS = "AccessConstructionSpeeds"      # 建造部门的生产方式（全局列表）
+# 州命令 → 核实读数（并入要几个月：命令下去后读「正在并入」；对正在并入的州「取消并入」是停下并入）
+_INCORPORATION = ["State.IsIncorporated", "State.IsIncorporating"]
+STATE_COMMANDS = {
+    "IncorporateState": _INCORPORATION, "UnincorporateState": _INCORPORATION,
+    "TogglePauseColonization": ["State.IsColonizationPaused"], "AbandonColony": ["State.IsGrowingColony"],
+}
+GOV_QUEUE = f"{PLAYER_MUT}.AccessGovernmentConstructionQueue"
+PRIVATE_QUEUE = f"{PLAYER_MUT}.AccessPrivateConstructionQueue"
+QUEUE_FIELDS = ["ConstructionQueueElement.GetBuilding.GetBuildingType.GetKey",
+                "ConstructionQueueElement.GetState.GetNameNoFormatting",
+                "ConstructionQueueElement.GetWeeksLeft", "ConstructionQueueElement.IsCurrentlyUnderConstruction"]
 LAW_LISTS = ("AccessActivePowerStructureLaws", "AccessActiveEconomyLaws", "AccessActiveHumanRightsLaws",
              "AccessActiveOtherLaws")
 
@@ -199,6 +234,38 @@ class Actions:
         cmd = f"{PLAYER}.{'CreateCompany' if create else 'RemoveCompany'}({t})"
         return self.command(cmd, f"{PLAYER}.GetNumCompanies", path=[(lst, keys.index(key))], probe_path=[],
                             name=name)
+
+    def toggle_charter(self, company: str, charter: str) -> ActionResult:
+        """公司面板上授予 / 撤销特许状（Company.ToggleCharter(CompanyCharterType.Self)）。
+        company 是公司类型 key，charter 是特许状中文名（如「贸易权」）。"""
+        name = f"{company} 特许状「{charter}」开关"
+        keys = [r[0] for r in self.b.rows(COMPANIES, ["Company.GetCompanyType.GetKey"])]
+        if company not in keys:
+            return ActionResult(False, name, f"已有的公司：{keys}")
+        cpath = [(COMPANIES, keys.index(company))]
+        path, names = self._find(CHARTER_TYPES, "CompanyCharterType.GetNameNoFormatting", charter, path=cpath)
+        if not path:
+            return ActionResult(False, name, f"可选特许状：{names}")
+        probe = lambda: self.b.read_many(CHARTER_PROBES, cpath)   # noqa: E731
+        return self._run(name, "Company.ToggleCharter(CompanyCharterType.Self)", probe, None, path=path)
+
+    def target_charter(self, company: str, charter: str, building: str = "", region: str = "") -> ActionResult:
+        """要选目标的特许状：产业 / 垄断（按建筑类型，Company.ToggleBuildingCharter）、殖民（按地区，
+        Company.ToggleRegionCharter）。charter 是特许状类型 key（industry_charter …），building / region 是
+        building_* / STATE_* 键。已授予时再执行一次就是撤销（与右键菜单同一条命令）。"""
+        name = f"{company} 特许状 {charter} → {building or region}"
+        keys = [r[0] for r in self.b.rows(COMPANIES, ["Company.GetCompanyType.GetKey"])]
+        if company not in keys:
+            return ActionResult(False, name, f"已有的公司：{keys}")
+        if bool(building) == bool(region):
+            raise ValueError("building 与 region 给且只给一个")
+        cpath = [(COMPANIES, keys.index(company))]
+        t = f"GetCompanyCharterType('{charter}').Self"
+        cmd = (f"Company.ToggleBuildingCharter({t},GetBuildingType('{building}').Self)" if building
+               else f"Company.ToggleRegionCharter({t},GetStateRegion('{region}').Self)")
+        probe = lambda: sorted(plain(r[0]) for r in self.b.rows(   # noqa: E731
+            f"Company.GetActiveCharters({t})", ["CompanyCharter.GetNameNoFormatting"], path=cpath))
+        return self._run(name, cmd, probe, None, path=cpath)
 
     # ------------------------------------------------------------ 谈判
     def negotiate(self, ig_index: int) -> ActionResult:
@@ -368,6 +435,146 @@ class Actions:
                     plain(r[0]) for r in self.b.rows(AMENDMENTS, ["Amendment.GetNameNoFormatting"], path=p))
                 return self._run(name, "Amendment.Repeal", probe, lambda v: amendment not in v, path=path)
         return ActionResult(False, name, "现行法律上没有这个修正案")
+
+    # ------------------------------------------------------------ 经济：建造队列
+    def construction_queue(self, private: bool = False) -> list[dict[str, Any]]:
+        """政府（或私人）建造队列，按队列顺序。"""
+        rows = self.b.rows(PRIVATE_QUEUE if private else GOV_QUEUE, QUEUE_FIELDS)
+        return [{"index": i, "building": k, "state": plain(s), "weeks_left": w, "under_construction": u == "1"}
+                for i, (k, s, w, u) in enumerate(rows)]
+
+    def _queue_keys(self, lst: str) -> list[tuple[str, str]]:
+        return [(r[0], plain(r[1])) for r in self.b.rows(lst, QUEUE_FIELDS[:2])]
+
+    def move_construction(self, index: int, how: str, private: bool = False) -> ActionResult:
+        """调整队列顺序：how 取 Up / Down / ToTop / ToBottom（队列面板上的箭头）。"""
+        if how not in ("Up", "Down", "ToTop", "ToBottom"):
+            raise ValueError("how 取 Up / Down / ToTop / ToBottom")
+        lst = PRIVATE_QUEUE if private else GOV_QUEUE
+        keys = self._queue_keys(lst)
+        name = f"建造队列第 {index} 项 Move{how}"
+        if not 0 <= index < len(keys):
+            return ActionResult(False, name, f"队列只有 {len(keys)} 项")
+        want = keys[:index] + keys[index + 1:]
+        to = {"Up": max(index - 1, 0), "Down": min(index + 1, len(keys) - 1), "ToTop": 0, "ToBottom": len(keys) - 1}[how]
+        want.insert(to, keys[index])
+        name = f"{keys[index][0]} @ {keys[index][1]}：队列 {index} → {to}"
+        return self._run(name, f"ConstructionQueueElement.Move{how}", lambda: self._queue_keys(lst),
+                         lambda v: v == want, path=[(lst, index)])
+
+    def cancel_construction(self, index: int, private: bool = False) -> ActionResult:
+        lst = PRIVATE_QUEUE if private else GOV_QUEUE
+        keys = self._queue_keys(lst)
+        if not 0 <= index < len(keys):
+            return ActionResult(False, f"取消建造队列第 {index} 项", f"队列只有 {len(keys)} 项")
+        return self._run(f"取消建造 {keys[index][0]} @ {keys[index][1]}", "ConstructionQueueElement.CancelConstruction",
+                         lambda: len(self._queue_keys(lst)), lambda v: v == len(keys) - 1, path=[(lst, index)])
+
+    def construction_speed(self, pm: str = "", pause: bool | None = None) -> ActionResult:
+        """建造面板顶上的全局命令：pm 给定时把全部建造部门换成该生产方式（ChangeAllConstructionSpeed），
+        pause=True / False 时暂停 / 恢复全部建造部门（PauseAllConstruction / ResumeAllConstruction）。"""
+        if pause is not None:
+            cmd, other = ("PauseAllConstruction", "ResumeAllConstruction") if pause else \
+                ("ResumeAllConstruction", "PauseAllConstruction")
+            return self.command(cmd, f"IsValid({other})", target="1", name=cmd)
+        keys = [r[0] for r in self.b.rows(CONSTRUCTION_SPEEDS, ["ProductionMethod.GetKey"])]
+        if pm not in keys:
+            return ActionResult(False, f"全部建造部门 → {pm}", f"可选：{keys}")
+        cmd = "ChangeAllConstructionSpeed(ProductionMethod.Self)"
+        # 全部换好后同一命令不可用（「该生产方式已在所有建筑中激活」）
+        return self.command(cmd, f"IsValid({cmd})", path=[(CONSTRUCTION_SPEEDS, keys.index(pm))], target="0",
+                            name=f"全部建造部门 → {pm}")
+
+    # ------------------------------------------------------------ 经济：州（法令、并入、殖民）
+    def _state_path(self, state: int | str) -> list:
+        rows = self.b.rows(STATES, ["State.GetID", "State.GetNameNoFormatting"])
+        si = next((i for i, (sid, n) in enumerate(rows) if str(state) in (sid, plain(n))), None)
+        return [] if si is None else [(STATES, si)]
+
+    def _decrees(self, spath) -> list[str]:
+        return sorted(plain(r[0]) for r in self.b.rows("State.AccessDecrees", ["Decree.GetName"], path=spath))
+
+    def set_decree(self, state: int | str, decree: str) -> ActionResult:
+        """在州里颁布法令（DecreeType.GetSetCommand(State.Self)）。decree 是法令中文名。"""
+        name = f"{state} 颁布法令「{decree}」"
+        spath = self._state_path(state)
+        if not spath:
+            return ActionResult(False, name, f"玩家没有州 {state}")
+        path, names = self._find("State.GetPotentialDecrees", "DecreeType.GetNameNoFormatting", decree, path=spath)
+        if not path:
+            return ActionResult(False, name, f"可颁布的法令：{names}")
+        return self._run(name, "DecreeType.GetSetCommand(State.Self)", lambda: self._decrees(spath),
+                         lambda v: decree in v, path=path)
+
+    def remove_decree(self, state: int | str, decree: str) -> ActionResult:
+        name = f"{state} 撤销法令「{decree}」"
+        spath = self._state_path(state)
+        path, names = self._find("State.AccessDecrees", "Decree.GetName", decree, path=spath) if spath else ([], [])
+        if not path:
+            return ActionResult(False, name, f"该州现有法令：{names}")
+        return self._run(name, "Decree.GetRemoveCommand", lambda: self._decrees(spath),
+                         lambda v: decree not in v, path=path)
+
+    def colonizing(self) -> list[str]:
+        """正在殖民的州（殖民开始后的下一次结算就作为玩家的州出现，IsGrowingColony；IsBeingColonized 不是它）。"""
+        return sorted(plain(n) for n, c in self.b.rows(STATES, ["State.GetNameNoFormatting", "State.IsGrowingColony"])
+                      if c == "1")
+
+    def colonize(self, region: str) -> ActionResult:
+        """殖民一个地区（地图右键「殖民」：State.GetStateRegion.Colonize）。region 是 STATE_* 键，
+        直接用全局 GetStateRegion 取到同一个 StateRegion。
+        暂停时殖民地要到下一次结算才作为州出现，即时可读的是同一命令变为不可用（「我们在这里已经有殖民地」）。"""
+        cmd = f"GetStateRegion('{region}').Colonize"
+        return self.command(cmd, f"IsValid({cmd})", target="0", name=f"殖民 {region}")
+
+    def state_action(self, state: int | str, cmd: str) -> ActionResult:
+        """州上的命令：IncorporateState / UnincorporateState / TogglePauseColonization / AbandonColony。"""
+        if cmd not in STATE_COMMANDS:
+            raise ValueError(f"cmd 取 {list(STATE_COMMANDS)}")
+        spath = self._state_path(state)
+        if not spath:
+            return ActionResult(False, f"{state}：{cmd}", f"玩家没有州 {state}")
+        return self.command(f"State.{cmd}", lambda: self.b.read_many(STATE_COMMANDS[cmd], spath), path=spath,
+                            name=f"{state}：{cmd}")
+
+    # ------------------------------------------------------------ 经济：单个建筑
+    def _building_path(self, state: int | str, building: str) -> tuple[list, str]:
+        """state 是州 id 或州名；在该州已有建筑（State.AccessBuildings）里找 building。"""
+        rows = self.b.rows(STATES, ["State.GetID", "State.GetNameNoFormatting"])
+        si = next((i for i, (sid, n) in enumerate(rows) if str(state) in (sid, plain(n))), None)
+        if si is None:
+            return [], f"玩家没有州 {state}"
+        keys = [r[0] for r in self.b.rows("State.AccessBuildings", ["Building.GetBuildingType.GetKey"],
+                                          path=[(STATES, si)])]
+        if building not in keys:
+            return [], f"{plain(rows[si][1])} 没有 {building}"
+        return [(STATES, si), ("State.AccessBuildings", keys.index(building))], ""
+
+    def building_action(self, state: int | str, building: str, cmd: str, levels: int = 1) -> ActionResult:
+        """建筑面板 / 右键菜单上的命令，见 BUILDING_COMMANDS（补贴、自动扩建、私有化、国有化、缩减、
+        取消建造、暂停建造部门产出、生产方式恢复默认……）。Nationalize 时 levels 是国有化的级数。"""
+        if cmd not in BUILDING_COMMANDS:
+            raise ValueError(f"cmd 取 {list(BUILDING_COMMANDS)}")
+        name = f"{building} @ {state}：{cmd}"
+        path, why = self._building_path(state, building)
+        if not path:
+            return ActionResult(False, name, why)
+        expr = BUILDING_COMMANDS[cmd]
+        # GetBuildingType.* 是建筑类型上的命令（按类型生效），经建筑取到类型，与建筑浏览器里的同一条命令
+        stmt = f"Building.NationalizeBuildingLevels('(int32){levels}')" if cmd == "Nationalize" else f"Building.{cmd}"
+
+        def probe():
+            # 州里的建筑按等级排序：缩减、取消建造之后同一下标可能换成别的建筑，每次按 key 重新找
+            p, _ = self._building_path(state, building)
+            if not p:
+                return None
+            return self._pms(p) if expr == "PMS" else self._probe(expr, p)
+
+        return self._run(name, stmt, probe, None, path=path)
+
+    def _pms(self, path) -> list[str]:
+        return [r[0] for r in self.b.rows(PM_GROUPS, ["Building.AccessProductionMethod(ProductionMethodGroup.Self).GetKey"],
+                                          path=path)]
 
     # ------------------------------------------------------------ 研究
     def research(self, tech: str) -> ActionResult:

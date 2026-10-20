@@ -5,9 +5,9 @@
 
 可达性：**直达** = 从玩家国家沿列表能走到对象，照现有做法即可；**窗口** = 对象只存在于界面窗口 / 弹窗 / 草稿里，要像改组政府那样构造（见 docs/bridge.md）；**组合** = 军事 / 地图类，要组合编队、前线、海域等多个对象；**界面** = 只影响界面显示（改名、开关、定位），不影响局面；**待查** = 接收对象还没归类。
 
-**进度：命令 71 / 265 已验证；按操作种类（只差档位的算一种）31 / 225。**
+**进度：命令 103 / 265 已验证；按操作种类（只差档位的算一种）63 / 225。**
 
-按可达性（操作种类，已验证 / 总数）：直达 29 / 110，窗口 2 / 31，组合 0 / 77，界面 0 / 7。
+按可达性（操作种类，已验证 / 总数）：直达 61 / 110，窗口 2 / 31，组合 0 / 77，界面 0 / 7。
 
 不在本表、但同样要打通的：立即存档（目前用自动存档）、暂停 / 调速（`TimeKeeper`，已验证，不经 Execute）。事件选项在「事件」一节（`EventOption.Select`）。每条命令用的路径与核实方式见 docs/bridge.md「已验证的玩家动作」。
 
@@ -66,11 +66,38 @@
 |  | 界面 | `Country.ToggleIgnoreCountryFormation` | `GetPlayer.ToggleIgnoreCountryFormation(CountryFormation.Self)` | country_formation_panel.gui, culture_panel.gui |
 |  | 界面 | `Country.ToggleIgnoreDecision` | `GetPlayer.ToggleIgnoreDecision(Decision.Self)` | journal.gui |
 
-## 经济（17 / 56）
+## 经济（49 / 56）
 
 | 状态 | 可达性 | 命令 | 例子 | 界面文件 |
 |---|---|---|---|---|
+| ✓ `Actions.building_action` | 直达 | `Building.CancelConstruction` | `Building.CancelConstruction` | building_details_panel.gui, goods_local_prices_panel.gui … |
+| ✓ `Actions.building_action` | 直达 | `Building.Downsize` | `Building.Downsize` | building_details_panel.gui, goods_state_panel.gui … |
+| ✓ `Actions.building_action` | 直达 | `Building.NationalizeBuildingLevels` | `Building.NationalizeBuildingLevels('(int32)1')` | building_details_panel.gui, right_click_menu.gui |
+| ✓ `Actions.building_action` | 直达 | `Building.PauseConstructionOutput` | `Building.PauseConstructionOutput` | production_methods.gui |
 | ✓ `Actions.build` | 直达 | `Building.QueueConstruction` | `Building.QueueConstruction` | build_urban_buildings_menu.gui, building_details_panel.gui … |
+| ✓ `Actions.building_action` | 直达 | `Building.ResetProductionMethodsToStandard` | `Building.ResetProductionMethodsToStandard` | right_click_menu.gui |
+| ✓ `Actions.building_action` | 直达 | `Building.ResumeConstructionOutput` | `Building.ResumeConstructionOutput` | production_methods.gui |
+| ✓ `Actions.building_action` | 直达 | `Building.ToggleAutoExpand` | `Building.ToggleAutoExpand` | building_details_panel.gui |
+| ✓ `Actions.building_action` | 直达 | `Building.ToggleAutoExpandOff` | `Building.ToggleAutoExpandOff` | right_click_menu.gui |
+| ✓ `Actions.building_action` | 直达 | `Building.ToggleAutoExpandOn` | `Building.ToggleAutoExpandOn` | right_click_menu.gui |
+| ✓ `Actions.building_action` | 直达 | `Building.TogglePrivatization` | `Building.TogglePrivatization` | building_details_panel.gui, right_click_menu.gui |
+| ✓ `Actions.building_action` | 直达 | `Building.ToggleSubsidies` | `Building.ToggleSubsidies` | building_details_panel.gui, right_click_menu.gui … |
+| ✓ `Actions.building_action` | 直达 | `Building.ToggleSubsidiesOff` | `Building.ToggleSubsidiesOff` | right_click_menu.gui |
+| ✓ `Actions.building_action` | 直达 | `Building.ToggleSubsidiesOn` | `Building.ToggleSubsidiesOn` | right_click_menu.gui |
+| ✓ `Actions.building_action` | 直达 | `BuildingType.ResetProductionMethodsToStandard` | `BuildingType.ResetProductionMethodsToStandard` | right_click_menu.gui |
+| ✓ `Actions.target_charter` | 直达 | `Company.ToggleBuildingCharter` | `Company.ToggleBuildingCharter(CompanyCharterType.Self,BuildingType.Self)` | right_click_menu.gui |
+| ✓ `Actions.toggle_charter` | 直达 | `Company.ToggleCharter` | `Company.ToggleCharter(CompanyCharterType.Self)` | company_panel.gui |
+| ✓ `Actions.target_charter` | 直达 | `Company.ToggleRegionCharter` | `Company.ToggleRegionCharter(CompanyCharterType.Self,StateRegion.Self)` | right_click_menu.gui |
+| ✓ `Actions.cancel_construction` | 直达 | `ConstructionQueueElement.CancelConstruction` | `ConstructionQueueElement.CancelConstruction` | construction_queue.gui |
+| ✓ `Actions.move_construction` | 直达 | `ConstructionQueueElement.MoveDown` | `ConstructionQueueElement.MoveDown` | construction_queue.gui |
+| ✓ `Actions.move_construction` | 直达 | `ConstructionQueueElement.MoveToBottom` | `ConstructionQueueElement.MoveToBottom` | construction_queue.gui |
+| ✓ `Actions.move_construction` | 直达 | `ConstructionQueueElement.MoveToTop` | `ConstructionQueueElement.MoveToTop` | construction_queue.gui |
+| ✓ `Actions.move_construction` | 直达 | `ConstructionQueueElement.MoveUp` | `ConstructionQueueElement.MoveUp` | construction_queue.gui |
+| ✓ `Actions.remove_decree` | 直达 | `Decree.GetRemoveCommand` | `Decree.GetRemoveCommand` | right_click_menu.gui, states_panel.gui |
+| ✓ `Actions.set_decree` | 直达 | `DecreeType.GetSetCommand` | `DecreeType.GetSetCommand(State.Self)` | right_click_menu.gui |
+| ✓ `Actions.construction_speed` | 直达 | `Global.ChangeAllConstructionSpeed` | `ChangeAllConstructionSpeed(ProductionMethod.Self)` | budget_panel.gui |
+| ✓ `Actions.construction_speed` | 直达 | `Global.PauseAllConstruction` | `PauseAllConstruction` | budget_panel.gui |
+| ✓ `Actions.construction_speed` | 直达 | `Global.ResumeAllConstruction` | `ResumeAllConstruction` | budget_panel.gui |
 | ✓ `Actions.command` | 直达 | `Goods.SetExportSubventionsHigh` | `Goods.GetMarket.GetOwner.SetExportSubventionsHigh(Goods.Self)` | budget_panel.gui |
 | ✓ `Actions.command` | 直达 | `Goods.SetExportSubventionsLow` | `Goods.GetMarket.GetOwner.SetExportSubventionsLow(Goods.Self)` | budget_panel.gui |
 | ✓ `Actions.command` | 直达 | `Goods.SetExportSubventionsMax` | `Goods.GetMarket.GetOwner.SetExportSubventionsMax(Goods.Self)` | budget_panel.gui |
@@ -87,41 +114,14 @@
 | ✓ `Actions.command` | 直达 | `Goods.SetImportTariffsNone` | `Goods.GetMarket.GetOwner.SetImportTariffsNone(Goods.Self)` | budget_panel.gui |
 | ✓ `Actions.toggle_consumption_tax` | 直达 | `Goods.ToggleTaxation` | `Goods.ToggleTaxation(GetPlayer)` | add_consumption_tax_menu.gui, goods_panel.gui … |
 | ✓ `Actions.set_pm` | 直达 | `ProductionMethod.GetSwitch` | `ProductionMethod.GetSwitch` | （程序生成的菜单） |
-|  | 直达 | `Building.CancelConstruction` | `Building.CancelConstruction` | building_details_panel.gui, goods_local_prices_panel.gui … |
-|  | 直达 | `Building.Downsize` | `Building.Downsize` | building_details_panel.gui, goods_state_panel.gui … |
-|  | 直达 | `Building.NationalizeBuildingLevels` | `Building.NationalizeBuildingLevels('(int32)1')` | building_details_panel.gui, right_click_menu.gui |
-|  | 直达 | `Building.PauseConstructionOutput` | `Building.PauseConstructionOutput` | production_methods.gui |
+| ✓ `Actions.state_action` | 直达 | `State.AbandonColony` | `State.AbandonColony` | states_panel.gui |
+| ✓ `Actions.colonize` | 直达 | `State.Colonize` | `State.GetStateRegion.Colonize` | right_click_menu.gui |
+| ✓ `Actions.state_action` | 直达 | `State.IncorporateState` | `State.IncorporateState` | right_click_menu.gui, states_panel.gui |
+| ✓ `Actions.state_action` | 直达 | `State.TogglePauseColonization` | `State.TogglePauseColonization` | states_panel.gui |
+| ✓ `Actions.state_action` | 直达 | `State.UnincorporateState` | `State.UnincorporateState` | right_click_menu.gui, states_panel.gui |
 |  | 直达 | `Building.QueueMilitaryConstruction` | `Building.QueueMilitaryConstruction(MilitaryFormation.Self,CombatUnitType.Self)` | building_details_panel.gui |
-|  | 直达 | `Building.ResetProductionMethodsToStandard` | `Building.ResetProductionMethodsToStandard` | right_click_menu.gui |
-|  | 直达 | `Building.ResumeConstructionOutput` | `Building.ResumeConstructionOutput` | production_methods.gui |
-|  | 直达 | `Building.ToggleAutoExpand` | `Building.ToggleAutoExpand` | building_details_panel.gui |
-|  | 直达 | `Building.ToggleAutoExpandOff` | `Building.ToggleAutoExpandOff` | right_click_menu.gui |
-|  | 直达 | `Building.ToggleAutoExpandOn` | `Building.ToggleAutoExpandOn` | right_click_menu.gui |
-|  | 直达 | `Building.TogglePrivatization` | `Building.TogglePrivatization` | building_details_panel.gui, right_click_menu.gui |
-|  | 直达 | `Building.ToggleSubsidies` | `Building.ToggleSubsidies` | building_details_panel.gui, right_click_menu.gui … |
-|  | 直达 | `Building.ToggleSubsidiesOff` | `Building.ToggleSubsidiesOff` | right_click_menu.gui |
-|  | 直达 | `Building.ToggleSubsidiesOn` | `Building.ToggleSubsidiesOn` | right_click_menu.gui |
-|  | 直达 | `BuildingType.ResetProductionMethodsToStandard` | `BuildingType.ResetProductionMethodsToStandard` | right_click_menu.gui |
 |  | 直达 | `BuildingType.ToggleMonopoly` | `BuildingType.ToggleMonopoly` | right_click_menu.gui |
-|  | 直达 | `Company.ToggleBuildingCharter` | `Company.ToggleBuildingCharter(CompanyCharterType.Self,BuildingType.Self)` | right_click_menu.gui |
-|  | 直达 | `Company.ToggleCharter` | `Company.ToggleCharter(CompanyCharterType.Self)` | company_panel.gui |
-|  | 直达 | `Company.ToggleRegionCharter` | `Company.ToggleRegionCharter(CompanyCharterType.Self,StateRegion.Self)` | right_click_menu.gui |
-|  | 直达 | `ConstructionQueueElement.CancelConstruction` | `ConstructionQueueElement.CancelConstruction` | construction_queue.gui |
-|  | 直达 | `ConstructionQueueElement.MoveDown` | `ConstructionQueueElement.MoveDown` | construction_queue.gui |
-|  | 直达 | `ConstructionQueueElement.MoveToBottom` | `ConstructionQueueElement.MoveToBottom` | construction_queue.gui |
-|  | 直达 | `ConstructionQueueElement.MoveToTop` | `ConstructionQueueElement.MoveToTop` | construction_queue.gui |
-|  | 直达 | `ConstructionQueueElement.MoveUp` | `ConstructionQueueElement.MoveUp` | construction_queue.gui |
-|  | 直达 | `Decree.GetRemoveCommand` | `Decree.GetRemoveCommand` | right_click_menu.gui, states_panel.gui |
-|  | 直达 | `DecreeType.GetSetCommand` | `DecreeType.GetSetCommand(State.Self)` | right_click_menu.gui |
-|  | 直达 | `Global.ChangeAllConstructionSpeed` | `ChangeAllConstructionSpeed(ProductionMethod.Self)` | budget_panel.gui |
-|  | 直达 | `Global.PauseAllConstruction` | `PauseAllConstruction` | budget_panel.gui |
-|  | 直达 | `Global.ResumeAllConstruction` | `ResumeAllConstruction` | budget_panel.gui |
-|  | 直达 | `State.AbandonColony` | `State.AbandonColony` | states_panel.gui |
-|  | 直达 | `State.Colonize` | `State.GetStateRegion.Colonize` | right_click_menu.gui |
 |  | 直达 | `State.GetStationSelectedFormationsCommand` | `State.GetStationSelectedFormationsCommand` | right_click_menu.gui |
-|  | 直达 | `State.IncorporateState` | `State.IncorporateState` | right_click_menu.gui, states_panel.gui |
-|  | 直达 | `State.TogglePauseColonization` | `State.TogglePauseColonization` | states_panel.gui |
-|  | 直达 | `State.UnincorporateState` | `State.UnincorporateState` | right_click_menu.gui, states_panel.gui |
 |  | 窗口 | `BuildingBrowserBuildingTypeItem.RemoveAllPrivatization` | `BuildingBrowserBuildingTypeItem.RemoveAllPrivatization` | right_click_menu.gui |
 |  | 窗口 | `BuildingBrowserBuildingTypeItem.ToggleAllAutoExpand` | `BuildingBrowserBuildingTypeItem.ToggleAllAutoExpand` | building_details_panel.gui |
 |  | 窗口 | `BuildingBrowserBuildingTypeItem.ToggleAllPrivatization` | `BuildingBrowserBuildingTypeItem.ToggleAllPrivatization` | building_details_panel.gui, right_click_menu.gui |
