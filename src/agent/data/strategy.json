@@ -14,6 +14,11 @@
         "central_archives",
         "banking",
         "military_drill",
+        "mandatory_service",
+        "line_infantry",
+        "napoleonic_warfare",
+        "army_reserves",
+        "general_staff",
         "railways",
         "international_trade",
         "modern_sewerage",
@@ -142,7 +147,7 @@
       "diplomacy": {
         "_comment": "鸦片战争已默认避战；对俄/法/普改善关系，等保障独立/防御同盟提议。要求/割让/赔款/投资权/治外法权/条约港一律拒绝。",
         "improve_relations": ["RUS", "FRA", "PRU"],
-        "accept_keywords": ["防御同盟", "同盟", "保障独立", "保独", "贸易协定", "改善关系", "和平"],
+        "accept_keywords": ["共同防御条约", "防御同盟", "同盟", "保证独立", "保障独立", "保独", "建立大使馆", "使馆", "贸易特权", "贸易协定", "改善关系", "和平"],
         "reject_keywords": ["要求", "最后通牒", "割让", "赔款", "宣战", "战争", "义务", "投资权", "治外法权", "条约港"]
       }
     }

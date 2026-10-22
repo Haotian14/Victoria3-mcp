@@ -81,8 +81,10 @@ def reform(snap: Snapshot, options: list[LawOption], enacting: str | None) -> De
     """路线上排在最前、只差支持者的目标：拉一个支持它的在野集团进政府。
     合法性太低（游戏提示“非法政府”）时，先移除影响力最小的在朝集团，别再加人。"""
     p = _pcfg(snap)
-    if enacting or not snap.igs:
+    if not snap.igs:
         return None
+    # 立法进行中也可以改组政府（实测游戏允许），但不要另起一条法律；
+    # 这里只做超限/合法性修复，options 为空时自然不会加支持者。
     gov = [ig for ig in snap.igs if ig.in_gov]
     legit = snap.country.get("legitimacy") or 0.0
     limit = _gov_limit(snap, p)

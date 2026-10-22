@@ -11,7 +11,11 @@ from typing import Any
 
 from agent.strategy.config import profile
 
-DEFAULT_GOOD = ("防御同盟", "同盟", "保障独立", "保独", "贸易协定", "改善关系", "和平", "停战", "白和")
+# 1.13 简中实际名称：defensive_pact=共同防御条约、guarantee=保证独立、offer_embassy=建立大使馆、
+# trade_privilege=贸易特权；旧关键词匹配不上会把它们静默拒绝（承认路线靠使馆 +1/月）。
+DEFAULT_GOOD = ("共同防御条约", "防御同盟", "同盟", "保证独立", "保障独立", "保独", "建立大使馆", "使馆",
+                "贸易特权", "贸易协定", "改善关系", "和平", "停战", "白和")
+PROTECTIVE = ("共同防御条约", "防御同盟", "同盟", "保证独立", "保障独立", "保独")
 DEFAULT_BAD = ("要求", "最后通牒", "割让", "赔款", "宣战", "战争", "屈服", "投降",
                "义务", "投资权", "治外法权", "条约港")
 
@@ -26,6 +30,11 @@ def accept_proposal(proposal: dict[str, Any], snap: Any = None) -> bool:
     text = f"{proposal.get('name', '')} {proposal.get('actor', '')}"
     if any(x in text for x in bad):
         return False
+    if any(x in text for x in PROTECTIVE):
+        # 方向盲时会误把大清当保障国/盟友，被拖入别人的战争。
+        # proposals() 目前只有 name/actor/kind，方向未知时宁可不签。
+        if proposal.get("direction") not in ("incoming", "target", "received"):
+            return False
     return any(x in text for x in good)
 
 

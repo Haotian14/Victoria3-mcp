@@ -58,7 +58,7 @@ def metrics(snap: observe.Snapshot) -> dict[str, Any]:
     return out
 
 
-def enacting(b: Bridge) -> str | None:
+def enacting(b: Bridge, snap: observe.Snapshot | None = None) -> str | None:
     try:
         return plain(b.read(f"[{PLAYER}.GetLawBeingEnacted.GetLawType.GetName]")) or None
     except GameError:
@@ -207,6 +207,22 @@ def handle_movements(b: Bridge, mem: Memory, note: Callable[[str], None],
             return 1
     except Exception as exc:
         note(f"    运动处理出错：{type(exc).__name__}: {exc}")
+    return 0
+
+
+def handle_military(b: Bridge, note: Callable[[str], None]) -> int:
+    """最小军事姿态：战时军饷 High，和平 Medium。动员/升级只在有战争时由人判断，
+    这里不做不可逆动作；Low/VeryLow 的 −50%/−75% 训练速度会让补员永远补不满。"""
+    try:
+        a = Actions(b)
+        wars = a.wars()
+        level = "High" if wars else "Medium"
+        r = a.set_wage("Military", level)
+        if r.ok and not str(r.detail).startswith(("已是", "现行")) and r.before != r.after:
+            note(f"    {r}  ← {'战时' if wars else '和平'}军饷 {level}")
+            return 1
+    except Exception as exc:
+        note(f"    军事姿态出错：{type(exc).__name__}: {exc}")
     return 0
 
 
@@ -416,6 +432,7 @@ def step(b: Bridge, mem: Memory, note: Callable[[str], None] = lambda s: None) -
     handle_proposals(b, mem, note, snap)
     handle_diplomacy(b, mem, note, snap)
     handle_movements(b, mem, note, snap)
+    handle_military(b, note)
     results = execute(b, plan, snap, mem, note)
     return {"date": str(snap.date), "metrics": m, "results": [str(r) for r in results]}
 

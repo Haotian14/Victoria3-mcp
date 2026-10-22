@@ -354,13 +354,26 @@ def test_privatization_candidates():
     assert privatization.candidates(snap) == []
 
 
+def test_diplomacy_accepts_113_localized_treaties():
+    snap = _snap(tag="CHI")
+    assert diplomacy.accept_proposal({"name": "建立大使馆", "actor": "GBR"}, snap)
+    # 方向未知的同盟/保障一律不签，避免大清变成保障国被拖入战争
+    assert not diplomacy.accept_proposal({"name": "共同防御条约", "actor": "RUS"}, snap)
+    assert diplomacy.accept_proposal({"name": "共同防御条约", "actor": "RUS",
+                                      "direction": "incoming"}, snap)
+    assert diplomacy.accept_proposal({"name": "保证独立", "actor": "FRA",
+                                      "direction": "incoming"}, snap)
+    assert not diplomacy.accept_proposal({"name": "要求割让香港", "actor": "GBR"}, snap)
+
+
 def test_diplomacy_rejects_demands_and_sway():
     assert not diplomacy.accept_proposal({"kind": "demand", "name": "割让香港", "actor": "英国"})
     assert not diplomacy.accept_proposal({"kind": "sway", "name": "加入战争", "actor": "法国"})
 
 
 def test_diplomacy_accepts_defensive_pact_rejects_investment_rights():
-    assert diplomacy.accept_proposal({"kind": "treaty", "name": "防御同盟", "actor": "俄国"})
+    assert diplomacy.accept_proposal({"kind": "treaty", "name": "防御同盟", "actor": "俄国",
+                                      "direction": "incoming"})
     assert not diplomacy.accept_proposal({"kind": "treaty", "name": "投资权", "actor": "英国"})
 
 
