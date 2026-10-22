@@ -71,10 +71,15 @@ def slots(snap: Snapshot) -> int:
     if money <= 0 and balance <= 0:
         return 0                     # 已在借债：先别再加开支
     if balance < 0:
-        # 赤字时：国库撑得住才继续排，且最多一个
+        # 赤字时：国库撑得住才继续排；国库很厚且赤字很小则允许正常扩建
         if money < -balance * cfg()["budget"]["deficit_weeks"]:
             return 0
-        n = min(n, 1)
+        expenses = snap.country.get("expenses") or 0.0
+        income = snap.country.get("income") or 1.0
+        deep = (expenses and money > expenses * float(c.get("deficit_construction_weeks", 26))
+                and balance > -income * float(c.get("deficit_construction_ratio", 0.03)))
+        if not deep:
+            n = min(n, 1)
     if queue > int(c.get("hard_stop", 45)):
         return 0                     # 队列已积压多年：先清队列，不再新排
     if queue > int(c.get("max_queue", 30)):
@@ -157,7 +162,10 @@ def candidates(gd: GameData, snap: Snapshot, researched: set[str], costs: dict[s
         share = c.get("sector_budget_share_rich", share)   # 国库超金储备上限：钱闲着，多投建造
     cap_levels = int(income * share / sector_cost) if sector_cost > 0 else 0
     want = min(c["construction_sector_max_parallel"], cap_levels - have)
-    if (balance > income * c["sector_min_surplus"] and money > expenses * c["construction_sector_reserve_weeks"]
+    # 国库充足时允许小赤字扩建：190 级卡住就是“结余必须 >5% 收入”过严。
+    sector_ok = balance > income * c["sector_min_surplus"] or (
+        balance > -income * float(c.get("sector_max_deficit_ratio", 0.03)))
+    if (sector_ok and money > expenses * c["construction_sector_reserve_weeks"]
             and want > 0 and _sector_inputs_ok(prices0, gd.base_prices())):
         ok = sorted((s for s in snap.states if SECTOR in s.buildings and s.buildings[SECTOR].can_queue
                      and s.incorporated), key=lambda s: -(s.population or 0))
