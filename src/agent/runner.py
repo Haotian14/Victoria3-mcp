@@ -226,6 +226,45 @@ def handle_military(b: Bridge, note: Callable[[str], None]) -> int:
     return 0
 
 
+def handle_journal(b: Bridge, mem: Memory, note: Callable[[str], None]) -> int:
+    """日志按钮 / 决议：只做鸦片相关白名单，且必须在 possible=true 时执行。
+    1.13 调研：press_button/take_decision 不检查 possible；通用决议一律不自动按。"""
+    month = len(mem.history)
+    try:
+        a = Actions(b)
+        j = a.journal()
+        entries = {e["key"]: e for e in j.get("journal_entries", [])}
+        e = entries.get("je_opium_obsession")
+        if e:
+            btn = next((x for x in e.get("buttons", [])
+                        if x.get("possible") and x.get("name") == "禁止鸦片贸易"), None)
+            if btn:
+                key = "journal:ban_opium"
+                if mem.blocked.get(key, -1) <= month:
+                    r = a.press_button("je_opium_obsession", btn["name"])
+                    mem.tally(r, "journal")
+                    note(f"    {r}  ← 鸦片危机：禁烟（只按 possible=true 的白名单按钮）")
+                    if not r.ok:
+                        mem.blocked[key] = month + 6
+                    return 1
+            return 0
+        # JE 不存在：如果仍在禁烟，用白名单决议解除（会移除 opium_ban_authority）
+        d = next((x for x in j.get("decisions", [])
+                  if x.get("possible") and x.get("name") == "取消鸦片禁令"), None)
+        if d:
+            key = "journal:unban_opium"
+            if mem.blocked.get(key, -1) <= month:
+                r = a.take_decision(d["name"])
+                mem.tally(r, "journal")
+                note(f"    {r}  ← 鸦片 JE 已结束：取消禁令")
+                if not r.ok:
+                    mem.blocked[key] = month + 6
+                return 1
+    except Exception as exc:
+        note(f"    日志/决议处理出错：{type(exc).__name__}: {exc}")
+    return 0
+
+
 def _promote_queue(a: Actions, note: Callable[[str], None]) -> None:
     """把建造部门 / 粮食建筑的排队项目移到队首（队列常有几百项，队尾永远轮不到）。"""
     c = cfg()["construction"]
@@ -432,6 +471,7 @@ def step(b: Bridge, mem: Memory, note: Callable[[str], None] = lambda s: None) -
     handle_proposals(b, mem, note, snap)
     handle_diplomacy(b, mem, note, snap)
     handle_movements(b, mem, note, snap)
+    handle_journal(b, mem, note)
     handle_military(b, note)
     results = execute(b, plan, snap, mem, note)
     return {"date": str(snap.date), "metrics": m, "results": [str(r) for r in results]}

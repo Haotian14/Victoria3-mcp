@@ -72,6 +72,9 @@ HARD: dict[str, tuple[tuple[str, ...], str]] = {
     "strike.1": (("谈判",), "default"),
     "strike.4": (("破坏罢工", "替代工人"), "default"),
     "1848.2": (("清除",), "default"),
+    "opium_wars.3": (("主权", "绝对"), "default"),       # A：china_authority；B 是福利路线
+    "opium_wars.6": (("处决",), "default"),
+    "opium_wars.7": (("卫生", "健康", "医疗"), "default"),
     "negotiation.1": (("修正案", "amendment"), "default"),
     "historical_agitators.21": (("留下", "留在中国", "不要流放", "赦免"), "default"),
 }

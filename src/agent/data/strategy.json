@@ -10,6 +10,7 @@
         "empiricism",
         "stock_exchange",
         "corporate_charters",
+        "mutual_funds",
         "dialectics",
         "central_archives",
         "banking",
@@ -21,6 +22,7 @@
         "general_staff",
         "railways",
         "international_trade",
+        "colonization",
         "modern_sewerage",
         "bessemer_process",
         "intensive_agriculture",
@@ -58,6 +60,7 @@
         ["lawgroup_economic_system", "law_interventionism"],
         ["lawgroup_distribution_of_power", "law_technocracy"],
         ["lawgroup_trade_policy", "law_protectionism"],
+        ["lawgroup_land_reform", "law_commercialized_agriculture"],
         ["lawgroup_economic_system", "law_laissez_faire"]
       ],
       "incorporate": {
