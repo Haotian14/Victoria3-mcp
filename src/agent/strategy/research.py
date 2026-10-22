@@ -28,19 +28,23 @@ def _path(gd: GameData, target: str, done: set[str]) -> list[str]:
 
 
 def candidates(gd: GameData, researched: set[str], researching: str | None,
-               priority: list[str] | None = None) -> list[Decision]:
+               priority: list[str] | None = None, blacklist: set[str] | None = None) -> list[Decision]:
     if researching:
         return []
     out: list[Decision] = []
     seen: set[str] = set()
+    blocked = set(blacklist or ())
     for target in (priority or cfg()["tech_priority"]):
+        if target in blocked:
+            continue
         for t in _path(gd, target, researched):
             if t not in seen:
                 seen.add(t)
                 why = "优先科技" if t == target else f"{target} 的前置"
                 out.append(Decision("research", {"tech": t}, why))
-    # 优先表走完后：时代最早的生产科技优先，研究槽别空着
-    rest = sorted((k for k, v in gd.techs.items() if k not in researched and k not in seen and v.get("can_research", True)),
+    # 优先表走完后：时代最早的生产科技优先，研究槽别空着；黑名单（时代 5 陷阱等）不补位
+    rest = sorted((k for k, v in gd.techs.items()
+                   if k not in researched and k not in seen and k not in blocked and v.get("can_research", True)),
                   key=lambda k: (gd.techs[k]["era"], gd.techs[k]["category"] != "production", k))
     out += [Decision("research", {"tech": t}, "优先表外，按时代补位") for t in rest[:20]]
     return out

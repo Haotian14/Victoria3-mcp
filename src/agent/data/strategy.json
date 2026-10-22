@@ -11,16 +11,27 @@
         "dialectics",
         "central_archives",
         "banking",
-        "mechanical_tools",
-        "atmospheric_engine",
         "railways",
         "modern_sewerage",
-        "steel_frame_buildings",
+        "bessemer_process",
         "intensive_agriculture",
+        "central_banking",
+        "psychiatry",
+        "reinforced_concrete",
+        "steel_frame_buildings",
+        "philosophical_pragmatism"
+      ],
+      "tech_blacklist": [
         "analytical_philosophy",
-        "international_trade",
-        "centralization",
-        "academia"
+        "fractional_distillation",
+        "baking_powder",
+        "canneries",
+        "chemical_bleaching",
+        "crystal_glass",
+        "rubber_mastication",
+        "vulcanization",
+        "aniline",
+        "pumpjacks"
       ],
       "law_route": [
         ["lawgroup_land_reform", "law_tenant_farmers"],

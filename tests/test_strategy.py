@@ -4,6 +4,7 @@ from agent import gamedata
 from agent.game import Date
 from agent.observe import BuildingRow, IGRow, LawOption, LawRow, Snapshot, StateRow
 from agent.strategy import budget, construction, decrees, diplomacy, events, institutions, politics, privatization, research, subsidies, trade
+from agent.strategy import config as strategy_config
 
 
 def _snap(**country) -> Snapshot:
@@ -42,6 +43,17 @@ def test_research_resolves_prerequisites_first():
     # 车床需要轧棉机，轧棉机需要制造厂：前置排在前面
     assert order.index("manufacturies") < order.index("cotton_gin") < order.index("lathe")
     assert research.candidates(gd, set(), "lathe") == []
+
+
+def test_research_blacklist_skips_trap_techs():
+    gd = gamedata.get()
+    blocked = {"crystal_glass", "canneries"}
+    # 用一条不依赖这两项科技的优先路线，验证补位时跳过黑名单
+    order = [d.args["tech"] for d in research.candidates(gd, set(), None, ["lathe"], blocked)]
+    assert order and not (blocked & set(order))
+    # 但作为优先科技的前置时仍要研究（否则路线会断）
+    assert "crystal_glass" in [d.args["tech"] for d in research.candidates(gd, set(), None, ["chemical_bleaching"])]
+    assert strategy_config.tech_blacklist(_snap(tag="CHI")) >= {"analytical_philosophy"}
 
 
 def _opt(key: str, group: str = "lawgroup_land_reform", valid: bool = True, success: float = 0.5,

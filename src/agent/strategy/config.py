@@ -31,6 +31,10 @@ def tech_priority(snap: Any) -> list[str]:
     return list(profile(snap).get("tech_priority") or cfg()["tech_priority"])
 
 
+def tech_blacklist(snap: Any) -> set[str]:
+    return set(profile(snap).get("tech_blacklist") or [])
+
+
 def law_route(snap: Any) -> list[list[str]]:
     return [list(x) for x in (profile(snap).get("law_route") or cfg()["law_route"])]
 

@@ -53,7 +53,7 @@
 | 6 | 日志条目 / 决议 / 剧本按钮 | 子代理研究中 | runner 完全未处理；鸦片/脆弱统一/现代化 |
 | 7 | 税收 / 消费税 / 工资 / 预算 | 子代理研究中 | 只调税级；奢侈品消费税、政府/军队工资 |
 | 8 | 殖民 / 承认 / 附属 / 条约港 | 子代理研究中 | 未处理；西藏/朝鲜/兰芳/澳门/对俄日 |
-| 9 | 科技树 / 科技扩散 / 大学 / 创新 | 子代理研究中 | 36 项科技后研什么；大学 30 级是否够 |
+| 9 | 科技树 / 科技扩散 / 大学 / 创新 | ✅ 已整合（2026-10-23） | 已研 43 项；铁路→下水道→酸性转炉→集约农业→央行→精神病学；时代 5 陷阱入黑名单；30 级大学足够 |
 | 10 | 生产方式 / 所有权 / 吞吐 / 规模经济 | 子代理研究中 | 工业利润率 -50~-90% 的 PM/所有权原因 |
 | 11 | 基础设施 / 铁路 / 港口 / 市场接入 / 建造效率 | 子代理研究中 | 铁路港口未自动化；建造 174 深水区 |
 | 12 | agitator / 政党 / 选举 / IG 领袖 / 运动 activism | 子代理研究中 | activism ≥25；如何改变领袖意识形态 |
@@ -63,6 +63,19 @@
 | 16 | 人口 / 移民 / 医疗 / 歧视 / 宗教文化 | 子代理研究中 | SoL 7.26、识字率 23% 的深层原因 |
 
 > 16 个子代理全部只做只读调研，返回后统一去重合并成“条件 → 动作 → 参数 → 风险”规则表。
+
+## 科技方向整合结果（#9，已写回代码）
+
+子代理按游戏 `common/technology/` 文件 + Wiki 核对后给出的结论：
+
+- **当前 43 项科技**，已研中央档案馆、辩证法、银行业、机械工具；下一阶段顺序：
+  `railways → modern_sewerage → bessemer_process → intensive_agriculture → central_banking → psychiatry`。
+- **时代 3 的钢筋混凝土 / 钢框架建筑**要等约 1862 年才划算，不要提前排。
+- **`analytical_philosophy` 是时代 5 陷阱**，已连同蒸馏、烘焙粉、罐头、漂白、水晶玻璃、橡胶硫化、苯胺、抽油机一起进 `tech_blacklist`；优先科技的前置如果命中黑名单，仍然会研究（否则路线断）。
+- **30 级大学在 23% 识字率下足够**，攻略里 189–210 级大学的说法已过时；大学继续按 30 级封顶。
+- **科技扩散倍率约 0.65**：未获承认 −15%、审查 −10%、广州体系 −10%，这是大清研究慢的结构性原因；先拿承认或废广州体系收益最大。
+
+代码改动：`strategy.json` 增加 `tech_priority` / `tech_blacklist`；`config.tech_blacklist()`；`research.candidates(..., blacklist=)`；`plan.py` 传入国家档案；新增单测 `test_research_blacklist_skips_trap_techs`。
 
 ## 已经验证过的结论（本轮实测）
 
@@ -102,6 +115,7 @@
 - [vicky3.guide：Markets & Trade](https://www.vicky3.guide/economy/markets-trade)
 - [Paradox Wiki：Government](https://vic3.paradoxwikis.com/Government)
 - [Paradox Wiki：Laws](https://vic3.paradoxwikis.com/Laws)
+- [Paradox Wiki：Technology](https://vic3.paradoxwikis.com/Technology)（科技方向 #9，另核对游戏 `game/common/technology/` 定义）
 - [贴吧：大清 1838 出教会学校拖节奏吗](https://tieba.baidu.com/p/9091029307)
 - [贴吧：1.86 大清实业家废了](https://tieba.baidu.com/p/9351766679)
 - [知乎：大清怎么快速提升识字率](https://www.zhihu.com/question/568238291)
