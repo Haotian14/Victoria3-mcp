@@ -17,7 +17,7 @@ from math import comb
 
 from agent.observe import LawOption, Snapshot
 from agent.strategy import config as strategy_config
-from agent.strategy.config import Decision, cfg
+from agent.strategy.config import Decision, cfg, profile
 
 PHASES = 3          # 推进几次生效
 SETBACKS = 3        # 受阻几次失败
@@ -37,6 +37,13 @@ def pass_chance(opt: LawOption) -> float:
     return sum(comb(PHASES - 1 + k, k) * p ** PHASES * q ** k for k in range(SETBACKS))
 
 
+def _pcfg(snap: Snapshot) -> dict:
+    """通用 politics 参数 + 国家档案覆盖（大清：min_pass 0.35、max_government 3 等）。"""
+    p = dict(cfg()["politics"])
+    p.update(profile(snap).get("politics") or {})
+    return p
+
+
 def targets(snap: Snapshot | None = None) -> list[tuple[str, str]]:
     """法律路线：优先用国家专属路线（strategy.json 的 country_profiles）。"""
     route = cfg()["law_route"] if snap is None else strategy_config.law_route(snap)
@@ -47,7 +54,7 @@ def candidates(snap: Snapshot, options: list[LawOption], enacting: str | None) -
     """可推、且通过率达标的路线法律，按路线顺序。"""
     if enacting:
         return []
-    need = cfg()["politics"]["min_pass"]
+    need = _pcfg(snap)["min_pass"]
     out: list[Decision] = []
     for opt in options:
         current = snap.laws.get(opt.group)
@@ -62,12 +69,24 @@ def candidates(snap: Snapshot, options: list[LawOption], enacting: str | None) -
 
 
 def reform(snap: Snapshot, options: list[LawOption], enacting: str | None) -> Decision | None:
-    """路线上排在最前、只差支持者的目标：拉一个支持它的在野集团进政府。已有可推的法律时不动政府。"""
-    p = cfg()["politics"]
-    if enacting or not snap.igs or candidates(snap, options, None):
+    """路线上排在最前、只差支持者的目标：拉一个支持它的在野集团进政府。
+    合法性太低（游戏提示“非法政府”）时，先移除影响力最小的在朝集团，别再加人。"""
+    p = _pcfg(snap)
+    if enacting or not snap.igs:
         return None
     gov = [ig for ig in snap.igs if ig.in_gov]
     legit = snap.country.get("legitimacy") or 0.0
+    if legit < p.get("min_legitimacy_recover", 50) and len(gov) > 1:
+        biggest = max(gov, key=lambda ig: ig.clout)
+        removable = [ig for ig in gov if ig.index != biggest.index]
+        if removable:
+            smallest = min(removable, key=lambda ig: ig.clout)
+            members = sorted(ig.index for ig in gov if ig.index != smallest.index)
+            return Decision("reform_government", {"members": members, "add": f"移除{smallest.name}"},
+                            f"合法性 {legit:.0f} 过低（非法政府），移除影响力最小的在朝集团 "
+                            f"{smallest.name}（{smallest.clout:.0%}）", score=-smallest.clout)
+    if candidates(snap, options, None):
+        return None
     if len(gov) >= p["max_government"] or legit < p["min_legitimacy_to_add"]:
         return None
     for opt in options:

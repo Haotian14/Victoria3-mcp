@@ -75,6 +75,8 @@ def slots(snap: Snapshot) -> int:
         if money < -balance * cfg()["budget"]["deficit_weeks"]:
             return 0
         n = min(n, 1)
+    if queue > int(c.get("max_queue", 30)):
+        n = min(n, int(c.get("priority_build_slots", 6)))   # 队列太长：只留优先项目
     return n
 
 
@@ -112,6 +114,19 @@ def _admin_states(snap: Snapshot) -> list[tuple[StateRow, float]]:
     return rows
 
 
+def _buy_sell_ratio(snap: Snapshot, good: str) -> float:
+    p = snap.prices.get(good) or {}
+    buy = p.get("buy") or 0.0
+    sell = p.get("sell") or 0.0
+    return buy / max(sell, 1.0) if buy > 0 else 0.0
+
+
+def _food_short(snap: Snapshot, c: dict) -> bool:
+    fs = c.get("food_security") or {}
+    trigger = float(fs.get("trigger_ratio", 1.5))
+    return any(_buy_sell_ratio(snap, g) > trigger for g in fs.get("goods", ()))
+
+
 def candidates(gd: GameData, snap: Snapshot, researched: set[str], costs: dict[str, float]) -> list[Decision]:
     """按优先级排好的建造候选（比 slots 多给几个备选，执行时可能有失败的）。"""
     c = cfg()["construction"]
@@ -119,6 +134,8 @@ def candidates(gd: GameData, snap: Snapshot, researched: set[str], costs: dict[s
     if n <= 0:
         return []
     out: list[Decision] = []
+    fs = c.get("food_security") or {}
+    food_short = _food_short(snap, c)
 
     money = snap.country.get("money") or 0.0
     expenses = snap.country.get("expenses") or 0.0
@@ -133,18 +150,43 @@ def candidates(gd: GameData, snap: Snapshot, researched: set[str], costs: dict[s
                                               wage_all0 * c["wage_mix"] / 1000.0).profit
     income = snap.country.get("income") or 0.0
     have = sum(s.buildings[SECTOR].levels + s.buildings[SECTOR].queued for s in snap.states if SECTOR in s.buildings)
-    cap_levels = int(income * c["sector_budget_share"] / sector_cost) if sector_cost > 0 else 0
+    share = c["sector_budget_share"]
+    limit = snap.country.get("gold_limit") or 0.0
+    if limit and money > limit * c.get("sector_rich_reserve_ratio", 1.0):
+        share = c.get("sector_budget_share_rich", share)   # 国库超金储备上限：钱闲着，多投建造
+    cap_levels = int(income * share / sector_cost) if sector_cost > 0 else 0
     want = min(c["construction_sector_max_parallel"], cap_levels - have)
     if (balance > income * c["sector_min_surplus"] and money > expenses * c["construction_sector_reserve_weeks"]
             and want > 0 and _sector_inputs_ok(prices0, gd.base_prices())):
         ok = sorted((s for s in snap.states if SECTOR in s.buildings and s.buildings[SECTOR].can_queue
                      and s.incorporated), key=lambda s: -(s.population or 0))
-        for i in range(max(0, want - _queued(snap, SECTOR))):
+        for i in range(max(0, want)):      # want 已经扣过现有+在建，别再扣一次排队
             if ok:
                 s = ok[i % len(ok)]
                 out.append(Decision("build", {"state": s.id, "building": SECTOR},
-                                    f"扩建造部门（{s.name}；已有 {have} 级，按收入可养 {cap_levels} 级，"
-                                    f"每级周成本 {sector_cost:,.0f}）", score=1e9 - i))
+                                    f"扩建造部门（{s.name}；已有 {have} 级，按收入 {share:.0%} 可养 "
+                                    f"{cap_levels} 级，每级周成本 {sector_cost:,.0f}，国库 {money:,.0f}）",
+                                    score=1e9 - i))
+    # 粮食安全：肉短缺时强制排牧场。经济账对牧场偏悲观（工资高、账面亏损），
+    # 但缺肉会直接拖生活水平，值得用建造力换。
+    if food_short:
+        fb = fs.get("building")
+        ratio = max((_buy_sell_ratio(snap, g) for g in fs.get("goods", ())), default=0.0)
+        if fb and fb in gd.buildings:
+            have_food = sum(row.levels + row.queued for s in snap.states
+                            for k, row in s.buildings.items() if k == fb)
+            if have_food < int(fs.get("max_levels", 80)):     # 别无限往队列里塞
+                pool = [s for s in snap.states
+                        if fb in s.buildings and s.buildings[fb].can_queue
+                        and s.incorporated and not s.isolated
+                        and (s.free_arable or 0) > 0
+                        and s.labor >= float(fs.get("min_labor", 5000))]
+                pool.sort(key=lambda s: (s.free_arable or 0) * (s.population or 0), reverse=True)
+                for s in pool[:int(fs.get("max_per_month", 1))]:
+                    out.append(Decision("build", {"state": s.id, "building": fb},
+                                        f"粮食安全：肉短缺（买单/卖单 {ratio:.1f}），优先牧场"
+                                        f"（{s.name}；空地 {s.free_arable}）", score=1e6))
+
     # 官僚：税收浪费说明征税能力不够。按各州缺口补，而不是把行政机构全堆在一个人口最多的州。
     waste = snap.country.get("tax_waste") or 0.0
     admin_states = _admin_states(snap)
@@ -188,6 +230,7 @@ def candidates(gd: GameData, snap: Snapshot, researched: set[str], costs: dict[s
     laws = {l.key for l in snap.laws.values() if l.key}
     wages, wage_all = _wage_rates(snap)
     skip = set(cfg()["skip_buildings"])
+    prio_goods = profile(snap).get("priority_goods") or {}
     econ_cache: dict[tuple[str, int], economy.BuildingEconomics] = {}
     scored: list[Decision] = []
     for s in snap.states:
@@ -197,6 +240,9 @@ def candidates(gd: GameData, snap: Snapshot, researched: set[str], costs: dict[s
         for key, row in s.buildings.items():
             if not row.can_queue or key in skip or key not in gd.buildings:
                 continue
+            if s.free_arable is not None and s.free_arable <= 0 and any(
+                    x in key for x in ("farm", "plantation", "ranch")):
+                continue                                     # 没空地了，别排农业
             rate = row.wage_rate or wages.get(s.id, wage_all)
             wage = rate * c["wage_mix"] / 1000.0
             ck = (key, round(rate))
@@ -223,6 +269,26 @@ def candidates(gd: GameData, snap: Snapshot, researched: set[str], costs: dict[s
             if glut:
                 score *= c["oversupply_penalty"]
                 notes.append("供过于求：" + ",".join(glut))
+            # 缺货加分：买单/卖单 > start（肉、木材、铁这类买不到的，价格再高也可能不够）
+            start = c.get("shortage_bonus_start", 1.2)
+            ratios = {g: _buy_sell_ratio(snap, g) for g in econ.outputs}
+            if ratios:
+                g, ratio = max(ratios.items(), key=lambda kv: kv[1])
+                if ratio > start:
+                    mult = min(c.get("shortage_bonus_max", 1.6),
+                               1 + (ratio - start) * c.get("shortage_bonus_per_ratio", 0.8))
+                    score *= mult
+                    notes.append(f"缺货 {g} ×{mult:.1f}（买单/卖单 {ratio:.1f}）")
+            hits = [(g, w) for g, w in prio_goods.items() if g in econ.outputs]
+            if hits:
+                g, w = max(hits, key=lambda kv: kv[1])
+                score *= float(w)
+                notes.append(f"优先 {g} ×{float(w):.1f}")
+            if food_short and key in set(fs.get("cash_crops", ())):
+                if fs.get("skip_cash_crops", False):
+                    continue
+                score *= float(fs.get("penalty", 0.15))
+                notes.append("粮食安全降权")
             why = f"{s.name} 每级周利润 {econ.profit:,.0f}，{econ.construction:.0f} 点" + \
                   (f"（{'；'.join(notes)}）" if notes else "")
             scored.append(Decision("build", {"state": s.id, "building": key}, why, score))

@@ -22,6 +22,7 @@ from agent.strategy import events as event_policy
 from agent.strategy import plan as planner
 from agent.strategy import politics
 from agent.strategy import research as research_strategy
+from agent.strategy.construction import ADMIN, SECTOR, UNIVERSITY
 from agent.strategy.config import cfg
 from agent.strategy.config import Decision
 
@@ -180,6 +181,84 @@ def handle_diplomacy(b: Bridge, mem: Memory, note: Callable[[str], None],
     return 0
 
 
+def handle_movements(b: Bridge, mem: Memory, note: Callable[[str], None],
+                     snap: observe.Snapshot | None = None) -> int:
+    """扶持国家档案里指定的政治运动（大清：现代化运动），给教育 / 经济改革提供运动支持。"""
+    names = (strategy_config.profile(snap).get("movements") or {}).get("bolster") or []
+    if not names:
+        return 0
+    month = len(mem.history)
+    try:
+        a = Actions(b)
+        ms = {m["name"]: m for m in a.movements()}
+        for name in names:
+            key = f"movement:{name}"
+            if mem.blocked.get(key, -1) > month:
+                continue
+            m = ms.get(name)
+            if not m or m["bolstered"] or m["suppressed"]:
+                continue
+            r = a.toggle_movement(name, "Bolstering")
+            mem.tally(r, "movement")
+            note(f"    {r}  ← 扶持运动「{name}」")
+            if not r.ok:
+                mem.blocked[key] = month + 6
+            return 1
+    except Exception as exc:
+        note(f"    运动处理出错：{type(exc).__name__}: {exc}")
+    return 0
+
+
+def _promote_queue(a: Actions, note: Callable[[str], None]) -> None:
+    """把建造部门 / 粮食建筑的排队项目移到队首（队列常有几百项，队尾永远轮不到）。"""
+    c = cfg()["construction"]
+    fb = (c.get("food_security") or {}).get("building")
+    counts = {SECTOR: 4}
+    if fb:
+        counts[fb] = int((c.get("food_security") or {}).get("max_per_month", 2))
+    for key, count in counts.items():
+        for _ in range(count):
+            try:
+                q = a.construction_queue()
+                idx = next((item["index"] for item in q
+                            if item["building"] == key and not item["under_construction"]
+                            and item["index"] > 0), None)
+                if idx is None:
+                    break
+                r = a.move_construction(idx, "ToTop")
+                if not r.ok:
+                    break
+                if not r.detail.startswith(("已是", "现行")):
+                    note(f"    队列优先：{r.action}")
+            except Exception:
+                break
+
+
+def _clean_queue(a: Actions, note: Callable[[str], None]) -> None:
+    """队列超过 max_queue 时，从队尾取消非优先项目（建造部门 / 粮食 / 行政 / 大学保留）。"""
+    try:
+        c = cfg()["construction"]
+        maxq = int(c.get("max_queue", 30))
+        q = a.construction_queue()
+        if len(q) <= maxq:
+            return
+        keep = {SECTOR, ADMIN, UNIVERSITY}
+        fb = (c.get("food_security") or {}).get("building")
+        if fb:
+            keep.add(fb)
+        for _ in range(int(c.get("cleanup_per_month", 10))):
+            q = a.construction_queue()
+            idx = next((item["index"] for item in q
+                        if item["building"] not in keep and not item["under_construction"]), None)
+            if idx is None:
+                break
+            r = a.cancel_construction(idx)      # 取消队首最老的低优先项目，别把本月新排的工厂砍掉
+            if r.ok and not r.detail.startswith(("已是", "现行")):
+                note(f"    {r}")
+    except Exception as exc:
+        note(f"    队列清理出错：{type(exc).__name__}: {exc}")
+
+
 def _do(a: Actions, d: Decision, snap: observe.Snapshot) -> ActionResult:
     x = d.args
     if d.kind == "set_tax":
@@ -192,6 +271,13 @@ def _do(a: Actions, d: Decision, snap: observe.Snapshot) -> ActionResult:
         return a.research(x["tech"])
     if d.kind == "queue_research":
         return a.queue_research(x["tech"])
+    if d.kind == "privatize":
+        return a.building_action(x["state"], x["building"], "TogglePrivatization")
+    if d.kind == "trade_policy":
+        return a.set_trade_policy(x["goods"], x["side"], x["policy"])
+    if d.kind == "subsidy":
+        return a.building_action(x["state"], x["building"],
+                                 "ToggleSubsidiesOn" if x["on"] else "ToggleSubsidiesOff")
     if d.kind == "enact_law":
         return a.enact_law(x["law"], snap)
     if d.kind == "reform_government":
@@ -207,6 +293,7 @@ def execute(b: Bridge, plan: planner.Plan, snap: observe.Snapshot, mem: Memory,
             note: Callable[[str], None]) -> list[ActionResult]:
     a = Actions(b)
     results: list[ActionResult] = []
+    _promote_queue(a, note)
 
     def run(d: Decision) -> ActionResult:
         try:
@@ -267,7 +354,26 @@ def execute(b: Bridge, plan: planner.Plan, snap: observe.Snapshot, mem: Memory,
             mem.blocked[key] = month + LAW_RETRY_MONTHS   # 换不了（不可用 / 没有这个方式）：一年内不再试
         elif r.before != r.after:
             mem.blocked[cool] = month + PM_COOLDOWN_MONTHS
+    for d in plan.subsidy:                        # 补贴亏损工业：盈利后取消补贴并私有化
+        key = f"subsidy:{d.args['state']}:{d.args['building']}"
+        if mem.blocked.get(key, -1) > month:
+            continue
+        if not run(d).ok:
+            mem.blocked[key] = month + LAW_RETRY_MONTHS
+    for d in plan.privatize:                      # 私有化：养大实业家（学校法只有他们支持）
+        key = f"privatize:{d.args['state']}:{d.args['building']}"
+        if mem.blocked.get(key, -1) > month:
+            continue
+        if not run(d).ok:
+            mem.blocked[key] = month + LAW_RETRY_MONTHS
+    for d in plan.trade:                          # 关税 / 补贴：缺货零进口关税，过剩出口补贴
+        key = f"trade:{d.args['goods']}:{d.args['side']}"
+        if mem.blocked.get(key, -1) > month:
+            continue
+        if not run(d).ok:
+            mem.blocked[key] = month + 6
     mem.pm_offset += len(plan.pm) or 1
+    _clean_queue(a, note)      # 放在建造之后：清理会改变州建筑列表顺序，先清会让本月快照路径失效
     return results
 
 
@@ -283,6 +389,7 @@ def step(b: Bridge, mem: Memory, note: Callable[[str], None] = lambda s: None) -
         snap, plan = advise(b, mem)      # 事件可能改了合法性、法律进度、国库，按新局面临时重算
     handle_proposals(b, mem, note, snap)
     handle_diplomacy(b, mem, note, snap)
+    handle_movements(b, mem, note, snap)
     results = execute(b, plan, snap, mem, note)
     return {"date": str(snap.date), "metrics": m, "results": [str(r) for r in results]}
 

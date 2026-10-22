@@ -3,7 +3,7 @@
 from agent import gamedata
 from agent.game import Date
 from agent.observe import BuildingRow, IGRow, LawOption, LawRow, Snapshot, StateRow
-from agent.strategy import budget, construction, decrees, diplomacy, events, institutions, politics, research
+from agent.strategy import budget, construction, decrees, diplomacy, events, institutions, politics, privatization, research, subsidies, trade
 
 
 def _snap(**country) -> Snapshot:
@@ -148,6 +148,66 @@ def test_decrees_pick_big_and_overused_states():
     snap.states = [big, small]
     got = {(d.args["state"], d.args["decree"]) for d in decrees.candidates(snap)}
     assert got == {(1, "促进社会流动"), (1, "道路养护")}
+
+
+def test_shortage_helpers():
+    snap = _snap()
+    snap.prices = {"meat": {"buy": 200.0, "sell": 100.0}, "grain": {"buy": 100.0, "sell": 100.0}}
+    assert construction._buy_sell_ratio(snap, "meat") == 2.0
+    assert construction._food_short(snap, {"food_security": {"goods": ["meat"], "trigger_ratio": 1.5}})
+    assert not construction._food_short(snap, {"food_security": {"goods": ["grain"], "trigger_ratio": 1.5}})
+
+
+def test_profile_politics_override():
+    snap = _snap(tag="CHI", legitimacy=100.0)
+    p = politics._pcfg(snap)
+    assert p["min_pass"] == 0.35 and p["max_government"] == 3
+
+
+def test_reform_removes_smallest_when_government_illegitimate():
+    snap = _qing()
+    snap.country["legitimacy"] = 19.0
+    snap.igs = [IGRow(0, "士大夫", 0.50, True, False), IGRow(1, "军队", 0.10, True, False),
+                IGRow(2, "文人", 0.05, False, False)]
+    d = politics.reform(snap, [], None)
+    assert d and d.args["members"] == [0] and "移除" in d.why
+
+
+def test_subsidies_add_and_remove():
+    snap = _snap(tag="CHI")
+    s = StateRow(0, 1, "州", 100.0, 10.0, 50, 10_000_000.0, None)
+    row = _row("building_textile_mill", levels=5)
+    row.profitability = -50.0
+    row.subsidized = False
+    s.buildings = {"building_textile_mill": row}
+    snap.states = [s]
+    got = subsidies.candidates(snap)
+    assert got and got[0].args["on"] is True
+    row.subsidized = True
+    row.profitability = 20.0
+    got = subsidies.candidates(snap)
+    assert got and got[0].args["on"] is False
+
+
+def test_trade_policy_shortage_and_surplus():
+    snap = _snap(tag="CHI")
+    snap.prices = {"meat": {"buy": 200.0, "sell": 100.0}, "fabric": {"buy": 100.0, "sell": 200.0}}
+    got = trade.candidates(snap)
+    args = {(d.args["goods"], d.args["side"], d.args["policy"]) for d in got}
+    assert ("meat", "Import", "TariffsNone") in args
+    assert ("fabric", "Import", "TariffsMax") in args
+
+
+def test_privatization_candidates():
+    snap = _snap(tag="CHI")
+    s = StateRow(0, 1, "州", 100.0, 10.0, 50, 10_000_000.0, None)
+    row = _row("building_textile_mill", levels=3)
+    row.can_privatize = True
+    row.profitability = 12.0
+    s.buildings = {"building_textile_mill": row}
+    snap.states = [s]
+    got = privatization.candidates(snap)
+    assert got and got[0].kind == "privatize" and got[0].args["building"] == "building_textile_mill"
 
 
 def test_diplomacy_rejects_demands_and_sway():

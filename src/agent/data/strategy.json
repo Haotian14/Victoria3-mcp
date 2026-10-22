@@ -43,11 +43,48 @@
       },
       "tax_floor": "Medium",
       "opium_war": "avoid",
+      "priority_goods": {"meat": 1.4, "wood": 1.25, "iron": 1.2},
+      "politics": {
+        "_comment": "政府合法性优先：最多 3 个集团；合法性 < 50 时移除影响力最小的在朝集团；农本主义 37% 也允许尝试。",
+        "min_pass": 0.35,
+        "min_legitimacy_to_add": 70,
+        "min_legitimacy_recover": 50,
+        "max_government": 3,
+        "min_clout_to_add": 0.05,
+        "reform_cooldown_months": 12
+      },
       "institutions": {"教育": 2},
       "decrees": {
         "_comment": "权威力：识字率低，先给人口大州开促进社会流动（教育机会 +25%）；基础设施超用的州开道路养护（+建造速度 10%）。",
-        "促进社会流动": {"max_states": 2, "min_population": 10000000},
+        "促进社会流动": {"max_states": 4, "min_population": 8000000},
         "道路养护": {"max_states": 1, "only_infra_overuse": true}
+      },
+      "subsidies": {
+        "_comment": "先补贴亏损工业，利润率回到 10% 以上取消补贴，让私有化接手，养大实业家（学校法只有他们支持）。",
+        "max_per_month": 4,
+        "max_profitability": 5,
+        "remove_above": 10,
+        "buildings": ["building_textile_mill", "building_furniture_manufactory", "building_glassworks",
+                      "building_tooling_workshop", "building_paper_mill", "building_food_industry",
+                      "building_arms_industry"]
+      },
+      "trade": {
+        "_comment": "缺货：进口零关税 / 出口高关税；过剩：进口高关税 / 出口补贴。先覆盖肉、木材、铁、groceries、工具。",
+        "goods": ["meat", "wood", "hardwood", "groceries", "iron", "tools", "luxury_clothes", "fabric", "coal"],
+        "shortage_ratio": 1.2,
+        "oversupply_ratio": 1.3,
+        "max_per_month": 6
+      },
+      "privatize": {
+        "_comment": "学校法只有实业家支持；私有化工业让资本家持股，养大实业家（目标 5% 入阁推公立学校）。",
+        "max_per_month": 2,
+        "buildings": ["building_textile_mill", "building_furniture_manufactory", "building_glassworks",
+                      "building_tooling_workshop", "building_paper_mill", "building_food_industry",
+                      "building_arms_industry"]
+      },
+      "movements": {
+        "_comment": "教育法 / 经济改革缺支持时，扶持现代化运动给它加运动支持。",
+        "bolster": ["现代化运动"]
       },
       "diplomacy": {
         "_comment": "鸦片战争已默认避战；对俄/法/普改善关系，等保障独立/防御同盟提议。要求/割让/赔款/投资权/治外法权/条约港一律拒绝。",
@@ -171,7 +208,28 @@
     "min_profit_per_point": 0.5,
     "sector_inputs": ["wood", "fabric"],
     "sector_input_max_price_ratio": 1.25,
-    "admin_max_per_month": 2
+    "admin_max_per_month": 2,
+    "sector_budget_share_rich": 0.45,
+    "sector_rich_reserve_ratio": 1.0,
+    "max_queue": 30,
+    "priority_build_slots": 7,
+    "cleanup_per_month": 10,
+    "shortage_bonus_start": 1.2,
+    "shortage_bonus_per_ratio": 0.8,
+    "shortage_bonus_max": 1.6,
+    "food_security": {
+      "_comment": "肉短缺时强制排牧场（经济账对牧场偏悲观），并跳过鸦片/葡萄园等经济作物（1846 实测肉价 52.5/30、买单/卖单 2.17）。",
+      "goods": ["meat"],
+      "trigger_ratio": 1.5,
+      "building": "building_livestock_ranch",
+      "max_per_month": 3,
+      "max_levels": 150,
+      "min_labor": 5000,
+      "skip_cash_crops": true,
+      "cash_crops": ["building_opium_plantation", "building_vineyard", "building_tea_plantation",
+                     "building_coffee_plantation", "building_tobacco_plantation"],
+      "penalty": 0.15
+    }
   },
   "skip_buildings": [
     "building_barrack",

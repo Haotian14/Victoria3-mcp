@@ -151,7 +151,7 @@ scripts/             启动、游玩、验收脚本
 tools/               数据抽取脚本
 tests/               单测（构造的数据，不需要游戏）
 docs/                逆向记录（bridge.md）、策略说明（strategy.md）、玩家操作清单（actions.md）、
-                     覆盖进度与缺口（coverage.md）
+                     覆盖进度与缺口（coverage.md）、研究进度与 16 个方向（research-progress.md）
 ```
 
 ## 边界

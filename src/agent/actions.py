@@ -764,6 +764,14 @@ class Actions:
         probe = "PoliticalMovement.IsBolstered" if action == "Bolstering" else "PoliticalMovement.IsSuppressed"
         return self.command(f"PoliticalMovement.Toggle{action}", probe, path=path, name=name)
 
+    def movements(self) -> list[dict[str, Any]]:
+        """进行中的政治运动：名称 / 是否已扶持 / 是否被压制 / 核心意识形态。"""
+        return [{"name": plain(n), "bolstered": b == "1", "suppressed": s == "1", "ideology": plain(i)}
+                for n, b, s, i in self.b.rows(
+                    MOVEMENTS, ["PoliticalMovement.GetNameNoFormatting", "PoliticalMovement.IsBolstered",
+                                "PoliticalMovement.IsSuppressed",
+                                "PoliticalMovement.GetCoreIdeology.GetNameNoFormatting"])]
+
     def stop_enacting(self) -> ActionResult:
         """取消正在推行的法律（Law.StopEnacting，在该法律组的可选法律里）。"""
         from agent.observe import laws as current_laws

@@ -68,6 +68,8 @@ class BuildingRow:
     can_queue: bool                 # IsValid(Building.QueueConstruction)
     wage_rate: float | None = None  # GetWageRate：每 1000 名雇员每周的工资基数
     employed: float | None = None   # 现有雇员数
+    can_privatize: bool = False     # 政府持有、可私有化（CanBePrivatized）
+    subsidized: bool = False        # 正在接受政府补贴（IsSubsidized）
 
 
 @dataclass
@@ -215,7 +217,8 @@ STATE_FIELDS = ["State.GetID", "State.GetNameNoFormatting", "State.GetInfrastruc
 BUILDING_FIELDS = ["Building.GetBuildingType.GetKey", "Building.GetTotalLevels", "Building.GetExpansionLevelsInQueue",
                    "Building.GetEmploymentPercentage|3", "Building.GetProfitability|1",
                    "Building.GetCurrentCashReserves|0", "IsValid(Building.QueueConstruction)",
-                   "Building.GetWageRate|3", "Building.GetNoOfEmployed"]
+                   "Building.GetWageRate|3", "Building.GetNoOfEmployed", "Building.CanBePrivatized",
+                   "Building.IsSubsidized"]
 
 
 def states(b: Bridge, with_buildings: bool = True) -> list[StateRow]:
@@ -242,7 +245,8 @@ def buildings(b: Bridge, s: StateRow) -> None:
             s.buildings[key] = BuildingRow(
                 key=key, path=s.path + [(lst, j)], levels=int(_f(r[1]) or 0), queued=int(_f(r[2]) or 0),
                 employment=_f(r[3]), profitability=_f(r[4]), cash=_f(r[5]), can_queue=r[6] == "1",
-                wage_rate=_f(r[7]) if row_built(r) else None, employed=_f(r[8]))
+                wage_rate=_f(r[7]) if row_built(r) else None, employed=_f(r[8]),
+                can_privatize=r[9] == "1", subsidized=r[10] == "1")
 
 
 def row_built(r: list[str]) -> bool:
