@@ -168,6 +168,18 @@ int seh_exec(void* stmt, PdxArray* ctx, void* scratch, void* arg_any) {
     }
 }
 
+int seh_resolve(void* stmt, PdxArray* ctx, void* scratch, void** out_ptr) {
+    __try {
+        struct { void* ptr; bool flag; char pad[7]; } target = {};
+        int id = *g_default_id();
+        if (!g_resolve(stmt, ctx, scratch, &target, &id)) return 0;
+        *out_ptr = target.ptr;
+        return 1;
+    } __except (filter(GetExceptionInformation())) {
+        return -1;
+    }
+}
+
 int seh_build_loc(const StrView* v, PdxArray* loc) {
     __try {
         return g_build_loc(v, loc, nullptr, nullptr, nullptr) ? 1 : 0;
@@ -339,6 +351,30 @@ bool exec_in(const std::string& statement, const CtxEntry* items, int n_items, s
     return true;
 }
 
+bool resolve_in(const std::string& statement, const CtxEntry* items, int n_items, std::string* out,
+                std::string* error) {
+    alignas(16) uint8_t stmt[kStmtSize] = {};
+    g_stmt_ctor(stmt);
+    StrView v{statement.c_str(), static_cast<int>(statement.size()), true};
+    if (!seh_create(&v, stmt, true)) {
+        *error = g_last_exception ? exc_text("构建语句") : "构建语句失败（看 error.log）";
+        seh_destroy(stmt);
+        return false;
+    }
+    CtxEntry storage[16];
+    PdxArray ctx = make_ctx(stmt, items, n_items, storage, 16);
+    Scratch scr = make_scratch();
+    void* ptr = nullptr;
+    int r = seh_resolve(stmt, &ctx, &scr, &ptr);
+    seh_destroy(stmt);
+    if (r < 0) { *error = exc_text("解析"); return false; }
+    if (r == 0 || !ptr) { *error = "解析命令失败（看 error.log）" + g_ctx_note; return false; }
+    char b[64];
+    snprintf(b, sizeof b, "0x%llx", static_cast<unsigned long long>(reinterpret_cast<uintptr_t>(ptr)));
+    *out = b;
+    return true;
+}
+
 bool eval_in(const std::string& statement, bool flag, const CtxEntry* items, int n_items, uint8_t* any_out,
              std::string* error) {
     alignas(16) uint8_t stmt[kStmtSize] = {};
@@ -399,6 +435,14 @@ bool walk(const std::vector<PathStep>& path, std::vector<CtxEntry>* items, std::
     for (const PathStep& step : path) {
         anys->emplace_back();
         if (!step.list.empty() && step.list[0] == '=') {
+            if (step.list.size() > 1 && step.list[1] == '@') {
+                // 「=@十六进制地址」：开发用，直接拿一个已知对象指针当通配上下文（窗口单例等）
+                char* end = nullptr;
+                unsigned long long addr = strtoull(step.list.c_str() + 2, &end, 16);
+                if (!addr || (end && *end)) { *error = "=@ 地址不合法"; return false; }
+                items->push_back(CtxEntry{reinterpret_cast<void*>(addr), kAnyType, false, {}});
+                continue;
+            }
             // 「=表达式」：按值求一个对象（如 GetStateRegion('STATE_X').GetLargestStateOwner），作为非 const 的通配上下文。
             // 只读路径（Get*）求出的对象，后面接 Access* / 要求非 const 的列表时语句建不起来，这样绕过去；
             // CPdxAny 是 { 类型信息*, 对象* }，const 与否只差类型信息
@@ -610,6 +654,15 @@ bool exec(const std::vector<PathStep>& path, const std::string& statement, std::
     std::vector<AnyBuf> anys;
     if (!walk(path, &items, &anys, error)) return false;
     return exec_in(statement, items.data(), static_cast<int>(items.size()), error);
+}
+
+bool resolve(const std::vector<PathStep>& path, const std::string& statement, std::string* out,
+             std::string* error) {
+    Access access;
+    std::vector<CtxEntry> items;
+    std::vector<AnyBuf> anys;
+    if (!walk(path, &items, &anys, error)) return false;
+    return resolve_in(statement, items.data(), static_cast<int>(items.size()), out, error);
 }
 
 bool eval_raw(const std::string& statement, bool flag, uint8_t* any_out, std::string* error) {

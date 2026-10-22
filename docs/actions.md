@@ -5,13 +5,13 @@
 
 可达性：**直达** = 从玩家国家沿列表能走到对象，照现有做法即可；**窗口** = 对象只存在于界面窗口 / 弹窗 / 草稿里，要像改组政府那样构造（见 docs/bridge.md）；**组合** = 军事 / 地图类，要组合编队、前线、海域等多个对象；**界面** = 只影响界面显示（改名、开关、定位），不影响局面；**待查** = 接收对象还没归类。
 
-**进度：命令 138 / 265 已验证；按操作种类（只差档位的算一种）98 / 225。**
+**进度：命令 172 / 266 已验证；另有 86 条已接到代码路径（○，含单编队等价与状态未满足）；按操作种类（只差档位的算一种）132 / 226 已验证。**
 
-按可达性（操作种类，已验证 / 总数）：直达 93 / 110，窗口 5 / 31，组合 0 / 77，界面 0 / 7。
+按可达性（操作种类，已验证 / 总数，已接）：直达 94 / 110（已接 15），窗口 16 / 31（已接 10），组合 19 / 78（已接 57），界面 3 / 7（已接 4）。
 
 不在本表、但同样要打通的：立即存档（目前用自动存档）、暂停 / 调速（`TimeKeeper`，已验证，不经 Execute）。事件选项在「事件」一节（`EventOption.Select`）。每条命令用的路径与核实方式见 docs/bridge.md「已验证的玩家动作」。
 
-## 国家（47 / 50）
+## 国家（47 / 50，已接 3）
 
 | 状态 | 可达性 | 命令 | 例子 | 界面文件 |
 |---|---|---|---|---|
@@ -62,11 +62,11 @@
 | ✓ `Actions.set_tax` | 直达 | `Country.SetTaxLevelVeryHigh` | `GetPlayer.SetTaxLevelVeryHigh` | budget_panel.gui |
 | ✓ `Actions.set_tax` | 直达 | `Country.SetTaxLevelVeryLow` | `GetPlayer.SetTaxLevelVeryLow` | budget_panel.gui |
 | ✓ `Actions.negotiate` | 直达 | `Country.StartNegotiationWith` | `AccessPlayer.StartNegotiationWith(InterestGroup.Self)` | right_click_menu.gui |
-|  | 直达 | `Country.Kick` | `Country.GetPowerBloc.Kick(Country.Self)` | right_click_menu.gui |
-|  | 界面 | `Country.ToggleIgnoreCountryFormation` | `GetPlayer.ToggleIgnoreCountryFormation(CountryFormation.Self)` | country_formation_panel.gui, culture_panel.gui |
-|  | 界面 | `Country.ToggleIgnoreDecision` | `GetPlayer.ToggleIgnoreDecision(Decision.Self)` | journal.gui |
+| ○ `Actions.kick_from_bloc` | 直达 | `Country.Kick` | `Country.GetPowerBloc.Kick(Country.Self)` | right_click_menu.gui |
+| ○ `Coverage.toggle_ignore_formation` | 界面 | `Country.ToggleIgnoreCountryFormation` | `GetPlayer.ToggleIgnoreCountryFormation(CountryFormation.Self)` | country_formation_panel.gui, culture_panel.gui |
+| ○ `Coverage.toggle_ignore_decision` | 界面 | `Country.ToggleIgnoreDecision` | `GetPlayer.ToggleIgnoreDecision(Decision.Self)` | journal.gui |
 
-## 经济（49 / 56）
+## 经济（53 / 56，已接 3）
 
 | 状态 | 可达性 | 命令 | 例子 | 界面文件 |
 |---|---|---|---|---|
@@ -119,15 +119,15 @@
 | ✓ `Actions.state_action` | 直达 | `State.IncorporateState` | `State.IncorporateState` | right_click_menu.gui, states_panel.gui |
 | ✓ `Actions.state_action` | 直达 | `State.TogglePauseColonization` | `State.TogglePauseColonization` | states_panel.gui |
 | ✓ `Actions.state_action` | 直达 | `State.UnincorporateState` | `State.UnincorporateState` | right_click_menu.gui, states_panel.gui |
-|  | 直达 | `Building.QueueMilitaryConstruction` | `Building.QueueMilitaryConstruction(MilitaryFormation.Self,CombatUnitType.Self)` | building_details_panel.gui |
-|  | 直达 | `BuildingType.ToggleMonopoly` | `BuildingType.ToggleMonopoly` | right_click_menu.gui |
-|  | 直达 | `State.GetStationSelectedFormationsCommand` | `State.GetStationSelectedFormationsCommand` | right_click_menu.gui |
-|  | 窗口 | `BuildingBrowserBuildingTypeItem.RemoveAllPrivatization` | `BuildingBrowserBuildingTypeItem.RemoveAllPrivatization` | right_click_menu.gui |
-|  | 窗口 | `BuildingBrowserBuildingTypeItem.ToggleAllAutoExpand` | `BuildingBrowserBuildingTypeItem.ToggleAllAutoExpand` | building_details_panel.gui |
-|  | 窗口 | `BuildingBrowserBuildingTypeItem.ToggleAllPrivatization` | `BuildingBrowserBuildingTypeItem.ToggleAllPrivatization` | building_details_panel.gui, right_click_menu.gui |
-|  | 窗口 | `BuildingBrowserBuildingTypeItem.ToggleAllSubsidies` | `BuildingBrowserBuildingTypeItem.ToggleAllSubsidies` | building_details_panel.gui, production_methods.gui |
+| ✓ `Coverage.building_type_toggle_all` | 窗口 | `BuildingBrowserBuildingTypeItem.RemoveAllPrivatization` | `BuildingBrowserBuildingTypeItem.RemoveAllPrivatization` | right_click_menu.gui |
+| ✓ `Coverage.building_type_toggle_all` | 窗口 | `BuildingBrowserBuildingTypeItem.ToggleAllAutoExpand` | `BuildingBrowserBuildingTypeItem.ToggleAllAutoExpand` | building_details_panel.gui |
+| ✓ `Coverage.building_type_toggle_all` | 窗口 | `BuildingBrowserBuildingTypeItem.ToggleAllPrivatization` | `BuildingBrowserBuildingTypeItem.ToggleAllPrivatization` | building_details_panel.gui, right_click_menu.gui |
+| ✓ `Coverage.building_type_toggle_all` | 窗口 | `BuildingBrowserBuildingTypeItem.ToggleAllSubsidies` | `BuildingBrowserBuildingTypeItem.ToggleAllSubsidies` | building_details_panel.gui, production_methods.gui |
+| ○ `Coverage.queue_military_construction` | 直达 | `Building.QueueMilitaryConstruction` | `Building.QueueMilitaryConstruction(MilitaryFormation.Self,CombatUnitType.Self)` | building_details_panel.gui |
+| ○ `Coverage.building_type_action` | 直达 | `BuildingType.ToggleMonopoly` | `BuildingType.ToggleMonopoly` | right_click_menu.gui |
+| ○ `Coverage.selected_action（需选择）` | 直达 | `State.GetStationSelectedFormationsCommand` | `State.GetStationSelectedFormationsCommand` | right_click_menu.gui |
 
-## 政治（9 / 9）
+## 政治（9 / 9，已接 0）
 
 | 状态 | 可达性 | 命令 | 例子 | 界面文件 |
 |---|---|---|---|---|
@@ -141,7 +141,7 @@
 | ✓ `Actions.toggle_movement` | 直达 | `PoliticalMovement.ToggleSuppression` | `PoliticalMovement.ToggleSuppression` | custom_tooltip.gui, political_movement_panel.gui … |
 | ✓ `Actions.reform_government` | 窗口 | `ReformGovernment.Confirm` | `ReformGovernment.Confirm` | politics_panel_reform_government.gui |
 
-## 研究（4 / 5）
+## 研究（5 / 5，已接 0）
 
 | 状态 | 可达性 | 命令 | 例子 | 界面文件 |
 |---|---|---|---|---|
@@ -149,9 +149,9 @@
 | ✓ `Actions.queue_research` | 直达 | `Technology.RemoveFromQueue` | `Technology.RemoveFromQueue(GetPlayer.Self)` | tech_tree.gui |
 | ✓ `Actions.research` | 直达 | `Technology.Research` | `Technology.Research(GetPlayer.Self)` | custom_tooltip.gui, tech_tree.gui |
 | ✓ `Actions.queue_research` | 直达 | `Technology.ResearchWithUnlocks` | `Technology.ResearchWithUnlocks(GetPlayer.Self)` | custom_tooltip.gui, tech_tree.gui |
-|  | 窗口 | `TechTreeLine.Research` | `TechTreeLine.GetTargetTech.Research(GetPlayer.Self)` | tech_tree.gui |
+| ✓ `Actions.research（等价）` | 窗口 | `TechTreeLine.Research` | `TechTreeLine.GetTargetTech.Research(GetPlayer.Self)` | tech_tree.gui |
 
-## 人物（7 / 9）
+## 人物（9 / 9，已接 0）
 
 | 状态 | 可达性 | 命令 | 例子 | 界面文件 |
 |---|---|---|---|---|
@@ -162,10 +162,10 @@
 | ✓ `Actions.recruit_commander` | 直达 | `Character.RecruitCharacterNoFormation` | `Character.RecruitCharacterNoFormation` | generate_character.gui |
 | ✓ `Actions.commander_action` | 直达 | `Character.SelectOrder` | `Character.SelectOrder(CommanderOrderType.Self)` | right_click_menu.gui |
 | ✓ `Actions.commander_action` | 直达 | `Character.UnassignFromFormation` | `Character.UnassignFromFormation` | right_click_menu.gui |
-|  | 窗口 | `RulerSelectionPopup.RandomizeRulersOffer` | `RulerSelectionPopup.RandomizeRulersOffer` | generate_character.gui |
-|  | 窗口 | `RulerSelectionPopup.SetRulerCommand` | `RulerSelectionPopup.SetRulerCommand(Character.Self)` | generate_character.gui |
+| ✓ `Coverage.randomize_ruler` | 窗口 | `RulerSelectionPopup.RandomizeRulersOffer` | `RulerSelectionPopup.RandomizeRulersOffer` | generate_character.gui |
+| ✓ `Coverage.set_ruler` | 窗口 | `RulerSelectionPopup.SetRulerCommand` | `RulerSelectionPopup.SetRulerCommand(Character.Self)` | generate_character.gui |
 
-## 日志（2 / 3）
+## 日志（2 / 3，已接 0）
 
 | 状态 | 可达性 | 命令 | 例子 | 界面文件 |
 |---|---|---|---|---|
@@ -173,17 +173,18 @@
 | ✓ `Actions.press_button` | 直达 | `ScriptedButton.ExecuteEffect` | `ScriptedButton.ExecuteEffect` | journal_entry.gui |
 |  | 直达 | `ScriptedGui.je_meiji_restoration_japanese_emperor_sgui` | `ScriptedGui.je_meiji_restoration_japanese_emperor_sgui` | journal_entry_widgets/ep2_japan_widgets.gui |
 
-## 事件（1 / 1）
+## 事件（1 / 1，已接 0）
 
 | 状态 | 可达性 | 命令 | 例子 | 界面文件 |
 |---|---|---|---|---|
 | ✓ `Actions.choose_event_option` | 窗口 | `EventOption.Select` | `EventOption.Select` | eventwindow.gui |
 
-## 外交（16 / 37）
+## 外交（19 / 37，已接 14）
 
 | 状态 | 可达性 | 命令 | 例子 | 界面文件 |
 |---|---|---|---|---|
 | ✓ `Actions.form_country` | 直达 | `CountryFormation.FormCountry` | `CountryFormation.FormCountry(GetPlayer)` | country_formation_panel.gui |
+| ✓ `Actions.diplomatic_action（等价）` | 直达 | `DiplomaticAction.ExecuteAction` | `DiplomaticAction.ExecuteAction` | country_panel.gui, power_bloc_panel.gui … |
 | ✓ `Actions.diplomatic_action` | 直达 | `DiplomaticAction.ExecuteWithConfirmation` | `DiplomaticAction.ExecuteWithConfirmation` | country_panel.gui, power_bloc_panel.gui … |
 | ✓ `Actions.play_stance` | 直达 | `DiplomaticPlay.BeOnTheFence` | `DiplomaticPlay.BeOnTheFence(GetPlayer)` | diplomatic_play_panel.gui |
 | ✓ `Actions.play_stance` | 直达 | `DiplomaticPlay.DeclareNeutrality` | `DiplomaticPlay.DeclareNeutrality(GetPlayer)` | diplomatic_play_panel.gui, right_click_menu.gui |
@@ -198,131 +199,131 @@
 | ✓ `Actions.upgrade_principle` | 直达 | `PowerBlocPrinciple.UpgradeToNextLevel` | `PowerBlocPrinciple.UpgradeToNextLevel` | custom_tooltip.gui, power_bloc_panel.gui |
 | ✓ `Actions.withdraw_treaty` | 直达 | `Treaty.WithdrawFromTreaty` | `Treaty.WithdrawFromTreaty` | treaty_panel.gui |
 | ✓ `Actions.war_goal` | 直达 | `WarGoal.ToggleIsPressedInPotentialPeaceDeal` | `WarGoal.ToggleIsPressedInPotentialPeaceDeal(GetPlayer.Self)` | add_wargoal_panel.gui, map_markers.gui |
+| ✓ `Coverage.add_war_goal` | 窗口 | `AddWarGoalPanel.AddWarGoal` | `AddWarGoalPanel.AccessDiplomaticPlay.AddWarGoal(WarGoalDraft.Self)` | add_wargoal_panel.gui |
 | ✓ `Actions.diplomatic_action` | 窗口 | `DiplomaticActionWindow.ExecuteAction` | `DiplomaticActionWindow.ExecuteAction` | popups.gui |
-|  | 直达 | `CountryFormation.SupportCandidate` | `CountryFormation.SupportCandidate(GetPlayer,Country.Self)` | country_formation_panel.gui |
-|  | 直达 | `DiplomaticAction.ExecuteAction` | `DiplomaticAction.ExecuteAction` | country_panel.gui, power_bloc_panel.gui … |
-|  | 直达 | `DiplomaticPlay.SwitchSide` | `DiplomaticPlay.SwitchSide(GetPlayer)` | diplomatic_play_panel.gui, right_click_menu.gui |
-|  | 直达 | `Proposal.AcceptActionProposal` | `Proposal.GetDiplomaticAction.AcceptActionProposal` | popups.gui |
-|  | 直达 | `Proposal.AcceptDiplomaticDemand` | `Proposal.GetDiplomaticDemand.AcceptDiplomaticDemand` | popups.gui |
-|  | 直达 | `Proposal.AcceptSway` | `Proposal.GetDiplomaticPlay.GetIncomingSway(Proposal.GetActor.Self,Proposal.GetRecipient.Self).AcceptSway` | popups.gui |
-|  | 直达 | `Proposal.AcceptTreatyProposal` | `Proposal.GetTreaty.AcceptTreatyProposal` | popups.gui |
-|  | 直达 | `Proposal.DeclineActionProposal` | `Proposal.GetDiplomaticAction.DeclineActionProposal` | popups.gui |
-|  | 直达 | `Proposal.DeclineTreatyProposal` | `Proposal.GetTreaty.DeclineTreatyProposal` | popups.gui |
-|  | 直达 | `Proposal.RejectDiplomaticDemand` | `Proposal.GetDiplomaticDemand.RejectDiplomaticDemand` | popups.gui |
-|  | 直达 | `Proposal.RejectSway` | `Proposal.GetDiplomaticPlay.GetIncomingSway(Proposal.GetActor.Self,Proposal.GetRecipient.Self).RejectSway` | popups.gui |
-|  | 直达 | `WarGoal.MakeWarGoalPrimaryDemand` | `WarGoal.MakeWarGoalPrimaryDemand(GetPlayer.Self)` | diplomatic_play_panel.gui |
-|  | 窗口 | `AddWarGoalPanel.AddWarGoal` | `AddWarGoalPanel.AccessDiplomaticPlay.AddWarGoal(WarGoalDraft.Self)` | add_wargoal_panel.gui |
-|  | 窗口 | `DiplomaticPlayConfirmation.ConfirmAction` | `DiplomaticPlayConfirmation.ConfirmAction` | popups.gui |
-|  | 窗口 | `PowerBlocFormation.Confirm` | `PowerBlocFormation.Confirm` | power_bloc_formation_panel.gui |
+| ✓ `Coverage.add_war_goal` | 窗口 | `WarGoalDraft.AddWarGoal` | `WarGoalDraft.GetDiplomaticPlay.AddWarGoal(WarGoalDraft.Self)` | right_click_menu.gui |
+| ○ `Actions.support_candidate` | 直达 | `CountryFormation.SupportCandidate` | `CountryFormation.SupportCandidate(GetPlayer,Country.Self)` | country_formation_panel.gui |
+| ○ `Actions.play_stance` | 直达 | `DiplomaticPlay.SwitchSide` | `DiplomaticPlay.SwitchSide(GetPlayer)` | diplomatic_play_panel.gui, right_click_menu.gui |
+| ○ `Actions.answer_proposal` | 直达 | `Proposal.AcceptActionProposal` | `Proposal.GetDiplomaticAction.AcceptActionProposal` | popups.gui |
+| ○ `Actions.answer_proposal` | 直达 | `Proposal.AcceptDiplomaticDemand` | `Proposal.GetDiplomaticDemand.AcceptDiplomaticDemand` | popups.gui |
+| ○ `Actions.answer_proposal` | 直达 | `Proposal.AcceptSway` | `Proposal.GetDiplomaticPlay.GetIncomingSway(Proposal.GetActor.Self,Proposal.GetRecipient.Self).AcceptSway` | popups.gui |
+| ○ `Actions.answer_proposal` | 直达 | `Proposal.AcceptTreatyProposal` | `Proposal.GetTreaty.AcceptTreatyProposal` | popups.gui |
+| ○ `Actions.answer_proposal` | 直达 | `Proposal.DeclineActionProposal` | `Proposal.GetDiplomaticAction.DeclineActionProposal` | popups.gui |
+| ○ `Actions.answer_proposal` | 直达 | `Proposal.DeclineTreatyProposal` | `Proposal.GetTreaty.DeclineTreatyProposal` | popups.gui |
+| ○ `Actions.answer_proposal` | 直达 | `Proposal.RejectDiplomaticDemand` | `Proposal.GetDiplomaticDemand.RejectDiplomaticDemand` | popups.gui |
+| ○ `Actions.answer_proposal` | 直达 | `Proposal.RejectSway` | `Proposal.GetDiplomaticPlay.GetIncomingSway(Proposal.GetActor.Self,Proposal.GetRecipient.Self).RejectSway` | popups.gui |
+| ○ `Actions.war_goal` | 直达 | `WarGoal.MakeWarGoalPrimaryDemand` | `WarGoal.MakeWarGoalPrimaryDemand(GetPlayer.Self)` | diplomatic_play_panel.gui |
+| ○ `Actions.start_play` | 窗口 | `DiplomaticPlayConfirmation.ConfirmAction` | `DiplomaticPlayConfirmation.ConfirmAction` | popups.gui |
+| ○ `Coverage.power_bloc_formation（待选原则）` | 窗口 | `PowerBlocFormation.Confirm` | `PowerBlocFormation.Confirm` | power_bloc_formation_panel.gui |
+| ○ `Coverage.create_sway（取决于博弈阶段/接受度）` | 窗口 | `SwayCountryPanel.CreateSway` | `SwayCountryPanel.AccessDiplomaticPlay.CreateSway(GetPlayer.Self,SwayCountryPanel.GetCountry,SwayOffer.Self)` | right_click_menu.gui, sway_country_panel.gui |
 |  | 窗口 | `PowerBlocPrincipleSelectionWindow.SubmitPrincipleSelection` | `PowerBlocPrincipleSelectionWindow.SubmitPrincipleSelection` | principle_selection_window.gui |
 |  | 窗口 | `ReleaseCountryWindow.ReleaseCountry` | `ReleaseCountryWindow.ReleaseCountry` | popups.gui |
-|  | 窗口 | `SwayCountryPanel.CreateSway` | `SwayCountryPanel.AccessDiplomaticPlay.CreateSway(GetPlayer.Self,SwayCountryPanel.GetCountry,SwayOffer.Self)` | right_click_menu.gui, sway_country_panel.gui |
 |  | 窗口 | `TreatyDraft.SendProposal` | `TreatyDraft.SendProposal` | treaty_draft_panel.gui |
 |  | 窗口 | `WarGoalDraft.AddTreatyWarGoal` | `WarGoalDraft.GetDiplomaticPlay.AddTreatyWarGoal(WarGoalDraft.Self,ArticleDraft.Self)` | right_click_menu.gui |
-|  | 窗口 | `WarGoalDraft.AddWarGoal` | `WarGoalDraft.GetDiplomaticPlay.AddWarGoal(WarGoalDraft.Self)` | right_click_menu.gui |
 
-## 军事（3 / 90）
+## 军事（23 / 91，已接 65）
 
 | 状态 | 可达性 | 命令 | 例子 | 界面文件 |
 |---|---|---|---|---|
 | ✓ `Actions.accept_peace` | 直达 | `War.ToggleAcceptPeace` | `War.ToggleAcceptPeace(GetPlayer.Self)` | war_panel.gui |
+| ✓ `Coverage.panel_upgrade_all` | 窗口 | `PanelMilitary.GetUpgradeAllUnitsInAllFormationsCommand` | `PanelMilitary.GetUpgradeAllUnitsInAllFormationsCommand` | panel_military.gui |
 | ✓ `Actions.peace` | 窗口 | `WarPanel.Capitulate` | `WarPanel.GetWar.Capitulate(GetPlayer.Self)` | war_panel.gui |
 | ✓ `Actions.peace` | 窗口 | `WarPanel.ProposePeaceDeal` | `WarPanel.GetWar.ProposePeaceDeal(GetPlayer.Self)` | war_panel.gui |
-|  | 窗口 | `DecommissionSupplyShipsWindow.GetDecommissionCommand` | `DecommissionSupplyShipsWindow.GetDecommissionCommand` | popups.gui |
+| ✓ `Coverage.combat_unit_action` | 组合 | `CombatUnit.GetDisbandUnitCommand` | `CombatUnit.GetMilitaryFormation.GetDisbandUnitCommand(CombatUnit.Self)` | military_formation_panel.gui |
+| ✓ `Coverage.naval_mission_action（单舰队等价）` | 组合 | `Global.CreateNavalMissionsForSelectedFleets` | `CreateNavalMissionsForSelectedFleets(NavalMissionType.AccessSelf)` | right_click_menu.gui |
+| ✓ `Coverage.formation_action（单舰队等价）` | 组合 | `Global.RemoveNavalMissionForSelectedFleets` | `RemoveNavalMissionForSelectedFleets(NavalMissionType.Self)` | right_click_menu.gui |
+| ✓ `Coverage.naval_mission_action` | 组合 | `MilitaryFormation.CreateNavalMission` | `MilitaryFormation.CreateNavalMission(NavalMissionType.AccessSelf)` | right_click_menu.gui |
+| ✓ `Coverage.naval_mission_action` | 组合 | `MilitaryFormation.CreateNavalMissionWithPreviousArea` | `MilitaryFormation.CreateNavalMissionWithPreviousArea(NavalMissionType.AccessSelf)` | right_click_menu.gui |
+| ✓ `Coverage.formation_action` | 组合 | `MilitaryFormation.Disband` | `MilitaryFormation.Disband` | military_formation_panel.gui, military_panel_formations.gui … |
+| ✓ `Coverage.unit_entry_action` | 组合 | `MilitaryFormation.GetDisbandUnitTypeRegularCommand` | `MilitaryFormation.GetDisbandUnitTypeRegularCommand(CombatUnitType.Self)` | military_formation_panel.gui |
+| ✓ `Coverage.unit_entry_action` | 组合 | `MilitaryFormation.GetSetDefaultUnitTypeCommand` | `MilitaryFormation.GetSetDefaultUnitTypeCommand(CombatUnitType.Self)` | military_formation_panel.gui |
+| ✓ `Coverage.upgrade_all` | 组合 | `MilitaryFormation.GetUpgradeAllUnitsCommand` | `MilitaryFormation.GetUpgradeAllUnitsCommand` | （程序生成的菜单） |
+| ✓ `Coverage.formation_action` | 组合 | `MilitaryFormation.Mobilize` | `MilitaryFormation.Mobilize` | military_formation_panel.gui, panel_military.gui … |
+| ✓ `Coverage.formation_action` | 组合 | `MilitaryFormation.RemoveNavalMission` | `MilitaryFormation.RemoveNavalMission` | right_click_menu.gui |
+| ✓ `Coverage.select_supply_priority` | 组合 | `MilitaryFormation.SelectSupplyPriority` | `MilitaryFormation.SelectSupplyPriority('low')` | military_formation_panel.gui |
+| ✓ `Coverage.borrow_setting` | 组合 | `MilitaryFormationBorrowSetting.GetBorrowingCommand` | `MilitaryFormationBorrowSetting.GetBorrowingCommand` | military_formation_panel.gui |
+| ✓ `Coverage.ship_action` | 组合 | `Ship.Decommission` | `Ship.Decommission` | ship_panel.gui |
+| ✓ `Coverage.ship_construction_action` | 组合 | `ShipConstruction.Cancel` | `ShipConstruction.Cancel` | construction_panel.gui |
+| ✓ `Coverage.ship_selection_action` | 组合 | `ShipSelection.Decommission` | `ShipSelection.Decommission` | combat_unit_types.gui |
+| ✓ `Coverage.template_action` | 组合 | `ShipTemplate.CancelConstructionForFleet` | `ShipTemplate.CancelConstructionForFleet(MilitaryFormation.Self)` | right_click_menu.gui |
+| ✓ `Coverage.template_action` | 组合 | `ShipTemplate.QueueConstruction` | `ShipTemplate.QueueConstruction` | right_click_menu.gui |
+| ✓ `Coverage.template_action` | 组合 | `ShipTemplate.QueueConstructionForFleet` | `ShipTemplate.QueueConstructionForFleet(MilitaryFormation.Self)` | right_click_menu.gui |
+| ○ `Coverage.decommission_supply_ships` | 窗口 | `DecommissionSupplyShipsWindow.GetDecommissionCommand` | `DecommissionSupplyShipsWindow.GetDecommissionCommand` | popups.gui |
+| ○ `Coverage.ship_designer_create（DLC 未启用）` | 窗口 | `ShipDesignerPopup.CreateTemplate` | `ShipDesignerPopup.CreateTemplate` | ship_designer_popup.gui |
+| ○ `Coverage.ship_designer_create(edit=True)（DLC 未启用）` | 窗口 | `ShipDesignerPopup.EditTemplate` | `ShipDesignerPopup.EditTemplate` | ship_designer_popup.gui |
+| ○ `Coverage.transfer_formation（待 StagedFormation 就绪）` | 窗口 | `TransferFormationPopup.Confirm` | `TransferFormationPopup.Confirm` | transfer_formation.gui |
+| ○ `Coverage.embark_formation（等价）` | 窗口 | `TransportPlannerPopup.GetTransportCommand` | `TransportPlannerPopup.GetTransportCommand(MilitaryFormation.Self)` | right_click_menu.gui |
+| ○ `Coverage.embark_formation（等价）` | 窗口 | `TransportPlannerPopup.StartTransport` | `TransportPlannerPopup.StartTransport` | transport_planner.gui |
+| ○ `Actions.peace` | 窗口 | `WarPanel.SetWhitePeace` | `WarPanel.GetWar.SetWhitePeace(GetPlayer.Self)` | war_panel.gui |
+| ○ `Coverage.front_action` | 组合 | `Front.GetDeploySelectedFormationsCommand` | `Front.GetDeploySelectedFormationsCommand` | map_markers.gui |
+| ○ `Coverage.formation_action（单编队）` | 组合 | `Global.CancelRetrofitShips` | `CancelRetrofitShips` | construction_panel.gui |
+| ○ `Coverage.formation_action（单编队）` | 组合 | `Global.DemobilizeSelectedArmies` | `DemobilizeSelectedArmies` | military_formation_panel.gui |
+| ○ `Coverage.selected_action（需选择）` | 组合 | `Global.MergeSelectedFormations` | `MergeSelectedFormations` | military_formation_panel.gui |
+| ○ `Coverage.formation_action（单编队）` | 组合 | `Global.MobilizeSelectedArmies` | `MobilizeSelectedArmies` | military_formation_panel.gui |
+| ○ `Coverage.formation_action（单编队）` | 组合 | `Global.RaiseConscriptsInSelectedArmies` | `RaiseConscriptsInSelectedArmies` | military_formation_panel.gui |
+| ○ `Coverage.formation_action（单编队）` | 组合 | `Global.RetrofitShips` | `RetrofitShips` | construction_panel.gui, right_click_menu.gui |
+| ○ `Coverage.formation_action（单编队）` | 组合 | `Global.RetrofitShipsAndStation` | `RetrofitShipsAndStation` | right_click_menu.gui |
+| ○ `Actions.commander_action（单将领）` | 组合 | `Global.SetCharacterOrderForSelectedFormations` | `SetCharacterOrderForSelectedFormations(CommanderOrderType.Self)` | military_formation_panel.gui |
+| ○ `Coverage.selected_action（需选择）` | 组合 | `Global.SetStrategicObjectiveForSelectedFormations` | `SetStrategicObjectiveForSelectedFormations(State.Self)` | right_click_menu.gui |
+| ○ `Coverage.hq_action` | 组合 | `Hq.GetStationSelectedFormationsCommand` | `Hq.GetStationSelectedFormationsCommand` | map_markers.gui |
+| ○ `Coverage.invasion_action` | 组合 | `Invasion.Cancel` | `Invasion.Cancel` | invasion_panel.gui, military_formation_panel.gui … |
+| ○ `Coverage.invasion_action` | 组合 | `Invasion.DeployArmyToDefend` | `Invasion.DeployArmyToDefend(MilitaryFormation.Self)` | right_click_menu.gui |
+| ○ `Coverage.invasion_action` | 组合 | `Invasion.DeployFleetToDefend` | `Invasion.DeployFleetToDefend(MilitaryFormation.Self)` | right_click_menu.gui |
+| ○ `Coverage.invasion_action` | 组合 | `Invasion.GetDeploySelectedFormationsCommand` | `Invasion.GetDeploySelectedFormationsCommand` | map_markers.gui |
+| ○ `Coverage.formation_action` | 组合 | `MilitaryFormation.CancelRetrofitShips` | `MilitaryFormation.CancelRetrofitShips` | military_panel_formations.gui |
+| ○ `Coverage.formation_action` | 组合 | `MilitaryFormation.Demobilize` | `MilitaryFormation.Demobilize` | military_formation_panel.gui, right_click_menu.gui |
+| ○ `Coverage.formation_action` | 组合 | `MilitaryFormation.DisembarkFormation` | `MilitaryFormation.DisembarkFormation` | right_click_menu.gui |
+| ○ `Coverage.unit_entry_action` | 组合 | `MilitaryFormation.GetDisbandUnitTypeConscriptCommand` | `MilitaryFormation.GetDisbandUnitTypeConscriptCommand(CombatUnitType.Self)` | military_formation_panel.gui |
+| ○ `Coverage.unit_entry_action` | 组合 | `MilitaryFormation.GetUpgradeConscriptUnitTypeCommand` | `MilitaryFormation.GetUpgradeConscriptUnitTypeCommand(MilitaryFormationUnitEntry.GetUnitType.Self)` | military_formation_panel.gui |
+| ○ `Coverage.unit_entry_action` | 组合 | `MilitaryFormation.GetUpgradeRegularUnitTypeCommand` | `MilitaryFormation.GetUpgradeRegularUnitTypeCommand(MilitaryFormationUnitEntry.GetUnitType.Self)` | military_formation_panel.gui |
+| ○ `Coverage.unit_group_action` | 组合 | `MilitaryFormation.GetUpgradeUnitGroupCommand` | `MilitaryFormation.GetUpgradeUnitGroupCommand(CombatUnitGroup.Self)` | military_formation_panel.gui |
+| ○ `Coverage.formation_action` | 组合 | `MilitaryFormation.RaiseConscripts` | `MilitaryFormation.RaiseConscripts` | military_formation_panel.gui, right_click_menu.gui |
+| ○ `Coverage.formation_action` | 组合 | `MilitaryFormation.RecallForRepairs` | `MilitaryFormation.RecallForRepairs` | right_click_menu.gui |
+| ○ `Coverage.formation_action` | 组合 | `MilitaryFormation.RetrofitShips` | `MilitaryFormation.RetrofitShips` | military_panel_formations.gui, right_click_menu.gui |
+| ○ `Coverage.formation_action` | 组合 | `MilitaryFormation.RetrofitShipsAndStation` | `MilitaryFormation.RetrofitShipsAndStation` | right_click_menu.gui |
+| ○ `Coverage.embark_formation（伪造包装）` | 组合 | `MilitaryFormationWrapped.EmbarkFormation` | `MilitaryFormationWrapped.EmbarkFormation(MilitaryFormation.Self)` | right_click_menu.gui |
+| ○ `Coverage.mobilization_action` | 组合 | `MobilizationOption.Toggle` | `MobilizationOption.Toggle(MilitaryFormation.AccessSelf)` | military_formation_panel.gui, panel_military.gui |
+| ○ `Coverage.mobilization_action（单编队）` | 组合 | `MobilizationOption.ToggleForSelected` | `MobilizationOption.ToggleForSelected` | military_formation_panel.gui |
+| ○ `Coverage.ship_action` | 组合 | `Ship.AssignAsFlagship` | `Ship.AssignAsFlagship` | ship_panel.gui |
+| ○ `Coverage.ship_action` | 组合 | `Ship.CancelRetrofit` | `Ship.CancelRetrofit` | combat_unit_types.gui, ship_panel.gui |
+| ○ `Coverage.ship_action` | 组合 | `Ship.ChangeTemplate` | `Ship.ChangeTemplate(ShipTemplate.Self)` | right_click_menu.gui |
+| ○ `Coverage.ship_action` | 组合 | `Ship.Retrofit` | `Ship.Retrofit` | combat_unit_types.gui, ship_panel.gui |
+| ○ `Coverage.ship_action` | 组合 | `Ship.SetNextFlagshipOrnament` | `Ship.SetNextFlagshipOrnament` | ship_panel.gui |
+| ○ `Coverage.ship_action` | 组合 | `Ship.SetPrevFlagshipOrnament` | `Ship.SetPrevFlagshipOrnament` | ship_panel.gui |
+| ○ `Coverage.ship_action` | 组合 | `Ship.ToggleFlagshipSignalFlags` | `Ship.ToggleFlagshipSignalFlags` | ship_panel.gui |
+| ○ `Coverage.ship_action` | 组合 | `Ship.UnassignAsFlagship` | `Ship.UnassignAsFlagship` | ship_panel.gui |
+| ○ `Coverage.ship_construction_action` | 组合 | `ShipConstruction.MoveDown` | `ShipConstruction.MoveDown` | construction_panel.gui |
+| ○ `Coverage.ship_construction_action` | 组合 | `ShipConstruction.MoveToBottom` | `ShipConstruction.MoveToBottom` | construction_panel.gui |
+| ○ `Coverage.ship_construction_action` | 组合 | `ShipConstruction.MoveToTop` | `ShipConstruction.MoveToTop` | construction_panel.gui |
+| ○ `Coverage.ship_construction_action` | 组合 | `ShipConstruction.MoveUp` | `ShipConstruction.MoveUp` | construction_panel.gui |
+| ○ `Coverage.ship_selection_action` | 组合 | `ShipSelection.ChangeTemplate` | `ShipSelection.ChangeTemplate(ShipTemplate.Self)` | right_click_menu.gui |
+| ○ `Coverage.ship_selection_action` | 组合 | `ShipSelection.Retrofit` | `ShipSelection.Retrofit` | combat_unit_types.gui |
+| ○ `Coverage.template_action` | 组合 | `ShipTemplate.CancelConstruction` | `ShipTemplate.CancelConstruction` | right_click_menu.gui |
+| ○ `Coverage.template_action` | 组合 | `ShipTemplate.DeleteTemplate` | `ShipTemplate.DeleteTemplate` | right_click_menu.gui |
+| ○ `Coverage.template_action` | 组合 | `ShipTemplate.SetAsDefaultForCountry` | `ShipTemplate.SetAsDefaultForCountry` | right_click_menu.gui |
+| ○ `Coverage.template_action` | 组合 | `ShipTemplate.SetAsDefaultForFleet` | `ShipTemplate.SetAsDefaultForFleet(MilitaryFormation.Self)` | right_click_menu.gui |
+| ○ `Coverage.strait_action（需完全控制）` | 组合 | `Strait.SetControllerTollRateHighTolls` | `Strait.SetControllerTollRateHighTolls(Country.Self)` | strait_panel.gui |
+| ○ `Coverage.strait_action（需完全控制）` | 组合 | `Strait.SetControllerTollRateLowTolls` | `Strait.SetControllerTollRateLowTolls(Country.Self)` | strait_panel.gui |
+| ○ `Coverage.strait_action（需完全控制）` | 组合 | `Strait.SetControllerTollRateMediumTolls` | `Strait.SetControllerTollRateMediumTolls(Country.Self)` | strait_panel.gui |
+| ○ `Coverage.strait_action（需完全控制）` | 组合 | `Strait.SetControllerTollRateNoTolls` | `Strait.SetControllerTollRateNoTolls(Country.Self)` | strait_panel.gui |
+| ○ `Coverage.strait_action（需完全控制）` | 组合 | `Strait.SetStateAccessClosed` | `Strait.SetStateAccessClosed(State.Self)` | strait_panel.gui |
+| ○ `Coverage.strait_action（需完全控制）` | 组合 | `Strait.SetStateAccessNoMilitary` | `Strait.SetStateAccessNoMilitary(State.Self)` | strait_panel.gui |
+| ○ `Coverage.strait_action（需完全控制）` | 组合 | `Strait.SetStateAccessOpen` | `Strait.SetStateAccessOpen(State.Self)` | strait_panel.gui |
+| ○ `Coverage.strait_action（需完全控制）` | 组合 | `Strait.SetStateAllowedCountriesNoEnemies` | `Strait.SetStateAllowedCountriesNoEnemies(State.Self)` | strait_panel.gui |
+| ○ `Coverage.strait_action（需完全控制）` | 组合 | `Strait.SetStateAllowedCountriesOnlyAllies` | `Strait.SetStateAllowedCountriesOnlyAllies(State.Self)` | strait_panel.gui |
+| ○ `Coverage.strait_action（需完全控制）` | 组合 | `Strait.SetStateAllowedCountriesOnlyController` | `Strait.SetStateAllowedCountriesOnlyController(State.Self)` | strait_panel.gui |
+| ○ `Coverage.ship_construction_move` | 界面 | `GetDraggedDatacontext.MoveToIndex` | `GetDraggedDatacontext('ShipConstruction').MoveToIndex(ShipConstruction.GetIndex)` | construction_panel.gui, construction_queue.gui |
 |  | 窗口 | `InvasionPlannerPopup.StartInvasion` | `InvasionPlannerPopup.StartInvasion` | invasion_planner.gui |
-|  | 窗口 | `PanelMilitary.GetUpgradeAllUnitsInAllFormationsCommand` | `PanelMilitary.GetUpgradeAllUnitsInAllFormationsCommand` | panel_military.gui |
-|  | 窗口 | `ShipDesignerPopup.CreateTemplate` | `ShipDesignerPopup.CreateTemplate` | ship_designer_popup.gui |
-|  | 窗口 | `ShipDesignerPopup.EditTemplate` | `ShipDesignerPopup.EditTemplate` | ship_designer_popup.gui |
-|  | 窗口 | `TransferFormationPopup.Confirm` | `TransferFormationPopup.Confirm` | transfer_formation.gui |
-|  | 窗口 | `TransportPlannerPopup.GetTransportCommand` | `TransportPlannerPopup.GetTransportCommand(MilitaryFormation.Self)` | right_click_menu.gui |
-|  | 窗口 | `TransportPlannerPopup.StartTransport` | `TransportPlannerPopup.StartTransport` | transport_planner.gui |
-|  | 窗口 | `WarPanel.SetWhitePeace` | `WarPanel.GetWar.SetWhitePeace(GetPlayer.Self)` | war_panel.gui |
-|  | 组合 | `CombatUnit.GetDisbandUnitCommand` | `CombatUnit.GetMilitaryFormation.GetDisbandUnitCommand(CombatUnit.Self)` | military_formation_panel.gui |
-|  | 组合 | `Front.GetDeploySelectedFormationsCommand` | `Front.GetDeploySelectedFormationsCommand` | map_markers.gui |
-|  | 组合 | `Global.CancelRetrofitShips` | `CancelRetrofitShips` | construction_panel.gui |
-|  | 组合 | `Global.CreateNavalMissionsForSelectedFleets` | `CreateNavalMissionsForSelectedFleets(NavalMissionType.AccessSelf)` | right_click_menu.gui |
-|  | 组合 | `Global.DemobilizeSelectedArmies` | `DemobilizeSelectedArmies` | military_formation_panel.gui |
-|  | 组合 | `Global.MergeSelectedFormations` | `MergeSelectedFormations` | military_formation_panel.gui |
-|  | 组合 | `Global.MobilizeSelectedArmies` | `MobilizeSelectedArmies` | military_formation_panel.gui |
-|  | 组合 | `Global.RaiseConscriptsInSelectedArmies` | `RaiseConscriptsInSelectedArmies` | military_formation_panel.gui |
-|  | 组合 | `Global.RemoveNavalMissionForSelectedFleets` | `RemoveNavalMissionForSelectedFleets(NavalMissionType.Self)` | right_click_menu.gui |
-|  | 组合 | `Global.RetrofitShips` | `RetrofitShips` | construction_panel.gui, right_click_menu.gui |
-|  | 组合 | `Global.RetrofitShipsAndStation` | `RetrofitShipsAndStation` | right_click_menu.gui |
-|  | 组合 | `Global.SetCharacterOrderForSelectedFormations` | `SetCharacterOrderForSelectedFormations(CommanderOrderType.Self)` | military_formation_panel.gui |
-|  | 组合 | `Global.SetStrategicObjectiveForSelectedFormations` | `SetStrategicObjectiveForSelectedFormations(State.Self)` | right_click_menu.gui |
-|  | 组合 | `Hq.GetStationSelectedFormationsCommand` | `Hq.GetStationSelectedFormationsCommand` | map_markers.gui |
-|  | 组合 | `Invasion.Cancel` | `Invasion.Cancel` | invasion_panel.gui, military_formation_panel.gui … |
-|  | 组合 | `Invasion.DeployArmyToDefend` | `Invasion.DeployArmyToDefend(MilitaryFormation.Self)` | right_click_menu.gui |
-|  | 组合 | `Invasion.DeployFleetToDefend` | `Invasion.DeployFleetToDefend(MilitaryFormation.Self)` | right_click_menu.gui |
-|  | 组合 | `Invasion.GetDeploySelectedFormationsCommand` | `Invasion.GetDeploySelectedFormationsCommand` | map_markers.gui |
-|  | 组合 | `MilitaryFormation.CancelRetrofitShips` | `MilitaryFormation.CancelRetrofitShips` | military_panel_formations.gui |
-|  | 组合 | `MilitaryFormation.CreateNavalMission` | `MilitaryFormation.CreateNavalMission(NavalMissionType.AccessSelf)` | right_click_menu.gui |
-|  | 组合 | `MilitaryFormation.CreateNavalMissionWithPreviousArea` | `MilitaryFormation.CreateNavalMissionWithPreviousArea(NavalMissionType.AccessSelf)` | right_click_menu.gui |
-|  | 组合 | `MilitaryFormation.Demobilize` | `MilitaryFormation.Demobilize` | military_formation_panel.gui, right_click_menu.gui |
-|  | 组合 | `MilitaryFormation.Disband` | `MilitaryFormation.Disband` | military_formation_panel.gui, military_panel_formations.gui … |
-|  | 组合 | `MilitaryFormation.DisembarkFormation` | `MilitaryFormation.DisembarkFormation` | right_click_menu.gui |
-|  | 组合 | `MilitaryFormation.GetDisbandUnitTypeConscriptCommand` | `MilitaryFormation.GetDisbandUnitTypeConscriptCommand(CombatUnitType.Self)` | military_formation_panel.gui |
-|  | 组合 | `MilitaryFormation.GetDisbandUnitTypeRegularCommand` | `MilitaryFormation.GetDisbandUnitTypeRegularCommand(CombatUnitType.Self)` | military_formation_panel.gui |
-|  | 组合 | `MilitaryFormation.GetSetDefaultUnitTypeCommand` | `MilitaryFormation.GetSetDefaultUnitTypeCommand(CombatUnitType.Self)` | military_formation_panel.gui |
-|  | 组合 | `MilitaryFormation.GetUpgradeConscriptUnitTypeCommand` | `MilitaryFormation.GetUpgradeConscriptUnitTypeCommand(MilitaryFormationUnitEntry.GetUnitType.Self)` | military_formation_panel.gui |
-|  | 组合 | `MilitaryFormation.GetUpgradeRegularUnitTypeCommand` | `MilitaryFormation.GetUpgradeRegularUnitTypeCommand(MilitaryFormationUnitEntry.GetUnitType.Self)` | military_formation_panel.gui |
-|  | 组合 | `MilitaryFormation.GetUpgradeUnitGroupCommand` | `MilitaryFormation.GetUpgradeUnitGroupCommand(CombatUnitGroup.Self)` | military_formation_panel.gui |
-|  | 组合 | `MilitaryFormation.Mobilize` | `MilitaryFormation.Mobilize` | military_formation_panel.gui, panel_military.gui … |
-|  | 组合 | `MilitaryFormation.RaiseConscripts` | `MilitaryFormation.RaiseConscripts` | military_formation_panel.gui, right_click_menu.gui |
-|  | 组合 | `MilitaryFormation.RecallForRepairs` | `MilitaryFormation.RecallForRepairs` | right_click_menu.gui |
-|  | 组合 | `MilitaryFormation.RemoveNavalMission` | `MilitaryFormation.RemoveNavalMission` | right_click_menu.gui |
-|  | 组合 | `MilitaryFormation.RetrofitShips` | `MilitaryFormation.RetrofitShips` | military_panel_formations.gui, right_click_menu.gui |
-|  | 组合 | `MilitaryFormation.RetrofitShipsAndStation` | `MilitaryFormation.RetrofitShipsAndStation` | right_click_menu.gui |
-|  | 组合 | `MilitaryFormation.SelectSupplyPriority` | `MilitaryFormation.SelectSupplyPriority('low')` | military_formation_panel.gui |
-|  | 组合 | `MilitaryFormationBorrowSetting.GetBorrowingCommand` | `MilitaryFormationBorrowSetting.GetBorrowingCommand` | military_formation_panel.gui |
-|  | 组合 | `MilitaryFormationWrapped.EmbarkFormation` | `MilitaryFormationWrapped.EmbarkFormation(MilitaryFormation.Self)` | right_click_menu.gui |
-|  | 组合 | `MobilizationOption.Toggle` | `MobilizationOption.Toggle(MilitaryFormation.AccessSelf)` | military_formation_panel.gui, panel_military.gui |
-|  | 组合 | `MobilizationOption.ToggleForSelected` | `MobilizationOption.ToggleForSelected` | military_formation_panel.gui |
 |  | 组合 | `SeaNodeMovementMarker.AddSeaRegionToSelectedFleetMissions` | `SeaNodeMovementMarker.GetSeaNode.AddSeaRegionToSelectedFleetMissions` | map_markers.gui |
 |  | 组合 | `SeaNodeMovementMarker.AssignSelectedFleetsToNewMissionInRegion` | `SeaNodeMovementMarker.GetSeaNode.AssignSelectedFleetsToNewMissionInRegion(GetDefine('NMilitary','NAVAL_MISSION_TYPE_PROJECT_POWER'))` | map_markers.gui |
-|  | 组合 | `Ship.AssignAsFlagship` | `Ship.AssignAsFlagship` | ship_panel.gui |
-|  | 组合 | `Ship.CancelRetrofit` | `Ship.CancelRetrofit` | combat_unit_types.gui, ship_panel.gui |
-|  | 组合 | `Ship.ChangeTemplate` | `Ship.ChangeTemplate(ShipTemplate.Self)` | right_click_menu.gui |
-|  | 组合 | `Ship.Decommission` | `Ship.Decommission` | ship_panel.gui |
-|  | 组合 | `Ship.Retrofit` | `Ship.Retrofit` | combat_unit_types.gui, ship_panel.gui |
-|  | 组合 | `Ship.SetNextFlagshipOrnament` | `Ship.SetNextFlagshipOrnament` | ship_panel.gui |
-|  | 组合 | `Ship.SetPrevFlagshipOrnament` | `Ship.SetPrevFlagshipOrnament` | ship_panel.gui |
-|  | 组合 | `Ship.ToggleFlagshipSignalFlags` | `Ship.ToggleFlagshipSignalFlags` | ship_panel.gui |
-|  | 组合 | `Ship.UnassignAsFlagship` | `Ship.UnassignAsFlagship` | ship_panel.gui |
-|  | 组合 | `ShipConstruction.Cancel` | `ShipConstruction.Cancel` | construction_panel.gui |
-|  | 组合 | `ShipConstruction.MoveDown` | `ShipConstruction.MoveDown` | construction_panel.gui |
-|  | 组合 | `ShipConstruction.MoveToBottom` | `ShipConstruction.MoveToBottom` | construction_panel.gui |
-|  | 组合 | `ShipConstruction.MoveToTop` | `ShipConstruction.MoveToTop` | construction_panel.gui |
-|  | 组合 | `ShipConstruction.MoveUp` | `ShipConstruction.MoveUp` | construction_panel.gui |
-|  | 组合 | `ShipSelection.ChangeTemplate` | `ShipSelection.ChangeTemplate(ShipTemplate.Self)` | right_click_menu.gui |
-|  | 组合 | `ShipSelection.Decommission` | `ShipSelection.Decommission` | combat_unit_types.gui |
-|  | 组合 | `ShipSelection.Retrofit` | `ShipSelection.Retrofit` | combat_unit_types.gui |
-|  | 组合 | `ShipTemplate.CancelConstruction` | `ShipTemplate.CancelConstruction` | right_click_menu.gui |
-|  | 组合 | `ShipTemplate.CancelConstructionForFleet` | `ShipTemplate.CancelConstructionForFleet(MilitaryFormation.Self)` | right_click_menu.gui |
-|  | 组合 | `ShipTemplate.DeleteTemplate` | `ShipTemplate.DeleteTemplate` | right_click_menu.gui |
-|  | 组合 | `ShipTemplate.QueueConstruction` | `ShipTemplate.QueueConstruction` | right_click_menu.gui |
-|  | 组合 | `ShipTemplate.QueueConstructionForFleet` | `ShipTemplate.QueueConstructionForFleet(MilitaryFormation.Self)` | right_click_menu.gui |
-|  | 组合 | `ShipTemplate.SetAsDefaultForCountry` | `ShipTemplate.SetAsDefaultForCountry` | right_click_menu.gui |
-|  | 组合 | `ShipTemplate.SetAsDefaultForFleet` | `ShipTemplate.SetAsDefaultForFleet(MilitaryFormation.Self)` | right_click_menu.gui |
-|  | 组合 | `Strait.SetControllerTollRateHighTolls` | `Strait.SetControllerTollRateHighTolls(Country.Self)` | strait_panel.gui |
-|  | 组合 | `Strait.SetControllerTollRateLowTolls` | `Strait.SetControllerTollRateLowTolls(Country.Self)` | strait_panel.gui |
-|  | 组合 | `Strait.SetControllerTollRateMediumTolls` | `Strait.SetControllerTollRateMediumTolls(Country.Self)` | strait_panel.gui |
-|  | 组合 | `Strait.SetControllerTollRateNoTolls` | `Strait.SetControllerTollRateNoTolls(Country.Self)` | strait_panel.gui |
-|  | 组合 | `Strait.SetStateAccessClosed` | `Strait.SetStateAccessClosed(State.Self)` | strait_panel.gui |
-|  | 组合 | `Strait.SetStateAccessNoMilitary` | `Strait.SetStateAccessNoMilitary(State.Self)` | strait_panel.gui |
-|  | 组合 | `Strait.SetStateAccessOpen` | `Strait.SetStateAccessOpen(State.Self)` | strait_panel.gui |
-|  | 组合 | `Strait.SetStateAllowedCountriesNoEnemies` | `Strait.SetStateAllowedCountriesNoEnemies(State.Self)` | strait_panel.gui |
-|  | 组合 | `Strait.SetStateAllowedCountriesOnlyAllies` | `Strait.SetStateAllowedCountriesOnlyAllies(State.Self)` | strait_panel.gui |
-|  | 组合 | `Strait.SetStateAllowedCountriesOnlyController` | `Strait.SetStateAllowedCountriesOnlyController(State.Self)` | strait_panel.gui |
-|  | 界面 | `GetDraggedDatacontext.MoveToIndex` | `GetDraggedDatacontext('ShipConstruction').MoveToIndex(ShipConstruction.GetIndex)` | construction_panel.gui, construction_queue.gui |
 
-## 其他（0 / 5）
+## 其他（4 / 5，已接 1）
 
 | 状态 | 可达性 | 命令 | 例子 | 界面文件 |
 |---|---|---|---|---|
-|  | 窗口 | `StateNameChangePopup.Confirm` | `StateNameChangePopup.Confirm` | states_panel.gui |
-|  | 界面 | `CompanyChangeNamePopup.Confirm` | `CompanyChangeNamePopup.Confirm` | companies_panel.gui |
-|  | 界面 | `MilitaryFormationChangeNamePopup.Confirm` | `MilitaryFormationChangeNamePopup.Confirm` | military_formation_panel.gui |
-|  | 界面 | `PrestigeGoodChangeNamePopup.Confirm` | `PrestigeGoodChangeNamePopup.Confirm` | market_panel.gui |
-|  | 界面 | `ShipChangeNamePopup.Confirm` | `ShipChangeNamePopup.Confirm` | ship_panel.gui |
+| ✓ `Coverage.rename_state` | 窗口 | `StateNameChangePopup.Confirm` | `StateNameChangePopup.Confirm` | states_panel.gui |
+| ✓ `Coverage.rename_company` | 界面 | `CompanyChangeNamePopup.Confirm` | `CompanyChangeNamePopup.Confirm` | companies_panel.gui |
+| ✓ `Coverage.rename_formation` | 界面 | `MilitaryFormationChangeNamePopup.Confirm` | `MilitaryFormationChangeNamePopup.Confirm` | military_formation_panel.gui |
+| ✓ `Coverage.rename_ship` | 界面 | `ShipChangeNamePopup.Confirm` | `ShipChangeNamePopup.Confirm` | ship_panel.gui |
+| ○ `Coverage.rename_prestige_good（测试局没有奢侈品）` | 界面 | `PrestigeGoodChangeNamePopup.Confirm` | `PrestigeGoodChangeNamePopup.Confirm` | market_panel.gui |
 

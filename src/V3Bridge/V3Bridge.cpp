@@ -149,7 +149,7 @@ bool locate() {
 }
 
 // ---------------------------------------------------------------- 主线程执行
-enum class JobKind { Console, Read, Exec, Call, Eval, List, Reform, Fake };
+enum class JobKind { Console, Read, Exec, Call, Eval, List, Reform, Fake, Resolve };
 
 struct Job {
     JobKind kind = JobKind::Console;
@@ -240,6 +240,12 @@ void run_job(Job* job) {
         char b[64];
         snprintf(b, sizeof b, job->ok ? "0x%llx" : "异常 0x%llx", job->ok ? ret : static_cast<unsigned long long>(job->exception));
         job->output = b;
+        return;
+    }
+    if (job->kind == JobKind::Resolve) {
+        std::string err;
+        job->ok = datasys::resolve(job->path, job->cmd, &job->output, &err);
+        if (!job->ok) job->output = err;
         return;
     }
     if (job->kind == JobKind::Read) {
@@ -494,8 +500,8 @@ void handle(SOCKET c) {
     }
     // /console?cmd=  控制台命令；/data/read?text=  按本地化文本求值；/data/exec?stmt=  执行语句
     if (path == "/console" || path == "/data/read" || path == "/data/exec" || path == "/call" ||
-        path == "/data/eval" || path == "/data/list" || path == "/gov/reform" || path == "/data/fake" ||
-        path == "/events") {
+        path == "/data/eval" || path == "/data/resolve" || path == "/data/list" || path == "/gov/reform" ||
+        path == "/data/fake" || path == "/events") {
         if (!g_ready) {
             send_json(c, 503, "{\"ok\":false,\"error\":\"桥接层未就绪\",\"health\":" + health_json() + "}");
             return;
@@ -503,6 +509,7 @@ void handle(SOCKET c) {
         auto* job = new Job;
         const char* key = path == "/console" ? "cmd" : path == "/data/read" ? "text" : "stmt";
         if (path == "/data/eval") job->kind = JobKind::Eval;
+        if (path == "/data/resolve") job->kind = JobKind::Resolve;
         if (path == "/data/list" || path == "/events" || path == "/data/fake") {
             // list=列表语句；fields=以  分隔的若干段文本
             job->kind = JobKind::List;

@@ -31,6 +31,9 @@ bool read(const std::vector<PathStep>& path, const std::string& text, std::strin
 // 执行一条语句（不带方括号），与界面 onclick 同一条路径，如 "Execute(Building.QueueConstruction)"
 bool exec(const std::vector<PathStep>& path, const std::string& statement, std::string* error);
 
+// 开发用：只解析语句，返回游戏解析出的函数指针（十六进制），不执行。用于逆向窗口命令的字段布局。
+bool resolve(const std::vector<PathStep>& path, const std::string& statement, std::string* out, std::string* error);
+
 // 开发用：按值求值一条语句，原样返回 CPdxAny（0x40 字节）。flag 同 CreateStatement 的第四个参数
 bool eval_raw(const std::string& statement, bool flag, uint8_t* any_out, std::string* error);
 

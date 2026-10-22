@@ -14,8 +14,8 @@
   "domain": "外交",
   "reach": "窗口",
   "family": "AddWarGoalPanel.AddWarGoal",
-  "status": "未做",
-  "via": ""
+  "status": "已验证",
+  "via": "Coverage.add_war_goal"
  },
  {
   "receiver": "Amendment",
@@ -157,8 +157,8 @@
   "domain": "经济",
   "reach": "直达",
   "family": "Building.QueueMilitaryConstruction",
-  "status": "未做",
-  "via": ""
+  "status": "已接",
+  "via": "Coverage.queue_military_construction"
  },
  {
   "receiver": "Building",
@@ -342,8 +342,8 @@
   "domain": "经济",
   "reach": "窗口",
   "family": "BuildingBrowserBuildingTypeItem.RemoveAllPrivatization",
-  "status": "未做",
-  "via": ""
+  "status": "已验证",
+  "via": "Coverage.building_type_toggle_all"
  },
  {
   "receiver": "BuildingBrowserBuildingTypeItem",
@@ -360,8 +360,8 @@
   "domain": "经济",
   "reach": "窗口",
   "family": "BuildingBrowserBuildingTypeItem.ToggleAllAutoExpand",
-  "status": "未做",
-  "via": ""
+  "status": "已验证",
+  "via": "Coverage.building_type_toggle_all"
  },
  {
   "receiver": "BuildingBrowserBuildingTypeItem",
@@ -379,8 +379,8 @@
   "domain": "经济",
   "reach": "窗口",
   "family": "BuildingBrowserBuildingTypeItem.ToggleAllPrivatization",
-  "status": "未做",
-  "via": ""
+  "status": "已验证",
+  "via": "Coverage.building_type_toggle_all"
  },
  {
   "receiver": "BuildingBrowserBuildingTypeItem",
@@ -398,8 +398,8 @@
   "domain": "经济",
   "reach": "窗口",
   "family": "BuildingBrowserBuildingTypeItem.ToggleAllSubsidies",
-  "status": "未做",
-  "via": ""
+  "status": "已验证",
+  "via": "Coverage.building_type_toggle_all"
  },
  {
   "receiver": "BuildingType",
@@ -434,8 +434,8 @@
   "domain": "经济",
   "reach": "直达",
   "family": "BuildingType.ToggleMonopoly",
-  "status": "未做",
-  "via": ""
+  "status": "已接",
+  "via": "Coverage.building_type_action"
  },
  {
   "receiver": "Character",
@@ -579,8 +579,8 @@
   "domain": "军事",
   "reach": "组合",
   "family": "CombatUnit.GetDisbandUnitCommand",
-  "status": "未做",
-  "via": ""
+  "status": "已验证",
+  "via": "Coverage.combat_unit_action"
  },
  {
   "receiver": "Company",
@@ -651,8 +651,8 @@
   "domain": "其他",
   "reach": "界面",
   "family": "CompanyChangeNamePopup.Confirm",
-  "status": "未做",
-  "via": ""
+  "status": "已验证",
+  "via": "Coverage.rename_company"
  },
  {
   "receiver": "ConstructionQueueElement",
@@ -831,8 +831,8 @@
   "domain": "国家",
   "reach": "直达",
   "family": "Country.Kick",
-  "status": "未做",
-  "via": ""
+  "status": "已接",
+  "via": "Actions.kick_from_bloc"
  },
  {
   "receiver": "Country",
@@ -1630,8 +1630,8 @@
   "domain": "国家",
   "reach": "界面",
   "family": "Country.ToggleIgnoreCountryFormation",
-  "status": "未做",
-  "via": ""
+  "status": "已接",
+  "via": "Coverage.toggle_ignore_formation"
  },
  {
   "receiver": "Country",
@@ -1648,8 +1648,8 @@
   "domain": "国家",
   "reach": "界面",
   "family": "Country.ToggleIgnoreDecision",
-  "status": "未做",
-  "via": ""
+  "status": "已接",
+  "via": "Coverage.toggle_ignore_decision"
  },
  {
   "receiver": "CountryFormation",
@@ -1684,8 +1684,8 @@
   "domain": "外交",
   "reach": "直达",
   "family": "CountryFormation.SupportCandidate",
-  "status": "未做",
-  "via": ""
+  "status": "已接",
+  "via": "Actions.support_candidate"
  },
  {
   "receiver": "Decision",
@@ -1720,8 +1720,8 @@
   "domain": "军事",
   "reach": "窗口",
   "family": "DecommissionSupplyShipsWindow.GetDecommissionCommand",
-  "status": "未做",
-  "via": ""
+  "status": "已接",
+  "via": "Coverage.decommission_supply_ships"
  },
  {
   "receiver": "Decree",
@@ -1777,8 +1777,8 @@
   "domain": "外交",
   "reach": "直达",
   "family": "DiplomaticAction.ExecuteAction",
-  "status": "未做",
-  "via": ""
+  "status": "已验证",
+  "via": "Actions.diplomatic_action（等价）"
  },
  {
   "receiver": "DiplomaticAction",
@@ -1945,8 +1945,8 @@
   "domain": "外交",
   "reach": "直达",
   "family": "DiplomaticPlay.SwitchSide",
-  "status": "未做",
-  "via": ""
+  "status": "已接",
+  "via": "Actions.play_stance"
  },
  {
   "receiver": "DiplomaticPlay",
@@ -1982,8 +1982,8 @@
   "domain": "外交",
   "reach": "窗口",
   "family": "DiplomaticPlayConfirmation.ConfirmAction",
-  "status": "未做",
-  "via": ""
+  "status": "已接",
+  "via": "Actions.start_play"
  },
  {
   "receiver": "DiplomaticPlayType",
@@ -2054,8 +2054,8 @@
   "domain": "军事",
   "reach": "组合",
   "family": "Front.GetDeploySelectedFormationsCommand",
-  "status": "未做",
-  "via": ""
+  "status": "已接",
+  "via": "Coverage.front_action"
  },
  {
   "receiver": "GetDraggedDatacontext",
@@ -2074,8 +2074,8 @@
   "domain": "军事",
   "reach": "界面",
   "family": "GetDraggedDatacontext.MoveToIndex",
-  "status": "未做",
-  "via": ""
+  "status": "已接",
+  "via": "Coverage.ship_construction_move"
  },
  {
   "receiver": "Global",
@@ -2092,8 +2092,8 @@
   "domain": "军事",
   "reach": "组合",
   "family": "Global.CancelRetrofitShips",
-  "status": "未做",
-  "via": ""
+  "status": "已接",
+  "via": "Coverage.formation_action（单编队）"
  },
  {
   "receiver": "Global",
@@ -2128,8 +2128,8 @@
   "domain": "军事",
   "reach": "组合",
   "family": "Global.CreateNavalMissionsForSelectedFleets",
-  "status": "未做",
-  "via": ""
+  "status": "已验证",
+  "via": "Coverage.naval_mission_action（单舰队等价）"
  },
  {
   "receiver": "Global",
@@ -2146,8 +2146,8 @@
   "domain": "军事",
   "reach": "组合",
   "family": "Global.DemobilizeSelectedArmies",
-  "status": "未做",
-  "via": ""
+  "status": "已接",
+  "via": "Coverage.formation_action（单编队）"
  },
  {
   "receiver": "Global",
@@ -2164,8 +2164,8 @@
   "domain": "军事",
   "reach": "组合",
   "family": "Global.MergeSelectedFormations",
-  "status": "未做",
-  "via": ""
+  "status": "已接",
+  "via": "Coverage.selected_action（需选择）"
  },
  {
   "receiver": "Global",
@@ -2182,8 +2182,8 @@
   "domain": "军事",
   "reach": "组合",
   "family": "Global.MobilizeSelectedArmies",
-  "status": "未做",
-  "via": ""
+  "status": "已接",
+  "via": "Coverage.formation_action（单编队）"
  },
  {
   "receiver": "Global",
@@ -2218,8 +2218,8 @@
   "domain": "军事",
   "reach": "组合",
   "family": "Global.RaiseConscriptsInSelectedArmies",
-  "status": "未做",
-  "via": ""
+  "status": "已接",
+  "via": "Coverage.formation_action（单编队）"
  },
  {
   "receiver": "Global",
@@ -2236,8 +2236,8 @@
   "domain": "军事",
   "reach": "组合",
   "family": "Global.RemoveNavalMissionForSelectedFleets",
-  "status": "未做",
-  "via": ""
+  "status": "已验证",
+  "via": "Coverage.formation_action（单舰队等价）"
  },
  {
   "receiver": "Global",
@@ -2273,8 +2273,8 @@
   "domain": "军事",
   "reach": "组合",
   "family": "Global.RetrofitShips",
-  "status": "未做",
-  "via": ""
+  "status": "已接",
+  "via": "Coverage.formation_action（单编队）"
  },
  {
   "receiver": "Global",
@@ -2291,8 +2291,8 @@
   "domain": "军事",
   "reach": "组合",
   "family": "Global.RetrofitShipsAndStation",
-  "status": "未做",
-  "via": ""
+  "status": "已接",
+  "via": "Coverage.formation_action（单编队）"
  },
  {
   "receiver": "Global",
@@ -2309,8 +2309,8 @@
   "domain": "军事",
   "reach": "组合",
   "family": "Global.SetCharacterOrderForSelectedFormations",
-  "status": "未做",
-  "via": ""
+  "status": "已接",
+  "via": "Actions.commander_action（单将领）"
  },
  {
   "receiver": "Global",
@@ -2327,8 +2327,8 @@
   "domain": "军事",
   "reach": "组合",
   "family": "Global.SetStrategicObjectiveForSelectedFormations",
-  "status": "未做",
-  "via": ""
+  "status": "已接",
+  "via": "Coverage.selected_action（需选择）"
  },
  {
   "receiver": "Goods",
@@ -2618,8 +2618,8 @@
   "domain": "军事",
   "reach": "组合",
   "family": "Hq.GetStationSelectedFormationsCommand",
-  "status": "未做",
-  "via": ""
+  "status": "已接",
+  "via": "Coverage.hq_action"
  },
  {
   "receiver": "Institution",
@@ -2674,8 +2674,8 @@
   "domain": "军事",
   "reach": "组合",
   "family": "Invasion.Cancel",
-  "status": "未做",
-  "via": ""
+  "status": "已接",
+  "via": "Coverage.invasion_action"
  },
  {
   "receiver": "Invasion",
@@ -2692,8 +2692,8 @@
   "domain": "军事",
   "reach": "组合",
   "family": "Invasion.DeployArmyToDefend",
-  "status": "未做",
-  "via": ""
+  "status": "已接",
+  "via": "Coverage.invasion_action"
  },
  {
   "receiver": "Invasion",
@@ -2710,8 +2710,8 @@
   "domain": "军事",
   "reach": "组合",
   "family": "Invasion.DeployFleetToDefend",
-  "status": "未做",
-  "via": ""
+  "status": "已接",
+  "via": "Coverage.invasion_action"
  },
  {
   "receiver": "Invasion",
@@ -2728,8 +2728,8 @@
   "domain": "军事",
   "reach": "组合",
   "family": "Invasion.GetDeploySelectedFormationsCommand",
-  "status": "未做",
-  "via": ""
+  "status": "已接",
+  "via": "Coverage.invasion_action"
  },
  {
   "receiver": "InvasionPlannerPopup",
@@ -2822,8 +2822,8 @@
   "domain": "军事",
   "reach": "组合",
   "family": "MilitaryFormation.CancelRetrofitShips",
-  "status": "未做",
-  "via": ""
+  "status": "已接",
+  "via": "Coverage.formation_action"
  },
  {
   "receiver": "MilitaryFormation",
@@ -2840,8 +2840,8 @@
   "domain": "军事",
   "reach": "组合",
   "family": "MilitaryFormation.CreateNavalMission",
-  "status": "未做",
-  "via": ""
+  "status": "已验证",
+  "via": "Coverage.naval_mission_action"
  },
  {
   "receiver": "MilitaryFormation",
@@ -2858,8 +2858,8 @@
   "domain": "军事",
   "reach": "组合",
   "family": "MilitaryFormation.CreateNavalMissionWithPreviousArea",
-  "status": "未做",
-  "via": ""
+  "status": "已验证",
+  "via": "Coverage.naval_mission_action"
  },
  {
   "receiver": "MilitaryFormation",
@@ -2877,8 +2877,8 @@
   "domain": "军事",
   "reach": "组合",
   "family": "MilitaryFormation.Demobilize",
-  "status": "未做",
-  "via": ""
+  "status": "已接",
+  "via": "Coverage.formation_action"
  },
  {
   "receiver": "MilitaryFormation",
@@ -2897,8 +2897,8 @@
   "domain": "军事",
   "reach": "组合",
   "family": "MilitaryFormation.Disband",
-  "status": "未做",
-  "via": ""
+  "status": "已验证",
+  "via": "Coverage.formation_action"
  },
  {
   "receiver": "MilitaryFormation",
@@ -2915,8 +2915,8 @@
   "domain": "军事",
   "reach": "组合",
   "family": "MilitaryFormation.DisembarkFormation",
-  "status": "未做",
-  "via": ""
+  "status": "已接",
+  "via": "Coverage.formation_action"
  },
  {
   "receiver": "MilitaryFormation",
@@ -2934,8 +2934,8 @@
   "domain": "军事",
   "reach": "组合",
   "family": "MilitaryFormation.GetDisbandUnitTypeConscriptCommand",
-  "status": "未做",
-  "via": ""
+  "status": "已接",
+  "via": "Coverage.unit_entry_action"
  },
  {
   "receiver": "MilitaryFormation",
@@ -2953,8 +2953,8 @@
   "domain": "军事",
   "reach": "组合",
   "family": "MilitaryFormation.GetDisbandUnitTypeRegularCommand",
-  "status": "未做",
-  "via": ""
+  "status": "已验证",
+  "via": "Coverage.unit_entry_action"
  },
  {
   "receiver": "MilitaryFormation",
@@ -2971,8 +2971,24 @@
   "domain": "军事",
   "reach": "组合",
   "family": "MilitaryFormation.GetSetDefaultUnitTypeCommand",
-  "status": "未做",
-  "via": ""
+  "status": "已验证",
+  "via": "Coverage.unit_entry_action"
+ },
+ {
+  "receiver": "MilitaryFormation",
+  "command": "GetUpgradeAllUnitsCommand",
+  "examples": [
+   "MilitaryFormation.GetUpgradeAllUnitsCommand"
+  ],
+  "files": [],
+  "confirm": false,
+  "count": 0,
+  "executed": true,
+  "domain": "军事",
+  "reach": "组合",
+  "family": "MilitaryFormation.GetUpgradeAllUnitsCommand",
+  "status": "已验证",
+  "via": "Coverage.upgrade_all"
  },
  {
   "receiver": "MilitaryFormation",
@@ -2989,8 +3005,8 @@
   "domain": "军事",
   "reach": "组合",
   "family": "MilitaryFormation.GetUpgradeConscriptUnitTypeCommand",
-  "status": "未做",
-  "via": ""
+  "status": "已接",
+  "via": "Coverage.unit_entry_action"
  },
  {
   "receiver": "MilitaryFormation",
@@ -3007,8 +3023,8 @@
   "domain": "军事",
   "reach": "组合",
   "family": "MilitaryFormation.GetUpgradeRegularUnitTypeCommand",
-  "status": "未做",
-  "via": ""
+  "status": "已接",
+  "via": "Coverage.unit_entry_action"
  },
  {
   "receiver": "MilitaryFormation",
@@ -3025,8 +3041,8 @@
   "domain": "军事",
   "reach": "组合",
   "family": "MilitaryFormation.GetUpgradeUnitGroupCommand",
-  "status": "未做",
-  "via": ""
+  "status": "已接",
+  "via": "Coverage.unit_group_action"
  },
  {
   "receiver": "MilitaryFormation",
@@ -3045,8 +3061,8 @@
   "domain": "军事",
   "reach": "组合",
   "family": "MilitaryFormation.Mobilize",
-  "status": "未做",
-  "via": ""
+  "status": "已验证",
+  "via": "Coverage.formation_action"
  },
  {
   "receiver": "MilitaryFormation",
@@ -3064,8 +3080,8 @@
   "domain": "军事",
   "reach": "组合",
   "family": "MilitaryFormation.RaiseConscripts",
-  "status": "未做",
-  "via": ""
+  "status": "已接",
+  "via": "Coverage.formation_action"
  },
  {
   "receiver": "MilitaryFormation",
@@ -3082,8 +3098,8 @@
   "domain": "军事",
   "reach": "组合",
   "family": "MilitaryFormation.RecallForRepairs",
-  "status": "未做",
-  "via": ""
+  "status": "已接",
+  "via": "Coverage.formation_action"
  },
  {
   "receiver": "MilitaryFormation",
@@ -3100,8 +3116,8 @@
   "domain": "军事",
   "reach": "组合",
   "family": "MilitaryFormation.RemoveNavalMission",
-  "status": "未做",
-  "via": ""
+  "status": "已验证",
+  "via": "Coverage.formation_action"
  },
  {
   "receiver": "MilitaryFormation",
@@ -3119,8 +3135,8 @@
   "domain": "军事",
   "reach": "组合",
   "family": "MilitaryFormation.RetrofitShips",
-  "status": "未做",
-  "via": ""
+  "status": "已接",
+  "via": "Coverage.formation_action"
  },
  {
   "receiver": "MilitaryFormation",
@@ -3137,8 +3153,8 @@
   "domain": "军事",
   "reach": "组合",
   "family": "MilitaryFormation.RetrofitShipsAndStation",
-  "status": "未做",
-  "via": ""
+  "status": "已接",
+  "via": "Coverage.formation_action"
  },
  {
   "receiver": "MilitaryFormation",
@@ -3157,8 +3173,8 @@
   "domain": "军事",
   "reach": "组合",
   "family": "MilitaryFormation.SelectSupplyPriority",
-  "status": "未做",
-  "via": ""
+  "status": "已验证",
+  "via": "Coverage.select_supply_priority"
  },
  {
   "receiver": "MilitaryFormationBorrowSetting",
@@ -3175,8 +3191,8 @@
   "domain": "军事",
   "reach": "组合",
   "family": "MilitaryFormationBorrowSetting.GetBorrowingCommand",
-  "status": "未做",
-  "via": ""
+  "status": "已验证",
+  "via": "Coverage.borrow_setting"
  },
  {
   "receiver": "MilitaryFormationChangeNamePopup",
@@ -3193,8 +3209,8 @@
   "domain": "其他",
   "reach": "界面",
   "family": "MilitaryFormationChangeNamePopup.Confirm",
-  "status": "未做",
-  "via": ""
+  "status": "已验证",
+  "via": "Coverage.rename_formation"
  },
  {
   "receiver": "MilitaryFormationWrapped",
@@ -3211,8 +3227,8 @@
   "domain": "军事",
   "reach": "组合",
   "family": "MilitaryFormationWrapped.EmbarkFormation",
-  "status": "未做",
-  "via": ""
+  "status": "已接",
+  "via": "Coverage.embark_formation（伪造包装）"
  },
  {
   "receiver": "MobilizationOption",
@@ -3230,8 +3246,8 @@
   "domain": "军事",
   "reach": "组合",
   "family": "MobilizationOption.Toggle",
-  "status": "未做",
-  "via": ""
+  "status": "已接",
+  "via": "Coverage.mobilization_action"
  },
  {
   "receiver": "MobilizationOption",
@@ -3248,8 +3264,8 @@
   "domain": "军事",
   "reach": "组合",
   "family": "MobilizationOption.ToggleForSelected",
-  "status": "未做",
-  "via": ""
+  "status": "已接",
+  "via": "Coverage.mobilization_action（单编队）"
  },
  {
   "receiver": "PanelMilitary",
@@ -3266,8 +3282,8 @@
   "domain": "军事",
   "reach": "窗口",
   "family": "PanelMilitary.GetUpgradeAllUnitsInAllFormationsCommand",
-  "status": "未做",
-  "via": ""
+  "status": "已验证",
+  "via": "Coverage.panel_upgrade_all"
  },
  {
   "receiver": "PoliticalMovement",
@@ -3342,8 +3358,8 @@
   "domain": "外交",
   "reach": "窗口",
   "family": "PowerBlocFormation.Confirm",
-  "status": "未做",
-  "via": ""
+  "status": "已接",
+  "via": "Coverage.power_bloc_formation（待选原则）"
  },
  {
   "receiver": "PowerBlocPrinciple",
@@ -3397,8 +3413,8 @@
   "domain": "其他",
   "reach": "界面",
   "family": "PrestigeGoodChangeNamePopup.Confirm",
-  "status": "未做",
-  "via": ""
+  "status": "已接",
+  "via": "Coverage.rename_prestige_good（测试局没有奢侈品）"
  },
  {
   "receiver": "ProductionMethod",
@@ -3431,8 +3447,8 @@
   "domain": "外交",
   "reach": "直达",
   "family": "Proposal.AcceptActionProposal",
-  "status": "未做",
-  "via": ""
+  "status": "已接",
+  "via": "Actions.answer_proposal"
  },
  {
   "receiver": "Proposal",
@@ -3449,8 +3465,8 @@
   "domain": "外交",
   "reach": "直达",
   "family": "Proposal.AcceptDiplomaticDemand",
-  "status": "未做",
-  "via": ""
+  "status": "已接",
+  "via": "Actions.answer_proposal"
  },
  {
   "receiver": "Proposal",
@@ -3467,8 +3483,8 @@
   "domain": "外交",
   "reach": "直达",
   "family": "Proposal.AcceptSway",
-  "status": "未做",
-  "via": ""
+  "status": "已接",
+  "via": "Actions.answer_proposal"
  },
  {
   "receiver": "Proposal",
@@ -3485,8 +3501,8 @@
   "domain": "外交",
   "reach": "直达",
   "family": "Proposal.AcceptTreatyProposal",
-  "status": "未做",
-  "via": ""
+  "status": "已接",
+  "via": "Actions.answer_proposal"
  },
  {
   "receiver": "Proposal",
@@ -3503,8 +3519,8 @@
   "domain": "外交",
   "reach": "直达",
   "family": "Proposal.DeclineActionProposal",
-  "status": "未做",
-  "via": ""
+  "status": "已接",
+  "via": "Actions.answer_proposal"
  },
  {
   "receiver": "Proposal",
@@ -3521,8 +3537,8 @@
   "domain": "外交",
   "reach": "直达",
   "family": "Proposal.DeclineTreatyProposal",
-  "status": "未做",
-  "via": ""
+  "status": "已接",
+  "via": "Actions.answer_proposal"
  },
  {
   "receiver": "Proposal",
@@ -3539,8 +3555,8 @@
   "domain": "外交",
   "reach": "直达",
   "family": "Proposal.RejectDiplomaticDemand",
-  "status": "未做",
-  "via": ""
+  "status": "已接",
+  "via": "Actions.answer_proposal"
  },
  {
   "receiver": "Proposal",
@@ -3557,8 +3573,8 @@
   "domain": "外交",
   "reach": "直达",
   "family": "Proposal.RejectSway",
-  "status": "未做",
-  "via": ""
+  "status": "已接",
+  "via": "Actions.answer_proposal"
  },
  {
   "receiver": "ReformGovernment",
@@ -3611,8 +3627,8 @@
   "domain": "人物",
   "reach": "窗口",
   "family": "RulerSelectionPopup.RandomizeRulersOffer",
-  "status": "未做",
-  "via": ""
+  "status": "已验证",
+  "via": "Coverage.randomize_ruler"
  },
  {
   "receiver": "RulerSelectionPopup",
@@ -3629,8 +3645,8 @@
   "domain": "人物",
   "reach": "窗口",
   "family": "RulerSelectionPopup.SetRulerCommand",
-  "status": "未做",
-  "via": ""
+  "status": "已验证",
+  "via": "Coverage.set_ruler"
  },
  {
   "receiver": "ScriptedButton",
@@ -3719,8 +3735,8 @@
   "domain": "军事",
   "reach": "组合",
   "family": "Ship.AssignAsFlagship",
-  "status": "未做",
-  "via": ""
+  "status": "已接",
+  "via": "Coverage.ship_action"
  },
  {
   "receiver": "Ship",
@@ -3738,8 +3754,8 @@
   "domain": "军事",
   "reach": "组合",
   "family": "Ship.CancelRetrofit",
-  "status": "未做",
-  "via": ""
+  "status": "已接",
+  "via": "Coverage.ship_action"
  },
  {
   "receiver": "Ship",
@@ -3756,8 +3772,8 @@
   "domain": "军事",
   "reach": "组合",
   "family": "Ship.ChangeTemplate",
-  "status": "未做",
-  "via": ""
+  "status": "已接",
+  "via": "Coverage.ship_action"
  },
  {
   "receiver": "Ship",
@@ -3774,8 +3790,8 @@
   "domain": "军事",
   "reach": "组合",
   "family": "Ship.Decommission",
-  "status": "未做",
-  "via": ""
+  "status": "已验证",
+  "via": "Coverage.ship_action"
  },
  {
   "receiver": "Ship",
@@ -3793,8 +3809,8 @@
   "domain": "军事",
   "reach": "组合",
   "family": "Ship.Retrofit",
-  "status": "未做",
-  "via": ""
+  "status": "已接",
+  "via": "Coverage.ship_action"
  },
  {
   "receiver": "Ship",
@@ -3811,8 +3827,8 @@
   "domain": "军事",
   "reach": "组合",
   "family": "Ship.SetNextFlagshipOrnament",
-  "status": "未做",
-  "via": ""
+  "status": "已接",
+  "via": "Coverage.ship_action"
  },
  {
   "receiver": "Ship",
@@ -3829,8 +3845,8 @@
   "domain": "军事",
   "reach": "组合",
   "family": "Ship.SetPrevFlagshipOrnament",
-  "status": "未做",
-  "via": ""
+  "status": "已接",
+  "via": "Coverage.ship_action"
  },
  {
   "receiver": "Ship",
@@ -3847,8 +3863,8 @@
   "domain": "军事",
   "reach": "组合",
   "family": "Ship.ToggleFlagshipSignalFlags",
-  "status": "未做",
-  "via": ""
+  "status": "已接",
+  "via": "Coverage.ship_action"
  },
  {
   "receiver": "Ship",
@@ -3865,8 +3881,8 @@
   "domain": "军事",
   "reach": "组合",
   "family": "Ship.UnassignAsFlagship",
-  "status": "未做",
-  "via": ""
+  "status": "已接",
+  "via": "Coverage.ship_action"
  },
  {
   "receiver": "ShipChangeNamePopup",
@@ -3883,8 +3899,8 @@
   "domain": "其他",
   "reach": "界面",
   "family": "ShipChangeNamePopup.Confirm",
-  "status": "未做",
-  "via": ""
+  "status": "已验证",
+  "via": "Coverage.rename_ship"
  },
  {
   "receiver": "ShipConstruction",
@@ -3901,8 +3917,8 @@
   "domain": "军事",
   "reach": "组合",
   "family": "ShipConstruction.Cancel",
-  "status": "未做",
-  "via": ""
+  "status": "已验证",
+  "via": "Coverage.ship_construction_action"
  },
  {
   "receiver": "ShipConstruction",
@@ -3919,8 +3935,8 @@
   "domain": "军事",
   "reach": "组合",
   "family": "ShipConstruction.MoveDown",
-  "status": "未做",
-  "via": ""
+  "status": "已接",
+  "via": "Coverage.ship_construction_action"
  },
  {
   "receiver": "ShipConstruction",
@@ -3937,8 +3953,8 @@
   "domain": "军事",
   "reach": "组合",
   "family": "ShipConstruction.MoveToBottom",
-  "status": "未做",
-  "via": ""
+  "status": "已接",
+  "via": "Coverage.ship_construction_action"
  },
  {
   "receiver": "ShipConstruction",
@@ -3955,8 +3971,8 @@
   "domain": "军事",
   "reach": "组合",
   "family": "ShipConstruction.MoveToTop",
-  "status": "未做",
-  "via": ""
+  "status": "已接",
+  "via": "Coverage.ship_construction_action"
  },
  {
   "receiver": "ShipConstruction",
@@ -3973,8 +3989,8 @@
   "domain": "军事",
   "reach": "组合",
   "family": "ShipConstruction.MoveUp",
-  "status": "未做",
-  "via": ""
+  "status": "已接",
+  "via": "Coverage.ship_construction_action"
  },
  {
   "receiver": "ShipDesignerPopup",
@@ -3991,8 +4007,8 @@
   "domain": "军事",
   "reach": "窗口",
   "family": "ShipDesignerPopup.CreateTemplate",
-  "status": "未做",
-  "via": ""
+  "status": "已接",
+  "via": "Coverage.ship_designer_create（DLC 未启用）"
  },
  {
   "receiver": "ShipDesignerPopup",
@@ -4009,8 +4025,8 @@
   "domain": "军事",
   "reach": "窗口",
   "family": "ShipDesignerPopup.EditTemplate",
-  "status": "未做",
-  "via": ""
+  "status": "已接",
+  "via": "Coverage.ship_designer_create(edit=True)（DLC 未启用）"
  },
  {
   "receiver": "ShipSelection",
@@ -4027,8 +4043,8 @@
   "domain": "军事",
   "reach": "组合",
   "family": "ShipSelection.ChangeTemplate",
-  "status": "未做",
-  "via": ""
+  "status": "已接",
+  "via": "Coverage.ship_selection_action"
  },
  {
   "receiver": "ShipSelection",
@@ -4045,8 +4061,8 @@
   "domain": "军事",
   "reach": "组合",
   "family": "ShipSelection.Decommission",
-  "status": "未做",
-  "via": ""
+  "status": "已验证",
+  "via": "Coverage.ship_selection_action"
  },
  {
   "receiver": "ShipSelection",
@@ -4063,8 +4079,8 @@
   "domain": "军事",
   "reach": "组合",
   "family": "ShipSelection.Retrofit",
-  "status": "未做",
-  "via": ""
+  "status": "已接",
+  "via": "Coverage.ship_selection_action"
  },
  {
   "receiver": "ShipTemplate",
@@ -4081,8 +4097,8 @@
   "domain": "军事",
   "reach": "组合",
   "family": "ShipTemplate.CancelConstruction",
-  "status": "未做",
-  "via": ""
+  "status": "已接",
+  "via": "Coverage.template_action"
  },
  {
   "receiver": "ShipTemplate",
@@ -4099,8 +4115,8 @@
   "domain": "军事",
   "reach": "组合",
   "family": "ShipTemplate.CancelConstructionForFleet",
-  "status": "未做",
-  "via": ""
+  "status": "已验证",
+  "via": "Coverage.template_action"
  },
  {
   "receiver": "ShipTemplate",
@@ -4117,8 +4133,8 @@
   "domain": "军事",
   "reach": "组合",
   "family": "ShipTemplate.DeleteTemplate",
-  "status": "未做",
-  "via": ""
+  "status": "已接",
+  "via": "Coverage.template_action"
  },
  {
   "receiver": "ShipTemplate",
@@ -4135,8 +4151,8 @@
   "domain": "军事",
   "reach": "组合",
   "family": "ShipTemplate.QueueConstruction",
-  "status": "未做",
-  "via": ""
+  "status": "已验证",
+  "via": "Coverage.template_action"
  },
  {
   "receiver": "ShipTemplate",
@@ -4153,8 +4169,8 @@
   "domain": "军事",
   "reach": "组合",
   "family": "ShipTemplate.QueueConstructionForFleet",
-  "status": "未做",
-  "via": ""
+  "status": "已验证",
+  "via": "Coverage.template_action"
  },
  {
   "receiver": "ShipTemplate",
@@ -4171,8 +4187,8 @@
   "domain": "军事",
   "reach": "组合",
   "family": "ShipTemplate.SetAsDefaultForCountry",
-  "status": "未做",
-  "via": ""
+  "status": "已接",
+  "via": "Coverage.template_action"
  },
  {
   "receiver": "ShipTemplate",
@@ -4189,8 +4205,8 @@
   "domain": "军事",
   "reach": "组合",
   "family": "ShipTemplate.SetAsDefaultForFleet",
-  "status": "未做",
-  "via": ""
+  "status": "已接",
+  "via": "Coverage.template_action"
  },
  {
   "receiver": "State",
@@ -4243,8 +4259,8 @@
   "domain": "经济",
   "reach": "直达",
   "family": "State.GetStationSelectedFormationsCommand",
-  "status": "未做",
-  "via": ""
+  "status": "已接",
+  "via": "Coverage.selected_action（需选择）"
  },
  {
   "receiver": "State",
@@ -4317,8 +4333,8 @@
   "domain": "其他",
   "reach": "窗口",
   "family": "StateNameChangePopup.Confirm",
-  "status": "未做",
-  "via": ""
+  "status": "已验证",
+  "via": "Coverage.rename_state"
  },
  {
   "receiver": "Strait",
@@ -4335,8 +4351,8 @@
   "domain": "军事",
   "reach": "组合",
   "family": "Strait.SetControllerTollRateHighTolls",
-  "status": "未做",
-  "via": ""
+  "status": "已接",
+  "via": "Coverage.strait_action（需完全控制）"
  },
  {
   "receiver": "Strait",
@@ -4353,8 +4369,8 @@
   "domain": "军事",
   "reach": "组合",
   "family": "Strait.SetControllerTollRateLowTolls",
-  "status": "未做",
-  "via": ""
+  "status": "已接",
+  "via": "Coverage.strait_action（需完全控制）"
  },
  {
   "receiver": "Strait",
@@ -4371,8 +4387,8 @@
   "domain": "军事",
   "reach": "组合",
   "family": "Strait.SetControllerTollRateMediumTolls",
-  "status": "未做",
-  "via": ""
+  "status": "已接",
+  "via": "Coverage.strait_action（需完全控制）"
  },
  {
   "receiver": "Strait",
@@ -4389,8 +4405,8 @@
   "domain": "军事",
   "reach": "组合",
   "family": "Strait.SetControllerTollRateNoTolls",
-  "status": "未做",
-  "via": ""
+  "status": "已接",
+  "via": "Coverage.strait_action（需完全控制）"
  },
  {
   "receiver": "Strait",
@@ -4407,8 +4423,8 @@
   "domain": "军事",
   "reach": "组合",
   "family": "Strait.SetStateAccessClosed",
-  "status": "未做",
-  "via": ""
+  "status": "已接",
+  "via": "Coverage.strait_action（需完全控制）"
  },
  {
   "receiver": "Strait",
@@ -4425,8 +4441,8 @@
   "domain": "军事",
   "reach": "组合",
   "family": "Strait.SetStateAccessNoMilitary",
-  "status": "未做",
-  "via": ""
+  "status": "已接",
+  "via": "Coverage.strait_action（需完全控制）"
  },
  {
   "receiver": "Strait",
@@ -4443,8 +4459,8 @@
   "domain": "军事",
   "reach": "组合",
   "family": "Strait.SetStateAccessOpen",
-  "status": "未做",
-  "via": ""
+  "status": "已接",
+  "via": "Coverage.strait_action（需完全控制）"
  },
  {
   "receiver": "Strait",
@@ -4461,8 +4477,8 @@
   "domain": "军事",
   "reach": "组合",
   "family": "Strait.SetStateAllowedCountriesNoEnemies",
-  "status": "未做",
-  "via": ""
+  "status": "已接",
+  "via": "Coverage.strait_action（需完全控制）"
  },
  {
   "receiver": "Strait",
@@ -4479,8 +4495,8 @@
   "domain": "军事",
   "reach": "组合",
   "family": "Strait.SetStateAllowedCountriesOnlyAllies",
-  "status": "未做",
-  "via": ""
+  "status": "已接",
+  "via": "Coverage.strait_action（需完全控制）"
  },
  {
   "receiver": "Strait",
@@ -4497,8 +4513,8 @@
   "domain": "军事",
   "reach": "组合",
   "family": "Strait.SetStateAllowedCountriesOnlyController",
-  "status": "未做",
-  "via": ""
+  "status": "已接",
+  "via": "Coverage.strait_action（需完全控制）"
  },
  {
   "receiver": "SwayCountryPanel",
@@ -4516,8 +4532,8 @@
   "domain": "外交",
   "reach": "窗口",
   "family": "SwayCountryPanel.CreateSway",
-  "status": "未做",
-  "via": ""
+  "status": "已接",
+  "via": "Coverage.create_sway（取决于博弈阶段/接受度）"
  },
  {
   "receiver": "TechTreeLine",
@@ -4534,8 +4550,8 @@
   "domain": "研究",
   "reach": "窗口",
   "family": "TechTreeLine.Research",
-  "status": "未做",
-  "via": ""
+  "status": "已验证",
+  "via": "Actions.research（等价）"
  },
  {
   "receiver": "Technology",
@@ -4627,8 +4643,8 @@
   "domain": "军事",
   "reach": "窗口",
   "family": "TransferFormationPopup.Confirm",
-  "status": "未做",
-  "via": ""
+  "status": "已接",
+  "via": "Coverage.transfer_formation（待 StagedFormation 就绪）"
  },
  {
   "receiver": "TransportPlannerPopup",
@@ -4645,8 +4661,8 @@
   "domain": "军事",
   "reach": "窗口",
   "family": "TransportPlannerPopup.GetTransportCommand",
-  "status": "未做",
-  "via": ""
+  "status": "已接",
+  "via": "Coverage.embark_formation（等价）"
  },
  {
   "receiver": "TransportPlannerPopup",
@@ -4663,8 +4679,8 @@
   "domain": "军事",
   "reach": "窗口",
   "family": "TransportPlannerPopup.StartTransport",
-  "status": "未做",
-  "via": ""
+  "status": "已接",
+  "via": "Coverage.embark_formation（等价）"
  },
  {
   "receiver": "Treaty",
@@ -4735,8 +4751,8 @@
   "domain": "外交",
   "reach": "直达",
   "family": "WarGoal.MakeWarGoalPrimaryDemand",
-  "status": "未做",
-  "via": ""
+  "status": "已接",
+  "via": "Actions.war_goal"
  },
  {
   "receiver": "WarGoal",
@@ -4790,8 +4806,8 @@
   "domain": "外交",
   "reach": "窗口",
   "family": "WarGoalDraft.AddWarGoal",
-  "status": "未做",
-  "via": ""
+  "status": "已验证",
+  "via": "Coverage.add_war_goal"
  },
  {
   "receiver": "WarPanel",
@@ -4845,7 +4861,7 @@
   "domain": "军事",
   "reach": "窗口",
   "family": "WarPanel.SetWhitePeace",
-  "status": "未做",
-  "via": ""
+  "status": "已接",
+  "via": "Actions.peace"
  }
 ]

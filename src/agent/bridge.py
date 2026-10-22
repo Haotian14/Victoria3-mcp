@@ -143,6 +143,23 @@ class Bridge:
                 out.append(None)
         return out
 
+    def eval_raw(self, stmt: str, flag: bool = True) -> bytes:
+        """按值求一条语句，返回 CPdxAny 的 0x40 字节（开发用：取对象指针）。
+        第 0..7 字节是类型信息，第 8..15 字节是对象指针。"""
+        r = self._request("POST", "/data/eval", {"stmt": stmt, "flag": "1" if flag else "0"})
+        if not r.get("ok"):
+            raise GameError(f"{stmt}：{r.get('output')}")
+        return bytes.fromhex(r["output"])
+
+    def mem_read(self, addr: int, length: int = 0x100) -> bytes:
+        """读游戏进程内存（开发用；窗口对象没有数据 getter 时靠它找字段）。"""
+        r = self._client.get(f"{self.url}/mem", params={"addr": hex(addr), "len": length})
+        r.raise_for_status()
+        data = r.json()
+        if not data.get("ok"):
+            raise BridgeError(f"读内存 {hex(addr)} 失败：{data}")
+        return bytes.fromhex(data["hex"])
+
     def exec(self, stmt: str, path: Path | None = None) -> None:
         """执行语句（不带方括号），如 "Execute(Building.QueueConstruction)"。失败抛 GameError。"""
         r = self._request("POST", "/data/exec", {"stmt": stmt, **self._path(path)})

@@ -126,6 +126,119 @@ VERIFIED = {
        for side in ("Import", "Export")
        for p in ("TariffsNone", "TariffsLow", "TariffsHigh", "TariffsMax",
                  "SubventionsLow", "SubventionsHigh", "SubventionsMax")},
+    # 2026-10-22 覆盖层：军事 / 舰船
+    "MilitaryFormation.SelectSupplyPriority": "Coverage.select_supply_priority",
+    "MilitaryFormation.GetSetDefaultUnitTypeCommand": "Coverage.unit_entry_action",
+    "MilitaryFormation.GetDisbandUnitTypeRegularCommand": "Coverage.unit_entry_action",
+    "MilitaryFormation.Mobilize": "Coverage.formation_action",
+    "MilitaryFormation.CreateNavalMission": "Coverage.naval_mission_action",
+    "MilitaryFormation.RemoveNavalMission": "Coverage.formation_action",
+    "MilitaryFormation.GetUpgradeAllUnitsCommand": "Coverage.upgrade_all",
+    "CombatUnit.GetDisbandUnitCommand": "Coverage.combat_unit_action",
+    "ShipSelection.Decommission": "Coverage.ship_selection_action",
+    "ShipTemplate.QueueConstruction": "Coverage.template_action",
+    "ShipTemplate.QueueConstructionForFleet": "Coverage.template_action",
+    "ShipTemplate.CancelConstructionForFleet": "Coverage.template_action",
+    "PanelMilitary.GetUpgradeAllUnitsInAllFormationsCommand": "Coverage.panel_upgrade_all",
+    "BuildingBrowserBuildingTypeItem.ToggleAllSubsidies": "Coverage.building_type_toggle_all",
+    "MilitaryFormationBorrowSetting.GetBorrowingCommand": "Coverage.borrow_setting",
+    # 窗口对象：开真实弹窗/面板，按对象指针执行
+    "AddWarGoalPanel.AddWarGoal": "Coverage.add_war_goal",
+    "WarGoalDraft.AddWarGoal": "Coverage.add_war_goal",
+    "CompanyChangeNamePopup.Confirm": "Coverage.rename_company",
+    "MilitaryFormationChangeNamePopup.Confirm": "Coverage.rename_formation",
+    "ShipChangeNamePopup.Confirm": "Coverage.rename_ship",
+    "StateNameChangePopup.Confirm": "Coverage.rename_state",
+    "RulerSelectionPopup.RandomizeRulersOffer": "Coverage.randomize_ruler",
+    "RulerSelectionPopup.SetRulerCommand": "Coverage.set_ruler",
+    # 2026-10-22 逐条实测通过（test_wired.py）
+    "BuildingBrowserBuildingTypeItem.RemoveAllPrivatization": "Coverage.building_type_toggle_all",
+    "BuildingBrowserBuildingTypeItem.ToggleAllAutoExpand": "Coverage.building_type_toggle_all",
+    "BuildingBrowserBuildingTypeItem.ToggleAllPrivatization": "Coverage.building_type_toggle_all",
+    "Ship.Decommission": "Coverage.ship_action",
+    "ShipConstruction.Cancel": "Coverage.ship_construction_action",
+    "MilitaryFormation.CreateNavalMissionWithPreviousArea": "Coverage.naval_mission_action",
+    "MilitaryFormation.Disband": "Coverage.formation_action",
+    "TechTreeLine.Research": "Actions.research（等价）",
+    "DiplomaticAction.ExecuteAction": "Actions.diplomatic_action（等价）",
+    "Global.CreateNavalMissionsForSelectedFleets": "Coverage.naval_mission_action（单舰队等价）",
+    "Global.RemoveNavalMissionForSelectedFleets": "Coverage.formation_action（单舰队等价）",
+}
+
+# 已经接到代码路径、但还没在游戏里看到效果的命令 → 实现方法。这些命令的入口已可用
+# （MCP act 能调到），只是测试局里当前状态不满足（没有可升级单位、没有战争、没有提案……）。
+WIRED = {
+    "Building.QueueMilitaryConstruction": "Coverage.queue_military_construction",
+    "BuildingType.ToggleMonopoly": "Coverage.building_type_action",
+    **{f"BuildingBrowserBuildingTypeItem.{c}": "Coverage.building_type_toggle_all" for c in (
+        "RemoveAllPrivatization", "ToggleAllAutoExpand", "ToggleAllPrivatization", "ToggleAllSubsidies")},
+    "Country.Kick": "Actions.kick_from_bloc",
+    "Country.ToggleIgnoreCountryFormation": "Coverage.toggle_ignore_formation",
+    "Country.ToggleIgnoreDecision": "Coverage.toggle_ignore_decision",
+    "CountryFormation.SupportCandidate": "Actions.support_candidate",
+    "DecommissionSupplyShipsWindow.GetDecommissionCommand": "Coverage.decommission_supply_ships",
+    "DiplomaticAction.ExecuteAction": "Actions.diplomatic_action",
+    "DiplomaticPlay.SwitchSide": "Actions.play_stance",
+    "DiplomaticPlayConfirmation.ConfirmAction": "Actions.start_play",
+    "Front.GetDeploySelectedFormationsCommand": "Coverage.front_action",
+    "GetDraggedDatacontext.MoveToIndex": "Coverage.ship_construction_move",
+    "Hq.GetStationSelectedFormationsCommand": "Coverage.hq_action",
+    **{f"Invasion.{c}": "Coverage.invasion_action" for c in (
+        "Cancel", "DeployArmyToDefend", "DeployFleetToDefend", "GetDeploySelectedFormationsCommand")},
+    **{f"MilitaryFormation.{c}": "Coverage.formation_action" for c in (
+        "CancelRetrofitShips", "Demobilize", "Disband", "DisembarkFormation", "RaiseConscripts",
+        "RecallForRepairs", "RetrofitShips", "RetrofitShipsAndStation")},
+    "MilitaryFormation.CreateNavalMissionWithPreviousArea": "Coverage.naval_mission_action",
+    "MilitaryFormation.GetDisbandUnitTypeConscriptCommand": "Coverage.unit_entry_action",
+    "MilitaryFormation.GetUpgradeConscriptUnitTypeCommand": "Coverage.unit_entry_action",
+    "MilitaryFormation.GetUpgradeRegularUnitTypeCommand": "Coverage.unit_entry_action",
+    "MilitaryFormation.GetUpgradeUnitGroupCommand": "Coverage.unit_group_action",
+    **{f"Global.{c}": via for c, via in (
+        ("CancelRetrofitShips", "Coverage.formation_action（单编队）"),
+        ("CreateNavalMissionsForSelectedFleets", "Coverage.naval_mission_action（单舰队）"),
+        ("DemobilizeSelectedArmies", "Coverage.formation_action（单编队）"),
+        ("MobilizeSelectedArmies", "Coverage.formation_action（单编队）"),
+        ("RaiseConscriptsInSelectedArmies", "Coverage.formation_action（单编队）"),
+        ("RemoveNavalMissionForSelectedFleets", "Coverage.formation_action（单舰队）"),
+        ("RetrofitShips", "Coverage.formation_action（单编队）"),
+        ("RetrofitShipsAndStation", "Coverage.formation_action（单编队）"),
+        ("SetCharacterOrderForSelectedFormations", "Actions.commander_action（单将领）"))},
+    "MobilizationOption.Toggle": "Coverage.mobilization_action",
+    "MobilizationOption.ToggleForSelected": "Coverage.mobilization_action（单编队）",
+    "PrestigeGoodChangeNamePopup.Confirm": "Coverage.rename_prestige_good（测试局没有奢侈品）",
+    "SwayCountryPanel.CreateSway": "Coverage.create_sway（取决于博弈阶段/接受度）",
+    "TransferFormationPopup.Confirm": "Coverage.transfer_formation（待 StagedFormation 就绪）",
+    "PowerBlocFormation.Confirm": "Coverage.power_bloc_formation（待选原则）",
+    "ShipDesignerPopup.CreateTemplate": "Coverage.ship_designer_create（DLC 未启用）",
+    "ShipDesignerPopup.EditTemplate": "Coverage.ship_designer_create(edit=True)（DLC 未启用）",
+    "MilitaryFormationWrapped.EmbarkFormation": "Coverage.embark_formation（伪造包装）",
+    "TransportPlannerPopup.GetTransportCommand": "Coverage.embark_formation（等价）",
+    "TransportPlannerPopup.StartTransport": "Coverage.embark_formation（等价）",
+    **{f"Strait.SetControllerTollRate{v}": "Coverage.strait_action（需完全控制）" for v in (
+        "NoTolls", "LowTolls", "MediumTolls", "HighTolls")},
+    **{f"Strait.SetStateAccess{v}": "Coverage.strait_action（需完全控制）" for v in (
+        "Open", "NoMilitary", "Closed")},
+    **{f"Strait.SetStateAllowedCountries{v}": "Coverage.strait_action（需完全控制）" for v in (
+        "OnlyController", "OnlyAllies", "NoEnemies")},
+    "Global.MergeSelectedFormations": "Coverage.selected_action（需选择）",
+    "Global.SetStrategicObjectiveForSelectedFormations": "Coverage.selected_action（需选择）",
+    "State.GetStationSelectedFormationsCommand": "Coverage.selected_action（需选择）",
+    "PanelMilitary.GetUpgradeAllUnitsInAllFormationsCommand": "Coverage.panel_upgrade_all",
+    **{f"Proposal.{c}": "Actions.answer_proposal" for c in (
+        "AcceptActionProposal", "AcceptDiplomaticDemand", "AcceptSway", "AcceptTreatyProposal",
+        "DeclineActionProposal", "DeclineTreatyProposal", "RejectDiplomaticDemand", "RejectSway")},
+    **{f"Ship.{c}": "Coverage.ship_action" for c in (
+        "AssignAsFlagship", "CancelRetrofit", "ChangeTemplate", "Decommission", "Retrofit",
+        "SetNextFlagshipOrnament", "SetPrevFlagshipOrnament", "ToggleFlagshipSignalFlags",
+        "UnassignAsFlagship")},
+    **{f"ShipConstruction.{c}": "Coverage.ship_construction_action" for c in (
+        "Cancel", "MoveDown", "MoveToBottom", "MoveToTop", "MoveUp")},
+    **{f"ShipSelection.{c}": "Coverage.ship_selection_action" for c in ("ChangeTemplate", "Retrofit")},
+    **{f"ShipTemplate.{c}": "Coverage.template_action" for c in (
+        "CancelConstruction", "DeleteTemplate", "SetAsDefaultForCountry", "SetAsDefaultForFleet")},
+    "TechTreeLine.Research": "Actions.research",
+    "WarGoal.MakeWarGoalPrimaryDemand": "Actions.war_goal",
+    "WarPanel.SetWhitePeace": "Actions.peace",
 }
 
 # 接收对象 → (领域, 可达性)。可达性：
@@ -290,8 +403,8 @@ def classify(row: dict) -> None:
     row["domain"] = domain
     row["reach"] = reach
     row["family"] = family(row)
-    row["status"] = "已验证" if k in VERIFIED else "未做"
-    row["via"] = VERIFIED.get(k, "")
+    row["status"] = "已验证" if k in VERIFIED else "已接" if k in WIRED else "未做"
+    row["via"] = VERIFIED.get(k) or WIRED.get(k, "")
 
 
 ORDER = ["国家", "经济", "政治", "研究", "人物", "日志", "事件", "外交", "军事", "其他"]
@@ -301,14 +414,17 @@ REACH_ORDER = ["直达", "窗口", "组合", "待查", "界面"]
 def render(rows: list[dict]) -> str:
     total = len(rows)
     done = sum(r["status"] == "已验证" for r in rows)
+    wired = sum(r["status"] == "已接" for r in rows)
     fams: dict[str, dict] = {}
     for r in rows:
-        f = fams.setdefault(r["family"], {"reach": r["reach"], "done": False})
+        f = fams.setdefault(r["family"], {"reach": r["reach"], "done": False, "wired": False})
         f["done"] |= r["status"] == "已验证"
-    by_reach: dict[str, list[int]] = defaultdict(lambda: [0, 0])
+        f["wired"] |= r["status"] == "已接"
+    by_reach: dict[str, list[int]] = defaultdict(lambda: [0, 0, 0])
     for f in fams.values():
         by_reach[f["reach"]][0] += 1
         by_reach[f["reach"]][1] += f["done"]
+        by_reach[f["reach"]][2] += f["wired"]
     lines = [
         "# 玩家操作清单",
         "",
@@ -320,11 +436,12 @@ def render(rows: list[dict]) -> str:
         "要像改组政府那样构造（见 docs/bridge.md）；**组合** = 军事 / 地图类，要组合编队、前线、海域等多个对象；"
         "**界面** = 只影响界面显示（改名、开关、定位），不影响局面；**待查** = 接收对象还没归类。",
         "",
-        f"**进度：命令 {done} / {total} 已验证；按操作种类（只差档位的算一种）"
-        f"{sum(f['done'] for f in fams.values())} / {len(fams)}。**",
+        f"**进度：命令 {done} / {total} 已验证；另有 {wired} 条已接到代码路径（○，含单编队等价与状态未满足）；"
+        f"按操作种类（只差档位的算一种）{sum(f['done'] for f in fams.values())} / {len(fams)} 已验证。**",
         "",
-        "按可达性（操作种类，已验证 / 总数）：" +
-        "，".join(f"{k} {by_reach[k][1]} / {by_reach[k][0]}" for k in REACH_ORDER if k in by_reach) + "。",
+        "按可达性（操作种类，已验证 / 总数，已接）：" +
+        "，".join(f"{k} {by_reach[k][1]} / {by_reach[k][0]}（已接 {by_reach[k][2]}）"
+                 for k in REACH_ORDER if k in by_reach) + "。",
         "",
         "不在本表、但同样要打通的：立即存档（目前用自动存档）、"
         "暂停 / 调速（`TimeKeeper`，已验证，不经 Execute）。事件选项在「事件」一节（`EventOption.Select`）。"
@@ -335,11 +452,15 @@ def render(rows: list[dict]) -> str:
         group = [r for r in rows if r["domain"] == domain]
         if not group:
             continue
-        group.sort(key=lambda r: (r["status"] != "已验证", REACH_ORDER.index(r["reach"]), r["receiver"], r["command"]))
-        lines += [f"## {domain}（{sum(r['status'] == '已验证' for r in group)} / {len(group)}）", "",
+        group.sort(key=lambda r: ({"已验证": 0, "已接": 1}.get(r["status"], 2),
+                                  REACH_ORDER.index(r["reach"]), r["receiver"], r["command"]))
+        n_done = sum(r["status"] == "已验证" for r in group)
+        n_wired = sum(r["status"] == "已接" for r in group)
+        lines += [f"## {domain}（{n_done} / {len(group)}，已接 {n_wired}）", "",
                   "| 状态 | 可达性 | 命令 | 例子 | 界面文件 |", "|---|---|---|---|---|"]
         for r in group:
-            mark = f"✓ `{r['via']}`" if r["status"] == "已验证" else ""
+            mark = f"✓ `{r['via']}`" if r["status"] == "已验证" else \
+                f"○ `{r['via']}`" if r["status"] == "已接" else ""
             ex = r["examples"][0].replace("|", "\\|")
             files = (", ".join(r["files"][:2]) + (" …" if len(r["files"]) > 2 else "")) if r["files"] else "（程序生成的菜单）"
             lines.append(f"| {mark} | {r['reach']} | `{r['receiver']}.{r['command']}` | `{ex}` | {files} |")
@@ -351,7 +472,8 @@ def main() -> int:
     sys.stdout.reconfigure(encoding="utf-8")
     gui = os.path.join(paths.game_dir(), "game", "gui")
     found = scan(gui)
-    for k in VERIFIED:          # 界面文件里没直接出现的（生产方式切换菜单由程序生成）也列上
+    for k in list(VERIFIED) + [k for k in WIRED if k not in VERIFIED]:
+        # 界面文件里没直接出现的（生产方式切换菜单由程序生成）也列上
         if k not in found:
             receiver, command = k.split(".", 1)
             found[k] = {"receiver": receiver, "command": command, "examples": [k], "files": [],
@@ -367,8 +489,9 @@ def main() -> int:
     with open(OUT_MD, "w", encoding="utf-8", newline="\n") as f:
         f.write(render(rows) + "\n")
     done = sum(r["status"] == "已验证" for r in rows)
-    print(f"{len(rows)} 条命令（{len({r['family'] for r in rows})} 种操作），已验证 {done}；待查接收对象：",
-          sorted({r["receiver"] for r in rows if r["reach"] == "待查"}))
+    wired = sum(r["status"] == "已接" for r in rows)
+    print(f"{len(rows)} 条命令（{len({r['family'] for r in rows})} 种操作），已验证 {done}，已接 {wired}；"
+          f"待查接收对象：", sorted({r["receiver"] for r in rows if r["reach"] == "待查"}))
     return 0
 
 

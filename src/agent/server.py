@@ -22,7 +22,8 @@ if __package__ in (None, ""):
 from mcp.server.mcpserver import MCPServer  # noqa: E402
 
 from agent import gamedata, observe, paths, pdx, runner, save, state  # noqa: E402
-from agent.actions import Actions  # noqa: E402
+from agent.actions import Actions, ActionResult  # noqa: E402
+from agent.coverage import Coverage  # noqa: E402
 from agent.bridge import Bridge, BridgeError, GameError, plain  # noqa: E402
 from agent.game import Clock, launch, wait_in_game  # noqa: E402
 from agent.strategy import economy  # noqa: E402
@@ -82,6 +83,68 @@ ACT_PARAMS = {
     "upgrade_principle": "index（集团原则序号）",
     "support_candidate": "formation, candidate（候选国序号）",
     "answer_proposal": "index（diplomacy 工具里 proposals 的序号）, accept: true/false",
+    # 军事 / 舰船 / 覆盖层（Coverage）
+    "formations": "fleets=false（陆军）/true（海军）",
+    "formation_action": "index, cmd: Mobilize/Demobilize/RaiseConscripts/Disband/DisembarkFormation/"
+                        "RecallForRepairs/RemoveNavalMission/RetrofitShips/RetrofitShipsAndStation/"
+                        "CancelRetrofitShips/GetUpgradeAllUnitsCommand, fleets=false",
+    "select_supply_priority": "index, priority: low/medium/high, fleets=false",
+    "select_formation": "index, fleets=false（界面选择层，数据系统里可能无效）",
+    "selected_action": "cmd: MobilizeSelectedArmies/...，可带 state_path/mission_path/order_path",
+    "unit_entries": "index, fleets=false",
+    "unit_entry_action": "index, entry, cmd: SetDefaultUnitType/DisbandRegular/DisbandConscript/"
+                         "UpgradeRegular/UpgradeConscript, fleets=false",
+    "unit_group_action": "index, group, cmd=UpgradeGroup",
+    "combat_units": "index, entry, fleets=false",
+    "combat_unit_action": "index, entry, unit, cmd=Disband",
+    "mobilization_options": "index, fleets=false",
+    "mobilization_action": "index, option, fleets=false",
+    "naval_missions": "index（舰队序号）, fleets=true",
+    "naval_mission_action": "index, mission, cmd=CreateNavalMission/CreateNavalMissionWithPreviousArea",
+    "upgrade_all": "index, fleets=false",
+    "panel_upgrade_all": "（无参数）逐个编队升级全部单位",
+    "decommission_supply_ships": "count=1",
+    "ships": "fleet=-1（全部）/编队序号, fleets=false",
+    "ship_action": "index, cmd: AssignAsFlagship/UnassignAsFlagship/CancelRetrofit/Retrofit/Decommission/"
+                   "SetNextFlagshipOrnament/SetPrevFlagshipOrnament/ToggleFlagshipSignalFlags/ChangeTemplate"
+                   "（ChangeTemplate 需 template）, fleet=-1, fleets=false, template=-1",
+    "templates": "（无参数）",
+    "template_action": "index, cmd: QueueConstruction/CancelConstruction/DeleteTemplate/SetAsDefaultForCountry/"
+                       "QueueConstructionForFleet/CancelConstructionForFleet/SetAsDefaultForFleet, fleet=-1",
+    "ship_constructions": "（无参数）",
+    "ship_construction_action": "index, cmd: Cancel/MoveUp/MoveDown/MoveToTop/MoveToBottom",
+    "ship_construction_move": "index, to",
+    "ship_selection": "（无参数）",
+    "select_all_ships": "（无参数）",
+    "ship_selection_action": "cmd: Retrofit/Decommission/ChangeTemplate（需 template）",
+    "hq_action": "formation, cmd=GetStationSelectedFormationsCommand, fleets=false",
+    "front_action": "war, cmd=GetDeploySelectedFormationsCommand",
+    "invasions": "war",
+    "invasion_action": "war, index, cmd: Cancel/DeployArmyToDefend/DeployFleetToDefend/"
+                       "GetDeploySelectedFormationsCommand, formation=-1",
+    "building_type_action": "key（building_*）, cmd=ToggleMonopoly",
+    "building_type_toggle_all": "key, cmd: Subsidies/AutoExpand/Privatization/RemoveAllPrivatization",
+    "queue_military_construction": "state, building, formation, unit_type（CombatUnitType key）, fleets=false",
+    "scripted_gui": "name（ScriptedGui 名字）",
+    "toggle_ignore_decision": "decision（决议名字）",
+    "toggle_ignore_formation": "formation（可成立国家名字）",
+    "borrow_settings": "index, fleets=false",
+    "borrow_setting": "index, setting（borrow_settings 里的序号）, fleets=false",
+    "rename_company": "key（公司类型 key）, new_name",
+    "rename_formation": "index, new_name, fleets=false",
+    "rename_ship": "index, new_name, fleet=-1, fleets=false",
+    "rename_state": "state（州 id 或州名）, new_name",
+    "rename_prestige_good": "company（公司类型 key）, index, new_name",
+    "add_war_goal": "play（plays 序号）, type_index（可选目标类型序号）, goal_index（该类型的第几个目标）",
+    "create_sway": "play, country（tag）, type_index=-1, offer=-1",
+    "transfer_formation": "left（编队序号）, right=-1, fleets=false",
+    "power_bloc_formation": "（无参数）",
+    "ship_designer_create": "edit=false（false 新建 / true 编辑）, template=-1",
+    "randomize_ruler": "（无参数）刷新君主候选人",
+    "set_ruler": "offer（候选人序号）",
+    "embark_formation": "army（陆军序号）, fleet（舰队序号）, fleets=true",
+    "strait_action": "kind: toll/access/allowed, value: NoTolls/LowTolls/MediumTolls/HighTolls、"
+                     "Open/NoMilitary/Closed、OnlyController/OnlyAllies/NoEnemies, index=-1",
 }
 
 server = MCPServer(
@@ -294,7 +357,7 @@ def get_state(states_limit: int = 8, buildings: bool = True) -> dict[str, Any]:
 ))
 def act(kind: str, level: str = "", tech: str = "", law: str = "", state: int = 0, building: str = "",
         pm: str = "", government: str = "", params: dict[str, Any] | None = None) -> dict[str, Any]:
-    a = Actions(bridge)
+    a = Coverage(bridge)
     if kind in ACT_PARAMS:
         try:
             r = getattr(a, kind)(**(params or {}))
@@ -321,20 +384,22 @@ def act(kind: str, level: str = "", tech: str = "", law: str = "", state: int = 
             r = a.set_pm(state, building, pm, snap)
         else:
             return {"ok": False, "error": f"不认识的动作 {kind}"}
+    if not isinstance(r, ActionResult):
+        return {"ok": True, "result": r}
     return {"ok": r.ok, "action": r.action, "detail": r.detail, "before": r.before, "after": r.after}
 
 
 @server.tool(description="进行中的日志条目与其按钮、可见的决议；用 act(kind=press_button / take_decision) 执行。")
 def journal() -> dict[str, Any]:
     try:
-        return Actions(bridge).journal()
+        return Coverage(bridge).journal()
     except (GameError, BridgeError) as e:
         return {"ok": False, "error": str(e)}
 
 
 @server.tool(description="将领（admirals=true 为海军）、可招募人选（offers=true）与编队；用 act(kind=recruit_commander / commander_action) 操作。")
 def military(admirals: bool = False, offers: bool = False) -> dict[str, Any]:
-    a = Actions(bridge)
+    a = Coverage(bridge)
     try:
         return {"commanders": a.commanders(admirals, offers), "formations": a.formations(admirals)}
     except (GameError, BridgeError) as e:
@@ -344,7 +409,7 @@ def military(admirals: bool = False, offers: bool = False) -> dict[str, Any]:
 @server.tool(description="政府（private=true 为私人）建造队列，按队列顺序；用 act(kind=move_construction / cancel_construction) 调整。")
 def construction_queue(private: bool = False) -> list[dict[str, Any]] | dict[str, Any]:
     try:
-        return Actions(bridge).construction_queue(private)
+        return Coverage(bridge).construction_queue(private)
     except (GameError, BridgeError) as e:
         return {"ok": False, "error": str(e)}
 
@@ -354,7 +419,7 @@ def construction_queue(private: bool = False) -> list[dict[str, Any]] | dict[str
     "另外总是返回玩家参与的外交博弈（plays）、研究队列和待回复的提议（proposals）。"
 ))
 def diplomacy(country: str = "") -> dict[str, Any]:
-    a = Actions(bridge)
+    a = Coverage(bridge)
     try:
         out: dict[str, Any] = {"plays": a.plays(), "wars": a.wars(), "proposals": a.proposals(),
                                "treaties": a.treaties(), "research_queue": a.research_queue()}
@@ -368,7 +433,7 @@ def diplomacy(country: str = "") -> dict[str, Any]:
 @server.tool(description="玩家待处理的事件（含弹窗事件）与可选项；用 act(kind=choose_event_option) 选择。")
 def events() -> list[dict[str, Any]] | dict[str, Any]:
     try:
-        return Actions(bridge).events()
+        return Coverage(bridge).events()
     except (GameError, BridgeError) as e:
         return {"ok": False, "error": str(e)}
 

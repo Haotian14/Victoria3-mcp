@@ -162,6 +162,29 @@ stmt = Execute(ProductionMethod.GetSwitch(Building.Self))
 - 成立国家：`tag CLM` 后控制台 `annex VNZ`、`annex ECU`，再成立大哥伦比亚；
 - 控制台没有 `effect` 命令，测试留下的修正去不掉，只能重新载入存档。
 
+### 军事、舰船与选择（2026-10-22）
+
+- **编队**：`PM.GetMilitaryFormationsArmy` / `GetMilitaryFormationsFleet`（已用于将领、编队命令）。
+  编队里的单位：`MilitaryFormation.GetCombatUnitEntries`（每项是 `MilitaryFormationUnitEntry`，
+  `GetUnitType` 是该类型的 `CombatUnitType`）；具体战斗单位在 `MilitaryFormationUnitEntry.GetCombatUnits`。
+  单位组升级用 `MilitaryFormation.GetEligibleGroups`（项是 `CombatUnitGroup`）。
+- **舰船**：`PM.GetShipList` 是玩家国家的 `ShipList`；`GetShips` / `GetShipTemplates` /
+  `GetShipConstructions` 都是它的列表。某个舰队的舰船列表要写完整的
+  `MilitaryFormation.GetShipList.GetShips` 加路径到编队；写成 `GetShipList.GetShips` 会报
+  `Failed to find type 'GetShipList'`。
+- **舰船选择**：`ShipList.GetActiveSelection` 只在**某个 ShipGroup 的编辑模式**里非空；
+  先 `ShipList.ToggleEditMode(ShipGroup.Self)`（路径：ShipList + `GetShipGroups` 项），
+  再用 `=AccessPlayer.GetShipList.GetActiveSelection.Self` 作为上下文。直接写
+  `=AccessPlayer.GetShipList.GetActiveSelection` 会报 `Promote ... returned nullptr`。
+  选择命令是 `ShipSelection.ToggleSelection(Ship.Self)`、`SelectFiltered`、`Retrofit`、`Decommission`、
+  `ChangeTemplate(ShipTemplate.Self)`。
+- **编队选择是 UI 层**：`MilitaryFormation.Select` / `ToggleSelected` 在数据系统里调用后，
+  `GetSelectedFormationsList` / `GetNumSelectedArmies` 都不变；`FormationPanel.SelectFormation`
+  只能从面板上下文拿到，没有全局 getter。所以 `Global.*Selected*`、`Front/Hq/Invasion` 的
+  「对选中编队」命令暂时走不了；单编队版本（`MilitaryFormation.Mobilize` 等）已经接通。
+- **海峡**：数据系统里只有 `StraitMarker.GetStrait` / `StraitPanel.GetStrait`，没有全局海峡列表；
+  临时的 `StraitPanel` 也没有 getter。要把 `Strait.*` 接上，需要找运行时的海峡注册表。
+
 ### 外交（路径步「=表达式」、伪造确认窗口、伪造 TopFrontend）
 
 - **按值取对象作上下文**：数据系统没有全部国家的列表，也没有按 tag 取国家的函数。`GetStateRegion('STATE_X')`
