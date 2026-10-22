@@ -55,6 +55,9 @@ class Memory:
 def metrics(snap: observe.Snapshot) -> dict[str, Any]:
     out: dict[str, Any] = {"date": str(snap.date)}
     out.update({k: snap.country.get(k) for k in METRICS})
+    gdp, pop = out.get("gdp"), out.get("population")
+    if gdp and pop:
+        out["gdp_per_capita"] = gdp / pop   # 人均 GDP：GDP 增长可能只是人口/建造堆出来的
     return out
 
 
