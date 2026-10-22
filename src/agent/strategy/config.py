@@ -17,6 +17,24 @@ def cfg() -> dict[str, Any]:
         return json.load(f)
 
 
+def profile_for_tag(tag: str) -> dict[str, Any]:
+    """国家专属策略：country_profiles 以游戏 tag（如 CHI）为键。没有就返回空，走通用规则。"""
+    return (cfg().get("country_profiles") or {}).get(tag or "", {})
+
+
+def profile(snap: Any) -> dict[str, Any]:
+    tag = str((getattr(snap, "country", {}) or {}).get("tag") or "")
+    return profile_for_tag(tag)
+
+
+def tech_priority(snap: Any) -> list[str]:
+    return list(profile(snap).get("tech_priority") or cfg()["tech_priority"])
+
+
+def law_route(snap: Any) -> list[list[str]]:
+    return [list(x) for x in (profile(snap).get("law_route") or cfg()["law_route"])]
+
+
 @dataclass
 class Decision:
     """一个要执行的动作。kind 对应 actions.Actions 的方法名，args 是它的参数（快照另传）。"""

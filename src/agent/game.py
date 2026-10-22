@@ -14,6 +14,7 @@ import re
 import subprocess
 import time
 from dataclasses import dataclass
+from typing import Callable
 
 from agent import paths
 from agent.bridge import Bridge, BridgeError, GameError
@@ -163,8 +164,10 @@ class Clock:
     def set_speed(self, speed: int = MAX_SPEED) -> None:
         self.b.exec(f"TimeKeeper.SetGameSpeed('(int32){max(0, min(MAX_SPEED, speed))}')")
 
-    def run_until(self, target: Date, timeout: float = 600, poll: float = 0.1) -> Date:
-        """以最高速推进到 target（含）后暂停，返回暂停时的日期。最高速约每秒 6 天，可能多走一两天。"""
+    def run_until(self, target: Date, timeout: float = 600, poll: float = 0.1,
+                  on_tick: Callable[[], None] | None = None, tick_interval: float = 1.0) -> Date:
+        """以最高速推进到 target（含）后暂停，返回暂停时的日期。最高速约每秒 6 天，可能多走一两天。
+        on_tick：每 tick_interval 秒调一次（runner 用它处理事件，避免被游戏按默认选项自动答掉）。"""
         now = self.date()
         if now >= target:
             return now
@@ -172,9 +175,13 @@ class Clock:
         self.resume()
         t0 = time.time()
         stalled = 0
+        last_tick = t0
         try:
             while time.time() - t0 < timeout:
                 time.sleep(poll)
+                if on_tick is not None and time.time() - last_tick >= tick_interval:
+                    last_tick = time.time()
+                    on_tick()
                 prev, now = now, self.date()
                 if now >= target:
                     break

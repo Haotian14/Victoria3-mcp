@@ -14,10 +14,14 @@ from typing import Any, Callable
 
 from agent import gamedata, observe
 from agent.actions import ActionResult, Actions
-from agent.bridge import PLAYER, Bridge, GameError, plain
+from agent.bridge import PLAYER, Bridge, BridgeError, GameError, plain
 from agent.game import Clock
+from agent.strategy import config as strategy_config
+from agent.strategy import diplomacy
+from agent.strategy import events as event_policy
 from agent.strategy import plan as planner
 from agent.strategy import politics
+from agent.strategy import research as research_strategy
 from agent.strategy.config import cfg
 from agent.strategy.config import Decision
 
@@ -26,6 +30,7 @@ LOG_DIR = os.path.join(ROOT, "logs")
 
 LAW_RETRY_MONTHS = 12
 PM_COOLDOWN_MONTHS = 24     # 建筑换过生产方式后这么久不再换（适应期减产 + 防止来回切）
+_EVENT_RETRY: dict[int, float] = {}   # 事件 id → 这个时刻之前不再试（答不了就退避，别每秒暂停）
 
 METRICS = ("gdp", "money", "balance", "income", "expenses", "construction", "construction_used",
            "sol", "literacy", "population", "prestige")
@@ -34,6 +39,7 @@ METRICS = ("gdp", "money", "balance", "income", "expenses", "construction", "con
 @dataclass
 class Memory:
     pm_offset: int = 0
+    diplo_offset: int = 0
     history: list[dict[str, Any]] = field(default_factory=list)
     counts: dict[str, list[int]] = field(default_factory=dict)   # 动作种类 → [生效, 失败]
     log: list[str] = field(default_factory=list)
@@ -64,18 +70,128 @@ def advise(b: Bridge, mem: Memory | None = None) -> tuple[observe.Snapshot, plan
     snap = observe.snapshot(b)
     law = enacting(b)
     # 推行中不能再提法律，也不改组政府：省掉逐条读成功率的几十次往返
-    options = [] if law else observe.law_options(b, snap.laws, politics.targets())
-    plan = planner.decide(gamedata.get(), snap, observe.researched(b), observe.construction_costs(b),
+    options = [] if law else observe.law_options(b, snap.laws, politics.targets(snap))
+    researched = observe.researched(b)
+    plan = planner.decide(gamedata.get(), snap, researched, observe.construction_costs(b),
                           law, mem.pm_offset, options)
+    # 研究队列：当前研究还在跑、队列空时，把优先表里的下 1–2 项排进去，科技完成后的空窗由游戏接上
+    try:
+        if snap.researching and not Actions(b).research_queue():
+            seen = {snap.researching}
+            for d in research_strategy.candidates(gamedata.get(), researched, None,
+                                                  strategy_config.tech_priority(snap)):
+                t = d.args["tech"]
+                if t in seen:
+                    continue
+                plan.research_queue.append(Decision("queue_research", {"tech": t}, "研究队列补位"))
+                seen.add(t)
+                if len(plan.research_queue) >= 2:
+                    break
+    except (GameError, BridgeError):
+        pass
     return snap, plan
+
+
+def handle_events(b: Bridge, mem: Memory, note: Callable[[str], None], tag: str = "",
+                  clock: Clock | None = None, keep_running: bool = False) -> int:
+    """答掉当前所有待处理事件。接口早就有（Actions.events / choose_event_option），
+    以前 runner 从不调用，游戏就按默认选项把它们自动答了。keep_running：答完继续走时间。"""
+    try:
+        a = Actions(b)
+        now = time.time()
+        events = [ev for ev in a.events() if _EVENT_RETRY.get(ev["id"], 0.0) <= now]
+        if not events:
+            return 0
+        paused = clock.paused() if clock else True
+        if clock and not paused:
+            clock.pause()
+        try:
+            for ev in events:
+                idx = event_policy.pick(ev, tag)
+                if idx is None:
+                    _EVENT_RETRY[ev["id"]] = time.time() + 60
+                    continue
+                r = a.choose_event_option(ev["id"], idx)
+                mem.tally(r, "event")
+                note(f"    {r}  ← 事件「{ev['title']}」")
+                if not r.ok:
+                    _EVENT_RETRY[ev["id"]] = time.time() + 60
+        finally:
+            if clock and (keep_running or not paused):
+                clock.resume()
+        return len(events)
+    except Exception as exc:                     # 桥接层偶发失败不该让整局停掉
+        note(f"    事件处理出错：{type(exc).__name__}: {exc}")
+        return 0
+
+
+def handle_proposals(b: Bridge, mem: Memory, note: Callable[[str], None],
+                     snap: observe.Snapshot | None = None) -> int:
+    """回复待处理的条约 / 外交行动提议；要挟与拉拢拒绝。"""
+    try:
+        a = Actions(b)
+        answered = 0
+        for _ in range(8):
+            props = a.proposals()
+            if not props:
+                break
+            p = props[0]
+            r = a.answer_proposal(0, diplomacy.accept_proposal(p, snap))
+            mem.tally(r, "proposal")
+            note(f"    {r}  ← 外交提议「{p.get('name', '')}」（{p.get('actor', '')}）")
+            answered += 1
+            if not r.ok:
+                break
+        return answered
+    except Exception as exc:
+        note(f"    外交提议处理出错：{type(exc).__name__}: {exc}")
+        return 0
+
+
+def handle_diplomacy(b: Bridge, mem: Memory, note: Callable[[str], None],
+                     snap: observe.Snapshot | None = None) -> int:
+    """每月对一个大国改善关系（俄 / 法 / 普轮流），为保障独立 / 防御同盟铺路。"""
+    targets = diplomacy.improve_targets(snap)
+    if not targets:
+        return 0
+    try:
+        a = Actions(b)
+    except Exception:
+        return 0
+    n = len(targets)
+    for k in range(n):
+        tag = targets[(mem.diplo_offset + k) % n]
+        try:
+            acts = a.diplomatic_actions(tag)
+        except Exception:
+            continue
+        for act in acts:
+            if (act.get("action") in ("increase_relations", "improve_relations")
+                    and act.get("valid") and not act.get("active")):
+                try:
+                    r = a.diplomatic_action(tag, act["action"])
+                except Exception as exc:
+                    note(f"    外交 {tag} 出错：{type(exc).__name__}: {exc}")
+                    continue
+                mem.tally(r, "diplomacy")
+                mem.diplo_offset = (mem.diplo_offset + k + 1) % n
+                note(f"    {r}  ← 改善关系（{tag}）")
+                return 1
+    return 0
 
 
 def _do(a: Actions, d: Decision, snap: observe.Snapshot) -> ActionResult:
     x = d.args
     if d.kind == "set_tax":
         return a.set_tax(x["level"])
+    if d.kind == "set_institution":
+        return a.set_institution(x["institution"], x["level"])
+    if d.kind == "set_decree":
+        return a.set_decree(x["state"], x["decree"])
     if d.kind == "research":
         return a.research(x["tech"])
+    if d.kind == "queue_research":
+        return a.queue_research(x["tech"])
     if d.kind == "enact_law":
         return a.enact_law(x["law"], snap)
     if d.kind == "reform_government":
@@ -103,12 +219,26 @@ def execute(b: Bridge, plan: planner.Plan, snap: observe.Snapshot, mem: Memory,
             note(f"    {r}  ← {d.why}")
         return r
 
+    month = len(mem.history)
     if plan.tax:
         run(plan.tax)
+    for d in plan.institution:                    # 机构投入：不存在（法律没到）就锁一年
+        key = f"institution:{d.args['institution']}"
+        if mem.blocked.get(key, -1) > month:
+            continue
+        if not run(d).ok:
+            mem.blocked[key] = month + LAW_RETRY_MONTHS
+    for d in plan.decree:                         # 州法令：权威力不够就过半年再试
+        key = f"decree:{d.args['state']}:{d.args['decree']}"
+        if mem.blocked.get(key, -1) > month:
+            continue
+        if not run(d).ok:
+            mem.blocked[key] = month + 6
     for d in plan.research:                       # 第一条成功即止
         if run(d).ok:
             break
-    month = len(mem.history)
+    for d in plan.research_queue:                 # 队列补位：排在当前研究之后
+        run(d)
     reformed = False
     if plan.reform and mem.blocked.get("reform", -1) <= month:
         reformed = run(plan.reform).ok
@@ -148,6 +278,11 @@ def step(b: Bridge, mem: Memory, note: Callable[[str], None] = lambda s: None) -
     mem.history.append(m)
     note(f"[{snap.date}] GDP {m['gdp'] or 0:,.0f} 国库 {m['money'] or 0:,.0f} 周结余 {m['balance'] or 0:+,.0f} "
          f"建造力 {m['construction_used'] or 0:.0f}/{m['construction'] or 0:.0f} 生活水平 {m['sol']}")
+    tag = str(snap.country.get("tag") or "")
+    if handle_events(b, mem, note, tag=tag) > 0:
+        snap, plan = advise(b, mem)      # 事件可能改了合法性、法律进度、国库，按新局面临时重算
+    handle_proposals(b, mem, note, snap)
+    handle_diplomacy(b, mem, note, snap)
     results = execute(b, plan, snap, mem, note)
     return {"date": str(snap.date), "metrics": m, "results": [str(r) for r in results]}
 
@@ -173,6 +308,10 @@ def play(b: Bridge, months: int = 12, verbose: Callable[[str], None] | None = No
 
     t0 = time.time()
     start = clock.date()
+    try:
+        tag = plain(b.read(f"[{PLAYER}.GetTagName]") or "")
+    except GameError:
+        tag = ""
     stopped = f"已走满 {months} 个月"
     for _ in range(months):
         try:
@@ -182,7 +321,19 @@ def play(b: Bridge, months: int = 12, verbose: Callable[[str], None] | None = No
                 snap = observe.snapshot(b, with_buildings=False)
                 mem.history.append(metrics(snap))
                 note(f"[{snap.date}] GDP {snap.country.get('gdp') or 0:,.0f}（基线，不干预）")
-            clock.run_until(clock.date().next_month())
+            if act:
+                ticks = {"n": 0}
+
+                def on_tick() -> None:
+                    handle_events(b, mem, note, tag=tag, clock=clock, keep_running=True)
+                    ticks["n"] += 1
+                    if ticks["n"] % 5 == 0:      # 提议不用每秒读
+                        handle_proposals(b, mem, note)
+
+                callback = on_tick
+            else:
+                callback = None
+            clock.run_until(clock.date().next_month(), on_tick=callback)
         except Exception as exc:      # 记一笔再停，已走的月份照样记入 runs.jsonl
             stopped = f"出错：{type(exc).__name__}: {exc}"
             note(stopped)

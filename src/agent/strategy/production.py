@@ -14,8 +14,10 @@ from __future__ import annotations
 from agent.gamedata import GameData
 from agent.observe import Snapshot
 from agent.strategy import economy
-from agent.strategy.config import Decision, cfg
+from agent.strategy.config import Decision, cfg, profile
 from agent.strategy.construction import _prices, _wage_rates
+
+UNIVERSITY = "building_university"
 
 SWITCH_MARGIN = 0.25
 MAX_PER_MONTH = 12
@@ -52,3 +54,24 @@ def candidates(gd: GameData, snap: Snapshot, researched: set[str], offset: int =
             out.append(Decision("set_pm", {"state": s.id, "building": key, "pm": ranked[0], "acceptable": ok},
                                 f"{s.name} {pmg}：每级周利润 {best:,.0f}"))
     return out
+
+
+def university_candidates(gd: GameData, snap: Snapshot, researched: set[str]) -> list[Decision]:
+    """大学：产出是创新、不是商品，经济账挑不了生产方式。按档案里的 pm_order 从低到高，
+    取已解锁的最高一档（经院教育 → 哲学系 → 分析哲学系，创新 +50% / +100%）。"""
+    order = (profile(snap).get("universities") or {}).get("pm_order") or []
+    if not order:
+        return []
+    laws = {l.key for l in snap.laws.values() if l.key}
+    out: list[Decision] = []
+    for s in snap.states:
+        row = s.buildings.get(UNIVERSITY)
+        if row is None or row.levels <= 0:
+            continue
+        unlocked = [pm for pm in order if pm in gd.pms and economy.pm_unlocked(gd, pm, researched, laws)]
+        if not unlocked:
+            continue
+        best = unlocked[-1]
+        out.append(Decision("set_pm", {"state": s.id, "building": UNIVERSITY, "pm": best, "acceptable": [best]},
+                            f"{s.name} 大学 → {gd.pms[best]['name'].get('zh', best)}（创新更高）"))
+    return out[:8]

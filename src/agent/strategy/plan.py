@@ -14,7 +14,8 @@ from dataclasses import dataclass, field
 
 from agent.gamedata import GameData
 from agent.observe import LawOption, Snapshot
-from agent.strategy import budget, construction, politics, production, research
+from agent.strategy import budget, construction, decrees, institutions, politics, production, research
+from agent.strategy import config as strategy_config
 from agent.strategy.config import Decision
 
 
@@ -23,7 +24,10 @@ class Plan:
     tax: Decision | None = None
     reform: Decision | None = None
     research: list[Decision] = field(default_factory=list)
+    research_queue: list[Decision] = field(default_factory=list)
     law: list[Decision] = field(default_factory=list)
+    institution: list[Decision] = field(default_factory=list)
+    decree: list[Decision] = field(default_factory=list)
     build: list[Decision] = field(default_factory=list)
     build_slots: int = 0
     pm: list[Decision] = field(default_factory=list)
@@ -34,10 +38,13 @@ class Plan:
             lines.append(f"税：{self.tax}")
         if self.research:
             lines.append(f"研究：{self.research[0]}")
+        lines += [f"研究队列：{d.args['tech']}" for d in self.research_queue[:limit]]
         if self.reform:
             lines.append(f"政府：{self.reform}")
         if self.law:
             lines.append(f"法律：{self.law[0]}")
+        lines += [f"机构：{d}" for d in self.institution[:limit]]
+        lines += [f"法令：{d}" for d in self.decree[:limit]]
         lines += [f"建造：{d}" for d in self.build[:max(self.build_slots, 0)][:limit]]
         lines += [f"生产方式：{d}" for d in self.pm[:limit]]
         return lines
@@ -49,9 +56,12 @@ def decide(gd: GameData, snap: Snapshot, researched: set[str], costs: dict[str, 
     return Plan(
         tax=budget.decide(snap),
         reform=politics.reform(snap, options, enacting),
-        research=research.candidates(gd, researched, snap.researching),
+        research=research.candidates(gd, researched, snap.researching, strategy_config.tech_priority(snap)),
         law=politics.candidates(snap, options, enacting),
+        institution=institutions.candidates(snap),
+        decree=decrees.candidates(snap),
         build=construction.candidates(gd, snap, researched, costs),
         build_slots=construction.slots(snap),
-        pm=production.candidates(gd, snap, researched, pm_offset),
+        pm=production.candidates(gd, snap, researched, pm_offset)
+           + production.university_candidates(gd, snap, researched),
     )

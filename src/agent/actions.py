@@ -44,8 +44,9 @@ CHARTER_PROBES = ["Company.HasAnyTradeCharterActive", "Company.HasAnyIndustryCha
 EVENT_FIELDS = ["Event.GetKey", "Event.GetTitle", "Event.GetNumRemainingDays",
                 "Event.GetTopScope.GetRootScope.GetCountry.IsLocalPlayer"]
 EVENT_OPTIONS = "EventWindow.GetOptions"
-OPTION_FIELDS = ["EventOption.GetText", "EventOption.IsEnabled", "EventOption.IsDefaultOption"]
-SIGNATURE_FIELDS = ["GetGoldReserves", "GetPrestige", "GetGovernmentLegitimacy", "GetLawBeingEnacted.GetLawType.GetKey",
+OPTION_FIELDS = ["EventOption.GetText", "EventOption.IsEnabled", "EventOption.IsDefaultOption",
+                 "EventOption.GetDesc"]
+SIGNATURE_FIELDS = ["GetGoldReserves", "GetPrestige", "GetGovernmentLegitimacy", "GetLawBeingEnacted.GetLawType.GetName",
                     "IsEnactingLaw", "IsNegotiating"]   # 谈判事件答完 IsNegotiating 立刻变 0
 _ANSWERED: dict[int, int] = {}      # 本进程已回答的事件 id → 选项
 
@@ -356,13 +357,15 @@ class Actions:
         ref = [(self.country_ref(country), 0)]
         out = []
         for lst in DIPLO_ACTION_LISTS:
-            for key, name, valid, why in self.b.rows(f"Country.{lst}", ["DiplomaticAction.GetType.GetKey",
-                                                                         "DiplomaticAction.GetNameNoFormatting",
-                                                                         "IsValid(DiplomaticAction.ExecuteAction)",
-                                                                         "GetDesc(DiplomaticAction.ExecuteAction)"],
-                                                     path=ref):
+            for key, name, valid, active, why in self.b.rows(
+                    f"Country.{lst}", ["DiplomaticAction.GetType.GetKey",
+                                       "DiplomaticAction.GetNameNoFormatting",
+                                       "IsValid(DiplomaticAction.ExecuteAction)",
+                                       "DiplomaticAction.IsActivePact",
+                                       "GetDesc(DiplomaticAction.ExecuteAction)"],
+                    path=ref):
                 out.append({"action": key, "name": plain(name), "list": lst, "valid": valid == "1",
-                            "why_not": plain(why)[:200]})
+                            "active": active == "1", "why_not": plain(why)[:200]})
         return out
 
     def diplomatic_action(self, country: str, action: str) -> ActionResult:
@@ -645,8 +648,10 @@ class Actions:
                 continue
             opts = self.b.rows_fake(EVENT_OPTIONS, OPTION_FIELDS, _event_window(int(eid)))
             out.append({"id": int(eid), "key": key, "title": plain(title), "days_left": int(days or 0),
-                        "options": [{"option": i, "text": plain(t), "enabled": e == "1", "default": d == "1"}
-                                    for i, (t, e, d) in enumerate(opts)]})
+                        "options": [{"option": i, "text": plain(row[0]), "enabled": row[1] == "1",
+                                     "default": row[2] == "1",
+                                     "desc": plain(row[3]) if len(row) > 3 else ""}
+                                    for i, row in enumerate(opts)]})
         return out
 
     def choose_event_option(self, event_id: int, option: int) -> ActionResult:
@@ -862,6 +867,9 @@ class Actions:
         spath = self._state_path(state)
         if not spath:
             return ActionResult(False, name, f"玩家没有州 {state}")
+        active = self._decrees(spath)
+        if decree in active:                     # GetPotentialDecrees 不含已生效的，先查现有的
+            return ActionResult(True, name, f"已是目标状态（现有：{active}）", active, active)
         path, names = self._find("State.GetPotentialDecrees", "DecreeType.GetNameNoFormatting", decree, path=spath)
         if not path:
             return ActionResult(False, name, f"可颁布的法令：{names}")

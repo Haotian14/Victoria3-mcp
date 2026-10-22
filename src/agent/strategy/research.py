@@ -27,12 +27,13 @@ def _path(gd: GameData, target: str, done: set[str]) -> list[str]:
     return order
 
 
-def candidates(gd: GameData, researched: set[str], researching: str | None) -> list[Decision]:
+def candidates(gd: GameData, researched: set[str], researching: str | None,
+               priority: list[str] | None = None) -> list[Decision]:
     if researching:
         return []
     out: list[Decision] = []
     seen: set[str] = set()
-    for target in cfg()["tech_priority"]:
+    for target in (priority or cfg()["tech_priority"]):
         for t in _path(gd, target, researched):
             if t not in seen:
                 seen.add(t)

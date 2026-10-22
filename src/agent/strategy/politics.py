@@ -16,6 +16,7 @@ from __future__ import annotations
 from math import comb
 
 from agent.observe import LawOption, Snapshot
+from agent.strategy import config as strategy_config
 from agent.strategy.config import Decision, cfg
 
 PHASES = 3          # 推进几次生效
@@ -36,8 +37,10 @@ def pass_chance(opt: LawOption) -> float:
     return sum(comb(PHASES - 1 + k, k) * p ** PHASES * q ** k for k in range(SETBACKS))
 
 
-def targets() -> list[tuple[str, str]]:
-    return [(g, law) for g, law in cfg()["law_route"]]
+def targets(snap: Snapshot | None = None) -> list[tuple[str, str]]:
+    """法律路线：优先用国家专属路线（strategy.json 的 country_profiles）。"""
+    route = cfg()["law_route"] if snap is None else strategy_config.law_route(snap)
+    return [(g, law) for g, law in route]
 
 
 def candidates(snap: Snapshot, options: list[LawOption], enacting: str | None) -> list[Decision]:

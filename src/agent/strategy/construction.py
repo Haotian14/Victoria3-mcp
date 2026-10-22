@@ -23,10 +23,11 @@ from statistics import median
 from agent.gamedata import GameData
 from agent.observe import Snapshot, StateRow
 from agent.strategy import economy
-from agent.strategy.config import Decision, cfg
+from agent.strategy.config import Decision, cfg, profile
 
 SECTOR = "building_construction_sector"
 ADMIN = "building_government_administration"
+UNIVERSITY = "building_university"
 
 
 def _wage_rates(snap: Snapshot) -> tuple[dict[int, float], float]:
@@ -83,6 +84,34 @@ def _best_state(snap: Snapshot, key: str) -> StateRow | None:
     return max(ok, key=lambda s: s.population or 0) if ok else None
 
 
+def _sector_inputs_ok(prices: dict[str, float], base: dict[str, float]) -> bool:
+    """建造部门吃木材与布料：这两种贵了就先别扩，等原材料产业追上（社区共识：木材与布料要便宜）。"""
+    c = cfg()["construction"]
+    ratio = c.get("sector_input_max_price_ratio") or 0.0
+    if ratio <= 0:
+        return True
+    return all(not base.get(g) or prices.get(g, 0.0) <= base[g] * ratio
+               for g in c.get("sector_inputs", ()))
+
+
+def _admin_states(snap: Snapshot) -> list[tuple[StateRow, float]]:
+    """按「征税能力缺口」（已用 − 可用）从大到小排；缺口都为 0 时按人口排。
+    大清 1836 的税收浪费接近一半，缺口集中在人口大州，不能可着一个州堆行政机构。"""
+    rows: list[tuple[StateRow, float]] = []
+    for s in snap.states:
+        if not s.incorporated:
+            continue
+        row = s.buildings.get(ADMIN)
+        if row is None or not row.can_queue:
+            continue
+        deficit = 0.0
+        if s.tax_capacity is not None and s.tax_capacity_usage is not None:
+            deficit = max(0.0, s.tax_capacity_usage - s.tax_capacity)
+        rows.append((s, deficit))
+    rows.sort(key=lambda t: (t[1], t[0].population or 0.0), reverse=True)
+    return rows
+
+
 def candidates(gd: GameData, snap: Snapshot, researched: set[str], costs: dict[str, float]) -> list[Decision]:
     """按优先级排好的建造候选（比 slots 多给几个备选，执行时可能有失败的）。"""
     c = cfg()["construction"]
@@ -106,7 +135,8 @@ def candidates(gd: GameData, snap: Snapshot, researched: set[str], costs: dict[s
     have = sum(s.buildings[SECTOR].levels + s.buildings[SECTOR].queued for s in snap.states if SECTOR in s.buildings)
     cap_levels = int(income * c["sector_budget_share"] / sector_cost) if sector_cost > 0 else 0
     want = min(c["construction_sector_max_parallel"], cap_levels - have)
-    if balance > income * c["sector_min_surplus"] and money > expenses * c["construction_sector_reserve_weeks"] and want > 0:
+    if (balance > income * c["sector_min_surplus"] and money > expenses * c["construction_sector_reserve_weeks"]
+            and want > 0 and _sector_inputs_ok(prices0, gd.base_prices())):
         ok = sorted((s for s in snap.states if SECTOR in s.buildings and s.buildings[SECTOR].can_queue
                      and s.incorporated), key=lambda s: -(s.population or 0))
         for i in range(max(0, want - _queued(snap, SECTOR))):
@@ -115,11 +145,43 @@ def candidates(gd: GameData, snap: Snapshot, researched: set[str], costs: dict[s
                 out.append(Decision("build", {"state": s.id, "building": SECTOR},
                                     f"扩建造部门（{s.name}；已有 {have} 级，按收入可养 {cap_levels} 级，"
                                     f"每级周成本 {sector_cost:,.0f}）", score=1e9 - i))
-    if (snap.country.get("tax_waste") or 0.0) > c["tax_waste_admin"] and _queued(snap, ADMIN) == 0:
-        s = _best_state(snap, ADMIN)
-        if s:
+    # 官僚：税收浪费说明征税能力不够。按各州缺口补，而不是把行政机构全堆在一个人口最多的州。
+    waste = snap.country.get("tax_waste") or 0.0
+    admin_states = _admin_states(snap)
+    if waste > c["tax_waste_admin"] or any(d > 0 for _, d in admin_states):
+        added = 0
+        for s, deficit in admin_states:
+            if added >= int(c.get("admin_max_per_month", 1)):
+                break
+            row = s.buildings.get(ADMIN)
+            if row is None or row.queued > 0:
+                continue
             out.append(Decision("build", {"state": s.id, "building": ADMIN},
-                                f"税收浪费 {snap.country['tax_waste']:.0%}，补官僚（{s.name}）", score=1e8))
+                                f"税收浪费 {waste:.0%}，补官僚（{s.name}；征税能力缺口 {deficit:,.0f}）",
+                                score=1e8 - deficit))
+            added += 1
+
+    # 大学：大清攻略的核心是研究速度（识字率低、科技慢）。大学产出创新、不产出商品，
+    # 经济账看不见它，只能按攻略单独排。
+    uni = profile(snap).get("universities") or {}
+    target = int(uni.get("target_levels") or 0)
+    if target > 0:
+        have = sum(row.levels + row.queued for s in snap.states
+                   for key, row in s.buildings.items() if key == UNIVERSITY)
+        if have < target:
+            per_state = int(uni.get("max_per_state", 2))
+            pool = [s for s in snap.states
+                    if UNIVERSITY in s.buildings and s.buildings[UNIVERSITY].can_queue
+                    and s.buildings[UNIVERSITY].queued == 0
+                    and s.buildings[UNIVERSITY].levels < per_state
+                    and s.incorporated and not s.isolated and s.labor >= 500]
+            pool.sort(key=lambda s: (s.population or 0.0) / (1 + s.buildings[UNIVERSITY].levels),
+                      reverse=True)
+            for s in pool[:int(uni.get("max_per_month", 1))]:
+                out.append(Decision("build", {"state": s.id, "building": UNIVERSITY},
+                                    f"大学 {have}/{target} 级（{s.name}；已有 "
+                                    f"{s.buildings[UNIVERSITY].levels} 级，人口 {s.population or 0:,.0f}）",
+                                    score=1e7))
 
     prices = _prices(gd, snap)
     base = gd.base_prices()

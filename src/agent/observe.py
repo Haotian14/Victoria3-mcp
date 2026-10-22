@@ -10,6 +10,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
+from typing import Any
 
 from agent import gamedata
 from agent.bridge import FIELD_ERROR, IGS, PLAYER, PLAYER_MUT, Bridge, number, plain
@@ -32,6 +33,7 @@ LAW_LISTS = ("AccessActivePowerStructureLaws", "AccessActiveEconomyLaws", "Acces
 TAX_LEVELS = ("VeryLow", "Low", "Medium", "High", "VeryHigh")
 
 COUNTRY_FIELDS = {
+    "tag": "GetTagName",
     "money": "GetGoldReserves",
     "gold_limit": "GetGoldReserveLimit",
     "credit_max": "GetMaxCredit",
@@ -81,6 +83,8 @@ class StateRow:
     incorporated: bool = True
     isolated: bool = False          # 与市场不连通
     unemployed: float = 0.0         # 失业的劳动年龄人口
+    tax_capacity: float | None = None       # 州征税能力（CalcTaxCapacity）
+    tax_capacity_usage: float | None = None  # 已用掉的征税能力（超过即税收浪费）
     buildings: dict[str, BuildingRow] = field(default_factory=dict)
 
     @property
@@ -139,7 +143,7 @@ CHANCE_REQUIREMENT = "立法成功概率高于0%"
 class Snapshot:
     date: Date
     name: str
-    country: dict[str, float | None]
+    country: dict[str, Any]           # 数值字段 + tag（字符串）
     tax_level: str | None
     researching: str | None         # 正在研究的科技 id
     laws: dict[str, LawRow]         # 法律组 → 现行法律
@@ -169,12 +173,13 @@ def _name_index(kind: str) -> dict[str, str]:
 
 def country(b: Bridge) -> tuple[str, dict[str, float | None], str | None, str | None, Date]:
     names = list(COUNTRY_FIELDS)
-    exprs = [f"{PLAYER}.{COUNTRY_FIELDS[n]}|2" for n in names]
+    exprs = [f"{PLAYER}.{COUNTRY_FIELDS[n]}" + ("" if n == "tag" else "|2") for n in names]
     exprs += [f"IsValid({PLAYER}.SetTaxLevel{t})" for t in TAX_LEVELS]
     exprs += [f"{PLAYER}.GetCurrentlyResearchedTechnology.GetNameNoFormatting",
               f"{PLAYER}.GetNameNoFormatting", "TimeKeeper.GetCurrentDate.GetString"]
     vals = b.read_many(exprs)
     out = {n: _f(v) for n, v in zip(names, vals)}
+    out["tag"] = plain(vals[names.index("tag")] or "")
     tax_valid = vals[len(names):len(names) + len(TAX_LEVELS)]
     # 现行税级的「设为该级」命令不可用；其余可用
     invalid = [t for t, v in zip(TAX_LEVELS, tax_valid) if v == "0"]
@@ -205,7 +210,7 @@ def prices(b: Bridge) -> dict[str, dict[str, float | None]]:
 STATE_FIELDS = ["State.GetID", "State.GetNameNoFormatting", "State.GetInfrastructure|1",
                 "State.GetInfrastructureUsage|1", "State.GetNumFreeArableLand", "State.GetPopulationSize",
                 "State.GetYearlyGDP|0", "State.IsIncorporated", "State.IsIsolatedFromMarket",
-                "State.GetNumUnemployedWorkingAdults"]
+                "State.GetNumUnemployedWorkingAdults", "State.CalcTaxCapacity|2", "State.CalcTaxCapacityUsage|2"]
 
 BUILDING_FIELDS = ["Building.GetBuildingType.GetKey", "Building.GetTotalLevels", "Building.GetExpansionLevelsInQueue",
                    "Building.GetEmploymentPercentage|3", "Building.GetProfitability|1",
@@ -219,7 +224,8 @@ def states(b: Bridge, with_buildings: bool = True) -> list[StateRow]:
         sid = _f(r[0])
         out.append(StateRow(i, int(sid) if sid is not None else -1, r[1], _f(r[2]), _f(r[3]),
                             int(_f(r[4]) or 0), _f(r[5]), _f(r[6]), incorporated=r[7] == "1",
-                            isolated=r[8] == "1", unemployed=_f(r[9]) or 0.0))
+                            isolated=r[8] == "1", unemployed=_f(r[9]) or 0.0,
+                            tax_capacity=_f(r[10]), tax_capacity_usage=_f(r[11])))
     if with_buildings:
         for s in out:
             buildings(b, s)

@@ -3,7 +3,7 @@
 from agent import gamedata
 from agent.game import Date
 from agent.observe import BuildingRow, IGRow, LawOption, LawRow, Snapshot, StateRow
-from agent.strategy import budget, construction, politics, research
+from agent.strategy import budget, construction, decrees, diplomacy, events, institutions, politics, research
 
 
 def _snap(**country) -> Snapshot:
@@ -112,6 +112,52 @@ def test_construction_stops_when_broke():
     snap = _snap(balance=-100_000.0, money=100_000.0)
     assert construction.slots(snap) == 0
     assert construction.slots(_snap(queue_government=10.0)) == 0
+
+
+def _event(key: str, *options: dict) -> dict:
+    return {"key": key, "title": key, "options": list(options)}
+
+
+def test_event_policy_avoids_opium_war():
+    ev = _event("opium_wars.1",
+                {"option": 0, "text": "我们得做点什么！", "desc": "开始鸦片危机", "enabled": True, "default": True},
+                {"option": 1, "text": "我们不能得罪大不列颠。", "desc": "增加激进派", "enabled": True, "default": False})
+    assert events.pick(ev, "CHI") == 1
+
+
+def test_event_policy_prefers_good_effects():
+    ev = _event("generic.1",
+                {"option": 0, "text": "改革", "desc": "增加 10% 创新，减少 5 生活水平",
+                 "enabled": True, "default": False},
+                {"option": 1, "text": "维持", "desc": "增加激进派，减少征税能力", "enabled": True, "default": True})
+    assert events.score(ev, ev["options"][0]) > events.score(ev, ev["options"][1])
+    assert events.pick(ev, "CHI") == 0
+
+
+def test_institutions_follow_profile_and_wait_for_bureaucracy():
+    snap = _snap(tag="CHI", tax_waste=0.0)
+    assert [d.args["institution"] for d in institutions.candidates(snap)] == ["教育"]
+    snap.country["tax_waste"] = 0.3
+    assert institutions.candidates(snap) == []
+
+
+def test_decrees_pick_big_and_overused_states():
+    snap = _snap(tag="CHI")
+    big = StateRow(0, 1, "大州", 100.0, 120.0, 50, 20_000_000.0, None)
+    small = StateRow(1, 2, "小州", 100.0, 10.0, 50, 5_000_000.0, None)
+    snap.states = [big, small]
+    got = {(d.args["state"], d.args["decree"]) for d in decrees.candidates(snap)}
+    assert got == {(1, "促进社会流动"), (1, "道路养护")}
+
+
+def test_diplomacy_rejects_demands_and_sway():
+    assert not diplomacy.accept_proposal({"kind": "demand", "name": "割让香港", "actor": "英国"})
+    assert not diplomacy.accept_proposal({"kind": "sway", "name": "加入战争", "actor": "法国"})
+
+
+def test_diplomacy_accepts_defensive_pact_rejects_investment_rights():
+    assert diplomacy.accept_proposal({"kind": "treaty", "name": "防御同盟", "actor": "俄国"})
+    assert not diplomacy.accept_proposal({"kind": "treaty", "name": "投资权", "actor": "英国"})
 
 
 def test_construction_sector_sized_to_income():
