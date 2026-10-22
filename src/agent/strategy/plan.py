@@ -14,7 +14,7 @@ from dataclasses import dataclass, field
 
 from agent.gamedata import GameData
 from agent.observe import LawOption, Snapshot
-from agent.strategy import budget, construction, decrees, institutions, politics, production, privatization, research, subsidies, trade
+from agent.strategy import budget, construction, consumption, decrees, expansion, institutions, politics, production, privatization, research, subsidies, trade
 from agent.strategy import config as strategy_config
 from agent.strategy.config import Decision
 
@@ -28,8 +28,10 @@ class Plan:
     law: list[Decision] = field(default_factory=list)
     institution: list[Decision] = field(default_factory=list)
     decree: list[Decision] = field(default_factory=list)
+    incorporate: list[Decision] = field(default_factory=list)
     privatize: list[Decision] = field(default_factory=list)
     subsidy: list[Decision] = field(default_factory=list)
+    consumption: list[Decision] = field(default_factory=list)
     trade: list[Decision] = field(default_factory=list)
     build: list[Decision] = field(default_factory=list)
     build_slots: int = 0
@@ -48,8 +50,10 @@ class Plan:
             lines.append(f"法律：{self.law[0]}")
         lines += [f"机构：{d}" for d in self.institution[:limit]]
         lines += [f"法令：{d}" for d in self.decree[:limit]]
+        lines += [f"并入：{d}" for d in self.incorporate[:limit]]
         lines += [f"私有化：{d}" for d in self.privatize[:limit]]
         lines += [f"补贴：{d}" for d in self.subsidy[:limit]]
+        lines += [f"消费税：{d}" for d in self.consumption[:limit]]
         lines += [f"贸易：{d}" for d in self.trade[:limit]]
         lines += [f"建造：{d}" for d in self.build[:max(self.build_slots, 0)][:limit]]
         lines += [f"生产方式：{d}" for d in self.pm[:limit]]
@@ -59,6 +63,9 @@ class Plan:
 def decide(gd: GameData, snap: Snapshot, researched: set[str], costs: dict[str, float],
            enacting: str | None, pm_offset: int = 0, law_options: list[LawOption] | None = None) -> Plan:
     options = law_options or []
+    build = construction.candidates(gd, snap, researched, costs)
+    # 队列硬停时 slots()=0，但优先项目（部门/食品/行政/大学/贸易中心）仍值得排 2 个
+    build_slots = construction.slots(snap) or (3 if build and (snap.country.get("money") or 0) > 0 else 0)
     return Plan(
         tax=budget.decide(snap),
         reform=politics.reform(snap, options, enacting),
@@ -67,11 +74,14 @@ def decide(gd: GameData, snap: Snapshot, researched: set[str], costs: dict[str, 
         law=politics.candidates(snap, options, enacting),
         institution=institutions.candidates(snap),
         decree=decrees.candidates(snap),
+        incorporate=expansion.candidates(snap),
         privatize=privatization.candidates(snap),
         subsidy=subsidies.candidates(snap),
+        consumption=consumption.candidates(snap),
         trade=trade.candidates(snap),
-        build=construction.candidates(gd, snap, researched, costs),
-        build_slots=construction.slots(snap),
+        build=build,
+        build_slots=build_slots,
         pm=production.candidates(gd, snap, researched, pm_offset)
-           + production.university_candidates(gd, snap, researched),
+           + production.university_candidates(gd, snap, researched)
+           + production.financial_candidates(gd, snap, researched),
     )

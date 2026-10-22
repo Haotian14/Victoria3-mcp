@@ -18,6 +18,11 @@ from agent.strategy.config import Decision, cfg, profile
 from agent.strategy.construction import _prices, _wage_rates
 
 UNIVERSITY = "building_university"
+FINANCIAL = "building_financial_district"
+FINANCIAL_PRIVATE = "pm_financial_district_privately_owned"
+# 1.13 调研里 PM 错配最严重、收益最大的行业：每月优先扫，不让庄园/生存农场挤掉
+PM_PRIORITY = ("building_paper_mill", "building_furniture_manufactory", "building_livestock_ranch",
+               "building_tooling_workshop", "building_logging_camp", "building_fishing_wharf")
 
 SWITCH_MARGIN = 0.25
 MAX_PER_MONTH = 12
@@ -36,12 +41,17 @@ def candidates(gd: GameData, snap: Snapshot, researched: set[str], offset: int =
     owned.sort(key=lambda t: -t[2].levels)
     if not owned:
         return []
-    start = offset % len(owned)
-    owned = owned[start:] + owned[:start]
+    # 优先检查 PM 收益最大的行业；庄园/生存农场等级再高也不该占满每月名额
+    priority = [t for t in owned if t[1] in PM_PRIORITY]
+    priority.sort(key=lambda t: -t[2].levels)
+    rest = [t for t in owned if t[1] not in PM_PRIORITY]
+    start = offset % len(rest) if rest else 0
+    rest = rest[start:] + rest[:start]
+    owned = priority + rest
 
     out: list[Decision] = []
     for s, key, row in owned[:MAX_PER_MONTH]:
-        wage = wages.get(s.id, wage_all) * mix / 1000.0
+        wage = wages.get(s.id, wage_all) * mix / 10000.0
         for pmg in gd.buildings[key]["pmgs"]:
             options = [pm for pm in (gd.pmgs.get(pmg) or {}).get("pms", [])
                        if economy.pm_unlocked(gd, pm, researched, laws)
@@ -53,6 +63,22 @@ def candidates(gd: GameData, snap: Snapshot, researched: set[str], offset: int =
             ok = [pm for pm in ranked if economy.pm_profit(gd, pm, prices, wage) >= best - abs(best) * SWITCH_MARGIN]
             out.append(Decision("set_pm", {"state": s.id, "building": key, "pm": ranked[0], "acceptable": ok},
                                 f"{s.name} {pmg}：每级周利润 {best:,.0f}"))
+    return out
+
+
+def financial_candidates(gd: GameData, snap: Snapshot, researched: set[str]) -> list[Decision]:
+    """金融区保持私人所有：每级 +50 资本家，是养大实业家最直接的单一杠杆。
+    公开交易 PM（mutual_funds）会把 25 店主换成 25 官僚，对实业家更差，所以不选。"""
+    if FINANCIAL not in gd.buildings or not economy.pm_unlocked(gd, FINANCIAL_PRIVATE, researched, None):
+        return []
+    out: list[Decision] = []
+    for s in snap.states:
+        row = s.buildings.get(FINANCIAL)
+        if row is None or row.levels <= 0:
+            continue
+        out.append(Decision("set_pm", {"state": s.id, "building": FINANCIAL, "pm": FINANCIAL_PRIVATE,
+                                       "acceptable": [FINANCIAL_PRIVATE]},
+                            f"{s.name} 金融区 → 私人所有（每级 +50 资本家）"))
     return out
 
 

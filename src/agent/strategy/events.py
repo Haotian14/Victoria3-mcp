@@ -5,7 +5,12 @@ tooltip）。这里不读存档、不改游戏，只给 runner 一个确定性�
 - 鸦片战争：没有军队 / 外交自动化时默认让步（country_profiles.CHI.opium_war = avoid），
   避免 1836 年被英国打崩；想打就把它改成 fight；
 - 立法检查点：优先推进 / 通过，别选辩论拖延；
-- 其他：按 desc 里的「增加 / 减少 + 好/坏名词」逐句打分，默认选项只加半分。
+- 其他：按 desc 里的「增加 / 减少 + 好/坏名词」逐句打分，默认选项只加 0.1 分。
+
+1.13.11 事件链调研（docs/research-progress.md #14）：大清的关键事件默认选项经常是坑
+（boxer.4.a、heavenly.5.a、CHI_missionaries.3/4.b、famine_political.1.b 等），
+GetDesc 又看不到 hidden_effect / set_variable，所以对政权级事件按「事件键 + 选项关键词」硬编码，
+默认只作 fallback；通用关键词打分继续兜底其余事件。
 """
 
 from __future__ import annotations
@@ -41,6 +46,36 @@ INCREASE = ("增加", "提高", "提升", "获得", "增长", "上升", "改善"
 LAW_ADVANCE = ("推进", "通过", "成功", "支持", "advance", "pass", "success")
 LAW_STALL = ("辩论", "搁置", "拖延", "受阻", "妥协", "debate", "stall", "delay")
 
+# 事件键 → (优先选项关键词, fallback)。fallback 取 "default" 或 "first"。
+# 只列「默认/关键词会选错、后果到政权级」的事件；其余仍走通用打分。
+HARD: dict[str, tuple[tuple[str, ...], str]] = {
+    "boxer_rebellion_events.1": (("盲从", "愚妄"), "default"),          # a：所有汉人家园国 -100 关系
+    "boxer_rebellion_events.2": (("团结", "正义", "united"), "default"),
+    "boxer_rebellion_events.3": (("这些屈辱",), "default"),            # b：改朝换代、杀统治者
+    "boxer_rebellion_events.4": (("和解", "大局为重"), "default"),      # a：-1 统一、移除满族
+    "heavenly.4": (("碾碎",), "default"),                             # b：play as 太平天国
+    "heavenly.5": (("仁慈", "赦免"), "default"),                      # a：基督教列强 -25 关系
+    "heavenly.1": (("拒绝",), "default"),                             # a：+5% 转化，加速太平天国
+    "CHI_missionaries.1": ((), "default"),                            # b 比 a 更轻
+    "CHI_missionaries.2": (("处决",), "default"),                     # a：该州 10 年不再触发
+    "CHI_missionaries.3": (("欢迎",), "default"),                     # b：+25% 转化 + 激进
+    "CHI_missionaries.4": (("欢迎",), "default"),
+    "warlord_china_events.100": (("挽救",), "default"),               # 其他选项放弃大清
+    "warlord_china_events.101": (("重建",), "default"),               # b：+官僚/权威/合法性
+    "warlord_china_events.110": (("掩盖", "掩盖此事"), "default"),
+    "warlord_china_events.200": (("聪明才智",), "default"),           # b：+25% 研究
+    "warlord_china_events.301": (("毫无意义",), "default"),           # a 只有 40–66.7% 成功
+    "famine_political.1": (("生命",), "default"),                     # b：0.3 下层激进
+    "famine_events.3": (("紧急救济",), "default"),                    # 无 relief 时 c 严格优于 b
+    "famine_events.4": (("接受",), "default"),                        # a/b：+2 生活水平
+    "treaty_port_inheritance_events.1": (("遵守协议",), "default"),
+    "strike.1": (("谈判",), "default"),
+    "strike.4": (("破坏罢工", "替代工人"), "default"),
+    "1848.2": (("清除",), "default"),
+    "negotiation.1": (("修正案", "amendment"), "default"),
+    "historical_agitators.21": (("留下", "留在中国", "不要流放", "赦免"), "default"),
+}
+
 _TAG = re.compile(r"#\w+|@\w+!|§[A-Za-z0-9]|\$[^$]*\$")
 
 
@@ -64,8 +99,22 @@ def score(event: dict[str, Any], option: dict[str, Any]) -> float:
     text = _clean(option.get("text", "") + " " + option.get("desc", ""))
     total = sum(_clause_score(c) for c in re.split(r"[。；;，,\n]", text) if c.strip())
     if option.get("default"):
-        total += 0.5
+        total += 0.1                # 只作平手裁决；默认选项经常是坑
     return total
+
+
+def _blob(option: dict[str, Any]) -> str:
+    return _clean(option.get("text", "") + " " + option.get("desc", ""))
+
+
+def _hard_pick(opts: list[dict[str, Any]], keywords: tuple[str, ...], fallback: str) -> int:
+    if keywords:
+        for o in opts:
+            if any(k.lower() in _blob(o).lower() for k in keywords):
+                return o["option"]
+    if fallback == "default":
+        return next((o["option"] for o in opts if o.get("default")), opts[0]["option"])
+    return opts[0]["option"]
 
 
 def pick(event: dict[str, Any], tag: str = "") -> int | None:
@@ -75,11 +124,19 @@ def pick(event: dict[str, Any], tag: str = "") -> int | None:
         return None
     key = event.get("key") or ""
 
-    # 鸦片战争：没有军队 / 外交自动化时，选最后一个（“让步 / 不感兴趣”），避免开战。
+    # 鸦片战争：没有军队 / 外交自动化时，选“让步 / 不能得罪”，避免开战。
     if key.startswith(("opium_wars.1", "opium_wars.2")):
         mode = profile_for_tag(tag).get("opium_war", "avoid")
         if mode == "avoid":
+            for o in opts:
+                if any(k in _blob(o) for k in ("不能得罪", "让步", "妥协", "不感兴趣", "give in")):
+                    return o["option"]
             return max(opts, key=lambda o: o["option"])["option"]
+
+    # 政权级事件：按事件键硬编码，优先于通用打分
+    hard = HARD.get(key)
+    if hard:
+        return _hard_pick(opts, *hard)
 
     # 立法检查点：优先推进 / 通过，别选辩论拖延（选错会拖慢甚至拖失败）。
     if "law" in key.lower() or "enact" in key.lower():

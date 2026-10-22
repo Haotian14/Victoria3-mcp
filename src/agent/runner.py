@@ -198,9 +198,10 @@ def handle_movements(b: Bridge, mem: Memory, note: Callable[[str], None],
             m = ms.get(name)
             if not m or m["bolstered"] or m["suppressed"]:
                 continue
+            # bolster 只提高 pop 吸引力，不直接加 activism；档案默认留空
             r = a.toggle_movement(name, "Bolstering")
             mem.tally(r, "movement")
-            note(f"    {r}  ← 扶持运动「{name}」")
+            note(f"    {r}  ← 扶持运动「{name}」（扩大支持基础）")
             if not r.ok:
                 mem.blocked[key] = month + 6
             return 1
@@ -213,11 +214,18 @@ def _promote_queue(a: Actions, note: Callable[[str], None]) -> None:
     """把建造部门 / 粮食建筑的排队项目移到队首（队列常有几百项，队尾永远轮不到）。"""
     c = cfg()["construction"]
     fb = (c.get("food_security") or {}).get("building")
-    counts = {SECTOR: 4}
+    counts = {SECTOR: 2}
     if fb:
-        counts[fb] = int((c.get("food_security") or {}).get("max_per_month", 2))
+        counts[fb] = 1
+    counts["building_logging_camp"] = 2       # 木材是建造部门/建造的瓶颈
+    counts["building_trade_center"] = 1       # 每级约 900/周，当前回报最高
+    counts["building_railway"] = 1            # 研究后才会有，没有就自动跳过
+    budget = int(c.get("priority_build_slots", 7))
+    used = 0
     for key, count in counts.items():
         for _ in range(count):
+            if used >= budget:
+                return
             try:
                 q = a.construction_queue()
                 idx = next((item["index"] for item in q
@@ -230,6 +238,7 @@ def _promote_queue(a: Actions, note: Callable[[str], None]) -> None:
                     break
                 if not r.detail.startswith(("已是", "现行")):
                     note(f"    队列优先：{r.action}")
+                    used += 1
             except Exception:
                 break
 
@@ -242,7 +251,8 @@ def _clean_queue(a: Actions, note: Callable[[str], None]) -> None:
         q = a.construction_queue()
         if len(q) <= maxq:
             return
-        keep = {SECTOR, ADMIN, UNIVERSITY}
+        keep = {SECTOR, ADMIN, UNIVERSITY, "building_trade_center", "building_logging_camp",
+                "building_railway", "building_port"}
         fb = (c.get("food_security") or {}).get("building")
         if fb:
             keep.add(fb)
@@ -267,6 +277,8 @@ def _do(a: Actions, d: Decision, snap: observe.Snapshot) -> ActionResult:
         return a.set_institution(x["institution"], x["level"])
     if d.kind == "set_decree":
         return a.set_decree(x["state"], x["decree"])
+    if d.kind == "state_action":
+        return a.state_action(x["state"], x["cmd"])
     if d.kind == "research":
         return a.research(x["tech"])
     if d.kind == "queue_research":
@@ -278,6 +290,8 @@ def _do(a: Actions, d: Decision, snap: observe.Snapshot) -> ActionResult:
     if d.kind == "subsidy":
         return a.building_action(x["state"], x["building"],
                                  "ToggleSubsidiesOn" if x["on"] else "ToggleSubsidiesOff")
+    if d.kind == "toggle_consumption_tax":
+        return a.toggle_consumption_tax(x["goods"])
     if d.kind == "enact_law":
         return a.enact_law(x["law"], snap)
     if d.kind == "reform_government":
@@ -321,6 +335,12 @@ def execute(b: Bridge, plan: planner.Plan, snap: observe.Snapshot, mem: Memory,
             continue
         if not run(d).ok:
             mem.blocked[key] = month + 6
+    for d in plan.incorporate:                    # 并入未合并州：失败就过一年再试
+        key = f"incorporate:{d.args['state']}"
+        if mem.blocked.get(key, -1) > month:
+            continue
+        if not run(d).ok:
+            mem.blocked[key] = month + LAW_RETRY_MONTHS
     for d in plan.research:                       # 第一条成功即止
         if run(d).ok:
             break
@@ -360,18 +380,24 @@ def execute(b: Bridge, plan: planner.Plan, snap: observe.Snapshot, mem: Memory,
             continue
         if not run(d).ok:
             mem.blocked[key] = month + LAW_RETRY_MONTHS
+    for d in plan.consumption:                    # 消费税：一次开一项，权威力不够就过半年再试
+        key = f"consumption:{d.args['goods']}"
+        if mem.blocked.get(key, -1) > month:
+            continue
+        if not run(d).ok:
+            mem.blocked[key] = month + 6
     for d in plan.privatize:                      # 私有化：养大实业家（学校法只有他们支持）
         key = f"privatize:{d.args['state']}:{d.args['building']}"
         if mem.blocked.get(key, -1) > month:
             continue
         if not run(d).ok:
             mem.blocked[key] = month + LAW_RETRY_MONTHS
-    for d in plan.trade:                          # 关税 / 补贴：缺货零进口关税，过剩出口补贴
+    for d in plan.trade:                          # 关税 / 补贴：缺货零进口关税，过剩进口高关税
         key = f"trade:{d.args['goods']}:{d.args['side']}"
         if mem.blocked.get(key, -1) > month:
             continue
-        if not run(d).ok:
-            mem.blocked[key] = month + 6
+        run(d)
+        mem.blocked[key] = month + 4              # 游戏冷却 3 个月 + 7 天：成败都锁 4 个月
     mem.pm_offset += len(plan.pm) or 1
     _clean_queue(a, note)      # 放在建造之后：清理会改变州建筑列表顺序，先清会让本月快照路径失效
     return results

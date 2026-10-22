@@ -3,16 +3,16 @@
 from agent import gamedata
 from agent.game import Date
 from agent.observe import BuildingRow, IGRow, LawOption, LawRow, Snapshot, StateRow
-from agent.strategy import budget, construction, decrees, diplomacy, events, institutions, politics, privatization, research, subsidies, trade
+from agent.strategy import budget, construction, consumption, decrees, diplomacy, events, expansion, institutions, politics, privatization, production, research, subsidies, trade
 from agent.strategy import config as strategy_config
 
 
-def _snap(**country) -> Snapshot:
+def _snap(tax_level: str = "Medium", **country) -> Snapshot:
     base = {"money": 1_000_000.0, "gold_limit": 5_000_000.0, "income": 100_000.0, "expenses": 90_000.0,
             "balance": 10_000.0, "construction": 20.0, "construction_used": 20.0, "queue_government": 0.0,
-            "tax_waste": 0.0}
+            "tax_waste": 0.0, "legitimacy": 70.0}
     base.update(country)
-    return Snapshot(date=Date(1836, 1, 1), name="测试", country=base, tax_level="Medium", researching=None,
+    return Snapshot(date=Date(1836, 1, 1), name="测试", country=base, tax_level=tax_level, researching=None,
                     laws={}, prices={}, states=[])
 
 
@@ -33,6 +33,17 @@ def test_budget_keeps_tax_when_reserve_is_deep():
 
 def test_budget_lowers_tax_when_reserve_full_and_surplus_large():
     d = budget.decide(_snap(balance=40_000.0, money=4_500_000.0))
+    assert d and d.args["level"] == "Low"
+
+
+def test_budget_legitimacy_guards():
+    # 高税 + 低合法性：立即回 Medium，不继续收
+    d = budget.decide(_snap(tax_level="High", legitimacy=45.0, balance=-1_000.0, money=5_000_000.0))
+    assert d and d.args["level"] == "Medium"
+    # 合法性不足 62：国库快见底也不升 High
+    assert budget.decide(_snap(legitimacy=50.0, balance=-50_000.0, money=500_000.0)) is None
+    # 合法性 45–49 且国库充足：降 Low 争取跨过 50
+    d = budget.decide(_snap(legitimacy=46.0, balance=-1_000.0, money=9_000_000.0))
     assert d and d.args["level"] == "Low"
 
 
@@ -87,6 +98,18 @@ def test_politics_only_enacts_likely_laws():
     assert politics.candidates(snap, opts, "某法律") == []
 
 
+def test_reform_removes_extra_ig_under_autocracy():
+    snap = _qing()
+    snap.country["legitimacy"] = 46.0
+    snap.laws["lawgroup_distribution_of_power"] = LawRow(
+        "lawgroup_distribution_of_power", "law_autocracy", "独裁制", [])
+    snap.igs = [IGRow(0, "士大夫", 0.50, True, False), IGRow(1, "乡村民众", 0.30, True, False),
+                IGRow(2, "小市民", 0.08, True, False)]
+    d = politics.reform(snap, [], None)
+    assert d and d.kind == "reform_government"
+    assert d.args["members"] == [0, 1]          # 只移除小市民，不动统治者/乡村民众
+
+
 def test_reform_adds_biggest_backer_of_blocked_law():
     snap = _qing()
     blocked = _opt("law_tenant_farmers", valid=False, why="立法成功概率高于0%", 士大夫=-1, 军队=1, 文人=1, 实业家=1)
@@ -137,6 +160,26 @@ def test_event_policy_avoids_opium_war():
     assert events.pick(ev, "CHI") == 1
 
 
+def test_event_hardcoded_traps():
+    boxer = _event("boxer_rebellion_events.4",
+                   {"option": 0, "text": "枷锁被打碎", "desc": "减少 脆弱统一", "enabled": True, "default": True},
+                   {"option": 1, "text": "以大局为重，以和解为贵", "desc": "增加 激进", "enabled": True,
+                    "default": False})
+    assert events.pick(boxer, "CHI") == 1
+    heavenly = _event("heavenly.5",
+                      {"option": 0, "text": "屠杀剩余异教徒", "desc": "关系 -25", "enabled": True,
+                       "default": True},
+                      {"option": 1, "text": "展示仁慈，赦免前叛军", "desc": "增加 忠诚", "enabled": True,
+                       "default": False})
+    assert events.pick(heavenly, "CHI") == 1
+    famine = _event("famine_political.1",
+                    {"option": 0, "text": "坚持传统不应该以生命为代价", "desc": "贸易容量 +20%",
+                     "enabled": True, "default": False},
+                    {"option": 1, "text": "农民哪个年代不挨饿", "desc": "增加 激进", "enabled": True,
+                     "default": True})
+    assert events.pick(famine, "CHI") == 0
+
+
 def test_event_policy_prefers_good_effects():
     ev = _event("generic.1",
                 {"option": 0, "text": "改革", "desc": "增加 10% 创新，减少 5 生活水平",
@@ -148,8 +191,16 @@ def test_event_policy_prefers_good_effects():
 
 def test_institutions_follow_profile_and_wait_for_bureaucracy():
     snap = _snap(tag="CHI", tax_waste=0.0)
+    snap.institutions = ["教育"]                 # 学校法未过时列表里没有教育，不会硬发动作
     assert [d.args["institution"] for d in institutions.candidates(snap)] == ["教育"]
     snap.country["tax_waste"] = 0.3
+    assert institutions.candidates(snap) == []
+    snap.country["tax_waste"] = 0.0
+    snap.institutions = []
+    assert institutions.candidates(snap) == []
+    snap.institutions = ["教育", "卫生系统"]
+    assert {d.args["institution"] for d in institutions.candidates(snap)} == {"教育", "卫生系统"}
+    snap.country["balance"] = -1_000.0           # 结余为负：先别加机构
     assert institutions.candidates(snap) == []
 
 
@@ -160,6 +211,10 @@ def test_decrees_pick_big_and_overused_states():
     snap.states = [big, small]
     got = {(d.args["state"], d.args["decree"]) for d in decrees.candidates(snap)}
     assert got == {(1, "促进社会流动"), (1, "道路养护")}
+    hungry = StateRow(2, 3, "饥荒州", 10.0, 10.0, 50, 1_000_000.0, None)
+    hungry.famine = True
+    snap.states.append(hungry)
+    assert (3, "紧急救济") in {(d.args["state"], d.args["decree"]) for d in decrees.candidates(snap)}
 
 
 def test_shortage_helpers():
@@ -189,37 +244,114 @@ def test_subsidies_add_and_remove():
     snap = _snap(tag="CHI")
     s = StateRow(0, 1, "州", 100.0, 10.0, 50, 10_000_000.0, None)
     row = _row("building_textile_mill", levels=5)
-    row.profitability = -50.0
+    row.earnings, row.wages_expense = 0.0, 50.0   # 实际周利润 −50
     row.subsidized = False
     s.buildings = {"building_textile_mill": row}
     snap.states = [s]
     got = subsidies.candidates(snap)
     assert got and got[0].args["on"] is True
     row.subsidized = True
-    row.profitability = 20.0
+    row.earnings, row.wages_expense = 120.0, 0.0  # 实际为正：取消补贴
     got = subsidies.candidates(snap)
     assert got and got[0].args["on"] is False
 
 
+def test_subsidies_cap_total_share():
+    snap = _snap(tag="CHI", income=100_000.0, subsidies=50_000.0)
+    s = StateRow(0, 1, "州", 100.0, 10.0, 50, 10_000_000.0, None)
+    row = _row("building_textile_mill", levels=10)
+    row.subsidized = True
+    row.earnings, row.wages_expense = 0.0, 50.0
+    row.subsidy_cost = 20_000.0
+    s.buildings = {"building_textile_mill": row}
+    snap.states = [s]
+    got = subsidies.candidates(snap)
+    assert got and got[0].args["on"] is False and "超过收入" in got[0].why
+
+
+def test_consumption_tax_one_at_a_time_and_authority_gate():
+    snap = _snap(tag="CHI", authority=350.0, legitimacy=50.0, sol=7.0)
+    snap.taxed_goods = set()
+    got = consumption.candidates(snap)
+    assert got and got[0].args["goods"] == "tea"
+    snap.country["authority"] = 150.0                # 连 100 成本 + 100 缓冲都不够
+    assert consumption.candidates(snap) == []
+    snap.country["authority"] = 900.0
+    snap.taxed_goods = {"tea", "liquor", "opium", "tobacco", "sugar", "porcelain"}
+    assert consumption.candidates(snap) == []
+
+
 def test_trade_policy_shortage_and_surplus():
     snap = _snap(tag="CHI")
-    snap.prices = {"meat": {"buy": 200.0, "sell": 100.0}, "fabric": {"buy": 100.0, "sell": 200.0}}
-    got = trade.candidates(snap)
-    args = {(d.args["goods"], d.args["side"], d.args["policy"]) for d in got}
+    snap.prices = {"meat": {"buy": 200.0, "sell": 100.0}, "wood": {"buy": 100.0, "sell": 100.0}}
+    snap.trade_policies = {"meat": {"Import": "TariffsLow", "Export": "TariffsLow"},
+                           "wood": {"Import": "TariffsLow", "Export": "TariffsLow"}}
+    args = {(d.args["goods"], d.args["side"], d.args["policy"]) for d in trade.candidates(snap)}
     assert ("meat", "Import", "TariffsNone") in args
-    assert ("fabric", "Import", "TariffsMax") in args
+    assert ("meat", "Export", "TariffsHigh") in args
+    # 已经是目标政策：不重复发（游戏有 3 个月冷却，乱翻会一直撞墙）
+    snap.trade_policies["meat"] = {"Import": "TariffsNone", "Export": "TariffsHigh"}
+    assert not [d for d in trade.candidates(snap) if d.args["goods"] == "meat"]
+    # 过剩：进口高关税保护本国产业
+    snap.prices["wood"] = {"buy": 100.0, "sell": 200.0}
+    args = {(d.args["goods"], d.args["side"], d.args["policy"]) for d in trade.candidates(snap)}
+    assert ("wood", "Import", "TariffsHigh") in args
+
+
+def test_production_scans_priority_industries_first():
+    gd = gamedata.get()
+    snap = _snap(tag="CHI")
+    states = []
+    for i in range(15):                          # 大量高等级非优先建筑占满轮转前排
+        s = StateRow(i, i + 1, f"农场{i}", 100.0, 10.0, 50, 10_000_000.0, None)
+        s.buildings = {"building_wheat_farm": _row("building_wheat_farm", levels=100)}
+        states.append(s)
+    paper = StateRow(99, 99, "纸厂", 100.0, 10.0, 50, 10_000_000.0, None)
+    paper.buildings = {"building_paper_mill": _row("building_paper_mill", levels=5)}
+    states.append(paper)
+    snap.states = states
+    got = production.candidates(gd, snap, set(gd.techs))
+    assert any(d.args["building"] == "building_paper_mill" for d in got)
+
+
+def test_financial_district_stays_privately_owned():
+    gd = gamedata.get()
+    snap = _snap(tag="CHI")
+    s = StateRow(0, 1, "州", 100.0, 10.0, 50, 10_000_000.0, None)
+    s.buildings = {"building_financial_district": _row("building_financial_district", levels=5)}
+    snap.states = [s]
+    got = production.financial_candidates(gd, snap, set(gd.techs))
+    assert got and got[0].args["pm"] == "pm_financial_district_privately_owned"
+
+
+def test_incorporate_unincorporated_states():
+    snap = _snap(tag="CHI", tax_waste=0.05)
+    s = StateRow(0, 1, "边疆", 10.0, 10.0, 50, 2_000_000.0, None)
+    s.incorporated = False
+    s.can_incorporate = True
+    snap.states = [s]
+    got = expansion.candidates(snap)
+    assert got and got[0].kind == "state_action" and got[0].args["cmd"] == "IncorporateState"
+    s.incorporating = True
+    assert expansion.candidates(snap) == []
 
 
 def test_privatization_candidates():
     snap = _snap(tag="CHI")
     s = StateRow(0, 1, "州", 100.0, 10.0, 50, 10_000_000.0, None)
     row = _row("building_textile_mill", levels=3)
-    row.can_privatize = True
-    row.profitability = 12.0
+    row.can_toggle_privatization = True
+    row.can_privatize = False
+    row.earnings, row.wages_expense = 120.0, 100.0
     s.buildings = {"building_textile_mill": row}
     snap.states = [s]
     got = privatization.candidates(snap)
     assert got and got[0].kind == "privatize" and got[0].args["building"] == "building_textile_mill"
+    row.can_privatize = True                      # 开关已开：再提案会把它关掉
+    assert privatization.candidates(snap) == []
+    row.can_privatize = False
+    row.earnings = 0.0                            # 负利润：没有买家
+    assert privatization.candidates(snap) == []
 
 
 def test_diplomacy_rejects_demands_and_sway():

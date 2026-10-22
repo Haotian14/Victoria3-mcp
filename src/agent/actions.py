@@ -14,7 +14,7 @@ from dataclasses import dataclass
 from typing import Any, Callable
 
 from agent import gamedata
-from agent.bridge import IGS, PLAYER, PLAYER_MUT, Bridge, GameError, plain
+from agent.bridge import IGS, PLAYER, PLAYER_MUT, Bridge, GameError, number, plain
 from agent.observe import STATES, TAX_LEVELS, Snapshot, _name_index, interest_groups
 
 PM_GROUPS = "Building.AccessProductionMethodGroups"
@@ -765,12 +765,15 @@ class Actions:
         return self.command(f"PoliticalMovement.Toggle{action}", probe, path=path, name=name)
 
     def movements(self) -> list[dict[str, Any]]:
-        """进行中的政治运动：名称 / 是否已扶持 / 是否被压制 / 核心意识形态。"""
-        return [{"name": plain(n), "bolstered": b == "1", "suppressed": s == "1", "ideology": plain(i)}
-                for n, b, s, i in self.b.rows(
+        """进行中的政治运动：名称 / 扶持 / 压制 / 意识形态 / activism / 支持者人数。"""
+        return [{"name": plain(n), "bolstered": b == "1", "suppressed": s == "1", "ideology": plain(i),
+                 "radicalism": number(r) or 0.0, "supporters": number(p) or 0.0}
+                for n, b, s, i, r, p in self.b.rows(
                     MOVEMENTS, ["PoliticalMovement.GetNameNoFormatting", "PoliticalMovement.IsBolstered",
                                 "PoliticalMovement.IsSuppressed",
-                                "PoliticalMovement.GetCoreIdeology.GetNameNoFormatting"])]
+                                "PoliticalMovement.GetCoreIdeology.GetNameNoFormatting",
+                                "PoliticalMovement.GetRadicalism|3",
+                                "PoliticalMovement.GetNumSupportingIndividuals|0"])]
 
     def stop_enacting(self) -> ActionResult:
         """取消正在推行的法律（Law.StopEnacting，在该法律组的可选法律里）。"""

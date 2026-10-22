@@ -6,17 +6,23 @@
       "tech_priority": [
         "romanticism",
         "currency_standards",
+        "rationalism",
         "empiricism",
         "stock_exchange",
+        "corporate_charters",
         "dialectics",
         "central_archives",
         "banking",
+        "military_drill",
         "railways",
+        "international_trade",
         "modern_sewerage",
         "bessemer_process",
         "intensive_agriculture",
         "central_banking",
         "psychiatry",
+        "medical_degrees",
+        "pharmaceuticals",
         "reinforced_concrete",
         "steel_frame_buildings",
         "philosophical_pragmatism"
@@ -33,18 +39,32 @@
         "aniline",
         "pumpjacks"
       ],
+      "ruler_ig": "士大夫",
       "law_route": [
+        ["lawgroup_distribution_of_power", "law_oligarchy"],
+        ["lawgroup_trade_policy", "law_mercantilism"],
         ["lawgroup_land_reform", "law_tenant_farmers"],
         ["lawgroup_economic_system", "law_agrarianism"],
         ["lawgroup_taxation", "law_per_capita_based_taxation"],
-        ["lawgroup_education_system", "law_religious_schools"],
+        ["lawgroup_church_and_state", "law_freedom_of_conscience"],
         ["lawgroup_education_system", "law_public_schools"],
         ["lawgroup_army_model", "law_professional_army"],
+        ["lawgroup_health_system", "law_public_health_insurance"],
         ["lawgroup_economic_system", "law_interventionism"],
         ["lawgroup_distribution_of_power", "law_technocracy"],
         ["lawgroup_trade_policy", "law_protectionism"],
         ["lawgroup_economic_system", "law_laissez_faire"]
       ],
+      "incorporate": {
+        "_comment": "未合并州吃 −25% 基础设施、−50% 重工业建造效率等惩罚；按人口并入，同时最多 2 个，税收浪费 >12% 时暂停。",
+        "max_per_month": 2,
+        "max_tax_waste": 0.10
+      },
+      "trade_center": {
+        "_comment": "1.13 贸易由贸易中心自治执行；广州体系下只有广东西部可建、上限 50 级。当前 39 级、容量饱和，补到 50。",
+        "target_levels": 50,
+        "max_per_month": 2
+      },
       "universities": {
         "_comment": "大学产出创新、不产出商品，经济账看不见；按攻略单独建。高层级有规模加成，但早期先铺开拿研究速度。",
         "target_levels": 30,
@@ -61,30 +81,52 @@
         "min_legitimacy_to_add": 70,
         "min_legitimacy_recover": 50,
         "max_government": 3,
+        "government_limits": {"law_autocracy": 2, "law_oligarchy": 3, "law_technocracy": 3},
+        "protected_igs": ["士大夫", "乡村民众"],
         "min_clout_to_add": 0.05,
         "reform_cooldown_months": 12
       },
-      "institutions": {"教育": 2},
+      "institutions": {"教育": 1, "卫生系统": 1},
+      "institution_gate": {"max_tax_waste": 0.05, "require_positive_balance": true},
       "decrees": {
         "_comment": "权威力：识字率低，先给人口大州开促进社会流动（教育机会 +25%）；基础设施超用的州开道路养护（+建造速度 10%）。",
+        "紧急救济": {"max_states": 4, "only_famine": true},
         "促进社会流动": {"max_states": 4, "min_population": 8000000},
         "道路养护": {"max_states": 1, "only_infra_overuse": true}
       },
       "subsidies": {
-        "_comment": "先补贴亏损工业，利润率回到 10% 以上取消补贴，让私有化接手，养大实业家（学校法只有他们支持）。",
-        "max_per_month": 4,
+        "_comment": "先补贴亏损工业，利润率回到 10% 以上取消补贴。1856 实测补贴累计 49k/周（收入 10.9%）、私有化仍为 0，所以封顶收入的 3%，超额先砍非战略建筑。",
+        "max_per_month": 2,
+        "max_remove_per_month": 3,
+        "min_level": 3,
+        "max_total_share": 0.03,
+        "protect_buildings": ["building_tooling_workshop", "building_paper_mill", "building_arms_industry"],
         "max_profitability": 5,
         "remove_above": 10,
         "buildings": ["building_textile_mill", "building_furniture_manufactory", "building_glassworks",
                       "building_tooling_workshop", "building_paper_mill", "building_food_industry",
                       "building_arms_industry"]
       },
+      "consumption_tax": {
+        "_comment": "财政调研：奢侈品每项约 100 权威，不碰谷物/布料等民生品。先茶→酒→鸦片，一次开一项，权威力留 100 缓冲；开满 6 项为止。",
+        "goods": ["tea", "liquor", "opium", "tobacco", "sugar", "porcelain"],
+        "max_goods": 6,
+        "cost_per_good": 100,
+        "min_authority_buffer": 100,
+        "min_legitimacy": 45,
+        "min_sol": 6.0,
+        "max_tax_waste": 0.12
+      },
       "trade": {
         "_comment": "缺货：进口零关税 / 出口高关税；过剩：进口高关税 / 出口补贴。先覆盖肉、木材、铁、groceries、工具。",
-        "goods": ["meat", "wood", "hardwood", "groceries", "iron", "tools", "luxury_clothes", "fabric", "coal"],
+        "goods": ["meat", "wood", "groceries", "iron", "tools", "coal"],
         "shortage_ratio": 1.2,
+        "severe_ratio": 1.5,
+        "price_shortage_ratio": 1.25,
+        "price_exit_ratio": 1.1,
+        "exit_ratio": 1.05,
         "oversupply_ratio": 1.3,
-        "max_per_month": 6
+        "max_per_month": 2
       },
       "privatize": {
         "_comment": "学校法只有实业家支持；私有化工业让资本家持股，养大实业家（目标 5% 入阁推公立学校）。",
@@ -94,8 +136,8 @@
                       "building_arms_industry"]
       },
       "movements": {
-        "_comment": "教育法 / 经济改革缺支持时，扶持现代化运动给它加运动支持。",
-        "bolster": ["现代化运动"]
+        "_comment": "1.13 调研：bolster 只提高 pop 对运动的吸引力，不直接加 activism（defines 为 0.0），现代化运动不需要花 200 权威扶。留空；只有想扩大支持基础时才填。",
+        "bolster": []
       },
       "diplomacy": {
         "_comment": "鸦片战争已默认避战；对俄/法/普改善关系，等保障独立/防御同盟提议。要求/割让/赔款/投资权/治外法权/条约港一律拒绝。",
@@ -194,14 +236,19 @@
     "lower_when_reserve_over": 0.8,
     "lower_when_surplus_over": 0.25,
     "max_tax": "High",
-    "min_tax": "Low"
+    "min_tax": "Low",
+    "reserve_guard": 1.5,
+    "deficit_tolerance": 0.03,
+    "legitimacy_guard": 60,
+    "tax_up_legitimacy": 62,
+    "very_high_legitimacy": 95
   },
   "construction": {
     "_comment": "每月最多新排 max_new_per_month 个政府项目；队列短于 min_queue 或建造力没用满时才排。同一建筑每月最多 per_type_per_month 级",
     "min_queue": 3,
     "max_new_per_month": 4,
     "per_type_per_month": 2,
-    "wage_mix": 1.1,
+    "wage_mix": 1.25,
     "infra_overuse_penalty": 0.6,
     "low_employment": 0.8,
     "low_employment_penalty": 0.3,
@@ -218,13 +265,14 @@
     "sector_min_surplus": 0.05,
     "min_profit_per_point": 0.5,
     "sector_inputs": ["wood", "fabric"],
-    "sector_input_max_price_ratio": 1.25,
+    "sector_input_max_price_ratio": 1.5,
     "admin_max_per_month": 2,
     "sector_budget_share_rich": 0.45,
     "sector_rich_reserve_ratio": 1.0,
     "max_queue": 30,
+    "hard_stop": 45,
     "priority_build_slots": 7,
-    "cleanup_per_month": 10,
+    "cleanup_per_month": 20,
     "shortage_bonus_start": 1.2,
     "shortage_bonus_per_ratio": 0.8,
     "shortage_bonus_max": 1.6,

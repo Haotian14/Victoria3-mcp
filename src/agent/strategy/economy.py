@@ -5,8 +5,9 @@
 
 价格默认用商品基准价（goods.cost）；有实时局面后换成本国市场的实际价格。
 工资随市场浮动，静态数据里没有，由调用方给出「每名雇员每周工资」（wage）：
-游戏里每级每周工资 ≈ 雇员数 / 1000 × 建筑的 GetWageRate × 约 1.1（职业混合），
-据此 wage ≈ GetWageRate × 1.1 / 1000。给了 wage 时按利润（增加值 − 工资）挑生产方式、排序。
+1.13.11 defines 的 POP_SIZE_PACKAGE = 10000，每级每周工资 ≈ 雇员数 / 10000 × GetWageRate × 约 1.25，
+据此 wage ≈ GetWageRate × 1.25 / 10000（旧代码除以 1000，把工资高估了约 8.8 倍）。
+给了 wage 时按利润（增加值 − 工资）挑生产方式、排序。
 """
 
 from __future__ import annotations

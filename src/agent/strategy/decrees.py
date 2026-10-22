@@ -2,6 +2,8 @@
 
 大清 1836 攻略：识字率低时用权威力开「促进社会流动」（教育机会 +25%、资质 +25%），
 基础设施吃紧的州开「道路养护」（基础设施 + 建造速度 +10%）。法令名是游戏里的中文名。
+人口调研补充：任何州闹饥荒都优先开「紧急救济」（+5% 食物安全、−50% 该州征税），
+因为饥饿最高 −70% 出生 / +60% 死亡，是唯一能把人口增长打成负数的东西。
 同一州重复提同一法令时，动作层会返回「已是目标状态」，不会重复花钱。
 """
 
@@ -12,6 +14,9 @@ from agent.strategy.config import Decision, profile
 
 
 def _pick_states(snap: Snapshot, opt: dict) -> list[StateRow]:
+    if opt.get("only_famine"):
+        rows = [s for s in snap.states if s.incorporated and s.famine]
+        return sorted(rows, key=lambda s: s.population or 0, reverse=True)
     if opt.get("only_infra_overuse"):
         rows = [s for s in snap.states
                 if s.incorporated and not s.isolated
@@ -26,6 +31,9 @@ def _pick_states(snap: Snapshot, opt: dict) -> list[StateRow]:
 
 def candidates(snap: Snapshot) -> list[Decision]:
     spec = profile(snap).get("decrees") or {}
+    authority = snap.country.get("authority")
+    if authority is not None and authority < 200:
+        return []                        # 每条法令约 100 权威，留 100 缓冲；容量不够就不再新增
     out: list[Decision] = []
     for name, opt in spec.items():
         if name.startswith("_"):

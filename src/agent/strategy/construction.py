@@ -4,7 +4,7 @@
 - 建造力每周按队列顺序分配，每个项目每周最多拿到「最大周进度」，多余的给下一个；
   闲置的建造力白白浪费，工资照付（wiki Construction）→ 队列要一直有活；
 - 社区共识：先铺建造部门、让木材与布料便宜，再工具 → 铁 → 煤 → 钢；
-- 建什么：每级每周利润 = 产出 − 投入（本国市场价）− 工资（雇员 / 1000 × 工资率 × 职业混合），
+- 建什么：每级每周利润 = 产出 − 投入（本国市场价）− 工资（雇员 / 10000 × 工资率 × 职业混合），
   除以建造点数（GetRequiredConstruction）= 每点建造力的回报。生产方式按同样的利润挑。
 
 修正：
@@ -75,8 +75,10 @@ def slots(snap: Snapshot) -> int:
         if money < -balance * cfg()["budget"]["deficit_weeks"]:
             return 0
         n = min(n, 1)
+    if queue > int(c.get("hard_stop", 45)):
+        return 0                     # 队列已积压多年：先清队列，不再新排
     if queue > int(c.get("max_queue", 30)):
-        n = min(n, int(c.get("priority_build_slots", 6)))   # 队列太长：只留优先项目
+        n = min(n, 2)                # 队列偏长：只留建造部门/食品等最高优先
     return n
 
 
@@ -131,8 +133,7 @@ def candidates(gd: GameData, snap: Snapshot, researched: set[str], costs: dict[s
     """按优先级排好的建造候选（比 slots 多给几个备选，执行时可能有失败的）。"""
     c = cfg()["construction"]
     n = slots(snap)
-    if n <= 0:
-        return []
+    priority_only = n <= 0          # 队列积压：只排部门/食品/行政/大学/贸易中心，不排普通工厂
     out: list[Decision] = []
     fs = c.get("food_security") or {}
     food_short = _food_short(snap, c)
@@ -147,7 +148,7 @@ def candidates(gd: GameData, snap: Snapshot, researched: set[str], costs: dict[s
     wages0, wage_all0 = _wage_rates(snap)
     sector_cost = -economy.building_economics(gd, SECTOR, prices0, researched,
                                               {l.key for l in snap.laws.values() if l.key},
-                                              wage_all0 * c["wage_mix"] / 1000.0).profit
+                                              wage_all0 * c["wage_mix"] / 10000.0).profit
     income = snap.country.get("income") or 0.0
     have = sum(s.buildings[SECTOR].levels + s.buildings[SECTOR].queued for s in snap.states if SECTOR in s.buildings)
     share = c["sector_budget_share"]
@@ -203,6 +204,23 @@ def candidates(gd: GameData, snap: Snapshot, researched: set[str], costs: dict[s
                                 score=1e8 - deficit))
             added += 1
 
+    # 贸易中心：1.13 没有手动贸易路线，贸易量由贸易中心自治执行。广州体系下只有广东西部能建，
+    # 上限 50 级；342 容量早已饱和，继续调关税的边际收益很低，扩容才是主杠杆。
+    tc = profile(snap).get("trade_center") or {}
+    target = int(tc.get("target_levels") or 0)
+    if target:
+        added = 0
+        for s in snap.states:
+            row = s.buildings.get("building_trade_center")
+            if row is None or not row.can_queue or row.levels + row.queued >= target:
+                continue
+            out.append(Decision("build", {"state": s.id, "building": "building_trade_center"},
+                                f"贸易容量饱和：扩贸易中心（{s.name}；{row.levels}/{target} 级）",
+                                score=5e7))
+            added += 1
+            if added >= int(tc.get("max_per_month", 1)):
+                break
+
     # 大学：大清攻略的核心是研究速度（识字率低、科技慢）。大学产出创新、不产出商品，
     # 经济账看不见它，只能按攻略单独排。
     uni = profile(snap).get("universities") or {}
@@ -244,7 +262,7 @@ def candidates(gd: GameData, snap: Snapshot, researched: set[str], costs: dict[s
                     x in key for x in ("farm", "plantation", "ranch")):
                 continue                                     # 没空地了，别排农业
             rate = row.wage_rate or wages.get(s.id, wage_all)
-            wage = rate * c["wage_mix"] / 1000.0
+            wage = rate * c["wage_mix"] / 10000.0
             ck = (key, round(rate))
             if ck not in econ_cache:
                 econ_cache[ck] = economy.building_economics(gd, key, prices, researched, laws, wage, costs.get(key))
@@ -305,4 +323,4 @@ def candidates(gd: GameData, snap: Snapshot, researched: set[str], costs: dict[s
             continue
         taken[k] = taken.get(k, 0) + 1
         picked.append(d)
-    return out + picked
+    return out if priority_only else out + picked

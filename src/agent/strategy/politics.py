@@ -41,7 +41,16 @@ def _pcfg(snap: Snapshot) -> dict:
     """通用 politics 参数 + 国家档案覆盖（大清：min_pass 0.35、max_government 3 等）。"""
     p = dict(cfg()["politics"])
     p.update(profile(snap).get("politics") or {})
+    p["ruler_ig"] = profile(snap).get("ruler_ig", "")
     return p
+
+
+def _gov_limit(snap: Snapshot, p: dict) -> int:
+    """政府规模上限按权力分配法律走：独裁 1（+基础 1=2），寡头/技术治国 3。"""
+    law = snap.laws.get("lawgroup_distribution_of_power")
+    key = (law.key if law else "") or ""
+    limits = p.get("government_limits") or {}
+    return int(limits.get(key, p.get("max_government", 3)))
 
 
 def targets(snap: Snapshot | None = None) -> list[tuple[str, str]]:
@@ -76,18 +85,25 @@ def reform(snap: Snapshot, options: list[LawOption], enacting: str | None) -> De
         return None
     gov = [ig for ig in snap.igs if ig.in_gov]
     legit = snap.country.get("legitimacy") or 0.0
-    if legit < p.get("min_legitimacy_recover", 50) and len(gov) > 1:
-        biggest = max(gov, key=lambda ig: ig.clout)
-        removable = [ig for ig in gov if ig.index != biggest.index]
-        if removable:
-            smallest = min(removable, key=lambda ig: ig.clout)
-            members = sorted(ig.index for ig in gov if ig.index != smallest.index)
-            return Decision("reform_government", {"members": members, "add": f"移除{smallest.name}"},
-                            f"合法性 {legit:.0f} 过低（非法政府），移除影响力最小的在朝集团 "
-                            f"{smallest.name}（{smallest.clout:.0%}）", score=-smallest.clout)
+    limit = _gov_limit(snap, p)
+    protected = {p.get("ruler_ig") or ""} | set(p.get("protected_igs") or ())
+    removable = [ig for ig in gov if ig.name not in protected]
+    # 独裁制上限 1（总 2）：多一个集团就 −20 合法性，且意识形态惩罚 ×1.6
+    if len(gov) > limit and removable:
+        smallest = min(removable, key=lambda ig: ig.clout)
+        members = sorted(ig.index for ig in gov if ig.index != smallest.index)
+        return Decision("reform_government", {"members": members, "add": f"移除{smallest.name}"},
+                        f"政府 {len(gov)} 个集团超过上限 {limit}（{smallest.name} 影响力 "
+                        f"{smallest.clout:.0%}），规模惩罚会压低合法性", score=-smallest.clout)
+    if legit < p.get("min_legitimacy_recover", 50) and len(gov) > 1 and removable:
+        smallest = min(removable, key=lambda ig: ig.clout)
+        members = sorted(ig.index for ig in gov if ig.index != smallest.index)
+        return Decision("reform_government", {"members": members, "add": f"移除{smallest.name}"},
+                        f"合法性 {legit:.0f} 过低（非法政府），移除影响力最小的在朝集团 "
+                        f"{smallest.name}（{smallest.clout:.0%}）", score=-smallest.clout)
     if candidates(snap, options, None):
         return None
-    if len(gov) >= p["max_government"] or legit < p["min_legitimacy_to_add"]:
+    if len(gov) >= limit or legit < p["min_legitimacy_to_add"]:
         return None
     for opt in options:
         if not (opt.support_only or (opt.valid and pass_chance(opt) < p["min_pass"])):

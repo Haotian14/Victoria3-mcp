@@ -17,6 +17,7 @@ from agent.bridge import FIELD_ERROR, IGS, PLAYER, PLAYER_MUT, Bridge, number, p
 from agent.game import Date
 
 STATES = f"{PLAYER_MUT}.AccessStates"
+INSTITUTIONS = f"{PLAYER_MUT}.AccessInstitutions"
 
 # 一个州里能建 / 能扩建的建筑分散在几个列表里（与界面上的分组一致）
 BUILDING_LISTS = (
@@ -53,7 +54,17 @@ COUNTRY_FIELDS = {
     "queue_private": "GetNumPrivateConstructionsInQueue",
     "tax_waste": "GetAverageTaxWaste",           # 官僚不足时上升：建政府行政机构的信号
     "unrealized_taxes": "GetUnrealizedTaxes",
+    "authority": "GetPowerDelta('authority')",   # 可用权威力（顶栏数字）
+    "subsidies": "GetSubsidiesExpenses",         # 每周补贴支出（预算面板合计）
 }
+
+# 消费税候选：先奢侈品，不碰谷物/布料等民生品（1.13 权威成本见财政调研）
+CONSUMPTION_TAX_GOODS = ("tea", "liquor", "opium", "tobacco", "sugar", "porcelain")
+
+# 贸易政策观测：七档互斥，同一商品同一方向只有一个生效
+TRADE_WATCH_GOODS = ("meat", "wood", "groceries", "iron", "tools", "coal")
+TRADE_POLICIES = ("TariffsNone", "TariffsLow", "TariffsHigh", "TariffsMax",
+                  "SubventionsLow", "SubventionsHigh", "SubventionsMax")
 
 
 @dataclass
@@ -68,8 +79,19 @@ class BuildingRow:
     can_queue: bool                 # IsValid(Building.QueueConstruction)
     wage_rate: float | None = None  # GetWageRate：每 1000 名雇员每周的工资基数
     employed: float | None = None   # 现有雇员数
-    can_privatize: bool = False     # 政府持有、可私有化（CanBePrivatized）
+    can_privatize: bool = False     # 私有化开关当前是否打开（CanBePrivatized）
+    can_toggle_privatization: bool = False   # 是否具备私有化资格（IsValid(TogglePrivatization)）
     subsidized: bool = False        # 正在接受政府补贴（IsSubsidized）
+    subsidy_cost: float = 0.0       # 每周补贴支出（GetSubsidies；未补贴为 0）
+    earnings: float = 0.0           # 每周收入（已扣投入品）
+    wages_expense: float = 0.0      # 每周工资
+    tariffs_paid: float = 0.0
+    tolls_paid: float = 0.0
+
+    @property
+    def profit(self) -> float:
+        """实际现金流（每级建筑合计，非“相对生产率”）。"""
+        return self.earnings - self.wages_expense - self.tariffs_paid - self.tolls_paid
 
 
 @dataclass
@@ -87,6 +109,10 @@ class StateRow:
     unemployed: float = 0.0         # 失业的劳动年龄人口
     tax_capacity: float | None = None       # 州征税能力（CalcTaxCapacity）
     tax_capacity_usage: float | None = None  # 已用掉的征税能力（超过即税收浪费）
+    famine: bool = False                    # 州正在闹饥荒（State.HasFamine）
+    incorporating: bool = False             # 正在并入（State.IsIncorporating）
+    incorporation_progress: float = 0.0
+    can_incorporate: bool = False           # IsValid(IncorporateState)
     buildings: dict[str, BuildingRow] = field(default_factory=dict)
 
     @property
@@ -152,6 +178,9 @@ class Snapshot:
     prices: dict[str, dict[str, float | None]]   # 商品 → price / base / buy / sell
     states: list[StateRow]
     igs: list[IGRow] = field(default_factory=list)
+    institutions: list[str] | None = None      # 已解锁的机构（教育要等学校法才会出现）
+    taxed_goods: set[str] | None = None        # 已开征消费税的商品
+    trade_policies: dict[str, dict[str, str]] | None = None   # 商品 → {Import/Export: 当前档位}
 
     def state(self, sid: int) -> StateRow | None:
         return next((s for s in self.states if s.id == sid), None)
@@ -212,13 +241,18 @@ def prices(b: Bridge) -> dict[str, dict[str, float | None]]:
 STATE_FIELDS = ["State.GetID", "State.GetNameNoFormatting", "State.GetInfrastructure|1",
                 "State.GetInfrastructureUsage|1", "State.GetNumFreeArableLand", "State.GetPopulationSize",
                 "State.GetYearlyGDP|0", "State.IsIncorporated", "State.IsIsolatedFromMarket",
-                "State.GetNumUnemployedWorkingAdults", "State.CalcTaxCapacity|2", "State.CalcTaxCapacityUsage|2"]
+                "State.GetNumUnemployedWorkingAdults", "State.CalcTaxCapacity|2", "State.CalcTaxCapacityUsage|2",
+                "State.HasFamine", "State.IsIncorporating", "State.GetIncorporationProgress|3",
+                "IsValid(State.IncorporateState)"]
 
 BUILDING_FIELDS = ["Building.GetBuildingType.GetKey", "Building.GetTotalLevels", "Building.GetExpansionLevelsInQueue",
                    "Building.GetEmploymentPercentage|3", "Building.GetProfitability|1",
                    "Building.GetCurrentCashReserves|0", "IsValid(Building.QueueConstruction)",
                    "Building.GetWageRate|3", "Building.GetNoOfEmployed", "Building.CanBePrivatized",
-                   "Building.IsSubsidized"]
+                   "Building.IsSubsidized", "Building.GetSubsidies|1",
+                   "Building.GetEarnings|2", "Building.GetLastWagesExpenses|2",
+                   "Building.GetTariffsPaid|2", "Building.GetTollsPaid|2",
+                   "IsValid(Building.TogglePrivatization)"]
 
 
 def states(b: Bridge, with_buildings: bool = True) -> list[StateRow]:
@@ -228,7 +262,9 @@ def states(b: Bridge, with_buildings: bool = True) -> list[StateRow]:
         out.append(StateRow(i, int(sid) if sid is not None else -1, r[1], _f(r[2]), _f(r[3]),
                             int(_f(r[4]) or 0), _f(r[5]), _f(r[6]), incorporated=r[7] == "1",
                             isolated=r[8] == "1", unemployed=_f(r[9]) or 0.0,
-                            tax_capacity=_f(r[10]), tax_capacity_usage=_f(r[11])))
+                            tax_capacity=_f(r[10]), tax_capacity_usage=_f(r[11]), famine=r[12] == "1",
+                            incorporating=r[13] == "1", incorporation_progress=_f(r[14]) or 0.0,
+                            can_incorporate=r[15] == "1"))
     if with_buildings:
         for s in out:
             buildings(b, s)
@@ -246,7 +282,10 @@ def buildings(b: Bridge, s: StateRow) -> None:
                 key=key, path=s.path + [(lst, j)], levels=int(_f(r[1]) or 0), queued=int(_f(r[2]) or 0),
                 employment=_f(r[3]), profitability=_f(r[4]), cash=_f(r[5]), can_queue=r[6] == "1",
                 wage_rate=_f(r[7]) if row_built(r) else None, employed=_f(r[8]),
-                can_privatize=r[9] == "1", subsidized=r[10] == "1")
+                can_privatize=r[9] == "1", subsidized=r[10] == "1", subsidy_cost=_f(r[11]) or 0.0,
+                earnings=_f(r[12]) or 0.0, wages_expense=_f(r[13]) or 0.0,
+                tariffs_paid=_f(r[14]) or 0.0, tolls_paid=_f(r[15]) or 0.0,
+                can_toggle_privatization=r[16] == "1")
 
 
 def row_built(r: list[str]) -> bool:
@@ -313,7 +352,28 @@ def law_options(b: Bridge, current: dict[str, LawRow], targets: list[tuple[str, 
     return out
 
 
+def trade_policies(b: Bridge) -> dict[str, dict[str, str]]:
+    """每个观察商品当前的进口/出口政策档位（HasImportTariffsNone 等七选一）。"""
+    exprs, keys = [], []
+    for g in TRADE_WATCH_GOODS:
+        for side in ("Import", "Export"):
+            for p in TRADE_POLICIES:
+                exprs.append(f"{PLAYER}.Has{side}{p}(GetGoods('{g}').Self)")
+                keys.append((g, side, p))
+    vals = b.read_many(exprs)
+    out: dict[str, dict[str, str]] = {g: {} for g in TRADE_WATCH_GOODS}
+    for (g, side, p), v in zip(keys, vals):
+        if v == "1":
+            out[g][side] = p
+    return out
+
+
 def snapshot(b: Bridge, with_buildings: bool = True) -> Snapshot:
     name, c, tax, tech, date = country(b)
+    taxed = {g for g, v in zip(CONSUMPTION_TAX_GOODS,
+                               b.read_many([f"GetGoods('{g}').IsTaxed({PLAYER})"
+                                            for g in CONSUMPTION_TAX_GOODS])) if v == "1"}
     return Snapshot(date=date, name=name, country=c, tax_level=tax, researching=tech, laws=laws(b),
-                    prices=prices(b), states=states(b, with_buildings), igs=interest_groups(b))
+                    prices=prices(b), states=states(b, with_buildings), igs=interest_groups(b),
+                    institutions=[plain(r[0]) for r in b.rows(INSTITUTIONS, ["Institution.GetNameNoFormatting"])],
+                    taxed_goods=taxed, trade_policies=trade_policies(b))
