@@ -41,3 +41,9 @@ def accept_proposal(proposal: dict[str, Any], snap: Any = None) -> bool:
 def improve_targets(snap: Any = None) -> list[str]:
     spec = profile(snap).get("diplomacy") or {}
     return list(spec.get("improve_relations") or ["RUS", "FRA", "PRU"])
+
+
+def match_action(act: dict[str, Any], keywords: Any) -> bool:
+    """外交行动匹配：action key 或中文名包含任一关键词。"""
+    text = f"{act.get('action', '')} {act.get('name', '')}".lower()
+    return any(str(k).lower() in text for k in (keywords or ()))

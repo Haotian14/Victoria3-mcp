@@ -39,6 +39,12 @@ def decide(snap: Snapshot) -> Decision | None:
     medium = TAX_LEVELS.index("Medium")
     rich = bool(limit) and money > limit * c.get("reserve_guard", 1.5)
     small_deficit = balance >= 0 or -balance <= income * c.get("deficit_tolerance", 0.03)
+    # 攻略：晚期国库充足时降税，让钱留在人民手里拉动内需/SoL；前期仍守住 Medium。
+    late_year = int(c.get("late_low_tax_year", 0) or 0)
+    late_ok = bool(late_year and snap.date.year >= late_year and limit
+                   and money > limit * float(c.get("late_low_tax_reserve_ratio", 1.5))
+                   and balance > income * float(c.get("late_low_tax_surplus_over", 0.1)))
+    eff_lo = TAX_LEVELS.index("Low") if late_ok else max(lo, fi)
 
     # 合法性护栏：高税掉进 Unacceptable 的代价大于多收的税
     if i > medium and leg < c.get("legitimacy_guard", 60):
@@ -50,7 +56,7 @@ def decide(snap: Snapshot) -> Decision | None:
         return Decision("set_tax", {"level": "Low"},
                         f"合法性 {leg:.0f}，降税 +5 争取跨过 50（国库充足）")
     # 为跨阈值而降的 Low 先不要急着加回 Medium
-    if i < fi and leg < 55 and rich and small_deficit:
+    if i < fi and not late_ok and leg < 55 and rich and small_deficit:
         return None
     if balance < 0 and money < -balance * c["deficit_weeks"] and i < hi and not (rich and small_deficit):
         target = TAX_LEVELS[i + 1]
@@ -60,11 +66,28 @@ def decide(snap: Snapshot) -> Decision | None:
             return None
         return Decision("set_tax", {"level": target},
                         f"每周赤字 {-balance:,.0f}，国库 {money:,.0f} 只够 {money / -balance:.0f} 周")
-    if i < fi:
+    if i < fi and not late_ok:
         return Decision("set_tax", {"level": TAX_LEVELS[i + 1]},
                         f"攻略建议税级不低于 {floor}（当前 {level}）")
+    if (late_ok and i > TAX_LEVELS.index("Low")
+            and balance > income * float(c.get("late_low_tax_surplus_over", 0.1))):
+        return Decision("set_tax", {"level": TAX_LEVELS[i - 1]},
+                        f"晚期国库 {money:,.0f} 充足，降税拉动内需与 SoL（攻略）")
     if (balance > income * c["lower_when_surplus_over"] and limit and money > limit * c["lower_when_reserve_over"]
-            and i > max(lo, fi) and not (50 <= leg < 55)):
+            and i > eff_lo and not (50 <= leg < 55)):
         return Decision("set_tax", {"level": TAX_LEVELS[i - 1]},
                         f"结余 {balance:,.0f}/周、国库 {money:,.0f} 已近储备上限 {limit:,.0f}，减税")
     return None
+
+
+def government_wage_level(snap: Snapshot, at_war: bool) -> str:
+    """攻略：前期政府工资压 Low 换建造资金；重商主义（承认 JE 激活）后回 Medium。
+    军队工资不走这里：Low 会 −50% 训练，始终 Medium/High。"""
+    w = profile(snap).get("wages") or {}
+    until = int(w.get("government_low_until_year", 0) or 0)
+    trade = snap.laws.get("lawgroup_trade_policy")
+    merc = bool(trade and trade.key == "law_mercantilism")
+    before_ok = (not w.get("government_low_before_mercantilism", True)) or not merc
+    if not at_war and until and snap.date.year < until and before_ok:
+        return "Low"
+    return "Medium"

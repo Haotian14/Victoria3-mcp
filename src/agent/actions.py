@@ -51,7 +51,13 @@ SIGNATURE_FIELDS = ["GetGoldReserves", "GetPrestige", "GetGovernmentLegitimacy",
 _ANSWERED: dict[int, int] = {}      # 本进程已回答的事件 id → 选项
 
 JOURNAL = f"{PLAYER_MUT}.AccessActiveJournalEntries"
+JOURNAL_FIELDS = ["JournalEntry.GetType.GetKey", "JournalEntry.GetName", "JournalEntry.GetProgressDesc",
+                  "JournalEntry.HasProgressBar", "JournalEntry.GetGoalProgressValue",
+                  "JournalEntry.GetGoalProgressPercent", "JournalEntry.GetTotalGoalValue",
+                  "JournalEntry.GetTimeoutDaysLeft", "JournalEntry.IsProgressing",
+                  "JournalEntry.CanComplete", "JournalEntry.GetGoalDesc"]
 JE_BUTTONS = "JournalEntry.GetScriptedButtons"      # 只含可见的按钮
+JE_BARS = "JournalEntry.GetScriptedProgressBars"    # 脚本进度条（如“赢得认可 0/200”）
 BUTTON_CMD = "ScriptedButton.ExecuteEffect"
 DECISIONS = f"{PLAYER_MUT}.GetDecisions"
 DECISION_CMD = f"Decision.TakeDecision({PLAYER})"
@@ -269,9 +275,13 @@ class Actions:
         return self._run(f"{goods} {side} {policy}", f"{PLAYER}.Set{side}{policy}({g})", probe,
                          lambda v: v == policy)
 
-    def toggle_consumption_tax(self, goods: str) -> ActionResult:
+    def toggle_consumption_tax(self, goods: str, on: bool | None = None) -> ActionResult:
+        """on=True/False 时只在不是目标状态时切换，并核实到目标状态；None 保持纯开关。"""
         g = f"GetGoods('{goods}')"
-        return self.command(f"{g}.ToggleTaxation({PLAYER})", f"{g}.IsTaxed({PLAYER})", name=f"消费税开关 {goods}")
+        target = None if on is None else ("1" if on else "0")
+        label = "开征" if on else "退出" if on is False else "开关"
+        return self.command(f"{g}.ToggleTaxation({PLAYER})", f"{g}.IsTaxed({PLAYER})",
+                            target=target, name=f"消费税{label} {goods}")
 
     # ------------------------------------------------------------ 国家级命令
     def country_command(self, cmd: str) -> ActionResult:
@@ -691,11 +701,31 @@ class Actions:
 
     # ------------------------------------------------------------ 日志：剧本按钮、决议
     def journal(self) -> dict[str, Any]:
-        """进行中的日志条目及其按钮（只列可见的，与界面一致），以及决议。"""
+        """进行中的日志条目：名字、进度条数值、剩余天数、按钮（只列界面可见的），以及决议。"""
         entries = []
-        for i, (key, name) in enumerate(self.b.rows(JOURNAL, ["JournalEntry.GetType.GetKey", "JournalEntry.GetName"])):
+        for i, row in enumerate(self.b.rows(JOURNAL, JOURNAL_FIELDS)):
+            key, name, progress, has_bar, value, pct, total, timeout, progressing, can_complete, goal = \
+                [plain(x or "") for x in row]
             buttons = self.b.rows(JE_BUTTONS, ["ScriptedButton.GetName", f"IsValid({BUTTON_CMD})"], path=[(JOURNAL, i)])
-            entries.append({"key": key, "name": plain(name),
+            bars = []
+            try:
+                for j, (bname, bmax) in enumerate(self.b.rows(
+                        JE_BARS, ["ScriptedProgressBar.GetName", "ScriptedProgressBar.GetMaxValue"],
+                        path=[(JOURNAL, i)])):
+                    bpath = [(JOURNAL, i), (JE_BARS, j)]
+                    try:
+                        bval = plain(self.b.read("[JournalEntry.GetCurrentBarValue(ScriptedProgressBar.Self)]",
+                                                 bpath) or "")
+                    except GameError:
+                        bval = ""
+                    bars.append({"name": plain(bname), "value": bval, "max": plain(bmax)})
+            except GameError:
+                pass
+            entries.append({"key": key, "name": name, "progress": progress,
+                            "has_progress": has_bar == "1", "progress_value": value,
+                            "progress_percent": pct, "goal_total": total, "timeout_days": timeout,
+                            "progressing": progressing == "1", "can_complete": can_complete == "1",
+                            "goal": goal, "bars": bars,
                             "buttons": [{"name": plain(n), "possible": v == "1"} for n, v in buttons]})
         decisions = [{"name": plain(n), "possible": v == "1"}
                      for n, v in self.b.rows(DECISIONS, ["Decision.GetName", f"IsValid({DECISION_CMD})"])]

@@ -14,7 +14,7 @@ from dataclasses import dataclass, field
 
 from agent.gamedata import GameData
 from agent.observe import LawOption, Snapshot
-from agent.strategy import budget, construction, consumption, decrees, expansion, institutions, politics, production, privatization, research, subsidies, trade
+from agent.strategy import budget, companies, construction, consumption, decrees, expansion, institutions, politics, production, privatization, research, subsidies, trade
 from agent.strategy import config as strategy_config
 from agent.strategy.config import Decision
 
@@ -30,6 +30,7 @@ class Plan:
     decree: list[Decision] = field(default_factory=list)
     incorporate: list[Decision] = field(default_factory=list)
     privatize: list[Decision] = field(default_factory=list)
+    company: list[Decision] = field(default_factory=list)
     subsidy: list[Decision] = field(default_factory=list)
     consumption: list[Decision] = field(default_factory=list)
     trade: list[Decision] = field(default_factory=list)
@@ -52,6 +53,7 @@ class Plan:
         lines += [f"法令：{d}" for d in self.decree[:limit]]
         lines += [f"并入：{d}" for d in self.incorporate[:limit]]
         lines += [f"私有化：{d}" for d in self.privatize[:limit]]
+        lines += [f"公司：{d}" for d in self.company[:limit]]
         lines += [f"补贴：{d}" for d in self.subsidy[:limit]]
         lines += [f"消费税：{d}" for d in self.consumption[:limit]]
         lines += [f"贸易：{d}" for d in self.trade[:limit]]
@@ -61,27 +63,32 @@ class Plan:
 
 
 def decide(gd: GameData, snap: Snapshot, researched: set[str], costs: dict[str, float],
-           enacting: str | None, pm_offset: int = 0, law_options: list[LawOption] | None = None) -> Plan:
+           enacting: str | None, pm_offset: int = 0, law_options: list[LawOption] | None = None,
+           law_stall: int = 0) -> Plan:
     options = law_options or []
+    fallback = politics.fallback_ready(snap, law_stall)
     build = construction.candidates(gd, snap, researched, costs)
     # 队列硬停时 slots()=0，但优先项目（部门/食品/行政/大学/贸易中心）仍值得排 2 个
     build_slots = construction.slots(snap) or (3 if build and (snap.country.get("money") or 0) > 0 else 0)
     return Plan(
         tax=budget.decide(snap),
-        reform=politics.reform(snap, options, enacting),
+        reform=politics.reform(snap, options, enacting, fallback),
         research=research.candidates(gd, researched, snap.researching, strategy_config.tech_priority(snap),
                                      strategy_config.tech_blacklist(snap)),
-        law=politics.candidates(snap, options, enacting),
+        law=politics.candidates(snap, options, enacting, fallback),
         institution=institutions.candidates(snap),
         decree=decrees.candidates(snap),
         incorporate=expansion.candidates(snap),
         privatize=privatization.candidates(snap),
+        company=companies.candidates(snap),
         subsidy=subsidies.candidates(snap),
         consumption=consumption.candidates(snap),
         trade=trade.candidates(snap),
         build=build,
         build_slots=build_slots,
         pm=production.candidates(gd, snap, researched, pm_offset)
+           + production.logging_candidates(gd, snap, researched)
            + production.university_candidates(gd, snap, researched)
-           + production.financial_candidates(gd, snap, researched),
+           + production.financial_candidates(gd, snap, researched)
+           + production.construction_pm_candidates(gd, snap, researched),
     )

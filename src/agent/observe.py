@@ -56,13 +56,18 @@ COUNTRY_FIELDS = {
     "unrealized_taxes": "GetUnrealizedTaxes",
     "authority": "GetPowerDelta('authority')",   # 可用权威力（顶栏数字）
     "subsidies": "GetSubsidiesExpenses",         # 每周补贴支出（预算面板合计）
+    "max_companies": "GetMaxNumCompanies",       # 公司槽（corporate_charters 后 +1）
+    "num_companies": "GetNumCompanies",
 }
 
 # 消费税候选：先奢侈品，不碰谷物/布料等民生品（1.13 权威成本见财政调研）
 CONSUMPTION_TAX_GOODS = ("tea", "liquor", "opium", "tobacco", "sugar", "porcelain")
 
-# 贸易政策观测：七档互斥，同一商品同一方向只有一个生效
-TRADE_WATCH_GOODS = ("meat", "wood", "groceries", "iron", "tools", "coal")
+# 贸易政策观测：七档互斥，同一商品同一方向只有一个生效。
+# 观察面覆盖消费品/上游/出口品；只盯 6 种商品时，纸张/家具/鸦片等高价商品永远不会调关税。
+TRADE_WATCH_GOODS = ("meat", "wood", "groceries", "iron", "tools", "coal", "fabric", "clothes",
+                     "furniture", "paper", "glass", "grain", "fish", "fruit", "hardwood", "lead",
+                     "steel", "tea", "liquor", "opium", "tobacco", "sugar", "porcelain")
 TRADE_POLICIES = ("TariffsNone", "TariffsLow", "TariffsHigh", "TariffsMax",
                   "SubventionsLow", "SubventionsHigh", "SubventionsMax")
 
@@ -168,6 +173,12 @@ CHANCE_REQUIREMENT = "立法成功概率高于0%"
 
 
 @dataclass
+class CompanyInfo:
+    available: list[str] = field(default_factory=list)   # 可建立的公司类型 key
+    existing: list[str] = field(default_factory=list)    # 已成立的公司类型 key
+
+
+@dataclass
 class Snapshot:
     date: Date
     name: str
@@ -181,6 +192,8 @@ class Snapshot:
     institutions: list[str] | None = None      # 已解锁的机构（教育要等学校法才会出现）
     taxed_goods: set[str] | None = None        # 已开征消费税的商品
     trade_policies: dict[str, dict[str, str]] | None = None   # 商品 → {Import/Export: 当前档位}
+    companies: CompanyInfo | None = None       # 公司槽与可建立/已成立的公司类型
+    journal_keys: set[str] | None = None       # 进行中的日志条目 key（贸易规则按 JE 调整）
 
     def state(self, sid: int) -> StateRow | None:
         return next((s for s in self.states if s.id == sid), None)
@@ -352,6 +365,22 @@ def law_options(b: Bridge, current: dict[str, LawRow], targets: list[tuple[str, 
     return out
 
 
+def journal_keys(b: Bridge) -> set[str]:
+    """进行中的日志条目 key（只读列表，不触发按钮）。"""
+    return {plain(r[0]) for r in b.rows(f"{PLAYER_MUT}.AccessActiveJournalEntries",
+                                        ["JournalEntry.GetType.GetKey"])
+            if r[0] and not r[0].startswith(FIELD_ERROR)}
+
+
+def companies(b: Bridge) -> CompanyInfo:
+    """可建立 / 已成立的公司类型。可建立列表由游戏按 possible 触发过滤（含同州 5 级要求）。"""
+    avail = [plain(r[0]) for r in b.rows(f"{PLAYER_MUT}.GetAvailableCompanies", ["CompanyType.GetKey"])
+             if not r[0].startswith(FIELD_ERROR)]
+    have = [plain(r[0]) for r in b.rows(f"{PLAYER_MUT}.GetCompanies", ["Company.GetCompanyType.GetKey"])
+            if not r[0].startswith(FIELD_ERROR)]
+    return CompanyInfo(avail, have)
+
+
 def trade_policies(b: Bridge) -> dict[str, dict[str, str]]:
     """每个观察商品当前的进口/出口政策档位（HasImportTariffsNone 等七选一）。"""
     exprs, keys = [], []
@@ -376,4 +405,5 @@ def snapshot(b: Bridge, with_buildings: bool = True) -> Snapshot:
     return Snapshot(date=date, name=name, country=c, tax_level=tax, researching=tech, laws=laws(b),
                     prices=prices(b), states=states(b, with_buildings), igs=interest_groups(b),
                     institutions=[plain(r[0]) for r in b.rows(INSTITUTIONS, ["Institution.GetNameNoFormatting"])],
-                    taxed_goods=taxed, trade_policies=trade_policies(b))
+                    taxed_goods=taxed, trade_policies=trade_policies(b), companies=companies(b),
+                    journal_keys=journal_keys(b))

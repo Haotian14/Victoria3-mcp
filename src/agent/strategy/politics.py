@@ -53,31 +53,78 @@ def _gov_limit(snap: Snapshot, p: dict) -> int:
     return int(limits.get(key, p.get("max_government", 3)))
 
 
+def fallback_threshold(snap: Snapshot) -> int:
+    return int(_pcfg(snap).get("fallback_after_months", 24))
+
+
+def fallback_min_pass(snap: Snapshot) -> float:
+    return float(_pcfg(snap).get("fallback_min_pass", 0.15))
+
+
+def fallback_ready(snap: Snapshot, months: int) -> bool:
+    """连续 months 个月没有法律可推后，才允许降门槛兜底。"""
+    return months >= fallback_threshold(snap)
+
+
+def _need(opt: LawOption, p: dict, fallback: bool) -> float:
+    if fallback:
+        return float(p.get("fallback_min_pass", 0.15))
+    override = (p.get("law_min_pass") or {}).get(opt.key)
+    return float(override) if override is not None else float(p["min_pass"])
+
+
+def _chance_ok(opt: LawOption, p: dict, fallback: bool) -> bool:
+    """正常门槛是 min_pass；law_min_pass 可对关键法单独降门槛（如农本 30%）；
+    兜底法再用 fallback_min_pass。0% 的法永远不推。"""
+    chance = pass_chance(opt)
+    if chance >= _need(opt, p, False):
+        return True
+    if not fallback:
+        return False
+    return opt.key in set(p.get("fallback_laws") or ()) and chance >= _need(opt, p, True)
+
+
 def targets(snap: Snapshot | None = None) -> list[tuple[str, str]]:
     """法律路线：优先用国家专属路线（strategy.json 的 country_profiles）。"""
     route = cfg()["law_route"] if snap is None else strategy_config.law_route(snap)
     return [(g, law) for g, law in route]
 
 
-def candidates(snap: Snapshot, options: list[LawOption], enacting: str | None) -> list[Decision]:
-    """可推、且通过率达标的路线法律，按路线顺序。"""
+def guard_fragile_unity(targets: list[tuple[str, str]], points: int | None) -> list[tuple[str, str]]:
+    """攻略：脆弱的统一 ≤1 点时不要碰政体/权力分配（君主制或法团国家的改动会再 −1，
+    直接进军阀时代）。distribution_of_power 与 governance_principles 都跳过。"""
+    if points is not None and points <= 1:
+        banned = {"lawgroup_distribution_of_power", "lawgroup_governance_principles"}
+        return [(g, law) for g, law in targets if g not in banned]
+    return targets
+
+
+def candidates(snap: Snapshot, options: list[LawOption], enacting: str | None,
+               fallback: bool = False) -> list[Decision]:
+    """可推、且通过率达标的路线法律。fallback=True 时，关键法门槛降到 fallback_min_pass。"""
     if enacting:
         return []
-    need = _pcfg(snap)["min_pass"]
+    p = _pcfg(snap)
     out: list[Decision] = []
     for opt in options:
         current = snap.laws.get(opt.group)
         if current is None or current.key == opt.key or not opt.valid:
             continue
         chance = pass_chance(opt)
-        if chance < need:
+        if not _chance_ok(opt, p, fallback):
             continue
+        tag = "（兜底）" if chance < float(p["min_pass"]) else ""
         out.append(Decision("enact_law", {"law": opt.key},
-                            f"{opt.group}：{current.name} → {opt.name}，预计通过率 {chance:.0%}", chance))
+                            f"{opt.group}：{current.name} → {opt.name}，预计通过率 {chance:.0%}{tag}", chance))
+    if fallback:
+        # 正常法律先走；兜底法律按 fallback_laws 的顺序（农本主义优先）
+        order = {k: i for i, k in enumerate(p.get("fallback_laws") or ())}
+        out.sort(key=lambda d: (d.score < float(p["min_pass"]), order.get(d.args["law"], 999)))
     return out
 
 
-def reform(snap: Snapshot, options: list[LawOption], enacting: str | None) -> Decision | None:
+def reform(snap: Snapshot, options: list[LawOption], enacting: str | None,
+           fallback: bool = False) -> Decision | None:
     """路线上排在最前、只差支持者的目标：拉一个支持它的在野集团进政府。
     合法性太低（游戏提示“非法政府”）时，先移除影响力最小的在朝集团，别再加人。"""
     p = _pcfg(snap)
@@ -103,12 +150,12 @@ def reform(snap: Snapshot, options: list[LawOption], enacting: str | None) -> De
         return Decision("reform_government", {"members": members, "add": f"移除{smallest.name}"},
                         f"合法性 {legit:.0f} 过低（非法政府），移除影响力最小的在朝集团 "
                         f"{smallest.name}（{smallest.clout:.0%}）", score=-smallest.clout)
-    if candidates(snap, options, None):
+    if candidates(snap, options, None, fallback):
         return None
     if len(gov) >= limit or legit < p["min_legitimacy_to_add"]:
         return None
     for opt in options:
-        if not (opt.support_only or (opt.valid and pass_chance(opt) < p["min_pass"])):
+        if not (opt.support_only or (opt.valid and not _chance_ok(opt, p, fallback))):
             continue
         backers = [ig for ig in snap.igs if not ig.in_gov and not ig.marginal
                    and ig.clout >= p["min_clout_to_add"] and opt.stance.get(ig.name, 0) > 0]

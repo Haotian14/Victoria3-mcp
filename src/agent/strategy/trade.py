@@ -36,8 +36,13 @@ def candidates(snap: Snapshot) -> list[Decision]:
     severe = float(spec.get("severe_ratio", 1.5))
     price_short = float(spec.get("price_shortage_ratio", 1.25))
     price_exit = float(spec.get("price_exit_ratio", 1.1))
+    price_over = float(spec.get("price_oversupply_ratio", 0.8))
     exit_ratio = float(spec.get("exit_ratio", 1.05))
     over = float(spec.get("oversupply_ratio", 1.3))
+    balance = snap.country.get("balance") or 0.0
+    journals = snap.journal_keys or set()
+    proactive = set(spec.get("proactive_imports") or ())
+    proactive_until = int(spec.get("proactive_until_year", 0) or 0)
     out: list[Decision] = []
     for g in goods:
         cur = snap.trade_policies.get(g) or {}
@@ -48,6 +53,36 @@ def candidates(snap: Snapshot) -> list[Decision]:
             continue
         buy_ratio, sell_ratio, price_ratio = _signal(p)
         cur_i, cur_e = cur.get("Import", ""), cur.get("Export", "")
+        # 攻略：前期主动对木材/硬木/铁开进口零关税，不等缺货，提前锁定廉价投入。
+        proactive_import = bool(g in proactive and proactive_until and snap.date.year < proactive_until)
+        if proactive_import:
+            if cur_i != "TariffsNone":
+                out.append(Decision("trade_policy", {"goods": g, "side": "Import", "policy": "TariffsNone"},
+                                    f"{g} 前期主动进口：零关税锁定廉价投入（攻略）",
+                                    score=2.5e4 + buy_ratio))
+                cur_i = "TariffsNone"
+            # 缺货时继续走下面的出口高关税；正常时保持零关税，不回到 Low
+            if not (buy_ratio >= short or price_ratio >= price_short):
+                continue
+        # 攻略：晚期国内资源耗尽，对铁/木材付进口补贴，保证工厂原料。
+        late = set(spec.get("late_import_subventions") or ())
+        late_year = int(spec.get("late_import_subvention_year", 0) or 0)
+        if (g in late and late_year and snap.date.year >= late_year and balance > 0
+                and price_ratio >= float(spec.get("late_import_subvention_ratio", 1.5))):
+            target_policy = spec.get("late_import_subvention_policy", "SubventionsLow")
+            if cur_i not in ("SubventionsLow", "SubventionsHigh", "SubventionsMax"):
+                out.append(Decision("trade_policy", {"goods": g, "side": "Import", "policy": target_policy},
+                                    f"{g} 晚期原材料短缺（价格/基准 {price_ratio:.2f}）：进口补贴",
+                                    score=2.6e4 + price_ratio))
+            continue
+        # 「建立纸张进口」JE 的完成条件：首都 paper 进口补贴（low/high/max_subventions）+ 价格不超过基准 20%。
+        # 这里必须用进口补贴，不是零关税；否则 JE 永远完不成。
+        if g == "paper" and "je_set_up_paper_import" in journals:
+            if cur_i not in ("SubventionsLow", "SubventionsHigh", "SubventionsMax"):
+                out.append(Decision("trade_policy", {"goods": g, "side": "Import", "policy": "SubventionsLow"},
+                                    f"paper 进口补贴（日志「建立纸张进口」要求；价格/基准 {price_ratio:.2f}）",
+                                    score=5e4))
+            continue
         if buy_ratio >= short or price_ratio >= price_short:
             if cur_i != "TariffsNone":
                 out.append(Decision("trade_policy", {"goods": g, "side": "Import", "policy": "TariffsNone"},
@@ -57,11 +92,22 @@ def candidates(snap: Snapshot) -> list[Decision]:
                 out.append(Decision("trade_policy", {"goods": g, "side": "Export", "policy": "TariffsHigh"},
                                     f"{g} 严重缺货：出口高关税，优先国内供给",
                                     score=2e4 + buy_ratio - 0.1))
-        elif sell_ratio >= over:
+        elif sell_ratio >= over or (price_ratio and price_ratio <= price_over):
             if cur_i not in ("TariffsHigh", "TariffsMax"):
                 out.append(Decision("trade_policy", {"goods": g, "side": "Import", "policy": "TariffsHigh"},
-                                    f"{g} 过剩（卖单/买单 {sell_ratio:.1f}）：进口高关税保护本国产业",
-                                    score=1e4 + sell_ratio))
+                                    f"{g} 过剩（卖单/买单 {sell_ratio:.1f}，价格/基准 {price_ratio:.2f}）："
+                                    f"进口高关税保护本国产业", score=1e4 + sell_ratio))
+            # 出口侧也要处理：过剩时出口零关税；严重过剩且结余为正才用出口补贴
+            severe_over = sell_ratio >= severe or (price_ratio and price_ratio <= max(0.0, price_over - 0.15))
+            target_e = "SubventionsLow" if severe_over and balance > 0 else "TariffsNone"
+            if target_e == "SubventionsLow":
+                needs = cur_e not in ("SubventionsLow", "SubventionsHigh", "SubventionsMax")
+            else:
+                needs = cur_e in ("TariffsLow", "TariffsHigh", "TariffsMax")
+            if needs:
+                out.append(Decision("trade_policy", {"goods": g, "side": "Export", "policy": target_e},
+                                    f"{g} 过剩：出口{ '低补贴' if target_e == 'SubventionsLow' else '零关税'}，鼓励外销",
+                                    score=1e4 + sell_ratio - 0.2))
         elif buy_ratio <= exit_ratio and price_ratio <= price_exit:
             if cur_i not in ("TariffsLow", ""):
                 out.append(Decision("trade_policy", {"goods": g, "side": "Import", "policy": "TariffsLow"},

@@ -15,7 +15,7 @@ from agent.gamedata import GameData
 from agent.observe import Snapshot
 from agent.strategy import economy
 from agent.strategy.config import Decision, cfg, profile
-from agent.strategy.construction import _prices, _wage_rates
+from agent.strategy.construction import SECTOR, _prices, _wage_rates
 
 UNIVERSITY = "building_university"
 FINANCIAL = "building_financial_district"
@@ -26,10 +26,38 @@ PM_PRIORITY = ("building_paper_mill", "building_furniture_manufactory", "buildin
 
 SWITCH_MARGIN = 0.25
 MAX_PER_MONTH = 12
+LOGGING = "building_logging_camp"
+
+
+def employment_delta(gd: GameData, pm: str) -> int:
+    """PM 的净雇佣变化：正数=增岗，负数=省人。游戏数据里减岗 PM 直接写负值。"""
+    return sum(int(v) for v in (gd.pms.get(pm, {}).get("employment") or {}).values())
+
+
+def labor_surplus(snap: Snapshot) -> bool:
+    """自给农 + 失业是否超过人口阈值：大清早期几乎总是 True。"""
+    spec = cfg().get("production") or {}
+    ratio = float(spec.get("labor_surplus_ratio", 0.05))
+    pop = snap.country.get("population") or 0.0
+    return bool(pop and sum(s.labor for s in snap.states) > pop * ratio)
+
+
+def _necessity_shortage(gd: GameData, pm: str, prices: dict[str, float],
+                        base: dict[str, float]) -> bool:
+    """该 PM 产出的必需品是否 >125% 基准价：短缺时可以破例机械化降成本。"""
+    ratio = float((cfg().get("production") or {}).get("necessity_price_ratio", 1.25))
+    return any(base.get(g) and prices.get(g, 0.0) > base[g] * ratio
+               for g in gd.pms.get(pm, {}).get("outputs", ()))
+
+
+def _price_ratio(prices: dict[str, float], base: dict[str, float], good: str) -> float:
+    return prices.get(good, 0.0) / base[good] if base.get(good) else 999.0
 
 
 def candidates(gd: GameData, snap: Snapshot, researched: set[str], offset: int = 0) -> list[Decision]:
     prices = _prices(gd, snap)
+    base = gd.base_prices()
+    jobs = labor_surplus(snap)
     laws = {l.key for l in snap.laws.values() if l.key}
     wages, wage_all = _wage_rates(snap)
     mix = cfg()["construction"]["wage_mix"]
@@ -58,12 +86,90 @@ def candidates(gd: GameData, snap: Snapshot, researched: set[str], offset: int =
                        and not (set(gd.pms[pm]["inputs"]) & no_supply)]
             if len(options) < 2 or any(not gd.pms[pm]["outputs"] for pm in options):
                 continue
+            if jobs:
+                # 就业优先：劳动力过剩时过滤净减岗 PM；必需品严重短缺时破例
+                safe = [pm for pm in options
+                        if employment_delta(gd, pm) >= 0 or _necessity_shortage(gd, pm, prices, base)]
+                if safe:
+                    options = safe
             ranked = sorted(options, key=lambda pm: economy.pm_profit(gd, pm, prices, wage), reverse=True)
             best = economy.pm_profit(gd, ranked[0], prices, wage)
             ok = [pm for pm in ranked if economy.pm_profit(gd, pm, prices, wage) >= best - abs(best) * SWITCH_MARGIN]
             out.append(Decision("set_pm", {"state": s.id, "building": key, "pm": ranked[0], "acceptable": ok},
                                 f"{s.name} {pmg}：每级周利润 {best:,.0f}"))
     return out
+
+
+def logging_candidates(gd: GameData, snap: Snapshot, researched: set[str]) -> list[Decision]:
+    """攻略：大部分伐木营优先软木，保留 2–4 个州专注硬木，让硬木价格比软木高 50–60%，
+    给建造预留软木产能。硬木太贵就多加一个州，太便宜就减一个。"""
+    spec = profile(snap).get("logging") or {}
+    soft, hard = spec.get("softwood_pm"), spec.get("hardwood_pm")
+    if not soft or not hard:
+        return []
+    rows = [(s, s.buildings[LOGGING]) for s in snap.states
+            if LOGGING in s.buildings and s.buildings[LOGGING].levels > 0]
+    if not rows:
+        return []
+    rows.sort(key=lambda t: -t[1].levels)
+    prices = _prices(gd, snap)
+    base = gd.base_prices()
+    ratio = _price_ratio(prices, base, "hardwood") / max(_price_ratio(prices, base, "wood"), 1e-6)
+    n = int(spec.get("hardwood_states", 3))
+    if ratio > float(spec.get("hardwood_price_ratio", 1.8)):
+        n += 1
+    elif ratio < 1.2:
+        n -= 1
+    n = max(int(spec.get("min_hardwood_states", 1)),
+            min(int(spec.get("max_hardwood_states", 6)), n))
+    laws = {l.key for l in snap.laws.values() if l.key}
+    desired: list[Decision] = []
+    for i, (s, row) in enumerate(rows):
+        target = hard if i < n else soft
+        if not economy.pm_unlocked(gd, target, researched, laws):
+            continue
+        desired.append(Decision(
+            "set_pm", {"state": s.id, "building": LOGGING, "pm": target, "acceptable": [target]},
+            f"{s.name} 伐木 → {'专注硬木' if i < n else '优先软木'}"
+            f"（{row.levels} 级；硬木/软木价格比 {ratio:.2f}）"))
+    if not desired:
+        return []
+    # 建筑行的当前 PM 不在快照里：按月轮转，保证软木州也能轮到，Actions 对已达标 PM 会跳过
+    per = max(1, int(spec.get("max_per_month", 3)))
+    start = (snap.date.month * per) % len(desired)
+    return (desired[start:] + desired[:start])[:per]
+
+
+def construction_pm_candidates(gd: GameData, snap: Snapshot, researched: set[str]) -> list[Decision]:
+    """建造部门 PM：铁价 ≤75% 基准切铁框架；钢价 ≤基准且科技已研切钢框架。
+    这部分不能走普通利润模型（建造部门不产商品），必须单独判断。"""
+    spec = (cfg().get("construction") or {}).get("construction_pm") or {}
+    iron, steel = spec.get("iron"), spec.get("steel")
+    if not iron or not steel:
+        return []
+    base = gd.base_prices()
+    prices = _prices(gd, snap)
+    laws = {l.key for l in snap.laws.values() if l.key}
+    target = ""
+    iron_ratio = float(spec.get("iron_price_ratio", 0.75))
+    early_year = int(spec.get("early_until_year", 0) or 0)
+    if early_year and snap.date.year < early_year:
+        iron_ratio = float(spec.get("early_iron_price_ratio", iron_ratio))
+    if (economy.pm_unlocked(gd, steel, researched, laws)
+            and _price_ratio(prices, base, "steel") <= float(spec.get("steel_price_ratio", 1.0))):
+        target = steel
+    elif (economy.pm_unlocked(gd, iron, researched, laws)
+            and _price_ratio(prices, base, "iron") <= iron_ratio):
+        target = iron
+    if not target:
+        return []
+    rows = [(s, s.buildings[SECTOR]) for s in snap.states
+            if SECTOR in s.buildings and s.buildings[SECTOR].levels > 0]
+    rows.sort(key=lambda t: -t[1].levels)
+    name = gd.pms[target]["name"].get("zh", target)
+    return [Decision("set_pm", {"state": s.id, "building": SECTOR, "pm": target, "acceptable": [target]},
+                     f"{s.name} 建造部门 → {name}（铁/钢价格已达标）")
+            for s, _ in rows[:int(spec.get("max_per_month", 4))]]
 
 
 def financial_candidates(gd: GameData, snap: Snapshot, researched: set[str]) -> list[Decision]:

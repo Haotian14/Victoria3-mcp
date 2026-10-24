@@ -15,7 +15,14 @@ from agent.strategy.config import Decision, profile
 
 def candidates(snap: Snapshot) -> list[Decision]:
     prof = profile(snap)
-    spec = prof.get("institutions") or {}
+    spec = dict(prof.get("institutions") or {})
+    # 攻略：1860 后国库充足时学校/医院升到 5 级（识字率/卫生接近满值）。
+    late_year = int(prof.get("institutions_late_year", 0) or 0)
+    if late_year and snap.date.year >= late_year:
+        limit = snap.country.get("gold_limit") or 0.0
+        money = snap.country.get("money") or 0.0
+        if limit and money > limit * float(prof.get("institutions_late_reserve_ratio", 1.5)):
+            spec.update(prof.get("institutions_late") or {})
     gate = prof.get("institution_gate") or {}
     waste = snap.country.get("tax_waste") or 0.0
     balance = snap.country.get("balance") or 0.0

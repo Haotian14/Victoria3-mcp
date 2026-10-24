@@ -39,6 +39,12 @@ def law_route(snap: Any) -> list[list[str]]:
     return [list(x) for x in (profile(snap).get("law_route") or cfg()["law_route"])]
 
 
+def fallback_route(snap: Any) -> list[list[str]]:
+    """兜底法律也必须出现在 law_options 的过滤列表里，否则 observe 根本读不到它们。"""
+    spec = profile(snap).get("politics") or {}
+    return [list(x) for x in (spec.get("fallback_route") or [])]
+
+
 @dataclass
 class Decision:
     """一个要执行的动作。kind 对应 actions.Actions 的方法名，args 是它的参数（快照另传）。"""
