@@ -35,6 +35,9 @@
 | 升级全部单位 | `MilitaryFormation.GetUpgradeAllUnitsCommand` |
 | 补给舰退役 | 逐艘 `Ship.Decommission`（补给舰窗口的等价路径） |
 | 军事建造 | `Building.QueueMilitaryConstruction(MilitaryFormation.Self, CombatUnitType.Self)`；测试局里英国没有征兵中心，命令收下但没有单位可造 |
+| 招募预备征召营（不动员） | `Coverage.recruit_conscripts`：`MilitaryFormation.OnClickRecruitConscript(CombatUnitType.Self)` → 真实 `MapListPanel.AccessValidOptions` → `MapListOption.OnClick`；逐营核对 `GetMaxConscripts` +1 与 `HasRaisedConscripts` 不变 |
+
+2026-10-25 接线注意（1.13.11）：`MapListPanelManager.AccessSelf` 的 `+0` 是面板指针数组，`+0xc` 是数量，`+0x18` 是当前下标；征召面板下标为33，数组每项8字节。只读这些字段定位真实面板，再调用UI回调；布局不匹配则停止，不写游戏内存。普通兵营建造命令不能用于增加征召中心。`Country.GetNumBattalions` 包含筹建营；`CombatUnitGroup.GetIDString` 返回 `0/1/2`（步/炮/骑），不是脚本键。
 
 ### 舰船 / 模板 / 造船队列
 

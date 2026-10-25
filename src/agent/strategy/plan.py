@@ -66,10 +66,31 @@ def decide(gd: GameData, snap: Snapshot, researched: set[str], costs: dict[str, 
            enacting: str | None, pm_offset: int = 0, law_options: list[LawOption] | None = None,
            law_stall: int = 0) -> Plan:
     options = law_options or []
+    commitment = politics.commitment_target(snap, options) if not enacting else None
     fallback = politics.fallback_ready(snap, law_stall)
+    if commitment is not None and not fallback:
+        options = [commitment]  # 先补路线首法支持，不让后面的100%警察法占住立法槽
+    next_law = None
+    for group, key in politics.targets(snap):
+        current = snap.laws.get(group)
+        if current and current.key != key:
+            next_law = key
+            opt = next((o for o in (law_options or []) if o.key == key), None)
+            if opt and politics.institution_block(snap, opt) and snap.country.get('institution_level_cost') is not None:
+                snap.country['bureaucracy_target'] = abs(snap.country['institution_level_cost']) + float(
+                    strategy_config.profile(snap).get('institution_bureaucracy_buffer', 500))
+            break
+    economy = snap.laws.get('lawgroup_economic_system')
+    c = snap.country
+    if (economy and economy.key == 'law_traditionalism'
+            and (enacting == 'law_interventionism' or next_law == 'law_interventionism')
+            and c.get('bureaucracy_income') is not None and c.get('bureaucracy') is not None):
+        # 传统主义的人口行政花费-25%将消失：按非机构消耗估算预留，实际差额继续驱动补建。
+        population_cost = max(0, c['bureaucracy_income'] - c['bureaucracy'] - (c.get('institutions') or 0))
+        c['bureaucracy_target'] = max(float(c.get('bureaucracy_target') or 500), population_cost / 3 + 500)
     build = construction.candidates(gd, snap, researched, costs)
     # 队列硬停时 slots()=0，但优先项目（部门/食品/行政/大学/贸易中心）仍值得排 2 个
-    build_slots = construction.slots(snap) or (3 if build and (snap.country.get("money") or 0) > 0 else 0)
+    build_slots = construction.slots(snap)
     return Plan(
         tax=budget.decide(snap),
         reform=politics.reform(snap, options, enacting, fallback),

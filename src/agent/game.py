@@ -8,6 +8,7 @@
 from __future__ import annotations
 
 import glob
+import ctypes
 import json
 import os
 import re
@@ -63,6 +64,19 @@ _MONTHS = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct",
 
 
 # ---------------------------------------------------------------- 进程
+
+
+def available_memory_gb() -> float:
+    """Windows 的可用物理内存，避免 WMI 权限差异；不是空闲提交额度。"""
+    class MemoryStatus(ctypes.Structure):
+        _fields_ = [("length", ctypes.c_ulong), ("load", ctypes.c_ulong)] + [
+            (k, ctypes.c_ulonglong) for k in ("total", "available", "page_total", "page_available",
+                                            "virtual_total", "virtual_available", "extended")]
+    status = MemoryStatus()
+    status.length = ctypes.sizeof(status)
+    if not ctypes.windll.kernel32.GlobalMemoryStatusEx(ctypes.byref(status)):
+        raise OSError("无法读取可用内存")
+    return status.available / (1024 ** 3)
 
 def running() -> bool:
     out = subprocess.run(["tasklist", "/FI", "IMAGENAME eq victoria3.exe", "/NH"],

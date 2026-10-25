@@ -42,6 +42,8 @@ def _pcfg(snap: Snapshot) -> dict:
     p = dict(cfg()["politics"])
     p.update(profile(snap).get("politics") or {})
     p["ruler_ig"] = profile(snap).get("ruler_ig", "")
+    p["committed_laws"] = snap.country.get("committed_laws") or ()
+    p["obligated_laws"] = snap.country.get("obligated_laws") or ()
     return p
 
 
@@ -70,18 +72,39 @@ def _need(opt: LawOption, p: dict, fallback: bool) -> float:
     if fallback:
         return float(p.get("fallback_min_pass", 0.15))
     override = (p.get("law_min_pass") or {}).get(opt.key)
-    return float(override) if override is not None else float(p["min_pass"])
+    threshold = float(override) if override is not None else float(p["min_pass"])
+    if opt.key in set(p.get("committed_laws", ())) | set(p.get("obligated_laws", ())):
+        threshold = min(threshold, float(p.get("committed_min_pass", .15)))
+    return threshold
 
 
 def _chance_ok(opt: LawOption, p: dict, fallback: bool) -> bool:
     """正常门槛是 min_pass；law_min_pass 可对关键法单独降门槛（如农本 30%）；
     兜底法再用 fallback_min_pass。0% 的法永远不推。"""
     chance = pass_chance(opt)
+    if chance <= 0:
+        return False
     if chance >= _need(opt, p, False):
         return True
     if not fallback:
         return False
     return opt.key in set(p.get("fallback_laws") or ()) and chance >= _need(opt, p, True)
+
+
+def institution_block(snap: Snapshot, opt: LawOption) -> str:
+    """新机构不是免费的兜底法：先有足够全国官僚，再开始制定。"""
+    empty = {'law_no_police', 'law_no_schools', 'law_no_health_system',
+             'law_no_home_affairs', 'law_no_colonial_affairs'}
+    current = snap.laws.get(opt.group)
+    if current is None or current.key not in empty or current.key == opt.key:
+        return ''
+    if not profile(snap).get('guard_new_institutions', False):
+        return ''
+    capacity, cost = snap.country.get('bureaucracy'), snap.country.get('institution_level_cost')
+    if capacity is None or cost is None:
+        return '新机构所需官僚不可读'
+    required = abs(float(cost)) + float(profile(snap).get('institution_bureaucracy_buffer', 500))
+    return f'新机构需官僚余量{required:,.0f}，当前{capacity:,.0f}' if capacity < required else ''
 
 
 def targets(snap: Snapshot | None = None) -> list[tuple[str, str]]:
@@ -99,6 +122,23 @@ def guard_fragile_unity(targets: list[tuple[str, str]], points: int | None) -> l
     return targets
 
 
+def commitment_target(snap: Snapshot, options: list[LawOption]) -> LawOption | None:
+    """路线首个未完成法律只缺支持时，先用条约补支持，不跳去先推警察等后项。"""
+    spec = (profile(snap).get("diplomacy") or {}).get("law_commitment") or {}
+    allowed = set(spec.get("laws") or ())
+    for group, key in targets(snap):
+        current = snap.laws.get(group)
+        if current is None or current.key == key:
+            continue
+        if key not in allowed:
+            return None  # 不能跳过佃农等前置直接承诺经济干预
+        opt = next((o for o in options if o.key == key), None)
+        if opt and not institution_block(snap, opt) and (opt.support_only or (opt.valid and not _chance_ok(opt, _pcfg(snap), False))):
+            return opt
+        return None
+    return None
+
+
 def candidates(snap: Snapshot, options: list[LawOption], enacting: str | None,
                fallback: bool = False) -> list[Decision]:
     """可推、且通过率达标的路线法律。fallback=True 时，关键法门槛降到 fallback_min_pass。"""
@@ -108,18 +148,23 @@ def candidates(snap: Snapshot, options: list[LawOption], enacting: str | None,
     out: list[Decision] = []
     for opt in options:
         current = snap.laws.get(opt.group)
-        if current is None or current.key == opt.key or not opt.valid:
+        if current is None or current.key == opt.key or not opt.valid or institution_block(snap, opt):
             continue
         chance = pass_chance(opt)
         if not _chance_ok(opt, p, fallback):
             continue
-        tag = "（兜底）" if chance < float(p["min_pass"]) else ""
+        tag = ("（生效承诺）" if opt.key in p.get("committed_laws", ()) else "（兜底）") if chance < float(p["min_pass"]) else ""
         out.append(Decision("enact_law", {"law": opt.key},
                             f"{opt.group}：{current.name} → {opt.name}，预计通过率 {chance:.0%}{tag}", chance))
+    route = {key: i for i, (_, key) in enumerate(targets(snap))}
     if fallback:
         # 正常法律先走；兜底法律按 fallback_laws 的顺序（农本主义优先）
         order = {k: i for i, k in enumerate(p.get("fallback_laws") or ())}
-        out.sort(key=lambda d: (d.score < float(p["min_pass"]), order.get(d.args["law"], 999)))
+        out.sort(key=lambda d: (d.score < float(p["min_pass"]),
+                               order.get(d.args["law"], 999) if d.score < float(p["min_pass"])
+                               else route.get(d.args["law"], 999)))
+    else:
+        out.sort(key=lambda d: route.get(d.args["law"], 999))
     return out
 
 

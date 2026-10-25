@@ -19,7 +19,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."
 
 from agent import runner  # noqa: E402
 from agent.bridge import Bridge  # noqa: E402
-from agent.game import Clock, launch, wait_in_game  # noqa: E402
+from agent.game import Clock, available_memory_gb, launch, running, wait_in_game  # noqa: E402
 
 
 def main() -> int:
@@ -34,6 +34,11 @@ def main() -> int:
     args = ap.parse_args()
 
     b = Bridge()
+    if args.save and not running():
+        free = available_memory_gb()
+        print(f"启动前可用物理内存 {free:.2f} GB（要求 ≥8 GB）", flush=True)
+        if free < 8:
+            raise RuntimeError("可用内存不足 8GB，未启动游戏")
     if args.save:
         print(f"重启游戏并载入 {args.save} ……")
         launch(save=args.save, restart=True, autosave="yearly")
@@ -63,4 +68,12 @@ def main() -> int:
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    import msvcrt
+    os.makedirs(runner.LOG_DIR, exist_ok=True)
+    with open(os.path.join(runner.LOG_DIR, "play.lock"), "a+b") as lock:
+        lock.seek(0)
+        try:
+            msvcrt.locking(lock.fileno(), msvcrt.LK_NBLCK, 1)
+        except OSError:
+            raise SystemExit("已有 play.py 长 run 在运行，禁止并行启动")
+        sys.exit(main())

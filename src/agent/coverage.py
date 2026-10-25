@@ -621,11 +621,75 @@ class Coverage(Actions):
             return ActionResult(False, f"{building} @ {state}：军事建造", why)
         path = spath + [(FLEETS if fleets else ARMIES, formation),
                         (f"=GetCombatUnitType('{unit_type}')", 0)]
-        before = int(float(self._probe("Building.GetExpansionLevelsInQueue", spath) or 0))
+        fpath = [(FLEETS if fleets else ARMIES, formation)]
+        count_expr = ("MilitaryFormation.GetMaxConscripts" if building == "building_conscription_center"
+                      else "MilitaryFormation.GetExpectedNumRegulars")
+        before = int(float(self._probe(count_expr, fpath) or 0))
         return self._run(f"{building} @ {state}：军事建造 {unit_type}",
                          "Building.QueueMilitaryConstruction(MilitaryFormation.Self,CombatUnitType.Self)",
-                         lambda: int(float(self._probe("Building.GetExpansionLevelsInQueue", spath) or 0)),
+                         lambda: int(float(self._probe(count_expr, fpath) or 0)),
                          lambda v: v > before, path=path)
+
+    def recruit_conscripts(self, formation: int, unit_type: str, count: int = 1) -> ActionResult:
+        """招募预备征召营（不动员），走编队的招募按钮及州列表 OnClick。
+
+        1.13.11 MapListPanelManager：+0是面板指针数组，+0xc是数量，+0x18是活动下标。
+        征召面板下标33。只读定位真实面板，再调用真实UI回调，不写游戏内存。
+        """
+        if not 1 <= count <= 50:
+            raise ValueError("count 取1..50")
+        if not unit_type.startswith("combat_unit_type_") or not unit_type.replace("_", "").isalnum():
+            raise ValueError("unit_type 必须是内部战斗单位键")
+        fp = [(ARMIES, formation)]
+        path = fp + [(f"=GetCombatUnitType('{unit_type}')", 0)]
+        name = f"编队 {formation} 招募预备征召 {count} 营"
+        if self.b.read("[MilitaryFormation.CanRecruitConscriptUnit(CombatUnitType.Self)]", path) != "1":
+            return ActionResult(False, name, "该编队不能招募这种征召单位")
+        total = lambda: int(float(self._probe("MilitaryFormation.GetMaxConscripts", fp) or 0))
+        before = total()
+        mobilized = self._probe("MilitaryFormation.HasRaisedConscripts", fp)
+        if mobilized == "1":
+            return ActionResult(False, name, "已动员的编队不新增预备征召")
+        self.b.exec("MilitaryFormation.OnClickRecruitConscript(CombatUnitType.Self)", path)
+        try:
+            manager = int.from_bytes(self.b.eval_raw("MapListPanelManager.AccessSelf")[8:16], "little")
+            header = self.b.mem_read(manager, 0x20)
+            data = int.from_bytes(header[:8], "little")
+            size = int.from_bytes(header[12:16], "little", signed=True)
+            index = int.from_bytes(header[24:28], "little", signed=True)
+            if not data or not 0 <= index < size <= 128 or index != 33:
+                raise GameError(f"征召面板布局不匹配：index={index}, size={size}")
+            panel = int.from_bytes(self.b.mem_read(data + index * 8, 8), "little")
+            pp = [(f"=@{panel:x}", 0)]
+            fields = ["MapListOption.CanClick",
+                      "MapListOption.GetActivateConscriptionCenterData.GetNumExpectedConscripts",
+                      "MapListOption.GetActivateConscriptionCenterData.GetConscriptionLimit",
+                      "MapListOption.GetActivateConscriptionCenterData.GetMilitaryFormation.GetNameNoFormatting"]
+            formation_name = self._probe("MilitaryFormation.GetNameNoFormatting", fp)
+            for _ in range(count):
+                rows = self.b.rows("MapListPanel.AccessValidOptions", fields, path=pp)
+                choices = []
+                for i, (valid, have, limit, owner) in enumerate(rows):
+                    if valid == "1" and plain(owner) == formation_name:
+                        room = int(float(limit)) - int(float(have))
+                        if room > 0:
+                            choices.append((room, i))
+                if not choices:
+                    break
+                prior = total()
+                self.b.exec("MapListOption.OnClick", pp + [("MapListPanel.AccessValidOptions", max(choices)[1])])
+                for _ in range(20):
+                    if total() != prior:
+                        break
+                    time.sleep(0.05)
+                if total() != prior + 1:
+                    raise GameError("州列表招募数量不是增加1，停止继续招募")
+                if self._probe("MilitaryFormation.HasRaisedConscripts", fp) != mobilized:
+                    raise GameError("招募改变了动员状态，停止")
+            after = total()
+            return ActionResult(after > before, name, f"新增 {after - before} 营，保持未动员", before, after)
+        finally:
+            self.b.exec("MapListPanelManager.CloseCurrentPanel")
 
     # ------------------------------------------------------------ 窗口对象 / 改名
     _PID: int | None = None

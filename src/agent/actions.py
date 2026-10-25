@@ -135,7 +135,8 @@ GOV_QUEUE = f"{PLAYER_MUT}.AccessGovernmentConstructionQueue"
 PRIVATE_QUEUE = f"{PLAYER_MUT}.AccessPrivateConstructionQueue"
 QUEUE_FIELDS = ["ConstructionQueueElement.GetBuilding.GetBuildingType.GetKey",
                 "ConstructionQueueElement.GetState.GetNameNoFormatting",
-                "ConstructionQueueElement.GetWeeksLeft", "ConstructionQueueElement.IsCurrentlyUnderConstruction"]
+                "ConstructionQueueElement.GetWeeksLeft", "ConstructionQueueElement.IsCurrentlyUnderConstruction",
+                "ConstructionQueueElement.GetBaseConstructionSpeed"]
 LAW_LISTS = ("AccessActivePowerStructureLaws", "AccessActiveEconomyLaws", "AccessActiveHumanRightsLaws",
              "AccessActiveOtherLaws")
 
@@ -848,8 +849,9 @@ class Actions:
     def construction_queue(self, private: bool = False) -> list[dict[str, Any]]:
         """政府（或私人）建造队列，按队列顺序。"""
         rows = self.b.rows(PRIVATE_QUEUE if private else GOV_QUEUE, QUEUE_FIELDS)
-        return [{"index": i, "building": k, "state": plain(s), "weeks_left": w, "under_construction": u == "1"}
-                for i, (k, s, w, u) in enumerate(rows)]
+        return [{"index": i, "building": k, "state": plain(s), "weeks_left": w,
+                 "under_construction": u == "1", "points": number(p) or 0}
+                for i, (k, s, w, u, p) in enumerate(rows)]
 
     def _queue_keys(self, lst: str) -> list[tuple[str, str]]:
         return [(r[0], plain(r[1])) for r in self.b.rows(lst, QUEUE_FIELDS[:2])]

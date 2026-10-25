@@ -19,6 +19,8 @@ import re
 from typing import Any
 
 from agent.strategy.config import profile_for_tag
+from agent.strategy import budget
+from agent.observe import Snapshot
 
 # 效果词（desc 是本地化文本，中英文都匹配）
 GOOD = {
@@ -49,6 +51,7 @@ LAW_STALL = ("辩论", "搁置", "拖延", "受阻", "妥协", "debate", "stall"
 # 事件键 → (优先选项关键词, fallback)。fallback 取 "default" 或 "first"。
 # 只列「默认/关键词会选错、后果到政权级」的事件；其余仍走通用打分。
 HARD: dict[str, tuple[tuple[str, ...], str]] = {
+    "unable_to_enact.1": (("彻底改写", "rewrite"), "default"),
     "boxer_rebellion_events.1": (("盲从", "愚妄"), "default"),          # a：所有汉人家园国 -100 关系
     "boxer_rebellion_events.2": (("团结", "正义", "united"), "default"),
     "boxer_rebellion_events.3": (("这些屈辱",), "default"),            # b：改朝换代、杀统治者
@@ -120,9 +123,46 @@ def _hard_pick(opts: list[dict[str, Any]], keywords: tuple[str, ...], fallback: 
     return opts[0]["option"]
 
 
-def pick(event: dict[str, Any], tag: str = "") -> int | None:
+def fiscal_option_allowed(option: dict[str, Any], snap: Snapshot,
+                          fragile_unity: int | None = None) -> bool:
+    raw = str(option.get("text", "")) + " " + str(option.get("desc", ""))
+    text = _clean(raw).lower()
+    # 无需贷款来换任何事件收益；减债/减少革命风险的选项仍允许。
+    for clause in re.split(r"[。；;\n]", text):
+        debt = any(w in clause for w in ("借款", "借债", "贷款", "take loan"))
+        reducing_debt = re.search(r"(?:偿还|归还|减少|降低|清偿|拒绝|避免|停止|repay|reduce).{0,8}(?:贷款|债务|借款|借债|loan|debt)", clause)
+        if debt and not reducing_debt:
+            return False
+        if any(w in clause for w in ("宣告破产", "债务违约", "declare bankruptcy")):
+            return False
+        if fragile_unity is not None and fragile_unity <= 4 and any(
+                w in clause for w in ("发动革命", "支持革命", "加入革命", "start revolution", "play as")):
+            return False
+    # 带货币效果且是支出时按金额预留；读不出金额则禁止，避免默认选项静默借款。
+    cost = 0.0
+    for clause in re.split(r"[。；;\n]", raw):
+        monetary = any(w in clause.lower() for w in ("money", "£", "金钱", "国库"))
+        negative = any(w in clause.lower() for w in ("支付", "花费", "支出", "失去", "减少", "pay", "spend", "lose"))
+        negative |= bool(re.search(r"[-−]\s*[\d£]", _clean(clause)))
+        if monetary and negative:
+            nums = re.findall(r"(?:\d[\d,]*(?:\.\d+)?)[KMB]?", re.sub(r"[\x15\x16][^ !]*!", " ", _clean(clause)), re.I)
+            if not nums:
+                return False
+            amounts = []
+            for num in nums:
+                mult = {"k": 1e3, "m": 1e6, "b": 1e9}.get(num[-1].lower(), 1)
+                amounts.append(float((num[:-1] if mult > 1 else num).replace(",", "")) * mult)
+            cost += max(amounts)
+    weekly = any(w in text for w in ("每周", "weekly", "per week"))
+    return not cost or budget.can_spend(snap, weekly=cost if weekly else 0, upfront=0 if weekly else cost)
+
+
+def pick(event: dict[str, Any], tag: str = "", snap: Snapshot | None = None,
+         fragile_unity: int | None = None) -> int | None:
     """返回要选的选项下标；没有可用选项时返回 None。tag 用于取国家档案（如 CHI 的鸦片策略）。"""
     opts = [o for o in event.get("options", []) if o.get("enabled")]
+    if snap is not None:
+        opts = [o for o in opts if fiscal_option_allowed(o, snap, fragile_unity)]
     if not opts:
         return None
     key = event.get("key") or ""

@@ -17,7 +17,7 @@ from agent.actions import ActionResult, Actions
 from agent.bridge import PLAYER, Bridge, BridgeError, GameError, plain
 from agent.game import Clock
 from agent.strategy import config as strategy_config
-from agent.strategy import budget, diplomacy
+from agent.strategy import budget, diplomacy, subsidies
 from agent.strategy import events as event_policy
 from agent.strategy import plan as planner
 from agent.strategy import politics
@@ -34,8 +34,19 @@ PM_COOLDOWN_MONTHS = 24     # 建筑换过生产方式后这么久不再换（�
 DECISION_WHITELIST = {"举办一场大型博览会"}   # 只在 possible=true 时按；鸦片解禁在 handle_journal 里单独处理
 _EVENT_RETRY: dict[int, float] = {}   # 事件 id → 这个时刻之前不再试（答不了就退避，别每秒暂停）
 
+
+class FiscalStop(RuntimeError):
+    """护栏无法自动消除风险时，暂停诊断，保留全部记录。"""
+
 METRICS = ("gdp", "money", "balance", "income", "expenses", "construction", "construction_used",
-           "sol", "literacy", "population", "prestige", "max_companies", "num_companies")
+           "sol", "literacy", "population", "prestige", "max_companies", "num_companies",
+           "credit_max", "credit_left", "in_default", "bankrupt", "interest", "military",
+           "military_wages", "military_goods", "subsidies", "construction_goods",
+           "government_construction_goods", "government_wages", "government_goods",
+           "institutions", "army_size", "construction_paused", "trade_subventions", "rank", "rank_name",
+           "loan_penalty", "opium_conceded", "fragile_unity", "government_construction_used",
+           "private_construction_used", "legitimacy", "queue_government", "queue_private", "tax_waste", "authority",
+           "bureaucracy", "bureaucracy_income", "institution_level_cost", "government_dividends", "investment_income")
 
 
 @dataclass
@@ -52,6 +63,13 @@ class Memory:
     journal_names: dict[str, str] = field(default_factory=dict)    # JE key → 名字
     situation: tuple[str, ...] = field(default_factory=tuple)      # 上个月的“当前形势”推导摘要
     fragile_unity: int | None = None    # 脆弱的统一剩余点数（je_warlord_china 进度条）
+    resume_construction_cost: float = 0.0  # 诊断值，不再用作整批恢复门槛
+    government_queue_limit: int | None = None
+    reserved_weekly: float = 0.0
+    commitment_retry: dict[str, int] = field(default_factory=dict)
+    commitment_signatures: dict[str, str] = field(default_factory=dict)
+    fiscal_history: list[dict[str, Any]] = field(default_factory=list)
+    label: str = ""
 
     def tally(self, r: ActionResult, kind: str) -> None:
         ok, bad = self.counts.setdefault(kind, [0, 0])
@@ -70,12 +88,27 @@ def metrics(snap: observe.Snapshot) -> dict[str, Any]:
     ind = igs.get("实业家")
     out["industrialists_clout"] = ind.clout if ind else None
     out["government"] = ",".join(ig.name for ig in snap.igs if ig.in_gov)
+    out["tax_level"], out["researching"] = snap.tax_level, snap.researching
+    out['law_enactment'] = snap.country.get('law_enactment')
+    if snap.laws:
+        out["law_keys"] = {g: law.key for g, law in snap.laws.items()}
+    if snap.states and any(s.buildings for s in snap.states):
+        levels: dict[str, int] = {}
+        for state in snap.states:
+            for key, row in state.buildings.items():
+                if row.levels:
+                    levels[key] = levels.get(key, 0) + row.levels
+        out["building_levels"] = levels
+        out["goods"] = snap.prices
     return out
 
 
 def enacting(b: Bridge, snap: observe.Snapshot | None = None) -> str | None:
     try:
-        return plain(b.read(f"[{PLAYER}.GetLawBeingEnacted.GetLawType.GetName]")) or None
+        if b.read(f"[{PLAYER}.IsEnactingLaw]") != '1':
+            return None
+        name = plain(b.read(f"[{PLAYER}.GetLawBeingEnacted.GetLawType.GetName]"))
+        return observe._name_index("laws").get(name, name) or None
     except GameError:
         return None
 
@@ -84,6 +117,23 @@ def advise(b: Bridge, mem: Memory | None = None) -> tuple[observe.Snapshot, plan
     """读局面、出计划，不执行。"""
     mem = mem or Memory()
     snap = observe.snapshot(b)
+    if (strategy_config.profile(snap).get("diplomacy") or {}).get("law_commitment"):
+        from agent.treaties import LawCommitments
+        commitments = LawCommitments(b).records()
+        snap.country["committed_laws"] = {r["law"] for r in commitments if r["status"] == "active"}
+        active_laws = {law.key for law in snap.laws.values()}
+        snap.country['obligated_laws'] = {r['law'] for r in commitments
+                                          if r['status'] in ('active', 'frozen', 'unfulfilled', 'at_risk')
+                                          and r['law'] not in active_laws}
+        pending = sum({r["name"]: r["weekly"] for r in commitments if r["status"] == "pending"}.values())
+        mem.reserved_weekly = max(mem.reserved_weekly, pending)  # 未确认发送也预留到下次月度核验
+    snap.country["reserved_weekly"] = mem.reserved_weekly
+    if mem.government_queue_limit is not None:
+        snap.country["government_queue_limit"] = mem.government_queue_limit
+    # 在计划前读取，开局第一月也有统一守卫。
+    j = Actions(b).journal()
+    mem.fragile_unity = fragile_points(j)
+    snap.country["fragile_unity"] = mem.fragile_unity
     law = enacting(b)
     mem.enacting = law
     # 推行中不能再提法律，也不改组政府：省掉逐条读成功率的几十次往返
@@ -127,21 +177,28 @@ def handle_events(b: Bridge, mem: Memory, note: Callable[[str], None], tag: str 
         paused = clock.paused() if clock else True
         if clock and not paused:
             clock.pause()
+        idx = None
         try:
             for ev in events:
-                idx = event_policy.pick(ev, tag)
+                _, current, tax, tech, date = observe.country(b)
+                live = observe.Snapshot(date, "", current, tax, tech, {}, {}, [])
+                if ev.get('key', '').startswith(('unable_to_enact', 'law_')):
+                    note(f"    立法事件前：{current.get('law_enactment')}；选项=" +
+                         str([(o.get('text'), o.get('enabled')) for o in ev.get('options', [])]))
+                idx = event_policy.pick(ev, tag, live, mem.fragile_unity)
                 if idx is None:
-                    _EVENT_RETRY[ev["id"]] = time.time() + 60
-                    continue
+                    raise FiscalStop(f"事件「{ev['title']}」没有财政护栏内的可选项")
                 r = a.choose_event_option(ev["id"], idx)
                 mem.tally(r, "event")
                 note(f"    {r}  ← 事件「{ev['title']}」")
                 if not r.ok:
                     _EVENT_RETRY[ev["id"]] = time.time() + 60
         finally:
-            if clock and (keep_running or not paused):
+            if clock and idx is not None and (keep_running or not paused):
                 clock.resume()
         return len(events)
+    except FiscalStop:
+        raise
     except Exception as exc:                     # 桥接层偶发失败不该让整局停掉
         note(f"    事件处理出错：{type(exc).__name__}: {exc}")
         return 0
@@ -172,7 +229,7 @@ def handle_proposals(b: Bridge, mem: Memory, note: Callable[[str], None],
 
 def handle_diplomacy(b: Bridge, mem: Memory, note: Callable[[str], None],
                      snap: observe.Snapshot | None = None) -> int:
-    """外交：先做攻略的主动动作（贸易特选 / 使馆 / 法律承诺 / 赠礼），再轮换改善关系。"""
+    """普通外交行动与改善关系；指定法律的条约承诺走handle_law_commitment。"""
     targets = diplomacy.improve_targets(snap)
     if not targets:
         return 0
@@ -190,9 +247,10 @@ def handle_diplomacy(b: Bridge, mem: Memory, note: Callable[[str], None],
         wants.append(("贸易特选", proactive["trade_privilege"]))
     if proactive.get("embassy") and "je_earn_recognition" in journals:
         wants.append(("建立大使馆", proactive["embassy"]))
-    if proactive.get("law_commitment") and not mem.enacting and mem.law_stall >= 6:
-        wants.append(("法律承诺", proactive["law_commitment"]))
-    if proactive.get("gift") and balance > 0 and money > float(proactive.get("gift_budget", 0)) * 10:
+    # 法律承诺是需要指定法律的条约条款，不能在普通外交行动里匹配关键词。
+    if (proactive.get("gift") and snap is not None
+            and budget.can_spend(snap, upfront=float(proactive.get("gift_budget", 0)))
+            and balance > 0 and money > float(proactive.get("gift_budget", 0)) * 10):
         wants.append(("赠礼", proactive["gift"]))
     n = len(targets)
     for k in range(n):
@@ -227,6 +285,73 @@ def handle_diplomacy(b: Bridge, mem: Memory, note: Callable[[str], None],
                 note(f"    {r}  ← 改善关系（{tag}）")
                 return 1
     return 0
+
+
+def handle_law_commitment(b: Bridge, snap: observe.Snapshot, mem: Memory,
+                          note: Callable[[str], None]) -> bool:
+    """开局即可争取首法承诺；重启后从真实条约恢复pending/active，避免重复付款。"""
+    spec = (strategy_config.profile(snap).get("diplomacy") or {}).get("law_commitment") or {}
+    if not spec:
+        return False
+    from agent.treaties import LawCommitments
+    service = LawCommitments(b)
+    retired = service.retire_completed({law.key for law in snap.laws.values() if law.key})
+    if retired is not None:
+        mem.tally(retired, 'treaty_cleanup')
+        note(f'    {retired}  ← 已完成承诺且绑定期结束，停止纯承诺转账')
+        if retired.ok:
+            return True
+    records = service.records()
+    pending = [r for r in records if r["status"] == "pending"]
+    mem.reserved_weekly = sum({r["name"]: r["weekly"] for r in pending}.values())
+    snap.country["reserved_weekly"] = mem.reserved_weekly
+    for r in records:
+        signature = f"{r['name']}:{r['law']}:{r['status']}"
+        if mem.commitment_signatures.get(r['name']) != signature:
+            note(f"    条约承诺[{r['status']}] {r['partner']} {r['law']}；持续转账{r['weekly']:,.0f}/周")
+            mem.commitment_signatures[r['name']] = signature
+            if r.get('non_fulfillment'):
+                note(f"    承诺履约警报：{r['non_fulfillment']}")
+    if pending or enacting(b):
+        return False
+    options = observe.law_options(b, snap.laws, politics.targets(snap))
+    target = politics.commitment_target(snap, options)
+    if target is None or any(r["law"] == target.key for r in records):
+        return False
+    month = snap.date.year * 12 + snap.date.month
+
+    def approve(weekly: float) -> bool:
+        _, current, _, _, _ = observe.country(b)
+        snap.country.update(current)
+        from dataclasses import replace
+        predicted = politics.pass_chance(replace(target, success=target.success + .05))
+        minimum = (strategy_config.profile(snap).get('politics') or {}).get('committed_min_pass', .01)
+        return (not politics.institution_block(snap, target) and predicted > 0 and predicted >= minimum
+                and budget.can_spend(snap, weekly=weekly))
+
+    for partner in spec.get("partners") or []:
+        key = f"{partner}:{target.key}"
+        if mem.commitment_retry.get(key, -1) > month:
+            continue
+        try:
+            r = service.propose(partner, target.key, float(spec.get("max_weekly_transfer", 5000)),
+                                approve, int(spec.get("binding_days", 1825)))
+        except (GameError, BridgeError) as exc:
+            # 发送可能已下发；先锁重试，下个月先查真实条约，不能立即换国重复承诺。
+            mem.commitment_retry[key] = month + int(spec.get("retry_months", 6))
+            mem.reserved_weekly += float(spec.get("max_weekly_transfer", 5000))
+            snap.country["reserved_weekly"] = mem.reserved_weekly
+            note(f"    法律承诺未确认：{exc}")
+            return False
+        mem.tally(r, "law_commitment")
+        note(f"    {r}")
+        mem.commitment_retry[key] = month + int(spec.get("retry_months", 6))
+        if r.ok or (isinstance(r.after, dict) and r.after.get("status") == "unconfirmed"):
+            if isinstance(r.after, dict) and r.after.get("status") != "active":
+                mem.reserved_weekly += float(r.after.get("weekly") or 0)
+                snap.country["reserved_weekly"] = mem.reserved_weekly
+            return True
+    return False
 
 
 def handle_subjects(b: Bridge, mem: Memory, note: Callable[[str], None],
@@ -333,20 +458,31 @@ def handle_movements(b: Bridge, mem: Memory, note: Callable[[str], None],
     return 0
 
 
+def regular_recruitment_allowed(snap: observe.Snapshot, at_war: bool) -> bool:
+    spec = strategy_config.profile(snap).get('military_recruitment') or {}
+    if budget.emergency(snap):
+        return False
+    if at_war:
+        return True
+    if snap.date.year < int(spec.get('peace_after_year', 0)):
+        return False
+    if spec.get('peace_requires_recognized'):
+        rank = str(snap.country.get('rank_name') or '')
+        if not rank or '未受认可' in rank or 'unrecognized' in rank.lower():
+            return False
+    return (snap.country.get('bureaucracy') or 0) >= 0
+
+
 def handle_military(b: Bridge, note: Callable[[str], None],
                     snap: observe.Snapshot | None = None) -> int:
-    """军事姿态 + 政府工资。
-    - 军队：战时 High，和平 Medium；Low/VeryLow 的 −50%/−75% 训练速度会让补员永远补不满。
-    - 政府：攻略前期压 Low 换建造资金；重商主义后回 Medium（避免认可/威望惩罚）。"""
+    """和平 Low、战时 Medium；按国家目标裁掉超编，缺炮只能在现金充足时补。"""
     changed = 0
     try:
         a = Actions(b)
         wars = a.wars()
-        broke = bool(snap is not None and (snap.country.get("balance") or 0.0) < 0
-                     and (snap.country.get("money") or 0.0) <= (snap.country.get("expenses") or 0.0) * 4)
+        broke = snap is None or budget.emergency(snap)
         wspec = (strategy_config.profile(snap).get("wages") or {}) if snap is not None else {}
-        level = "High" if wars else (
-            "Low" if broke and wspec.get("military_low_when_broke", True) else "Medium")
+        level = "Medium" if wars else "Low"
         r = a.set_wage("Military", level)
         if r.ok and not str(r.detail).startswith(("已是", "现行")) and r.before != r.after:
             note(f"    {r}  ← {'战时' if wars else '和平'}军饷 {level}")
@@ -359,9 +495,105 @@ def handle_military(b: Bridge, note: Callable[[str], None],
             if rg.ok and not str(rg.detail).startswith(("已是", "现行")) and rg.before != rg.after:
                 note(f"    {rg}  ← 政府工资 {gov}")
                 changed += 1
+        targets = (strategy_config.profile(snap).get("military_targets") or {}) if snap else {}
+        if targets:
+            from agent.coverage import Coverage
+            ca = Coverage(b)
+            rows = observe.army_entries(b)
+            regular = sum(r["regular"] for r in rows)
+            expected = sum(r["expected_regular"] + r["expected_conscripts"] for r in rows)
+            # GetNumBattalions 包含筹建营；编队 current 则只数已建成营。
+            if not regular <= int(snap.country["army_size"]) <= expected:
+                raise FiscalStop("编队营数与国家 army_size 不一致，停止裁军")
+            totals = {g: sum(r["expected_regular"] for r in rows if r["group"] == g)
+                      for g in ("infantry", "artillery", "cavalry")}
+            conscripts = sum(r["expected_conscripts"] for r in rows)
+            # 从后往前删，不删除编队；每次用编队总数验证，条目消失也不误判。
+            for row in reversed(rows):
+                g = row["group"]
+                if g not in totals:
+                    continue
+                for key, cmd, over in (
+                    ("regular", "DisbandRegular", max(0, totals[g] - int(targets.get(g, totals[g])))),
+                    ("conscripts", "DisbandConscript", max(0, conscripts - int(targets.get("conscripts", conscripts)))),
+                ):
+                    for _ in range(min(row[f"expected_{key}"] if key == "regular" else row["expected_conscripts"], over)):
+                        current = next((r for r in observe.army_entries(b)
+                                        if r["formation"] == row["formation"] and r["group"] == g
+                                        and r["type"] == row["type"]), None)
+                        if current is None:
+                            break
+                        path = [(f"{observe.PLAYER_MUT}.GetMilitaryFormationsArmy", current["formation"]),
+                                ("MilitaryFormation.GetCombatUnitEntries", current["entry"])]
+                        unit_cmd = "GetDisbandUnitTypeRegularCommand" if key == "regular" else "GetDisbandUnitTypeConscriptCommand"
+                        probe = "MilitaryFormation.GetExpectedNumRegulars" if key == "regular" else "MilitaryFormation.GetMaxConscripts"
+                        r = ca.command(f"MilitaryFormation.{unit_cmd}(MilitaryFormationUnitEntry.GetUnitType.Self)",
+                                       probe, path=path, probe_path=path[:1], name=f"裁超编 {g} {key}")
+                        if not r.ok:
+                            note(f"    {r}")
+                            break
+                        changed += 1
+                        if key == "regular":
+                            totals[g] -= 1
+                        else:
+                            conscripts -= 1
+            final_rows = observe.army_entries(b)
+            totals = {g: sum(r["expected_regular"] for r in final_rows if r["group"] == g) for g in totals}
+            note(f"    军队：步兵 {totals['infantry']}/{targets['infantry']}，"
+                 f"炮兵 {totals['artillery']}/{targets['artillery']}，骑兵 {totals['cavalry']}，"
+                 f"征召 {sum(r['expected_conscripts'] for r in final_rows)}/{targets['conscripts']}")
+            # 已有队列计入 expected，避免重复补炮。保守预留每营£1000/周，最多两营/月。
+            if regular_recruitment_allowed(snap, bool(wars)) and budget.can_spend(snap, weekly=2000) and totals['artillery'] < targets['artillery']:
+                fi = final_rows[0]["formation"] if final_rows else None
+                added = 0
+                recruit = strategy_config.profile(snap).get('military_recruitment') or {}
+                quota = min(int(recruit.get('max_per_month', 2)), targets['artillery'] - totals['artillery'])
+                if snap.country.get("government_queue_limit") is not None:
+                    # 炮兵兵营也占政府建造预算；至少给经济项目留一个位置。
+                    quota = min(quota, max(0, int(snap.country["government_queue_limit"])
+                                           - len(a.construction_queue()) - 1))
+                for s in snap.states if fi is not None else []:
+                    building = next((k for k in s.buildings if k in ("building_barracks", "building_barrack")
+                                     and s.buildings[k].levels > 0), None)
+                    if building:
+                        for _ in range(quota - added):
+                            r = ca.queue_military_construction(s.id, building, fi, "combat_unit_type_cannon_artillery")
+                            if not r.ok:
+                                break  # 当前州满级就试下一州，不能永远卡在首州
+                            note(f"    {r}  ← 现金护栏内补炮兵")
+                            changed += 1
+                            added += 1
+                            if added >= quota:
+                                break
+                        if added >= quota:
+                            break
+            # 同一军事建造命令对征召中心增加预备营，不动员、不支付常备军饷。
+            missing_conscripts = targets['conscripts'] - sum(r['expected_conscripts'] for r in final_rows)
+            if not wars and missing_conscripts > 0 and budget.can_spend(snap, weekly=1000):
+                fi = final_rows[0]["formation"] if final_rows else None
+                if fi is not None:
+                    r = ca.recruit_conscripts(fi, "combat_unit_type_irregular_infantry", min(10, missing_conscripts))
+                    note(f"    {r}  ← 预备征召营（不动员）")
+                    changed += bool(r.ok)
     except Exception as exc:
-        note(f"    军事姿态出错：{type(exc).__name__}: {exc}")
+        raise FiscalStop(f"军事护栏执行失败：{type(exc).__name__}: {exc}") from exc
     return changed
+
+
+def fragile_points(journal: dict[str, Any]) -> int | None:
+    je = next((e for e in journal.get("journal_entries", []) if e["key"] == "je_warlord_china"), None)
+    if not je:
+        return None
+    for bar in je.get("bars") or []:
+        if any(k in str(bar.get("name") or "") for k in ("统一", "容错", "失败")):
+            try:
+                return int(float(str(bar.get("value"))))
+            except (TypeError, ValueError):
+                pass
+    try:
+        return int(float(str(je.get("progress_value"))))
+    except (TypeError, ValueError):
+        raise GameError("脆弱的统一点数不可读，停止自动支出")
 
 
 def _je_signature(e: dict[str, Any]) -> str:
@@ -432,17 +664,7 @@ def handle_journal(b: Bridge, mem: Memory, note: Callable[[str], None],
         mem.journal_active = {key: _je_signature(e) for key, e in entries.items()}
         mem.journal_names = {key: e["name"] for key, e in entries.items()}
         # 脆弱的统一：进度条就是剩余容错点；≤1 时法律路线会跳过权力分配组
-        mem.fragile_unity = None
-        je = entries.get("je_warlord_china")
-        if je:
-            for bar in je.get("bars") or []:
-                name = str(bar.get("name") or "")
-                if any(k in name for k in ("统一", "容错", "失败")):
-                    try:
-                        mem.fragile_unity = int(float(str(bar.get("value") or "")))
-                    except ValueError:
-                        pass
-                    break
+        mem.fragile_unity = fragile_points(j)
 
         e = entries.get("je_opium_obsession")
         if e:
@@ -474,6 +696,8 @@ def handle_journal(b: Bridge, mem: Memory, note: Callable[[str], None],
         for d in j.get("decisions", []):
             if not d.get("possible") or d.get("name") not in DECISION_WHITELIST:
                 continue
+            if snap is None or budget.emergency(snap):
+                continue  # 博览会等非必要开支不在紧急模式执行
             key = f"decision:{d['name']}"
             if mem.blocked.get(key, -1) > month:
                 continue
@@ -623,6 +847,7 @@ def _clean_queue(a: Actions, note: Callable[[str], None],
         if len(q) <= maxq:
             return
         keep = {ADMIN, UNIVERSITY, "building_trade_center", "building_logging_camp"}
+        keep |= {"building_barrack", "building_barracks"}  # 军事模块已按200/50限额，不能又撤掉补炮队列
         keep |= {k for k in (c.get("priority_queue") or {}) if not k.startswith("_")}
         if snap is None or _sector_below_cap(snap):
             keep.add(SECTOR)
@@ -682,10 +907,26 @@ def execute(b: Bridge, plan: planner.Plan, snap: observe.Snapshot, mem: Memory,
             note: Callable[[str], None]) -> list[ActionResult]:
     a = Actions(b)
     results: list[ActionResult] = []
-    _trim_sector(a, snap, note)
-    _promote_queue(a, note, snap)
+    if not budget.emergency(snap):
+        _trim_sector(a, snap, note)
+        _promote_queue(a, note, snap)
 
     def run(d: Decision) -> ActionResult:
+        if d.kind in ("build", "set_institution", "subsidy", "trade_policy", "set_pm", "set_tax", "enact_law"):
+            _, current, _, _, _ = observe.country(b)
+            snap.country.update(current)  # 每个支出前重读，避免同批动作累计透支
+        reason = budget.action_block(snap, d, mem.fragile_unity)
+        if not reason and d.kind == 'enact_law':
+            opts = observe.law_options(b, snap.laws, politics.targets(snap) + strategy_config.fallback_route(snap))
+            opt = next((o for o in opts if o.key == d.args['law']), None)
+            if opt:
+                reason = politics.institution_block(snap, opt)
+        if not reason and d.kind == "build" and mem.government_queue_limit is not None:
+            if len(a.construction_queue()) >= mem.government_queue_limit:
+                reason = f"政府队列已达到持续盈余额度 {mem.government_queue_limit} 项"
+        if reason:
+            note(f"    财政守卫跳过 {d.kind}：{reason}")
+            return ActionResult(False, str(d), reason)
         try:
             r = _do(a, d, snap)
         except GameError as exc:
@@ -736,7 +977,8 @@ def execute(b: Bridge, plan: planner.Plan, snap: observe.Snapshot, mem: Memory,
             law_started = True
             break
         if "不可执行" in r.detail:
-            mem.blocked[law] = month + LAW_RETRY_MONTHS   # 缺科技 / 支持不够：过一阵再看
+            # 游戏自己的失败冷却由valid约束；临时支持变化不再额外锁一年。
+            mem.blocked[law] = month + 1
     # 法律卡死计数：真正开始立法 / 改组成功才清零；计划里有但没执行（冷却/失败）不算
     mem.law_stall = 0 if (mem.enacting or reformed or law_started) else mem.law_stall + 1
     built = 0
@@ -756,7 +998,7 @@ def execute(b: Bridge, plan: planner.Plan, snap: observe.Snapshot, mem: Memory,
             mem.blocked[cool] = month + PM_COOLDOWN_MONTHS
     for d in plan.subsidy:                        # 补贴亏损工业：盈利后取消补贴并私有化
         key = f"subsidy:{d.args['state']}:{d.args['building']}"
-        if mem.blocked.get(key, -1) > month:
+        if mem.blocked.get(key, -1) > month and d.args.get("on"):
             continue
         r = run(d)
         if not r.ok:
@@ -792,6 +1034,94 @@ def execute(b: Bridge, plan: planner.Plan, snap: observe.Snapshot, mem: Memory,
     return results
 
 
+def handle_subsidies(b: Bridge, snap: observe.Snapshot, mem: Memory,
+                     note: Callable[[str], None]) -> None:
+    """财政紧急时取消全部补贴；不受过去开启补贴的冷却锁影响。"""
+    if not budget.emergency(snap):
+        return
+    a = Actions(b)
+    for d in subsidies.candidates(snap):
+        r = _do(a, d, snap)
+        mem.tally(r, "subsidy")
+        note(f"    {r}  ← {d.why}")
+        if not r.ok:
+            raise FiscalStop(f"紧急取消补贴失败：{r}")
+
+
+def fiscal_guard(b: Bridge, snap: observe.Snapshot, mem: Memory,
+                 note: Callable[[str], None]) -> None:
+    c = snap.country
+    required = ("money", "income", "expenses", "balance", "credit_left", "in_default", "army_size")
+    missing = [k for k in required if c.get(k) is None]
+    if missing:
+        raise FiscalStop(f"关键财政观测缺失：{missing}")
+    if c.get("in_default") or c.get("bankrupt") or c["money"] <= 0:
+        raise FiscalStop("国库耗尽/违约/破产，停止推进并保留诊断")
+    if c.get("loan_penalty"):
+        raise FiscalStop("检测到借款统一惩罚标记，停止诊断")
+    a = Actions(b)
+    if budget.emergency(snap):
+        mem.government_queue_limit = 0
+        c["government_queue_limit"] = 0
+        if not c.get("construction_paused"):
+            mem.resume_construction_cost = max(mem.resume_construction_cost,
+                                               float(c.get("government_construction_goods") or 0))
+            r = a.country_command("PauseConstruction")
+            note(f"    {r}  ← 财政紧急：暂停政府建造（不只停止新排队）")
+            if not r.ok:
+                raise FiscalStop(f"暂停政府建造失败：{r}")
+        if c["money"] + min(0, c["balance"]) * 4 <= 0:
+            raise FiscalStop("现金不足四周赤字，暂停等待诊断，禁止消耗信用")
+    else:
+        c["reserved_weekly"] = mem.reserved_weekly
+        queue = a.construction_queue()
+        c["project_construction_points"] = max((float(q.get("points") or 0) for q in queue), default=0)
+        limit, cost = budget.construction_allowance(snap)
+        if not c.get("construction_paused"):
+            # 已结算且有盈余的在建项目不因报价余量而反复开停；限制新增排队即可。
+            limit = max(limit, sum(q["under_construction"] for q in queue))
+        mem.government_queue_limit = limit
+        c["government_queue_limit"] = limit
+        if limit > 0:
+            while len(queue) > limit:
+                r = a.cancel_construction(queue[-1]["index"])
+                note(f"    {r}  ← 政府建造预算仅容纳 {limit} 项，保留队首进度")
+                if not r.ok:
+                    raise FiscalStop(f"缩减政府队列失败：{r}")
+                queue = a.construction_queue()
+        if c.get("construction_paused") and queue and limit > 0 and budget.can_spend(snap, weekly=cost * len(queue)):
+            r = a.country_command("ResumeConstruction")
+            note(f"    {r}  ← 每项保守报价 {cost:,.0f}/周，恢复 {len(queue)} 项政府建造")
+            if not r.ok:
+                raise FiscalStop(f"恢复建造失败：{r}")
+        elif c.get("construction_paused") and not queue and limit > 0:
+            r = a.country_command("ResumeConstruction")
+            if not r.ok:
+                raise FiscalStop(f"恢复空队列失败：{r}")
+
+
+def record_fiscal(snap: observe.Snapshot, mem: Memory, note: Callable[[str], None], cadence: str) -> None:
+    m = metrics(snap)
+    unity = snap.country.get("fragile_unity") if snap.country.get("tag") == "CHI" else mem.fragile_unity
+    m.update(label=mem.label, cadence=cadence, fragile_unity=unity,
+             emergency=budget.emergency(snap), law_stall=mem.law_stall, enacting=mem.enacting,
+             government_queue_limit=mem.government_queue_limit, reserved_weekly=mem.reserved_weekly)
+    mem.fiscal_history.append(m)
+    os.makedirs(LOG_DIR, exist_ok=True)
+    with open(os.path.join(LOG_DIR, "fiscal.jsonl"), "a", encoding="utf-8") as f:
+        f.write(json.dumps(m, ensure_ascii=False) + "\n")
+    def fmt(key: str) -> str:
+        value = m.get(key)
+        return "?" if value is None else f"{value:,.0f}"
+    note(f"    财政[{snap.date}/{cadence}] income={fmt('income')} expenses={fmt('expenses')} "
+         f"balance={fmt('balance')} money={fmt('money')} credit_left={fmt('credit_left')} "
+         f"interest={fmt('interest')} military={fmt('military')} subsidies={fmt('subsidies')} "
+         f"construction_goods={fmt('construction_goods')} institutions(官僚)={fmt('institutions')} "
+         f"army_size={fmt('army_size')} default={m.get('in_default')} unity={unity} loan_penalty={m.get('loan_penalty')}")
+    if m.get('law_enactment'):
+        note(f"    立法[{snap.date}/{cadence}] {m['law_enactment']}")
+
+
 def law_vanished(prev: str | None, snap: observe.Snapshot) -> bool:
     """上个月在推的法，这个月既不是现行法、也不在推：说明失败/被取消。
     完成的法会变成现行法，仍留在 snap.laws 里，所以不会被误判。"""
@@ -811,13 +1141,21 @@ def step(b: Bridge, mem: Memory, note: Callable[[str], None] = lambda s: None) -
     tag = str(snap.country.get("tag") or "")
     if handle_events(b, mem, note, tag=tag) > 0:
         snap, plan = advise(b, mem)      # 事件可能改了合法性、法律进度、国库，按新局面临时重算
+    if handle_law_commitment(b, snap, mem, note):
+        snap, plan = advise(b, mem)
+    record_fiscal(snap, mem, note, "monthly")
+    fiscal_guard(b, snap, mem, note)
+    handle_subsidies(b, snap, mem, note)
+    handle_military(b, note, snap)
+    # 裁军、暂停、撤补贴都改变预算和建筑列表；旧计划不能继续执行。
+    snap, plan = advise(b, mem)
     if law_vanished(prev_law, snap) and not mem.enacting:
         # 立法失败后不要空转满 6 个月：直接按兜底门槛进入下一轮，下一月就能换法。
         mem.law_stall = max(mem.law_stall, politics.fallback_threshold(snap))
         note(f"    法律 {prev_law} 失败/被取消：下月起启用兜底（{mem.law_stall} 月）")
     if (mem.law_stall == politics.fallback_threshold(snap) and not mem.enacting and not plan.law):
         note(f"    法律兜底已启用（连续 {mem.law_stall} 个月无法律），"
-             f"本月没有通过率 ≥{politics.fallback_min_pass(snap):.0%} 的关键法")
+             "本月没有同时满足支持、官僚与通过率要求的可执行法律")
     handle_proposals(b, mem, note, snap)
     handle_diplomacy(b, mem, note, snap)
     handle_subjects(b, mem, note, snap)
@@ -825,7 +1163,6 @@ def step(b: Bridge, mem: Memory, note: Callable[[str], None] = lambda s: None) -
     handle_movements(b, mem, note, snap)
     handle_journal(b, mem, note, snap)
     handle_situation(snap, mem, note)
-    handle_military(b, note, snap)
     results = execute(b, plan, snap, mem, note)
     return {"date": str(snap.date), "metrics": m, "results": [str(r) for r in results]}
 
@@ -840,7 +1177,7 @@ def play(b: Bridge, months: int = 12, verbose: Callable[[str], None] | None = No
          label: str = "", act: bool = True) -> dict[str, Any]:
     """从当前日期起每月决策一次，共 months 个月，结束时写一行 logs/runs.jsonl。
     act=False 是基线：不做任何动作（游戏 AI 不接管玩家国家），只按月记录同样的指标。"""
-    mem = Memory()
+    mem = Memory(label=label)
     clock = Clock(b)
     clock.pause()
 
@@ -866,8 +1203,26 @@ def play(b: Bridge, months: int = 12, verbose: Callable[[str], None] | None = No
                 note(f"[{snap.date}] GDP {snap.country.get('gdp') or 0:,.0f}（基线，不干预）")
             if act:
                 ticks = {"n": 0}
+                last_check = {"day": None}
 
                 def on_tick() -> None:
+                    if os.path.exists(os.path.join(LOG_DIR, "stop-play")):
+                        raise FiscalStop("收到 logs/stop-play 停止标记，暂停并保存诊断")
+                    from datetime import date as calendar_date
+                    now = clock.date()
+                    ordinal = calendar_date(now.year, now.month, now.day).toordinal()
+                    if last_check["day"] is None or ordinal - last_check["day"] >= 7:
+                        clock.pause()
+                        _, country, tax, tech, date = observe.country(b)
+                        live = observe.Snapshot(date, "", country, tax, tech, {}, {}, [])
+                        record_fiscal(live, mem, note, "weekly")
+                        fiscal_guard(b, live, mem, note)
+                        # 新出现的补贴也不能等下月；有补贴时才读取建筑列表。
+                        if budget.emergency(live) and (country.get("subsidies") or 0) > 0:
+                            live.states = observe.states(b)
+                            handle_subsidies(b, live, mem, note)
+                        last_check["day"] = ordinal
+                        clock.resume()
                     handle_events(b, mem, note, tag=tag, clock=clock, keep_running=True)
                     ticks["n"] += 1
                     if ticks["n"] % 5 == 0:      # 提议不用每秒读
@@ -882,17 +1237,20 @@ def play(b: Bridge, months: int = 12, verbose: Callable[[str], None] | None = No
             note(stopped)
             break
     try:
-        mem.history.append(metrics(observe.snapshot(b, with_buildings=False)))
+        final_snap = observe.snapshot(b, with_buildings=False)
+        mem.history.append(metrics(final_snap))
+        record_fiscal(final_snap, mem, note, "final")
     except Exception:
         pass
     summary = {
         "t": time.strftime("%Y-%m-%d %H:%M:%S"), "label": label or ("strategy" if act else "baseline"),
         "stopped": stopped, "country": observe.country(b)[0],
         "start": str(start), "end": mem.history[-1]["date"] if mem.history else None,
-        "months": max(0, len(mem.history) - 1), "seconds": round(time.time() - t0),
+        "months": (observe.Date.parse(mem.history[-1]["date"]).months_since(start) if mem.history else 0),
+        "seconds": round(time.time() - t0),
         "start_metrics": mem.history[0] if mem.history else None,
         "end_metrics": mem.history[-1] if mem.history else None,
-        "actions": mem.counts, "history": mem.history,
+        "actions": mem.counts, "history": mem.history, "fiscal_history": mem.fiscal_history,
     }
     _record(summary)
     summary["log_tail"] = mem.log[-40:]

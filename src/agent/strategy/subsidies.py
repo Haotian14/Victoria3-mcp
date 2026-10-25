@@ -13,6 +13,7 @@ from __future__ import annotations
 
 from agent.observe import Snapshot
 from agent.strategy.config import Decision, profile
+from agent.strategy import budget
 
 DEFAULT_KEYS = (
     "building_textile_mill", "building_furniture_manufactory", "building_glassworks",
@@ -22,6 +23,11 @@ DEFAULT_KEYS = (
 
 
 def candidates(snap: Snapshot) -> list[Decision]:
+    if budget.emergency(snap):
+        # 紧急削支覆盖全部州/全部建筑，不受战略保护、名单或每月取消数量上限限制。
+        return [Decision("subsidy", {"state": s.id, "building": key, "on": False},
+                         f"财政紧急：取消补贴（{s.name} {key}，省 {row.subsidy_cost:,.0f}/周）")
+                for s in snap.states for key, row in s.buildings.items() if row.subsidized]
     spec = profile(snap).get("subsidies") or {}
     if not spec:
         return []

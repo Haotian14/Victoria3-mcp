@@ -13,7 +13,7 @@ from dataclasses import dataclass, field
 from typing import Any
 
 from agent import gamedata
-from agent.bridge import FIELD_ERROR, IGS, PLAYER, PLAYER_MUT, Bridge, number, plain
+from agent.bridge import FIELD_ERROR, IGS, PLAYER, PLAYER_MUT, Bridge, GameError, number, plain
 from agent.game import Date
 
 STATES = f"{PLAYER_MUT}.AccessStates"
@@ -46,6 +46,8 @@ COUNTRY_FIELDS = {
     "population": "GetTotalPopulation",
     "construction": "CalcBaseConstructionSpeed",
     "construction_used": "CalcUsedConstruction",
+    "government_construction_used": "CalcUsedGovernmentConstruction",
+    "private_construction_used": "CalcUsedPrivateConstruction",
     "sol": "GetAverageSoLByPopulation",
     "literacy": "GetIncorporatedLiteracyRate",
     "prestige": "GetPrestige",
@@ -58,6 +60,29 @@ COUNTRY_FIELDS = {
     "subsidies": "GetSubsidiesExpenses",         # 每周补贴支出（预算面板合计）
     "max_companies": "GetMaxNumCompanies",       # 公司槽（corporate_charters 后 +1）
     "num_companies": "GetNumCompanies",
+    "in_default": "InDefault",
+    "army_size": "GetNumBattalions",
+    "interest": "GetInterestPayment",
+    "military_wages": "PredictMilitaryWagesExpenses",
+    "military_goods": "GetMilitaryGoodsExpenses",
+    "construction_goods": "GetConstructionGoodsExpenses",
+    "government_construction_goods": "GetGovernmentConstructionGoodsExpenses",
+    "government_wages": "PredictGovernmentWagesExpenses",
+    "government_goods": "GetGovernmentGoodsExpenses",
+    "institutions": "GetInstitutionInvestmentBureaucracyCost",  # 官僚点，非英镑
+    "bureaucracy": "GetPowerDelta('bureaucracy')",
+    "bureaucracy_income": "GetPowerIncome('bureaucracy')",
+    "institution_level_cost": "GetInstitutionInvestmentBureaucracyFactor",
+    "government_dividends": "PredictGovernmentShareDividends",
+    "investment_income": "GetInvestmentIncome",
+    "trade_subventions": "GetSubventionsExpenses",
+    "construction_paused": "IsConstructionPaused",
+    "rank": "GetRankNumber",
+    "bankrupt": "HasTimedModifier('declared_bankruptcy')",
+    "loan_penalty": "MakeScope.Var('china_warlord_explosion_loans').IsSet",
+    "fragile_unity": "MakeScope.Var('china_warlord_explosion').GetValue",
+    "opium_conceded": "MakeScope.Var('opium_wars_gave_in').IsSet",
+    "rank_name": "GetRank",
 }
 
 # 消费税候选：先奢侈品，不碰谷物/布料等民生品（1.13 权威成本见财政调研）
@@ -217,20 +242,53 @@ def _name_index(kind: str) -> dict[str, str]:
 
 def country(b: Bridge) -> tuple[str, dict[str, float | None], str | None, str | None, Date]:
     names = list(COUNTRY_FIELDS)
-    exprs = [f"{PLAYER}.{COUNTRY_FIELDS[n]}" + ("" if n == "tag" else "|2") for n in names]
+    exprs = [f"{PLAYER}.{COUNTRY_FIELDS[n]}" + ("" if n in ("tag", "rank_name") else "|2") for n in names]
     exprs += [f"IsValid({PLAYER}.SetTaxLevel{t})" for t in TAX_LEVELS]
     exprs += [f"{PLAYER}.GetCurrentlyResearchedTechnology.GetNameNoFormatting",
               f"{PLAYER}.GetNameNoFormatting", "TimeKeeper.GetCurrentDate.GetString"]
     vals = b.read_many(exprs)
     out = {n: _f(v) for n, v in zip(names, vals)}
     out["tag"] = plain(vals[names.index("tag")] or "")
+    out["rank_name"] = plain(vals[names.index("rank_name")] or "")
+    for key in ("in_default", "construction_paused", "bankrupt", "loan_penalty", "opium_conceded"):
+        raw = vals[names.index(key)]
+        out[key] = (raw == "1") if raw in ("0", "1") else None
+    mw, mg = out.get("military_wages"), out.get("military_goods")
+    out["military"] = mw + mg if mw is not None and mg is not None else None
     tax_valid = vals[len(names):len(names) + len(TAX_LEVELS)]
     # 现行税级的「设为该级」命令不可用；其余可用
     invalid = [t for t, v in zip(TAX_LEVELS, tax_valid) if v == "0"]
     tax = invalid[0] if len(invalid) == 1 else None
     tech_name = vals[-3]
     tech = _name_index("technologies").get(plain(tech_name)) if tech_name else None
+    out['law_enactment'] = law_progress(b)
     return plain(vals[-2] or ""), out, tax, tech, Date.parse(vals[-1] or "")
+
+
+def army_entries(b: Bridge) -> list[dict[str, Any]]:
+    """编队按类型的常备/征召/排队数量；裁军后必须重新读，不能复用旧下标。"""
+    armies = f"{PLAYER_MUT}.GetMilitaryFormationsArmy"
+    fields = ["MilitaryFormationUnitEntry.GetUnitType.GetNameNoFormatting",
+              "MilitaryFormationUnitEntry.GetUnitType.GetGroup.GetIDString",
+              "MilitaryFormationUnitEntry.GetCurrentNumRegularUnits",
+              "MilitaryFormationUnitEntry.GetExpectedNumRegularUnits",
+              "MilitaryFormationUnitEntry.GetCurrentNumConscriptUnits",
+              "MilitaryFormationUnitEntry.GetExpectedNumConscriptUnits"]
+    out = []
+    for fi, (name,) in enumerate(b.rows(armies, ["MilitaryFormation.GetNameNoFormatting"])):
+        for ei, vals in enumerate(b.rows("MilitaryFormation.GetCombatUnitEntries", fields, path=[(armies, fi)])):
+            if any(_f(v) is None for v in vals[2:]):
+                raise GameError("军队数量观测失败，停止裁军")
+            group_id = plain(vals[1]).removeprefix("combat_unit_group_")
+            # 1.13.11 GetIDString 返回数值序号；不能将其误当成脚本 key。
+            group = {"0": "infantry", "1": "artillery", "2": "cavalry", "3": "marines"}.get(group_id, group_id)
+            if group not in ("infantry", "artillery", "cavalry", "marines"):
+                raise GameError(f"未知军队分组 {group_id}，停止裁军")
+            out.append(dict(formation=fi, entry=ei, name=plain(name), type=plain(vals[0]),
+                            group=group,
+                            regular=int(_f(vals[2])), expected_regular=int(_f(vals[3])),
+                            conscripts=int(_f(vals[4])), expected_conscripts=int(_f(vals[5]))))
+    return out
 
 
 def laws(b: Bridge) -> dict[str, LawRow]:
@@ -238,10 +296,24 @@ def laws(b: Bridge) -> dict[str, LawRow]:
     out: dict[str, LawRow] = {}
     for lst in LAW_LISTS:
         full = f"{PLAYER_MUT}.{lst}"
-        for i, (group, name) in enumerate(b.rows(full, ["Law.GetGroup.GetKey", "Law.GetLawType.GetName"])):
+        for i, (group, name) in enumerate(b.rows(full, ["Law.GetGroup.GetKey", "Law.GetActiveGroupLaw.GetLawType.GetName"])):
             n = plain(name)
             out[group] = LawRow(group, by_name.get(n), n, [(full, i)])
     return out
+
+
+def law_progress(b: Bridge) -> dict[str, Any] | None:
+    """仅在确实制定时读取目标，避免缓存目标被误当现行法。"""
+    if b.read(f"[{PLAYER}.IsEnactingLaw]") != "1":
+        return None
+    root = f"{PLAYER}.GetLawBeingEnacted"
+    fields = ["GetLawType.GetName", "GetCheckpointSuccessChance|3", "GetCheckpointAdvanceChance|3",
+              "GetCheckpointStallChance|3", "GetCheckpointDebateChance|3", "GetEnactmentSetbackCount",
+              "GetCurrentEnactmentPhaseKey", "GetCheckpointProgress|3"]
+    vals = b.read_many([f"{root}.{f}" for f in fields])
+    return dict(law=_name_index('laws').get(plain(vals[0] or ''), plain(vals[0] or '')),
+                success=_f(vals[1]), advance=_f(vals[2]), stall=_f(vals[3]), debate=_f(vals[4]),
+                setbacks=_f(vals[5]), phase=plain(vals[6] or ''), progress=_f(vals[7]))
 
 
 def prices(b: Bridge) -> dict[str, dict[str, float | None]]:

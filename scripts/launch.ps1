@@ -53,6 +53,17 @@ using System;
 using System.Runtime.InteropServices;
 using System.Text;
 public static class V3Inject {
+    [StructLayout(LayoutKind.Sequential)] struct MemoryStatus {
+        public uint length, load;
+        public ulong total, available, pageTotal, pageAvailable, virtualTotal, virtualAvailable, extended;
+    }
+    [DllImport("kernel32", SetLastError = true)] static extern bool GlobalMemoryStatusEx(ref MemoryStatus status);
+    public static double AvailableMemoryGB() {
+        var s = new MemoryStatus();
+        s.length = (uint)Marshal.SizeOf(typeof(MemoryStatus));
+        if (!GlobalMemoryStatusEx(ref s)) throw new InvalidOperationException("无法读取可用物理内存");
+        return s.available / 1073741824.0;
+    }
     [DllImport("kernel32", SetLastError = true)] static extern IntPtr OpenProcess(uint access, bool inherit, int pid);
     [DllImport("kernel32", SetLastError = true)] static extern IntPtr VirtualAllocEx(IntPtr h, IntPtr addr, UIntPtr size, uint type, uint protect);
     [DllImport("kernel32", SetLastError = true)] static extern bool WriteProcessMemory(IntPtr h, IntPtr addr, byte[] buf, UIntPtr size, out UIntPtr written);
@@ -108,6 +119,9 @@ if ($Attach) {
     $proc = $running | Select-Object -First 1
 } else {
     if ($running) { throw "游戏已在运行 (pid $($running.Id))。用 -Restart 重开，或 -Attach 只注入" }
+    $availableMemoryGB = [V3Inject]::AvailableMemoryGB()
+    Write-Host ("[信息] 启动前可用物理内存 {0:N2} GB（要求至少 8 GB）" -f $availableMemoryGB)
+    if ($availableMemoryGB -lt 8) { throw "可用物理内存不足8GB，未启动游戏" }
     $env:SteamAppId = '529340'
     $env:SteamGameId = '529340'
     $env:V3MCP_PORT = "$Port"

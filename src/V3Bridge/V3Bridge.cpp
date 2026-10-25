@@ -157,6 +157,8 @@ struct Job {
     uint64_t call[5] = {};  // 开发用 /call：函数 rva 与四个参数
     std::string cmd;        // 命令 / 文本 / 语句
     std::vector<datasys::PathStep> path;  // 数据系统的上下文路径（p0/i0, p1/i1 ...）
+    std::string next_cmd;  // /data/exec_pair：同一主线程任务内，重新取路径后执行第二步
+    std::vector<datasys::PathStep> next_path;
     std::string list;                     // /data/list：要逐项求值的列表
     std::vector<std::string> fields;
     int limit = 0;
@@ -266,6 +268,10 @@ void run_job(Job* job) {
     if (job->kind == JobKind::Exec) {
         std::string err;
         job->ok = datasys::exec(job->path, job->cmd, &err);
+        if (job->ok && !job->next_cmd.empty()) {
+            job->ok = datasys::exec(job->next_path, job->next_cmd, &err);
+            if (!job->ok) err = "第二步失败（第一步已执行）: " + err;
+        }
         job->output = err;
         return;
     }
@@ -499,7 +505,7 @@ void handle(SOCKET c) {
         return;
     }
     // /console?cmd=  控制台命令；/data/read?text=  按本地化文本求值；/data/exec?stmt=  执行语句
-    if (path == "/console" || path == "/data/read" || path == "/data/exec" || path == "/call" ||
+    if (path == "/console" || path == "/data/read" || path == "/data/exec" || path == "/data/exec_pair" || path == "/call" ||
         path == "/data/eval" || path == "/data/resolve" || path == "/data/list" || path == "/gov/reform" ||
         path == "/data/fake" || path == "/events") {
         if (!g_ready) {
@@ -547,6 +553,24 @@ void handle(SOCKET c) {
             if (ip.empty()) ip = query_param(body, ik.c_str());
             job->path.push_back({lp, atoi(ip.c_str())});
         }
+        if (path == "/data/exec_pair") {
+            job->next_cmd = query_param(query, "next_stmt");
+            if (job->next_cmd.empty()) job->next_cmd = query_param(body, "next_stmt");
+            if (job->next_cmd.empty()) {
+                delete job;
+                send_json(c, 400, "{\"ok\":false,\"error\":\"缺少next_stmt，未执行\"}");
+                return;
+            }
+            for (int k = 0; k < 8; ++k) {
+                std::string pk = "np" + std::to_string(k), ik = "ni" + std::to_string(k);
+                std::string lp = query_param(query, pk.c_str());
+                if (lp.empty()) lp = query_param(body, pk.c_str());
+                if (lp.empty()) break;
+                std::string ip = query_param(query, ik.c_str());
+                if (ip.empty()) ip = query_param(body, ik.c_str());
+                job->next_path.push_back({lp, atoi(ip.c_str())});
+            }
+        }
         if (path == "/data/fake") {
             // spec=伪造对象的写入项；mode=x（stmt=语句）/ r（text=文本）/ l（list + fields）；p0/i0... 照常
             job->kind = JobKind::Fake;
@@ -559,7 +583,7 @@ void handle(SOCKET c) {
         if (job->kind == JobKind::Console || job->kind == JobKind::Read || job->kind == JobKind::Exec ||
             job->kind == JobKind::Call)
             job->kind = path == "/console" ? JobKind::Console : path == "/data/read" ? JobKind::Read
-                      : path == "/data/exec" ? JobKind::Exec : JobKind::Call;
+                      : (path == "/data/exec" || path == "/data/exec_pair") ? JobKind::Exec : JobKind::Call;
         if (job->kind == JobKind::Call) {  // 开发用：在主线程调用 base+rva(a1..a4)
             job->call[0] = strtoull(query_param(query, "rva").c_str(), nullptr, 16);
             const char* names[] = {"a1", "a2", "a3", "a4"};

@@ -166,6 +166,17 @@ class Bridge:
         if not r.get("ok"):
             raise GameError(f"{stmt}：{r.get('output')}")
 
+    def exec_pair(self, stmt: str, next_stmt: str, path: Path, next_path: Path) -> None:
+        """同一主线程任务内添加条款并填入必填值，避免中间空输入被界面估值。
+
+        第二步失败不会回滚第一步；调用方须清理自己创建的草稿。旧桥接返回404，不降级为空条款流程。
+        """
+        params = {'stmt': stmt, 'next_stmt': next_stmt, **self._path(path)}
+        params.update({'n' + k: v for k, v in self._path(next_path).items()})
+        r = self._request('POST', '/data/exec_pair', params)
+        if not r.get('ok'):
+            raise GameError(f"成对执行失败，需检查/清理草稿：{r.get('output') or r.get('error')}")
+
     def reform_government(self, members: list[int]) -> list[int]:
         """改组政府：members 是玩家国家利益集团列表（IGS）里的下标，即改组后的全部在朝集团。
         与玩家在政治面板点「确认」同一条命令（Execute(ReformGovernment.Confirm)）。返回各集团 id。"""

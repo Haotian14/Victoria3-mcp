@@ -22,7 +22,7 @@ from statistics import median
 
 from agent.gamedata import GameData
 from agent.observe import Snapshot, StateRow
-from agent.strategy import economy
+from agent.strategy import budget, economy
 from agent.strategy.config import Decision, cfg, profile
 
 SECTOR = "building_construction_sector"
@@ -58,6 +58,13 @@ def _queued(snap: Snapshot, key: str) -> int:
 
 def slots(snap: Snapshot) -> int:
     """本月最多新排几个政府项目。"""
+    if budget.emergency(snap) or snap.country.get("construction_paused"):
+        # 工厂盈利不是国库自偿。没有可核验的财政回款时，broke_min_slots 不启用。
+        return 0
+    allowance = snap.country.get("government_queue_limit")
+    if allowance is not None:
+        return max(0, min(int(allowance) - int(snap.country.get("queue_government") or 0),
+                          int(cfg()["construction"]["max_new_per_month"])))
     c = cfg()["construction"]
     rush = c.get("construction_rush") or {}
     rush_on = False
@@ -82,25 +89,6 @@ def slots(snap: Snapshot) -> int:
     limit = snap.country.get("gold_limit") or 0.0
     if limit and (snap.country.get("money") or 0.0) > limit * 0.5:
         n = max(n, c["max_new_rich"])
-    balance = snap.country.get("balance") or 0.0
-    money = snap.country.get("money") or 0.0
-    credit = snap.country.get("credit_left") or 0.0
-    broke_but_credit = money <= 0 and balance <= 0 and credit > 0
-    if money <= 0 and balance <= 0 and not broke_but_credit:
-        return 0                     # 借债且无信用：先别再加开支
-    if broke_but_credit:
-        # 破产但还有信用：至少排 2 个自偿项目，别让建造力闲置
-        n = max(n, int(c.get("broke_min_slots", 2)))
-    if balance < 0:
-        # 赤字时：国库撑得住才继续排；国库很厚且赤字很小则允许正常扩建
-        if money < -balance * cfg()["budget"]["deficit_weeks"] and not broke_but_credit:
-            return 0
-        expenses = snap.country.get("expenses") or 0.0
-        income = snap.country.get("income") or 1.0
-        deep = (expenses and money > expenses * float(c.get("deficit_construction_weeks", 26))
-                and balance > -income * float(c.get("deficit_construction_ratio", 0.03)))
-        if not deep and not broke_but_credit:
-            n = min(n, 1)
     if queue > int(c.get("hard_stop", 45)):
         # 冲刺期队列长是正常的：建造部门优先，继续排；否则先清队列
         return int(rush.get("max_parallel", 8)) if rush_on else 0
@@ -245,6 +233,33 @@ def _admin_states(snap: Snapshot) -> list[tuple[StateRow, float]]:
     return rows
 
 
+def bureaucracy_projects(snap: Snapshot) -> list[Decision]:
+    """全国官僚缺口优先补，不受旧的地方追税总量上限拦截。"""
+    spec = cfg()['construction'].get('bureaucracy_recovery') or {}
+    capacity = snap.country.get('bureaucracy')
+    target = float(snap.country.get('bureaucracy_target', spec.get('buffer', 500)))
+    if not spec.get('enabled') or capacity is None or capacity >= target:
+        return []
+    queued = _queued(snap, ADMIN)
+    room = max(0, int(spec.get('max_parallel', 2)) - queued)
+    if room <= 0:
+        return []
+    pool = [(s, deficit) for s, deficit in _admin_states(snap)
+            if not s.isolated and s.labor >= 500 and s.buildings[ADMIN].queued == 0
+            and s.infrastructure is not None and s.infrastructure_usage is not None
+            and s.infrastructure >= float(spec.get('min_infrastructure', 20))
+            and s.infrastructure - s.infrastructure_usage >= float(spec.get('min_infrastructure_margin', 2))]
+    out = []
+    for s, _ in pool[:min(room, int(spec.get('max_per_month', 1)))]:
+        row = s.buildings[ADMIN]
+        cost = max(1000, -row.profit / row.levels) if row.levels else 2000
+        if not budget.can_spend(snap, weekly=cost):
+            continue
+        out.append(Decision('build', {'state': s.id, 'building': ADMIN, 'operating_weekly': cost},
+                            f'全国行政力{capacity:,.0f}，目标{target:,.0f}；优先补行政（{s.name}）', 1e12))
+    return out
+
+
 def _buy_sell_ratio(snap: Snapshot, good: str) -> float:
     p = snap.prices.get(good) or {}
     buy = p.get("buy") or 0.0
@@ -288,10 +303,12 @@ def university_target(snap: Snapshot, uni: dict) -> int:
 
 def candidates(gd: GameData, snap: Snapshot, researched: set[str], costs: dict[str, float]) -> list[Decision]:
     """按优先级排好的建造候选（比 slots 多给几个备选，执行时可能有失败的）。"""
+    if budget.emergency(snap) or snap.country.get("construction_paused"):
+        return []
     c = cfg()["construction"]
     n = slots(snap)
     priority_only = n <= 0          # 队列积压：只排部门/食品/行政/大学/贸易中心，不排普通工厂
-    out: list[Decision] = []
+    out: list[Decision] = bureaucracy_projects(snap)
     fs = c.get("food_security") or {}
     food_short = _food_short(snap, c)
 
@@ -456,7 +473,9 @@ def candidates(gd: GameData, snap: Snapshot, researched: set[str], costs: dict[s
     admin_have = sum(row.levels for s in snap.states for k, row in s.buildings.items() if k == ADMIN)
     admin_cap = int(c.get("admin_max_total_levels") or 0)
     # 税收浪费已经很低时，州级“征税能力缺口”只是显示口径，继续堆行政会白占建造槽
-    if (not admin_cap or admin_have < admin_cap) and \
+    if not any(d.args.get('building') == ADMIN for d in out) \
+            and (snap.country.get('bureaucracy') is None or snap.country['bureaucracy'] >= 0) \
+            and (not admin_cap or admin_have < admin_cap) and \
             waste > float(c.get("admin_min_tax_waste", 0.02)) and (
             waste > c["tax_waste_admin"] or any(d > 0 for _, d in admin_states)):
         added = 0
@@ -666,12 +685,15 @@ def candidates(gd: GameData, snap: Snapshot, researched: set[str], costs: dict[s
     food_building = (c.get("food_security") or {}).get("building")
     if food_building:
         rank[food_building] = 1
-    out.sort(key=lambda d: rank.get(d.args["building"], 9))
+    out.sort(key=lambda d: -1 if d.score >= 1e12 else rank.get(d.args["building"], 9))
     if n > 0:
         # 至少给大学留 1 个槽：否则建造部门 4 级 + 牧场 3 级会把 6-8 个槽吃满，
         # 大学永远排在第 9 位（v4 首轮 12 个月只建了 1 所）。
         ui = next((i for i, d in enumerate(out) if d.args["building"] == UNIVERSITY), None)
-        if ui is not None and ui >= n:
+        if ui is not None and ui >= n and not any(d.score >= 1e12 for d in out[:n]):
             out.insert(n - 1, out.pop(ui))
+    critical = [d for d in out if d.score >= 1e12]
     out, picked = _ensure_recovery_slots(out, picked, n, snap)
+    if critical:
+        out = critical + [d for d in out if d not in critical]
     return out if priority_only else out + picked

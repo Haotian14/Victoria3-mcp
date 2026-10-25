@@ -58,12 +58,12 @@
       "ruler_ig": "士大夫",
       "law_route": [
         ["lawgroup_trade_policy", "law_mercantilism"],
-        ["lawgroup_distribution_of_power", "law_oligarchy"],
         ["lawgroup_land_reform", "law_tenant_farmers"],
         ["lawgroup_economic_system", "law_interventionism"],
+        ["lawgroup_education_system", "law_public_schools"],
         ["lawgroup_taxation", "law_per_capita_based_taxation"],
         ["lawgroup_church_and_state", "law_freedom_of_conscience"],
-        ["lawgroup_education_system", "law_public_schools"],
+        ["lawgroup_distribution_of_power", "law_oligarchy"],
         ["lawgroup_distribution_of_power", "law_census_voting"],
         ["lawgroup_policing", "law_dedicated_police"],
         ["lawgroup_internal_security", "law_secret_police"],
@@ -100,14 +100,19 @@
         "pm_order": ["pm_scholastic_education", "pm_philosophy_department", "pm_analytical_philosophy_department"]
       },
       "tax_floor": "Medium",
+      "tax_ceiling": "Medium",
       "wages": {
-        "_comment": "攻略：前期政府工资压 Low 换建造资金；重商主义（承认 JE 激活）后回 Medium，避免认可/威望惩罚。军队始终 Medium，战时 High。",
+        "_comment": "财政护栏：和平军饷 Low、战时 Medium；紧急时政府工资 Low。",
         "government_low_until_year": 1845,
         "government_low_before_mercantilism": true,
         "military_low_when_broke": true,
         "government_low_when_broke": true
       },
       "opium_war": "avoid",
+      "military_targets": {"infantry": 200, "artillery": 50, "cavalry": 50, "conscripts": 50},
+      "military_recruitment": {"peace_after_year": 1845, "peace_requires_recognized": true, "max_per_month": 1},
+      "guard_new_institutions": true,
+      "institution_bureaucracy_buffer": 500,
       "priority_goods": {"iron": 1.5, "coal": 1.4, "tools": 1.4, "wood": 1.35, "steel": 1.35,
                          "glass": 1.25, "hardwood": 1.2,
                          "meat": 1.3, "fabric": 1.15, "clothes": 1.15, "furniture": 1.15,
@@ -115,6 +120,7 @@
       "politics": {
         "_comment": "政府合法性优先：最多 3 个集团；合法性 < 50 时移除影响力最小的在朝集团。连续 6 个月没有法律在推时，允许尝试通过率 ≥0.15 的关键法（按 fallback_route 顺序），避免法律失败后空转两年；0% 的法仍然不碰。",
         "min_pass": 0.35,
+        "committed_min_pass": 0.01,
         "law_min_pass": {"law_agrarianism": 0.30, "law_oligarchy": 0.30},
         "fallback_after_months": 6,
         "fallback_min_pass": 0.15,
@@ -251,6 +257,13 @@
       "diplomacy": {
         "_comment": "鸦片战争已默认避战；对主要大国改善关系，等大使馆/保障独立/防御同盟提议。承认 JE 每份大国大使馆 +1/月，所以把 GBR/USA/AUS 也纳入。要求/割让/赔款/投资权/治外法权/条约港一律拒绝。",
         "improve_relations": ["GBR", "RUS", "FRA", "PRU", "AUS", "USA", "OTT", "SPA"],
+        "law_commitment": {
+          "laws": ["law_mercantilism", "law_interventionism", "law_public_schools"],
+          "partners": ["SPA", "PRU", "FRA", "RUS"],
+          "max_weekly_transfer": 5000,
+          "binding_days": 1825,
+          "retry_months": 6
+        },
         "proactive": {
           "_comment": "攻略：先给列强贸易特选建立关系；承认 JE 时请求使馆；立法卡住时请求法律承诺；有余钱送礼。关键词同时匹配 action key 与中文名。",
           "trade_privilege": ["trade_privilege", "贸易特权", "贸易特选"],
@@ -350,6 +363,16 @@
     "reform_cooldown_months": 12
   },
   "budget": {
+    "emergency_reserve_weeks": 8,
+    "construction_recovery": {
+      "project_points": 25,
+      "unknown_cost_per_point": 3000,
+      "min_cost_per_point": 1000,
+      "cost_buffer": 1.05,
+      "surplus_share": 0.95,
+      "minimum_surplus": 1000,
+      "max_projects": 8
+    },
     "_comment": "税级按周结余调：入不敷出且国库撑不过 deficit_weeks 周就加税；结余充裕、国库超过金储备上限的 lower_when_reserve_over 倍就减税",
     "deficit_weeks": 30,
     "lower_when_reserve_over": 0.8,
@@ -434,7 +457,7 @@
     "sector_budget_share_late": 0.55,
     "late_after_levels": 60,
     "idle_used_ratio": 0.75,
-    "broke_min_slots": 2,
+    "broke_min_slots": 1,
     "sector_completion_window": 20,
     "sector_completion_reserve_weeks": 8,
     "max_new_rich": 6,
@@ -448,7 +471,8 @@
     "sector_input_max_price_ratio": 1.5,
     "admin_max_per_month": 1,
     "admin_min_tax_waste": 0.08,
-    "admin_max_total_levels": 40,
+    "admin_max_total_levels": 0,
+    "bureaucracy_recovery": {"enabled": true, "buffer": 500, "max_parallel": 4, "max_per_month": 2, "min_infrastructure": 20, "min_infrastructure_margin": 2},
     "sector_budget_share_rich": 0.45,
     "sector_rich_reserve_ratio": 0.7,
     "max_queue": 30,
